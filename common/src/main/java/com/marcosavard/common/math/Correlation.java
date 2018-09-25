@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * A class that computes correlation coefficients.  
  * 
- * ref http://en.wikipedia.org/wiki/Correlation_and_dependence
+ * ref: http://en.wikipedia.org/wiki/Correlation_and_dependence
  * 
  * @author Marco
  *
