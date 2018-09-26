@@ -1,4 +1,4 @@
-package com.marcosavard.common;
+package com.marcosavard.commons;
 
 /**
  * Hello world!
