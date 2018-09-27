@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class CorrelationDemo {
 	private static final GunStat[] GunStats = new GunStat[] {
-	    //country, gun homicide, overall homicide, gun ownership 
+	    //country, gun homicide, overall homicide, gun ownership   
 		new GunStat("NL", 2.7, 11.8, 1.9), 
 		new GunStat("UK", 0.8, 6.7,  4.7), 	
 		new GunStat("DE", 2.0, 12.1, 8.9),
