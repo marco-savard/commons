@@ -7,7 +7,7 @@ public class InterpolationDemo {
 	public static void main(String[] args) {
 		//define a mile-to-kilometer converter
 		Interpolation mileToKmConverter = new Interpolation(); 
-		mileToKmConverter.define(65, 100);
+		mileToKmConverter.define(65.0, 104.60);
 		
 		double miles = 150; 
 		double km = mileToKmConverter.interpolate(miles);  

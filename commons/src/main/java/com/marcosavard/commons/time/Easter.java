@@ -39,18 +39,18 @@ public class Easter {
 	// private method
 	// 
 	private static DateField computeDateFields(int year) {
-		int golden, century, x, z, d, epact, n;
-		
-	    golden = (year % 19) + 1; /* E1: metonic cycle */
-	    century = (year / 100) + 1; /* E2: e.g. 1984 was in 20th C */
-	    x = (3 * century / 4) - 12; /* E3: leap year correction */
-	    z = ((8 * century + 5) / 25) - 5; /* E3: sync with moon's orbit */
-	    d = (5 * year / 4) - x - 10;
-	    epact = (11 * golden + 20 + z - x) % 30; /* E5: epact */
+	    int golden = (year % 19) + 1; // E1: metonic cycle of 19 years
+	    int century = (year / 100) + 1; // E2: e.g. 1984 was in 20th C 
+	    int x = (3 * century / 4) - 12; // E3: leap year correction 
+	    int z = ((8 * century + 5) / 25) - 5; // E3: sync with moon's orbit 
+	    int d = (5 * year / 4) - x - 10;
+	    int epact = (11 * golden + 20 + z - x) % 30; // E5: epact 
+	    
 	    if ((epact == 25 && golden > 11) || epact == 24)
 	      epact++;
-	    n = 44 - epact;
-	    n += 30 * (n < 21 ? 1 : 0); /* E6: */
+	    
+	    int n = 44 - epact;
+	    n += 30 * (n < 21 ? 1 : 0); // E6 
 	    n += 7 - ((d + n) % 7);
 	    
 	    DateField fields = new DateField(); 
