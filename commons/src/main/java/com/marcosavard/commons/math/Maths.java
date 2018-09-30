@@ -7,24 +7,33 @@ package com.marcosavard.commons.math;
  *
  */
 public class Maths {
-	private static final double EPSILON = 0.0001; 
+	private static final double EPSILON = 0.0001;
 
 	/**
-	 * Tells if double numbers are equal. It is not a good practice to compare double directly, 
-	 * use if (Maths.equal(d1, d2) instead of if (d1 == d2). 
+	 * Tells if double numbers are equal. It is not a good practice to compare
+	 * double directly, use if (Maths.equal(d1, d2) instead of if (d1 == d2).
 	 * 
-	 * @param d1 the 1st number
-	 * @param d2 the 2nd number
+	 * @param d1         the 1st number
+	 * @param d2         the 2nd number
 	 * @param difference (default value EPSILON)
 	 * @return true if equal
 	 */
 	public static boolean equal(double d1, double d2, double difference) {
-		boolean equal = Math.abs(d1 - d2) < difference; 
+		boolean equal = Math.abs(d1 - d2) < difference;
 		return equal;
 	}
-	
+
 	public static boolean equal(double d1, double d2) {
-		return equal(d1, d2, EPSILON); 
+		return equal(d1, d2, EPSILON);
+	}
+
+	//gives N!
+	public static long factorial(int N) {
+		long multi = 1;
+		for (int i = 1; i <= N; i++) {
+			multi = multi * i;
+		}
+		return multi;
 	}
 
 	/**
@@ -34,22 +43,21 @@ public class Maths {
 	 * @return angle in degree
 	 */
 	public double radianToDegree(double radian) {
-		double degrees = (radian * 180) / Math.PI; 
-		degrees = (degrees > 0) ? (degrees % 360) : (degrees + 360); 
+		double degrees = (radian * 180) / Math.PI;
+		degrees = (degrees > 0) ? (degrees % 360) : (degrees + 360);
 		return degrees;
 	}
-	
+
 	/**
-	 * Round the full precision value at a given precision. 
-	 * For instance, round(Math.PI, 0.01) gives 3.14 
+	 * Round the full precision value at a given precision. For instance,
+	 * round(Math.PI, 0.01) gives 3.14
 	 * 
-	 * @param original value
+	 * @param original  value
 	 * @param precision
 	 * @return rouned values
-	 */ 
+	 */
 	public static double round(double original, double precision) {
-		double rounded = ((int)(Math.round(original / precision))) * precision; 
-		return rounded; 
+		double rounded = ((int) (Math.round(original / precision))) * precision;
+		return rounded;
 	}
 }
- 

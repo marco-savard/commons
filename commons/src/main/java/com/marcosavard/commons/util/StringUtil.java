@@ -32,6 +32,17 @@ public class StringUtil {
 		return s;
 	}
 
+	public static String capitalizeWords(String original) {
+		String[] words = original.split(" ");
+
+		for (String word : words) {
+			word = capitalize(word);
+		}
+
+		String joined = String.join(" ", words);
+		return joined;
+	}
+
 	/**
 	 * Returns the same string, but empty is null.
 	 * 
@@ -77,18 +88,30 @@ public class StringUtil {
 		boolean voyel = voyels.contains(c);
 		return voyel;
 	}
-	
+
 	/**
-	 * Pad n blanks at left 
+	 * Pad n blanks at left
 	 * 
 	 * @param source
-	 * @param n of blanks
+	 * @param n      of blanks
 	 * @return
 	 */
-    public static String padLeftBlanks(String source, int n) {
-        String padded = (n > 0) ? String.format("%1$" + n + "s", source) : source;
-        return padded;
-    }
+	public static String padLeftBlanks(String source, int n) {
+		String padded = (n > 0) ? String.format("%1$" + n + "s", source) : source;
+		return padded;
+	}
+
+	public static String pad(String source, int width) {
+		StringBuilder sb = new StringBuilder();
+		int n = Math.max(0, width - source.length());
+
+		for (int i = 0; i < n; i++) {
+			sb.append(" ");
+		}
+
+		sb.append(source);
+		return sb.toString();
+	}
 
 	/**
 	 * Strip off accents from characters
@@ -149,31 +172,30 @@ public class StringUtil {
 		truncated = trunk ? truncated.substring(0, lenght - 1) + ELLIPSIS : truncated;
 		return truncated;
 	}
-	
+
 	/**
-     * Returns the same String, but without the quotes. For instance,
-     * removeSurroundingQuotes("'text'", '\'') returns "text".
-     * 
-     * @param text whose the first and last characters may be quote characters.
-     * 
-     * @return the text without the quotes, if any
-     */
-    public static String unquote(String text, char quoteCharacter) {
-        String target = "";
+	 * Returns the same String, but without the quotes. For instance,
+	 * removeSurroundingQuotes("'text'", '\'') returns "text".
+	 * 
+	 * @param text whose the first and last characters may be quote characters.
+	 * 
+	 * @return the text without the quotes, if any
+	 */
+	public static String unquote(String text, char quoteCharacter) {
+		String target = "";
 
-        if (!isNullOrBlank(text)) {
-            char ch = text.charAt(0);
-            target = (ch == quoteCharacter) ? text.substring(1) : text;
+		if (!isNullOrBlank(text)) {
+			char ch = text.charAt(0);
+			target = (ch == quoteCharacter) ? text.substring(1) : text;
 
-            if (!isNullOrBlank(target)) {
-                int len = target.length() - 1;
-                ch = target.charAt(len);
-                target = (ch == quoteCharacter) ? target.substring(0, len) : target;
-            }
-        }
+			if (!isNullOrBlank(target)) {
+				int len = target.length() - 1;
+				ch = target.charAt(len);
+				target = (ch == quoteCharacter) ? target.substring(0, len) : target;
+			}
+		}
 
-        return target;
-    }
-
+		return target;
+	}
 
 }

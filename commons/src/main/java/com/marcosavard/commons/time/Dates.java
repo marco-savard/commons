@@ -74,6 +74,12 @@ public class Dates {
         return relativeDate;
     }
     
+    //is year a leap year
+    public static boolean isLeapYear(int year) {
+		 boolean leap = ((year % 4 == 0) && ((year % 400 == 0) || (year % 100 != 0)));
+		 return leap;
+	}
+    
 	/**
 	 * Convert a Date into a LocalDate instance. 
 	 * 
