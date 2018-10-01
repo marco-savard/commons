@@ -51,7 +51,7 @@ public class IndentWriter extends PrintWriter {
 	}
 
 	/**
-	 * Decrease the indentation and write an empyy line. 
+	 * Decrease the indentation and write an empty line. 
 	 */
 	public void unindent() {
 		level--;

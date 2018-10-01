@@ -43,6 +43,12 @@ public class StringUtil {
 		return joined;
 	}
 
+	//count occurrences of substring in str
+	public static int countOccurences(String str, String substring) {
+		int count = str.length() - str.replace(substring, "").length();
+		return count;
+	}
+	
 	/**
 	 * Returns the same string, but empty is null.
 	 * 
