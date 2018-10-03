@@ -73,6 +73,9 @@ public class IndentWriterDemo implements Runnable {
 	}
 
 	private static List<Package> findPackages(String wildcards) {
+		String javaHome = System.getProperty("java.home");
+		System.out.println(javaHome);; 
+		
 		String regex = WildcardsToRegex.toRegex(wildcards);
 		List<Package> allPackages = Arrays.asList(Package.getPackages());
 		Comparator<Package> comparator = Comparator.comparing(Package::getName);
