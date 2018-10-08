@@ -118,6 +118,11 @@ public class StringUtil {
 		sb.append(source);
 		return sb.toString();
 	}
+	
+	public static boolean startsWith(String str, String prefix) {
+		boolean startsWith = ! isNullOrEmpty(str) && str.startsWith(prefix); 
+		return startsWith;
+	}
 
 	/**
 	 * Strip off accents from characters
@@ -203,5 +208,7 @@ public class StringUtil {
 
 		return target;
 	}
+
+
 
 }

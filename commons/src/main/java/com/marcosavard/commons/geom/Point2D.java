@@ -1,0 +1,68 @@
+package com.marcosavard.commons.geom;
+
+import java.text.MessageFormat;
+
+import com.marcosavard.commons.math.Maths;
+
+public class Point2D {
+	private double x, y; 
+
+	public Point2D(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public double getX() { return x; }
+	public double getY() { return y; }
+	
+	public double getRadius() {
+		double radius = Math.sqrt(x*x + y*y); 
+		return radius;
+	}
+
+	public double getAngle() {
+		double angle = Math.atan2(y, x); 
+		return angle;
+	}
+	
+	public static Point2D ofPolarCoordinates(double radius, double angle) {
+		double x = radius * Math.cos(angle); 
+		double y = radius * Math.sin(angle); 
+		return new Point2D(x, y);
+	}
+	
+	public double distanceFrom(Point2D that) {
+		double dx = (that.getX() - x) * (that.getX() - x); 
+		double dy = (that.getY() - y) * (that.getY() - y); 
+		return Math.sqrt(dx + dy); 
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		boolean equal = false; 
+		
+		if (o instanceof Point2D) {
+			Point2D that = (Point2D)o; 
+			equal = Maths.equal(this.x, that.x) && Maths.equal(this.y, that.y); 
+		}
+		
+		return equal; 
+	}
+	
+	@Override
+	public int hashCode() {
+		return (int)(x*7 + y);
+	}
+
+	@Override
+	public String toString() {
+		return MessageFormat.format("(x={0}, y={1})", x, y); 
+	}
+	
+	
+
+
+
+
+
+}

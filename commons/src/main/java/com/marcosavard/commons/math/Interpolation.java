@@ -2,7 +2,6 @@ package com.marcosavard.commons.math;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A class that interpolates values from defined values.  For instance, 
