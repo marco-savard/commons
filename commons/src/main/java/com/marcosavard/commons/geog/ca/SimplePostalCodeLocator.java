@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +11,16 @@ import java.util.Map;
 import com.marcosavard.commons.geog.GeoCoordinate;
 import com.marcosavard.commons.io.CsvReader;
 
-public class PostalCodeGeoCoordinate {
-	private static Map<String, GeoCoordinate> locations = new HashMap<>();
+/**
+ * Find a approximate location (latitude/longitude) for a given postal code.
+ * 
+ * @author Marco
+ *
+ */
+public class SimplePostalCodeLocator extends PostalCodeLocator {
+	private Map<String, GeoCoordinate> locations = new HashMap<>();
 	
-	public static GeoCoordinate findLocation(PostalCode code) {
+	public GeoCoordinate findLocation(PostalCode code) {
 		if (locations.isEmpty()) {
 			loadLocations(); 
 		}
@@ -24,9 +29,9 @@ public class PostalCodeGeoCoordinate {
 		return locations.get(prefix);
 	}
 
-	private static void loadLocations() {
+	private void loadLocations() {
 		try {
-			InputStream input = PostalCodeGeoCoordinate.class.getResourceAsStream("postalCodes.csv");
+			InputStream input = SimplePostalCodeLocator.class.getResourceAsStream("postalCodes.csv");
 			Reader r = new InputStreamReader(input, "UTF-8");
 			CsvReader cr = new CsvReader(r, 0, ';'); 
 			
@@ -43,7 +48,7 @@ public class PostalCodeGeoCoordinate {
 		
 	}
 
-	private static void readLine(List<String> values) {
+	private void readLine(List<String> values) {
 		String prefix = values.get(0); 
 		double lat = Double.parseDouble(values.get(1));
 		double lon = Double.parseDouble(values.get(2));
