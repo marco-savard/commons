@@ -1,8 +1,14 @@
 com.marcosavard.commons
 com.marcosavard.commons.debug
+com.marcosavard.commons.geog
+com.marcosavard.commons.geog.ca
+com.marcosavard.commons.geog.ca.qc
+com.marcosavard.commons.geog.ca.qc.educ
+com.marcosavard.commons.geom
 com.marcosavard.commons.io
 com.marcosavard.commons.math
 com.marcosavard.commons.security
+com.marcosavard.commons.soc
 com.marcosavard.commons.text
 com.marcosavard.commons.time
 com.marcosavard.commons.types

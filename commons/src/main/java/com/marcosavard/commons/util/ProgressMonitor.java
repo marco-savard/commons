@@ -30,7 +30,7 @@ public interface ProgressMonitor {
 	 * @param task name
 	 * @param totalWork
 	 */
-	public void beginTask(String name, int totalWork);
+	public void beginTask(String task, int totalWork);
 	
 	/**
 	 * Notifies that a given number of work unit of the main task has been completed.
