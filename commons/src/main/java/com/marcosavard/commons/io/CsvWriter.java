@@ -19,6 +19,7 @@ public class CsvWriter {
 	 * Create an instance of CsvWriter. 
 	 * 
 	 * @param writer usually a FileWriter. 
+	 * @param separator such as ; , or |
 	 */
 	public CsvWriter(Writer writer, String separator) {
 		this.writer = writer;
@@ -27,10 +28,9 @@ public class CsvWriter {
 
 	/**
 	 * Writes CSV headers, and then rows, using the separator.
-	 * 
-	 * 
-	 * @param headers
-	 * @param rows
+	 * 	 
+	 * @param headers lines of header
+	 * @param rows list of rows
 	 */
 	public void write(List<String[]> headers, List<String[]> rows) {
 		PrintWriter pw = new PrintWriter(writer); 
@@ -50,8 +50,8 @@ public class CsvWriter {
 	 * Writes CSV headers, and then rows. Format in a way that 
 	 * all columns have the same width.
 	 * 
-	 * @param headers
-	 * @param rows
+	 * @param headers lines of header
+	 * @param rows list of rows
 	 */
 	public void writeTable(List<String[]> headers, List<String[]> rows) {
 		PrintWriter pw = new PrintWriter(writer); 

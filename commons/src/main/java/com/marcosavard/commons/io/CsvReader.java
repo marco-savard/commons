@@ -21,13 +21,13 @@ public class CsvReader {
 	/**
 	 * Builds a CSV reader from a standard Reader instance. 
 	 *  
-	 * @param reader
-	 * @param nbHeaders
-	 * @param sep
+	 * @param reader the input
+	 * @param nbHeaders number of lines to skip
+	 * @param separator such as ; , or |  
 	 */
-	public CsvReader(Reader reader, int nbHeaders, char sep) {
+	public CsvReader(Reader reader, int nbHeaders, char separator) {
 		this.bf = new BufferedReader(reader); 
-		this.separator = sep;
+		this.separator = separator;
 		this.nbHeaders = nbHeaders; 
 	}
 	
@@ -35,7 +35,7 @@ public class CsvReader {
 	 * Read header columns, if the case where there is only one line of header
 	 * 
 	 * @return the list of columns
-	 * @throws IOException
+	 * @throws IOException when I/O exception occurs
 	 */
 	public List<String> readHeaderColumns() throws IOException {
 		return readHeaders().get(0); 
@@ -45,7 +45,7 @@ public class CsvReader {
 	 * Read headers, in the case there are several lines of headers
 	 * 
 	 * @return the list of columns
-	 * @throws IOException
+	 * @throws IOException when I/O exception occurs
 	 */
 	public List<List<String>> readHeaders() throws IOException {
 		List<List<String>> headers = new ArrayList<>(); 
@@ -73,7 +73,7 @@ public class CsvReader {
 	 * 
 	 * @return a list of cell values. 
 	 * 
-	 * @throws IOException
+	 * @throws IOException when I/O exception occurs
 	 */
 	public List<String> readLine() throws IOException {
 		List<String> line = new ArrayList<>(); 	

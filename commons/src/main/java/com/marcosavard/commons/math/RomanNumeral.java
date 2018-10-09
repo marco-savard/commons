@@ -17,7 +17,7 @@ public class RomanNumeral {
 	 * Create a roman numeral whose toString() is its textual representation. 
 	 * For instance, System.out.println(new RomanNumeral(10)) prints "X". 
 	 *  
-	 * @param number
+	 * @param number between 1 and 3999
 	 */
 	public RomanNumeral(int number) {
 		if (number < 1)

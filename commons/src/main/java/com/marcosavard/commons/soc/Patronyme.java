@@ -15,7 +15,7 @@ public class Patronyme {
 	 * Create a patronyme.  Accepts any international letter \p{L}, hyphens -, 
 	 * apostrophes, spaces and dots; remove any other characters,
 	 * 
-	 * @param name
+	 * @param name not sanitized
 	 */
 	public Patronyme(String name) {
 		name = (name == null) ? "" : name;

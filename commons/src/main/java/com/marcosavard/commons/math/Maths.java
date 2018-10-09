@@ -39,7 +39,7 @@ public class Maths {
 	/**
 	 * Convert an angle in radian unit to degree units
 	 * 
-	 * @param radian
+	 * @param radian angle in radian
 	 * @return angle in degree
 	 */
 	public double radianToDegree(double radian) {
@@ -52,9 +52,9 @@ public class Maths {
 	 * Round the full precision value at a given precision. For instance,
 	 * round(Math.PI, 0.01) gives 3.14
 	 * 
-	 * @param original  value
-	 * @param precision
-	 * @return rouned values
+	 * @param original value
+	 * @param precision (0.01 to round at the nearest 0.01 value)
+	 * @return rounded values 
 	 */
 	public static double round(double original, double precision) {
 		double rounded = ((int) (Math.round(original / precision))) * precision;

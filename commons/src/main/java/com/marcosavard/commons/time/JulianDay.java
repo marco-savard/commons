@@ -14,8 +14,8 @@ public class JulianDay {
 	
 	/** Convert a standard date into a Julian day
 	 *  
-	 * @param date
-	 * @return
+	 * @param date a given date
+	 * @return the Julian day
 	 */
 	public static int toJulianDay(Date date) {
 		int year = 1900 + date.getYear(); 

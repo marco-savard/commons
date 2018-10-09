@@ -38,6 +38,7 @@ public class HolidayCalendar {
 	/**
 	 * Find the date that a given holiday occurs
 	 * @param holiday to find
+	 * @param date the date after which the holiday occurs
 	 * @return find date of holiday after a given date
 	 */
 	public static Date findHolidayAfterDate(Holiday holiday, Date date) {
@@ -50,6 +51,7 @@ public class HolidayCalendar {
 	/**
 	 * Find the date that a given holiday occurs, in the given year
 	 * @param holiday to find
+	 * @param year the year in which the holiday occurs (e.g. 2018)
 	 * @return find date of holiday in a given year 
 	 */
 	public static Date findHolidayOfYear(Holiday holiday, int year) {
@@ -96,7 +98,7 @@ public class HolidayCalendar {
 
 	/**
 	 * Find the new Year's date of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return new Year's date
 	 */
 	public static Date findNewYearDay(int year) {
@@ -105,7 +107,7 @@ public class HolidayCalendar {
 
 	/**
 	 * Find the Valentine day of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Valentine day of the year
 	 */
 	public static Date findSaintValentineDay(int year) {
@@ -114,7 +116,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the family day of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return family day of the year
 	 */
 	public static Date findFamilyDay(int year) {
@@ -123,7 +125,7 @@ public class HolidayCalendar {
 
 	/**
 	 * Find the Saint Patrick's day of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Saint Patrick's day of the year
 	 */
 	public static Date findSaintPatrickDay(int year) {
@@ -132,7 +134,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the date of the year when Daylight Saving Time starts 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return date of the year when Daylight Saving Time starts
 	 */
 	public static Date findDaylightSavingDate(int year) {
@@ -141,7 +143,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Easter date of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Easter date of the year
 	 */
 	public static Date findEasterDate(int year) {
@@ -150,7 +152,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Mother's day of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Mother's day of the year
 	 */
 	public static Date findMothersDay(int year) {
@@ -159,7 +161,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Victoria day of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Victoria day of the year 
 	 */
 	private static Date findVictoriaDay(int year) {
@@ -168,7 +170,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Father's day of the year
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Father's day of the year
 	 */
 	public static Date findFathersDay(int year) {
@@ -177,7 +179,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Saint-Jean Baptiste day of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Saint-Jean Baptiste day of the year 
 	 */
 	public static Date findSaintJeanBaptisteDay(int year) {
@@ -186,7 +188,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Canada day of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Canada day of the year 
 	 */
 	private static Date findCanadaDay(int year) {
@@ -195,7 +197,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Civic holiday of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Civic holiday of the year 
 	 */
 	public static Date findCivicDay(int year) {
@@ -204,7 +206,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Labor day of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Labor day of the year 
 	 */
 	public static Date findLaborDay(int year) {
@@ -213,7 +215,7 @@ public class HolidayCalendar {
 
 	/**
 	 * Find the Canadian Thanksgiving of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Canadian Thanksgiving of the year 
 	 */
 	public static Date findCanadianThanksgiving(int year) {
@@ -222,7 +224,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the Halloween of the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return Halloween of the year 
 	 */
 	private static Date findHalloween(int year) {
@@ -231,7 +233,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the date of the year when Daylight Saving Time ends 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return date of the year when Daylight Saving Time ends
 	 */
 	public static Date findDaylightSavingOffDate(int year) {
@@ -240,7 +242,7 @@ public class HolidayCalendar {
 	
 	/**
 	 * Find the date on which Christmas occurs, at the year 
-	 * @param year
+	 * @param year a given year (e.g. 2018)
 	 * @return date on which Christmas occurs 
 	 */
 	public static Date findChristmas(int year) {
@@ -250,9 +252,9 @@ public class HolidayCalendar {
 	/**
 	 * Find the first specified day of week, at a given month and year 
 	 * 
-	 * @param year
-	 * @param month
-	 * @param month
+	 * @param year a given year (e.g. 2018)
+	 * @param month a given month in the range [1..12]
+	 * @param dayOfWeek from 1 (Calendar.SUNDAY) to 7 (Calendar.SATURDAY)
 	 * @return date on which the specified date occurs
 	 */
 	public static Date findFirstDayOfWeekInMonth(int year, int month, int dayOfWeek) {
@@ -262,9 +264,9 @@ public class HolidayCalendar {
 	/**
 	 * Find the second specified day of week, at a given month and year 
 	 * 
-	 * @param year
-	 * @param month
-	 * @param month
+	 * @param year a given year (e.g. 2018)
+	 * @param month a given month in the range [1..12]
+	 * @param dayOfWeek from 1 (Calendar.SUNDAY) to 7 (Calendar.SATURDAY)
 	 * @return date on which the specified date occurs
 	 */
 	public static Date findSecondDayOfWeekInMonth(int year, int month, int dayOfWeek) {
@@ -274,9 +276,9 @@ public class HolidayCalendar {
 	/**
 	 * Find the third specified day of week, at a given month and year 
 	 * 
-	 * @param year
-	 * @param month
-	 * @param month
+	 * @param year a given year (e.g. 2018)
+	 * @param month a given month in the range [1..12]
+	 * @param dayOfWeek from 1 (Calendar.SUNDAY) to 7 (Calendar.SATURDAY)
 	 * @return date on which the specified date occurs
 	 */
 	public static Date findThirdDayOfWeekInMonth(int year, int month, int dayOfWeek) {
@@ -288,11 +290,11 @@ public class HolidayCalendar {
 	 * Date date = findNDayOfWeekInMonth(2018, 5, Calendar.SUNDAY, 2)
 	 *   return the 2nd Sunday of May (5th month) 2018 
 	 *    
-	 * @param year
-	 * @param month
-	 * @param dayOfWeek
-	 * @param rank
-	 * @return
+	 * @param year a given year (e.g. 2018)
+	 * @param month a given month in the range [1..12]
+	 * @param dayOfWeek from 1 (Calendar.SUNDAY) to 7 (Calendar.SATURDAY)
+	 * @param rank first, second, thirf or fourth of the month
+	 * @return date of the holiday
 	 */
 	public static Date findNDayOfWeekInMonth(int year, int month, int dayOfWeek, int rank) {
 		Date firstOfMonth = new Date(year-1900, month-1, 1); 
@@ -303,9 +305,5 @@ public class HolidayCalendar {
 		Date firstDayOfWeekInMonth = new Date(year-1900, month-1, 1+daysOffset); 
 		return firstDayOfWeekInMonth;
 	}
-
-
-
-
 
 }

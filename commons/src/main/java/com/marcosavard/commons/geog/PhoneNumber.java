@@ -38,6 +38,7 @@ public class PhoneNumber implements Serializable {
 	 * Create a phone number with an extension. 
 	 * 
 	 * @param fullNumber number with area code
+	 * @param extension optional
 	 */
 	public PhoneNumber(String fullNumber, String extension) {
 		String digits = StringUtil.stripNonDigit(fullNumber); 

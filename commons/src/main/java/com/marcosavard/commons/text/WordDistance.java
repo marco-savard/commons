@@ -15,8 +15,8 @@ public class WordDistance {
 	/**
 	 * Compute the Levenshtein distance between two words. 
 	 * 
-	 * @param word1
-	 * @param word2
+	 * @param word1 first word
+	 * @param word2 second word
 	 * @return a number representing the distance between two words. 
 	 */
 	//https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Java
@@ -71,8 +71,8 @@ public class WordDistance {
 	 * means the word whose entry in the list
 	 * is the close
 	 * 
-	 * @param word
-	 * @param wordList
+	 * @param word a given word
+	 * @param wordList a list of candidate words
 	 * @return the nearest word in the wordList
 	 */
 	public static String findNearestString(String word, List<String> wordList) {

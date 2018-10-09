@@ -128,8 +128,8 @@ public class Color implements Serializable {
 	/**
 	 * Converts a string formatted as #ff00ff to a Color instance. 
 	 * 
-	 * @param value
-	 * @return
+	 * @param value such as #ff00ff
+	 * @return a color instance
 	 */
 	public static Color fromString(String value) {
 		Color color;
@@ -171,7 +171,7 @@ public class Color implements Serializable {
 	/**
 	 * Return the grayscale of a color.
 	 * 
-	 * @return
+	 * @return a color (white, grey or black) 
 	 */
 	public Color getGrayscale() {
 		int luminence = (int)((RED_LUMINENCE * _r) + (GREEN_LUMINENCE * _g) + (BLUE_LUMINENCE * _b));
@@ -182,7 +182,7 @@ public class Color implements Serializable {
 	 * Build a color brighter from a given color 
 	 * 
 	 * @param factor from 1.0 to 100.0 (1.2 default)
-	 * @return
+	 * @return a brighter color
 	 */
 	public Color brighter(double factor) {
 		float[] hsb = toHSB();
@@ -203,7 +203,7 @@ public class Color implements Serializable {
 	 * Build a color darker from a given color 
 	 * 
 	 * @param factor from 1.0 to 100.0 (1.2 default)
-	 * @return
+	 * @return a darker color
 	 */
 	public Color darker(double factor) {
 		Color darkerColor = brighter(1.0 / factor); 
@@ -217,7 +217,7 @@ public class Color implements Serializable {
 	/**
 	 * Return the contrast (from 0.0 to 1.0) with that color
 	 * 
-	 * @param thatColor 
+	 * @param thatColor another color
 	 * @return contrast from 0.0 (no contrast) and 1.0 (full contrast)
 	 */
 	public double constrastWith(Color thatColor) {
@@ -358,10 +358,10 @@ public class Color implements Serializable {
 	/**
 	 * Create a color, from HSB instead of RGB values 
 	 * 
-	 * @param hue
-	 * @param saturation
-	 * @param lightness
-	 * @return
+	 * @param hue in the range [0..360]
+	 * @param saturation in percentage
+	 * @param lightness in percentage
+	 * @return a color 
 	 */
 	public static Color createFromHsl(int hue, int saturation, int lightness) {
 		hue = (hue >= 360) ? hue % 360 : hue;

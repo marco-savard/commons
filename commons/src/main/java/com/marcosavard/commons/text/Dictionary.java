@@ -64,13 +64,13 @@ public class Dictionary {
 	}
 	
 	/**
-	 * Find a list of words matching the wildcards
+	 * Find a list of words matching the wildcard string
 	 * 
-	 * @param wildcards
-	 * @return list of words matching the wildcards
+	 * @param wildcard string
+	 * @return list of words matching the wildcard string
 	 */
-	public List<String> findWordsByWildcards(String wildcards) {
-		String regex = wildcards.replaceAll("\\?", ".");  
+	public List<String> findWordsByWildcards(String wildcard) {
+		String regex = wildcard.replaceAll("\\?", ".");  
 		regex =  regex.replaceAll("\\*", ".+"); 
 		return findWordsByRegex(regex);
 	}
@@ -78,7 +78,7 @@ public class Dictionary {
 	/**
 	 * Find a list of words matching the regular expression
 	 * 
-	 * @param regex
+	 * @param regex regular expression
 	 * @return list of words matching the the regular expression
 	 */
 	public List<String> findWordsByRegex(String regex) {
@@ -102,7 +102,7 @@ public class Dictionary {
 	 * 
 	 * @param misspelled word 
 	 * @param maxSuggestions (5 by default)
-	 * @return
+	 * @return a list of suggested words
 	 */
 	public List<String> findSuggestions(String misspelled, int maxSuggestions) {
 		TreeSet<Integer> shorterDistances = new TreeSet<>();

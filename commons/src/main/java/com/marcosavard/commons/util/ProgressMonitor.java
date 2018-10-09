@@ -28,14 +28,14 @@ public interface ProgressMonitor {
 	 * Notifies that the main task is beginning.
 	 * 
 	 * @param task name
-	 * @param totalWork
+	 * @param totalWork a value representing the total work
 	 */
 	public void beginTask(String task, int totalWork);
 	
 	/**
 	 * Notifies that a given number of work unit of the main task has been completed.
 	 * 
-	 * @param work
+	 * @param work completed
 	 */
 	public void worked(int work);
 	
@@ -45,7 +45,7 @@ public interface ProgressMonitor {
 	public void cancel();
 	
 	/**
-	 * Returns whether cancelation of current operation has been requested.
+	 * Returns whether cancellation of current operation has been requested.
 	 * 
 	 * @return true if is canceled
 	 */

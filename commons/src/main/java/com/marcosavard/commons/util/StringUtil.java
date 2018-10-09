@@ -23,13 +23,13 @@ public class StringUtil {
 	/**
 	 * Capitalize the original string.
 	 * 
-	 * @param original
-	 * @return
+	 * @param original string
+	 * @return capitalized string
 	 */
 	public static String capitalize(String original) {
-		String s = (original == null) ? "" : original;
-		s = (s.length() == 0) ? s : s.substring(0, 1).toUpperCase() + s.substring(1);
-		return s;
+		String capitalized = (original == null) ? "" : original;
+		capitalized = (capitalized.length() == 0) ? capitalized : capitalized.substring(0, 1).toUpperCase() + capitalized.substring(1);
+		return capitalized;
 	}
 
 	public static String capitalizeWords(String original) {
@@ -63,7 +63,7 @@ public class StringUtil {
 	/**
 	 * Tells if text is null or blank
 	 * 
-	 * @param text
+	 * @param text a given string
 	 * @return true if null or blank
 	 */
 	public static boolean isNullOrBlank(String text) {
@@ -74,7 +74,7 @@ public class StringUtil {
 	/**
 	 * Tells if text is null or empty
 	 * 
-	 * @param text
+	 * @param text a given string
 	 * @return true if null or empty
 	 */
 	public static boolean isNullOrEmpty(String text) {
@@ -85,7 +85,7 @@ public class StringUtil {
 	/**
 	 * Tells if c is a voyel
 	 * 
-	 * @param c
+	 * @param c given character
 	 * @return true if voyel
 	 */
 	public static boolean isVoyel(char c) {
@@ -98,9 +98,9 @@ public class StringUtil {
 	/**
 	 * Pad n blanks at left
 	 * 
-	 * @param source
-	 * @param n      of blanks
-	 * @return
+	 * @param source a given string
+	 * @param n of blanks
+	 * @return padded string
 	 */
 	public static String padLeftBlanks(String source, int n) {
 		String padded = (n > 0) ? String.format("%1$" + n + "s", source) : source;
@@ -153,8 +153,8 @@ public class StringUtil {
 	/**
 	 * Strip off non digit characters
 	 * 
-	 * @param text
-	 * @return
+	 * @param text a given string
+	 * @return stripped string
 	 */
 	public static String stripNonDigit(String text) {
 		StringBuilder sb = new StringBuilder();
@@ -173,7 +173,7 @@ public class StringUtil {
 	/**
 	 * Truncate source at a given length
 	 * 
-	 * @param source
+	 * @param source a given string
 	 * @param lenght to be truncate
 	 * @return a string having at most 'lenght' characters
 	 */
@@ -189,7 +189,7 @@ public class StringUtil {
 	 * removeSurroundingQuotes("'text'", '\'') returns "text".
 	 * 
 	 * @param text whose the first and last characters may be quote characters.
-	 * 
+	 * @param quoteCharacter such as ' or "
 	 * @return the text without the quotes, if any
 	 */
 	public static String unquote(String text, char quoteCharacter) {

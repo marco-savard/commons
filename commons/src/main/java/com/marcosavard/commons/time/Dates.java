@@ -40,9 +40,9 @@ public class Dates {
 	/**
 	 * Return the number of days between two dates. 
 	 *  
-	 * @param firstDate
-	 * @param secondDate
-	 * @return
+	 * @param firstDate first date
+	 * @param secondDate second date
+	 * @return number of days between the two dates
 	 */
 	public static long daysBetween(Date firstDate, Date secondDate) {
 		long deltaMs = Math.abs(secondDate.getTime() - firstDate.getTime());
@@ -63,8 +63,8 @@ public class Dates {
      * &nbsp;&nbsp;Date tomorrow = DateHelper.getDate(1, Time.AFTER);<br>
      * </code>
      * 
-     * @param numberOfDays
-     *            a positive or negative number of days
+     * @param numberOfDays a positive or negative number of days
+     * @param time one of {BEFORE, AFTER}
      * @return date relative to the current date
      */
     public static Date getDate(int numberOfDays, Time time) {

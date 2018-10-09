@@ -11,9 +11,11 @@ public class SocialInsuranceNumber {
 	
 	/**
 	 * Create a Social Insurance Number, blanks and dashed ignored. 
+	 * 
+	 * @param string not sanitized value
 	 */
-	public SocialInsuranceNumber(String s) {
-		checkedNumber = s.replaceAll(" ", "").replaceAll("-", "");
+	public SocialInsuranceNumber(String string) {
+		checkedNumber = string.replaceAll(" ", "").replaceAll("-", "");
 	}
 	
 	@Override
@@ -21,6 +23,11 @@ public class SocialInsuranceNumber {
 		return checkedNumber;
 	}
 
+	/**
+	 * A string in human-readable formal
+	 * 
+	 * @return formated string
+	 */
 	public String toDisplayString() {
 		String displayString = checkedNumber.substring(0, 3) + " " +
 			checkedNumber.substring(3, 6) + " " +
