@@ -3,7 +3,7 @@ package com.marcosavard.commons.io;
 import java.io.File;
 import java.net.URL;
 
-//import javax.swing.JFileChooser;
+import javax.swing.JFileChooser;
 
 /**
  * A facade class that returns commonly used folders. See FileSystemDemo. 
@@ -28,24 +28,22 @@ public class FileSystem {
 	 * 
 	 * @return the user folder
 	 */
-	/*
 	public static File getUserDocumentFolder() {
 		String folderName = new JFileChooser().getFileSystemView().getDefaultDirectory().toString();
 		File documentFolder = new File(folderName);
 		return documentFolder;
-	}*/
+	}
 
 	/**
 	 * Return the folder for user's desktop, generally C:\Users\MyName\Desktop on Windows
 	 * 
 	 * @return the user folder
 	 */
-	/*
 	public static File getUserDesktopFolder() {
 		String folderName = new JFileChooser().getFileSystemView().getHomeDirectory().toString();
 		File documentFolder = new File(folderName);
 		return documentFolder;
-	}*/
+	}
 
 	/**
 	 * Return the folder for user's download folder, generally C:\Users\MyName\Downloads on Windows
@@ -63,7 +61,6 @@ public class FileSystem {
 	 * 
 	 * @return the user folder
 	 */
-	/*
 	public static File getUserMusicFolder() {
 		File userDocumentFolder = getUserDocumentFolder(); 
 		File musicFolder;
@@ -84,7 +81,6 @@ public class FileSystem {
 	 * 
 	 * @return the user folder
 	 */
-	/*
 	public static File getUserPictureFolder() {
 		File userDocumentFolder = getUserDocumentFolder(); 
 		File pictureFolder;
@@ -98,7 +94,7 @@ public class FileSystem {
 		}
 
 		return pictureFolder;
-	}*/
+	}
 	
 	/**
 	 * Return a folder to store temporary files.
