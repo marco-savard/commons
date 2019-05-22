@@ -6,14 +6,8 @@ import org.junit.Test;
 public class InterpolationTest {
 	private static double DELTA = 0.01;
 
-	public static void main(String[] args) {
-		InterpolationTest test = new InterpolationTest();
-		test.testMileToKmConverter();
-		test.testFahrenheitToCelciusConverter(); 
-	}
-
 	@Test
-	public void testMileToKmConverter() {
+	public void givenMiles_whenInterpolateToKm_thanEqual() {
 		Interpolation mileToKmConverter = new Interpolation(); 
 		mileToKmConverter.define(65.0, 104.607);
 		
@@ -24,7 +18,7 @@ public class InterpolationTest {
 	}
 
 	@Test
-	public void testFahrenheitToCelciusConverter() {
+	public void givenFahrenheit_whenInterpolateToCelcius_thanEqual() {
 		Interpolation fahrenheitToCelciusConverter = new Interpolation(32.0, 0.0); 
 		fahrenheitToCelciusConverter.define(212, 100);
 		
