@@ -1,6 +1,7 @@
 package com.marcosavard.commons.util;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,14 +33,21 @@ public class StringUtil {
 		return capitalized;
 	}
 
-	public static String capitalizeWords(String original) {
-		String[] words = original.split(" ");
-
+	/**
+	 * Capitalize each words in sentence
+	 * 
+	 * @param sentence
+	 * @return
+	 */
+	public static String capitalizeWords(String sentence) {
+		List<String> words = Arrays.asList(sentence.split(" ")); 
+		List<String> capitalizedWords = new ArrayList<>(); 
+		
 		for (String word : words) {
-			word = capitalize(word);
+			capitalizedWords.add(capitalize(word));
 		}
 
-		String joined = String.join(" ", words);
+		String joined = String.join(" ", capitalizedWords);
 		return joined;
 	}
 
@@ -169,6 +177,19 @@ public class StringUtil {
 
 		return sb.toString();
 	}
+	
+	/**
+	 * Convert "HELLO_WORLD" to "Hello World" 
+	 * 
+	 * @param original
+	 * @return
+	 */
+	public static String toDisplayString(String original) {
+		String displayed = original.replaceAll("_", " "); 
+		displayed = displayed.toLowerCase(); 
+		displayed = capitalizeWords(displayed); 
+		return displayed;
+	}
 
 	/**
 	 * Truncate source at a given length
@@ -208,7 +229,4 @@ public class StringUtil {
 
 		return target;
 	}
-
-
-
 }
