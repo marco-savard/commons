@@ -61,7 +61,10 @@ public enum ChemicalElement {
 	Xe(131.3)
 	;
 
-	private static final Integer[] INERT_GASES = new Integer[] {2, 10, 18, 36, 54, 86, 118};
+	public enum Category {ALKALI, ALKALINE_EARTH, METAL, METALLOID, NONMETAL, NOBLE_GAS}; 
+	
+	public static final int NOBLE_GAS_GROUP = 18;
+	private static final Integer[] NOBLE_GASES = new Integer[] {2, 10, 18, 36, 54, 86, 118};
 	private double atomicWeight; 
 	
 	private ChemicalElement(double atomicWeight) {
@@ -78,29 +81,76 @@ public enum ChemicalElement {
 
 	public int getAtomicPeriod() {
 		int atomicNumber = getAtomicNumber(); 
-		List<Integer> orbitalList = Arrays.asList(INERT_GASES); 
+		List<Integer> orbitalList = Arrays.asList(NOBLE_GASES); 
 		int orbital = orbitalList.stream().filter(i -> (i >= atomicNumber)).findFirst().orElse(0); 
 		int period = orbitalList.indexOf(orbital) + 1; 
 		return period;
 	}
 
-	public int getAtomicFamily() {
+	public int getAtomicGroup() {
 		int atomicNumber = getAtomicNumber(); 
 		int period = getAtomicPeriod(); 
-		int orbital = (period == 1) ? 0 : INERT_GASES[period-2]; 
-		int family = atomicNumber - orbital;
-		return family;
+		int orbital = (period == 1) ? 0 : NOBLE_GASES[period-2]; 
+		int group = 0; 
+		
+		if (period == 1) {
+			group = (atomicNumber == 1) ? 1 : NOBLE_GAS_GROUP; 
+		} else if (period <= 3) {
+			group = (atomicNumber - orbital <= 2) ? atomicNumber - orbital : NOBLE_GAS_GROUP - NOBLE_GASES[period-1] + atomicNumber;
+		} else {
+			group = (atomicNumber - orbital <= 3) ? atomicNumber - orbital : NOBLE_GAS_GROUP - NOBLE_GASES[period-1] + atomicNumber;
+		}
+		
+		return group;
 	}
 	
-	public boolean isInertGas() {
-		List<Integer> orbitalList = Arrays.asList(INERT_GASES); 
-		return orbitalList.contains(getAtomicNumber()); 
-	}
-
 	public static List<ChemicalElement> getPeriod(int periodNumber) {
 		List<ChemicalElement> allElements = Arrays.asList(ChemicalElement.values()); 
 		List<ChemicalElement> period = allElements.stream().filter(e -> e.getAtomicPeriod() == periodNumber).collect(Collectors.toList()); 
 		return period;
+	}
+
+	public static ChemicalElement findElement(List<ChemicalElement> period, int atomicGroup) {
+		ChemicalElement foundElement = period.stream().filter(e -> e.getAtomicGroup() == atomicGroup).findFirst().orElse(null); 
+		return foundElement;
+	}
+
+	public Category getCategory() {
+		int atomicNumber = getAtomicNumber(); 
+		int period = getAtomicPeriod(); 
+		int group = getAtomicGroup(); 
+		Category category; 
+		Category[] transition = new Category[] {Category.METAL, Category.METALLOID, Category.NONMETAL}; 
+		
+		if (atomicNumber == 1) {
+			category = Category.NONMETAL; 
+		} else if (group == 1) {
+			category = Category.ALKALI; 
+		} else if (group == 2) {
+			category = Category.ALKALINE_EARTH; 
+		} else if (group == NOBLE_GAS_GROUP) {
+			category = Category.NOBLE_GAS; 	
+		} else if (period == 2) {
+			category = transition[getTransitionIndex(group, 13, 13)]; 
+		} else if (period == 3) {
+			category = transition[getTransitionIndex(group, 14, 14)]; 
+		} else if (period == 4) {
+			category = transition[getTransitionIndex(group, 14, 15)]; 
+		} else if (period == 5) {
+			category = transition[getTransitionIndex(group, 15, 16)]; 
+		} else if (period == 6) {
+			category = transition[getTransitionIndex(group, 17, 17)]; 
+		} else {
+			category = Category.METAL ; 
+		}
+		
+		return category;
+	}
+
+	private int getTransitionIndex(int group, int start, int end) {
+		int startIdx = (int)Math.signum(group - start); 
+		int endIdx = (int)Math.signum(group - end); 
+		return (startIdx * Math.abs(endIdx)) + 1;
 	}
 
 	
