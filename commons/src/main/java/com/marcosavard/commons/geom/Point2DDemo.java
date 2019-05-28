@@ -7,7 +7,7 @@ public class Point2DDemo {
 	public static void main(String[] args) {
 		//create a point in Cartesian coordinates, at x=4, y=3
 		int x = 4, y = 3;
-		Point2D pt = new Point2D(x, y);
+		Point2D pt = Point2D.of(x, y);
 		 
 		//get its radius and angle 
 		double radius = pt.getRadius();
@@ -21,7 +21,7 @@ public class Point2DDemo {
 		String msg = MessageFormat.format("{0} equal to {1} : {2}", pt, pt2, equal); 
 		System.out.println(msg);
 		
-		Point2D pole = new Point2D(0, 0); 
+		Point2D pole = Point2D.of(0, 0); 
 		msg = MessageFormat.format("distance of {0} from pole : {1}", pt, pt.distanceFrom(pole)); 
 		System.out.println(msg);
 	

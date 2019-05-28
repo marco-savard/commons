@@ -12,17 +12,17 @@ package com.marcosavard.commons.geom;
  *
  */
 public class Rectangle extends Shape {
-	double x, y, width, height;
+	private final double x, y, width, height;
 	
-	public static Rectangle createRectangle(double x, double y, double width, double height) {
+	public static Rectangle of(double x, double y, double width, double height) {
 		return new Rectangle(x, y, width, height); 
 	}
 	
-	public static Rectangle createSquare(double x, double y, double length) {
+	public static Rectangle squareOf(double x, double y, double length) {
 		return new Rectangle(x, y, length, length); 
 	}
 	
-	public Rectangle(double x, double y, double width, double height) {
+	private Rectangle(double x, double y, double width, double height) {
 		this.x = x;
 		this.y = y; 
 		this.width = width;

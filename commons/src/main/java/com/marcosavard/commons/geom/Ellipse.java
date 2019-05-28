@@ -1,17 +1,17 @@
 package com.marcosavard.commons.geom;
 
 public class Ellipse extends Shape {
-	double centerX, centerY, radiusX, radiusY;
+	private final double centerX, centerY, radiusX, radiusY;
 	
-	public static Ellipse createEllipsis(double centerX, double centerY, double radiusX, double radiusY) {
+	public static Ellipse of(double centerX, double centerY, double radiusX, double radiusY) {
 		return new Ellipse(centerX, centerY, radiusX, radiusY); 
 	}
 	
-	public static Ellipse createCircle(double centerX, double centerY, double radius) {
+	public static Ellipse circleOf(double centerX, double centerY, double radius) {
 		return new Ellipse(centerX, centerY, radius, radius); 
 	}
 	
-	public Ellipse(double centerX, double centerY, double radiusX, double radiusY) {
+	private Ellipse(double centerX, double centerY, double radiusX, double radiusY) {
 		this.centerX = centerX;
 		this.centerY = centerY; 
 		this.radiusX = radiusX;
@@ -69,7 +69,7 @@ public class Ellipse extends Shape {
 	public Rectangle getBounds() {
 		double x = centerX - radiusX;  
 		double y = centerY - radiusY; 
-		Rectangle bounds = new Rectangle(x, y, getWidth(), getHeight()); 
+		Rectangle bounds = Rectangle.of(x, y, getWidth(), getHeight()); 
 		return bounds;
 	}
 

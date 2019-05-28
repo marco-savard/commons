@@ -6,8 +6,18 @@ import com.marcosavard.commons.math.Maths;
 
 public class Point2D {
 	private double x, y; 
+	
+	public static Point2D of(double x, double y) {
+		return new Point2D(x, y);
+	}
 
-	public Point2D(double x, double y) {
+	public static Point2D ofPolarCoordinates(double radius, double angle) {
+		double x = radius * Math.cos(angle); 
+		double y = radius * Math.sin(angle); 
+		return new Point2D(x, y);
+	}
+	
+	private Point2D(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -23,12 +33,6 @@ public class Point2D {
 	public double getAngle() {
 		double angle = Math.atan2(y, x); 
 		return angle;
-	}
-	
-	public static Point2D ofPolarCoordinates(double radius, double angle) {
-		double x = radius * Math.cos(angle); 
-		double y = radius * Math.sin(angle); 
-		return new Point2D(x, y);
 	}
 	
 	public double distanceFrom(Point2D that) {
