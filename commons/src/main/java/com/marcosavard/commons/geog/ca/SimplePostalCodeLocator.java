@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.marcosavard.commons.geog.GeoCoordinate;
-import com.marcosavard.commons.io.CsvReader;
+import com.marcosavard.commons.io.csv.CsvReader;
 
 /**
  * Find a approximate location (latitude/longitude) for a given postal code.
@@ -36,7 +36,7 @@ public class SimplePostalCodeLocator extends PostalCodeLocator {
 			CsvReader cr = new CsvReader(r, 0, ';'); 
 			
 			while (cr.hasNext()) {
-				List<String> values = cr.readLine(); 
+				List<String> values = cr.readNext(); 
 				
 				if (! values.isEmpty()) {
 					readLine(values); 
