@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.marcosavard.commons.io.CsvReader;
+import com.marcosavard.commons.io.csv.CsvReader;
 
 /**
  * A color palette is simply a set of colors identified by a name. 
@@ -56,7 +55,7 @@ public class ColorPalette {
 		List<NamedColor> namedColors = new ArrayList<>();  
 		
 		while (cr.hasNext()) {
-			List<String> line = cr.readLine();
+			List<String> line = cr.readNext();
 			
 			if (! line.isEmpty()) {
 				NamedColor namedColor = readColor(line); 
