@@ -1,4 +1,4 @@
-package com.marcosavard.commons.io;
+package com.marcosavard.commons.io.csv;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public class CsvReaderDemo {
 		cr.readHeaders();
 		
 		while (cr.hasNext()) {
-			List<String> values = cr.readLine();
+			List<String> values = cr.readNext();
 			
 			if (! values.isEmpty()) {
 				System.out.println(values); 
