@@ -6,8 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.marcosavard.commons.io.CsvReader;
+import com.marcosavard.commons.io.csv.CsvReader;
 import com.marcosavard.commons.text.WordDistance;
 
 /**
@@ -73,7 +72,7 @@ public class PatronymeRepository {
 		List<String> columns = cr.readHeaderColumns(); 
 		
 		while (cr.hasNext()) {
-			List<String> line = cr.readLine();
+			List<String> line = cr.readNext();
 			if (! line.isEmpty()) {
 				Patronyme patronyme = readPatronyme(columns, line);
 				patronymes.add(patronyme);

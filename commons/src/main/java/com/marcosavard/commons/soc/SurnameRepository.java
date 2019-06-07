@@ -6,8 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.marcosavard.commons.io.CsvReader;
+import com.marcosavard.commons.io.csv.CsvReader;
 
 public class SurnameRepository {
 	private static final String FEMALE_RESOURCE = "filles1980-2017.csv";
@@ -47,7 +46,7 @@ public class SurnameRepository {
 		List<String> columns = cr.readHeaderColumns(); 
 		
 		while (cr.hasNext()) {
-			List<String> line = cr.readLine();
+			List<String> line = cr.readNext();
 			if (! line.isEmpty()) {
 				readSurname(surnames, columns, line, gender);
 			}
@@ -56,7 +55,7 @@ public class SurnameRepository {
 	}
 
 	private static void readSurname(List<Surname> surnames, List<String> columns, List<String> line, Surname.Gender gender) {
-		String name = readValue(columns, line, "Prénom/Année");
+		String name = readValue(columns, line, "Prï¿½nom/Annï¿½e");
 		int occurrences = Integer.parseInt(readValue(columns, line, "2017"));
 		
 		if (occurrences >= 50) {
