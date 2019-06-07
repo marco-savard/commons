@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import com.marcosavard.commons.geog.ca.qc.RegionAdministrative;
-import com.marcosavard.commons.io.CsvReader;
+import com.marcosavard.commons.io.csv.CsvReader;
 
 public class EducationalNetworkReader {
 	
@@ -36,7 +36,7 @@ public class EducationalNetworkReader {
 		List<String> columns = reader.readHeaderColumns();  
 		
 		while (reader.hasNext()) {
-			List<String> line = reader.readLine(); 
+			List<String> line = reader.readNext(); 
 			if (! line.isEmpty()) {
 				Organization organization = readOrganization(network, columns, line);
 				
