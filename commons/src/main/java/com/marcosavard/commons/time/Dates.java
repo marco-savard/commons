@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
@@ -167,6 +168,10 @@ public class Dates {
    */
   public static Date toDate(LocalDate localDate) {
     return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+  }
+
+  public static Date toDate(ZonedDateTime zonedTime) {
+    return Date.from(zonedTime.toInstant());
   }
 
 
