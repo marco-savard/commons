@@ -139,6 +139,10 @@ public class StringUtil {
     return sb.toString();
   }
 
+  public static String[] splitLine(String str) {
+    return str.split("\\r?\\n");
+  }
+
   public static boolean startsWith(String str, String prefix) {
     boolean startsWith = !isNullOrEmpty(str) && str.startsWith(prefix);
     return startsWith;
