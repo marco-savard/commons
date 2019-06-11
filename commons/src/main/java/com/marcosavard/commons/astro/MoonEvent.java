@@ -1,6 +1,8 @@
 package com.marcosavard.commons.astro;
 
+import java.time.LocalDate;
 import java.util.Date;
+import com.marcosavard.commons.time.Dates;
 
 /**
  * File: MoonCalculation.java Author: Angus McIntyre angus@pobox.com Date: 31.05.96 Updated:
@@ -52,6 +54,34 @@ public class MoonEvent {
     return phase;
   }
 
+  public static Date findNextFullMoon(Date date) {
+    return findNextMoonPhase(date, MoonPhase.PhaseName.FULL);
+  }
+
+  public static Date findNextNewMoon(Date date) {
+    return findNextMoonPhase(date, MoonPhase.PhaseName.NEW);
+  }
+
+  public static Date findNextMoonPhase(Date date, MoonPhase.PhaseName moonPhase) {
+    LocalDate localDate = Dates.toLocalDate(date);
+    Date foundDate = null;
+
+    for (int i = 0; i < MoonPhase.MOON_PERIOD; i++) {
+      Date dateInFuture = Dates.toDate(localDate.plusDays(i));
+      MoonPhase.PhaseName phase = getPhaseOnDate(dateInFuture).getPhaseName();
+      if (moonPhase.equals(phase)) {
+        foundDate = dateInFuture;
+        break;
+      }
+    }
+
+    return foundDate;
+  }
+
+  //
+  // private methods
+  //
+
   private static MoonPhase getPhaseOnDate(int year, int julianDay) {
     // Century number (1979 = 20)
     int cent = (year / 100) + 1;
@@ -88,5 +118,7 @@ public class MoonEvent {
     boolean leap = ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0)));
     return leap;
   }
+
+
 
 }

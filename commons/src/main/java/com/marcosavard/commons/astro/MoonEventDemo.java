@@ -11,6 +11,9 @@ public class MoonEventDemo {
     Date date = Dates.toDate(LocalDate.of(2019, Month.JUNE, 7));
     MoonPhase phase = MoonEvent.getPhaseOnDate(date);
     System.out.println(" Phase : " + phase.toString());
+
+    Date nextFullMoon = MoonEvent.findNextFullMoon(date);
+    System.out.println(" Next full moon : " + nextFullMoon.toString());
   }
 
 }
