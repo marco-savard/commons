@@ -1,12 +1,11 @@
-package com.marcosavard.commons.types;
+package com.marcosavard.commons.ui;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import com.marcosavard.commons.types.Color.Hue;
-import com.marcosavard.commons.types.ColorPalette.NamedColor;
+import com.marcosavard.commons.ui.Color.Hue;
+import com.marcosavard.commons.ui.ColorPalette.NamedColor;
 
 public class ColorPaletteDemo {
 	

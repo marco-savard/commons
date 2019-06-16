@@ -1,4 +1,4 @@
-package com.marcosavard.commons.types;
+package com.marcosavard.commons.ui;
 
 public class ColorDemo {
 

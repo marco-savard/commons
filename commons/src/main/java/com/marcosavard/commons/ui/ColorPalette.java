@@ -1,4 +1,4 @@
-package com.marcosavard.commons.types;
+package com.marcosavard.commons.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,9 +55,9 @@ public class ColorPalette {
     List<NamedColor> namedColors = new ArrayList<>();
 
     while (cr.hasNext()) {
-      List<String> line = cr.readNext();
+      String[] line = cr.readNext();
 
-      if (!line.isEmpty()) {
+      if (line.length > 0) {
         NamedColor namedColor = readColor(line);
         namedColors.add(namedColor);
       }
@@ -66,9 +66,9 @@ public class ColorPalette {
     return namedColors;
   }
 
-  private NamedColor readColor(List<String> line) {
-    String code = line.get(0);
-    String name = line.get(1);
+  private NamedColor readColor(String[] line) {
+    String code = line[0];
+    String name = line[1];
     Color color = Color.of(Integer.decode(code));
     NamedColor namedColor = new NamedColor(color, name);
     return namedColor;
