@@ -1,0 +1,13 @@
+
+ASTRO
+
+Hot to compute the current Julian Day? 
+Hot to compute local sideral time given local time and location ? 
+How to compute the current phase of the Moon ?
+How to compute on which date the next full Moon will occur? 
+How to compute the current position of a star and a given time and location ? 
+How to compute moment of sunrise and sunset for a given date ? 
+
+
+CHEM
+
