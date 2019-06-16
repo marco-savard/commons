@@ -7,8 +7,8 @@ import java.io.Reader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import com.marcosavard.commons.types.Color;
-import com.marcosavard.commons.types.ColorPalette;
+import com.marcosavard.commons.ui.Color;
+import com.marcosavard.commons.ui.ColorPalette;
 
 public class CsvReaderDemo {
 
@@ -36,9 +36,9 @@ public class CsvReaderDemo {
     cr.readHeaders();
 
     while (cr.hasNext()) {
-      List<String> values = cr.readNext();
+      String[] values = cr.readNext();
 
-      if (!values.isEmpty()) {
+      if (values.length > 0) {
         System.out.println(values);
 
         NamedColor namedColor = readColor(values);
@@ -49,9 +49,9 @@ public class CsvReaderDemo {
     return namedColors;
   }
 
-  private static NamedColor readColor(List<String> row) {
-    String code = row.get(0);
-    String name = row.get(1);
+  private static NamedColor readColor(String[] row) {
+    String code = row[0];
+    String name = row[1];
     Color color = Color.of(Integer.decode(code));
     NamedColor namedColor = new NamedColor(color, name);
     return namedColor;

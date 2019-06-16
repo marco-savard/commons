@@ -37,7 +37,7 @@ public class CsvReader {
    * @return the list of columns
    * @throws IOException when I/O exception occurs
    */
-  public List<String> readHeaderColumns() throws IOException {
+  public String[] readHeaderColumns() throws IOException {
     return readHeaders().get(0);
   }
 
@@ -47,11 +47,11 @@ public class CsvReader {
    * @return the list of columns
    * @throws IOException when I/O exception occurs
    */
-  public List<List<String>> readHeaders() throws IOException {
-    List<List<String>> headers = new ArrayList<>();
+  public List<String[]> readHeaders() throws IOException {
+    List<String[]> headers = new ArrayList<>();
 
     for (int h = 0; h < nbHeaders; h++) {
-      List<String> columns = readNext();
+      String[] columns = readNext();
       headers.add(columns);
     }
 
@@ -75,19 +75,32 @@ public class CsvReader {
    * 
    * @throws IOException when I/O exception occurs
    */
-  public List<String> readNext() throws IOException {
-    List<String> line = new ArrayList<>();
+  public String[] readNext() throws IOException {
+    String[] line;
 
     do {
       line = readNotEmptyLine();
-    } while (line.isEmpty() && hasNext);
+    } while (line.length == 0 && hasNext);
 
     return line;
   }
 
+  public List<String[]> readAll() throws IOException {
+    List<String[]> lines = new ArrayList<>();
+
+    do {
+      String[] line = readNext();
+      if (line.length > 0) {
+        lines.add(line);
+      }
+    } while (hasNext());
+
+    return lines;
+  }
+
 
   // private method
-  private List<String> readNotEmptyLine() throws IOException {
+  private String[] readNotEmptyLine() throws IOException {
     List<String> values = new ArrayList<>();
     StringBuilder sb = new StringBuilder();
     boolean inQuotes = false;
@@ -116,6 +129,14 @@ public class CsvReader {
       hasNext = false;
     }
 
-    return values;
+    String[] row = new String[values.size()];
+    row = values.toArray(row);
+    return row;
   }
+
+  public void close() throws IOException {
+    bf.close();
+  }
+
+
 }

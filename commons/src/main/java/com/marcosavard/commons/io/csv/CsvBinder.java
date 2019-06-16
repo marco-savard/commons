@@ -31,9 +31,9 @@ public class CsvBinder<T> {
 
     do {
       try {
-        List<String> values = csvReader.readNext();
+        String[] values = csvReader.readNext();
 
-        if (!values.isEmpty()) {
+        if (values.length > 0) {
           T row = readRow(values);
           rows.add(row);
         }
@@ -46,20 +46,20 @@ public class CsvBinder<T> {
   }
 
   private void readHeader() throws IOException {
-    List<String> cols = csvReader.readHeaderColumns();
+    String[] cols = csvReader.readHeaderColumns();
 
-    for (int i = 0; i < cols.size(); i++) {
-      columnIndexByFieldName.put(cols.get(i), i);
+    for (int i = 0; i < cols.length; i++) {
+      columnIndexByFieldName.put(cols[i], i);
     }
   }
 
-  private T readRow(List<String> values) throws InstantiationException, IllegalAccessException {
+  private T readRow(String[] values) throws InstantiationException, IllegalAccessException {
     T row = (T) claz.newInstance();
 
     for (Field f : claz.getDeclaredFields()) {
       String fieldName = f.getName();
       int idx = columnIndexByFieldName.get(fieldName);
-      String value = values.get(idx);
+      String value = values[idx];
       f.setAccessible(true);
       f.set(row, value);
     }
