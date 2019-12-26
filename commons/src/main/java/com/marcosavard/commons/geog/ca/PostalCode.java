@@ -37,6 +37,22 @@ public class PostalCode implements Serializable {
     return _postalCode;
   }
 
+  @Override
+  public boolean equals(Object other) {
+    boolean equal = false;
+
+    if (other instanceof PostalCode) {
+      PostalCode that = (PostalCode) other;
+      equal = this._postalCode.equals(that._postalCode);
+    }
+    return equal;
+  }
+
+  @Override
+  public int hashCode() {
+    return _postalCode.hashCode();
+  }
+
   public String toDisplayString() {
     int len = (_postalCode == null) ? 0 : _postalCode.length();
     String display = _postalCode;

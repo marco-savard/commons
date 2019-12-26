@@ -7,6 +7,18 @@ public class PostalCodeDemo {
   private static final String[] POSTAL_CODES = new String[] {"A0A B1A", "G1A A1A"};
 
   public static void main(String[] args) {
+    demoPostalCodeEquality();
+    findProvinceByPostalCode();
+  }
+
+  private static void demoPostalCodeEquality() {
+    PostalCode postalCode1 = PostalCode.of("G1A A1A ");
+    PostalCode postalCode2 = PostalCode.of("g1aa1a");
+    boolean equal = postalCode1.equals(postalCode2);
+    System.out.println("Are equal : " + equal);
+  }
+
+  private static void findProvinceByPostalCode() {
     for (String code : POSTAL_CODES) {
       PostalCode postalCode = PostalCode.of(code);
 
