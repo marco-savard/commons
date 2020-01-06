@@ -21,7 +21,7 @@ public class CsvBinder<T> {
   private Map<String, Integer> columnIndexByFieldName = new HashMap<>();
 
   public CsvBinder(Reader reader, char separator, Class<T> claz) {
-    this.csvReader = new CsvReader(reader, 1, separator);
+    this.csvReader = CsvReader.of(reader).withHeader(1, separator).withSeparator(separator);
     this.claz = claz;
   }
 

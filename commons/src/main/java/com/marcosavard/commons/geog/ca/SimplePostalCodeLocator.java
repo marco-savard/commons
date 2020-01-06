@@ -33,7 +33,7 @@ public class SimplePostalCodeLocator extends PostalCodeLocator {
     try {
       InputStream input = SimplePostalCodeLocator.class.getResourceAsStream("postalCodes.csv");
       Reader r = new InputStreamReader(input, "UTF-8");
-      CsvReader cr = new CsvReader(r, 0, ';');
+      CsvReader cr = CsvReader.of(r).withHeader(0, ';');
 
       while (cr.hasNext()) {
         String[] values = cr.readNext();

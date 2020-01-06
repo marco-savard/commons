@@ -50,7 +50,7 @@ public class ColorPalette {
   }
 
   private List<NamedColor> readColors(Reader reader) throws IOException {
-    CsvReader cr = new CsvReader(reader, 1, ';');
+    CsvReader cr = CsvReader.of(reader).withSeparator(';');
     cr.readHeaderColumns();
     List<NamedColor> namedColors = new ArrayList<>();
 

@@ -32,11 +32,11 @@ public class CsvReaderDemo {
 
   private static List<NamedColor> readColors(Reader reader) throws IOException {
     List<NamedColor> namedColors = new ArrayList<>();
-    CsvReader cr = new CsvReader(reader, 1, ';');
+    CsvReader cr = CsvReader.of(reader);
     cr.readHeaders();
 
     while (cr.hasNext()) {
-      String[] values = cr.readNext();
+      String[] values = cr.readNext(';');
 
       if (values.length > 0) {
         System.out.println(values);

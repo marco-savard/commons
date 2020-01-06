@@ -6,7 +6,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ContentReader {
-  public String readContent(Class claz, String filename) {
+  private Class claz;
+  private String filename;
+
+  public ContentReader(Class claz, String filename) {
+    this.claz = claz;
+    this.filename = filename;
+  }
+
+  public String readContent() {
     URL url = claz.getResource(filename);
     String content;
 

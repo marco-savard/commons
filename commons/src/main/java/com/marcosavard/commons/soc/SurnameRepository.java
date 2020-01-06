@@ -33,7 +33,7 @@ public class SurnameRepository {
     Reader r = new InputStreamReader(input);
 
     try {
-      CsvReader cr = new CsvReader(r, 1, ',');
+      CsvReader cr = CsvReader.of(r).withSeparator(',').withHeader(1, ',');
       List<Surname> surnames = readSurnames(cr, gender);
       allSurnames.addAll(surnames);
     } catch (IOException ex) {

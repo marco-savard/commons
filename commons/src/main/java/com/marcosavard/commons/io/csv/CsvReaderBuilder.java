@@ -17,7 +17,8 @@ public class CsvReaderBuilder {
   }
 
   public CsvReader build() {
-    CsvReader csvReader = new CsvReader(reader, nbHeader, separator);
+    CsvReader csvReader =
+        CsvReader.of(reader).withHeader(nbHeader, separator).withSeparator(separator);
     return csvReader;
   }
 

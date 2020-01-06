@@ -2,6 +2,8 @@ package com.marcosavard.commons.io.csv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +16,37 @@ import java.util.List;
  */
 public class CsvReader {
   private BufferedReader bf;
-  private int nbHeaders;
-  private char separator;
+  private int nbHeaders = 1;
+  private char headerSeparator = ';', separator = ';';
   private boolean hasNext = true;
+
+  public static CsvReader of(Class<?> claz, String filename) {
+    InputStream input = claz.getResourceAsStream(filename);
+    CsvReader csvReader = of(input);
+    return csvReader;
+  }
+
+  public static CsvReader of(InputStream input) {
+    Reader reader = new InputStreamReader(input);
+    CsvReader csvReader = of(reader);
+    return csvReader;
+  }
+
+  public static CsvReader of(Reader reader) {
+    CsvReader csvReader = new CsvReader(reader, 0, ';');
+    return csvReader;
+  }
+
+  public CsvReader withHeader(int nbHeaders, char headerSeparator) {
+    this.nbHeaders = nbHeaders;
+    this.headerSeparator = headerSeparator;
+    return this;
+  }
+
+  public CsvReader withSeparator(char separator) {
+    this.separator = separator;
+    return this;
+  }
 
   /**
    * Builds a CSV reader from a standard Reader instance.
@@ -25,7 +55,7 @@ public class CsvReader {
    * @param nbHeaders number of lines to skip
    * @param separator such as ; , or |
    */
-  public CsvReader(Reader reader, int nbHeaders, char separator) {
+  private CsvReader(Reader reader, int nbHeaders, char separator) {
     this.bf = new BufferedReader(reader);
     this.separator = separator;
     this.nbHeaders = nbHeaders;
@@ -51,7 +81,7 @@ public class CsvReader {
     List<String[]> headers = new ArrayList<>();
 
     for (int h = 0; h < nbHeaders; h++) {
-      String[] columns = readNext();
+      String[] columns = readNext(this.headerSeparator);
       headers.add(columns);
     }
 
@@ -76,10 +106,14 @@ public class CsvReader {
    * @throws IOException when I/O exception occurs
    */
   public String[] readNext() throws IOException {
+    return readNext(this.separator);
+  }
+
+  public String[] readNext(char separator) throws IOException {
     String[] line;
 
     do {
-      line = readNotEmptyLine();
+      line = readNotEmptyLine(separator);
     } while (line.length == 0 && hasNext);
 
     return line;
@@ -89,7 +123,7 @@ public class CsvReader {
     List<String[]> lines = new ArrayList<>();
 
     do {
-      String[] line = readNext();
+      String[] line = readNext(this.separator);
       if (line.length > 0) {
         lines.add(line);
       }
@@ -100,7 +134,7 @@ public class CsvReader {
 
 
   // private method
-  private String[] readNotEmptyLine() throws IOException {
+  private String[] readNotEmptyLine(char separator) throws IOException {
     List<String> values = new ArrayList<>();
     StringBuilder sb = new StringBuilder();
     boolean inQuotes = false;
@@ -114,7 +148,7 @@ public class CsvReader {
         if (ch == '\"') {
           inQuotes = !inQuotes;
         } else if ((ch == separator) && !inQuotes) {
-          values.add(sb.toString());
+          values.add(sb.toString().trim());
           sb.setLength(0);
         } else {
           sb.append(ch);
@@ -122,7 +156,7 @@ public class CsvReader {
       }
 
       if (!sb.toString().isEmpty()) {
-        values.add(sb.toString());
+        values.add(sb.toString().trim());
       }
 
     } else {
@@ -137,6 +171,7 @@ public class CsvReader {
   public void close() throws IOException {
     bf.close();
   }
+
 
 
 }
