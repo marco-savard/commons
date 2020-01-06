@@ -31,7 +31,7 @@ public class PatronymeRepository {
       Reader r = new InputStreamReader(input);
 
       try {
-        CsvReader cr = new CsvReader(r, 1, ';');
+        CsvReader cr = CsvReader.of(r);
         patronymes = readPatronymes(cr);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
