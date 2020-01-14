@@ -4,71 +4,86 @@ import java.io.PrintStream;
 import java.text.MessageFormat;
 
 /**
- * A utility class to measure long-running operation and identify application's
- * bottlenecks.
+ * A utility class to measure long-running operation and identify application's bottlenecks.
  * 
  * @author Marco
  *
  */
 public class StopWatch {
-	private PrintStream output;
+  private PrintStream output;
+  private long cumulativeTime = 0;
+  private long startedAt, pausedAt;
 
-	public StopWatch(PrintStream out) {
-		this.output = out;
-	}
+  public StopWatch() {
+    this(System.out);
+  }
 
-	private long cumulativeTime = 0;
-	private long startedAt, pausedAt;
+  public StopWatch(PrintStream out) {
+    this.output = out;
+  }
 
-	/**
-	 * Start the stopwatch
-	 */
-	public void start() {
-		reset();
-		resume();
-	}
+  /**
+   * Start the stopwatch
+   */
+  public void start() {
+    reset();
+    resume();
+    println("  ..started");
+  }
 
-	/**
-	 * Pause the stopwatch
-	 */
-	public void pause() {
-		pausedAt = System.currentTimeMillis();
-		cumulativeTime += (pausedAt - startedAt);
-	}
+  public void step() {
+    println("  ..step");
+  }
 
-	/**
-	 * Resume the stopwatch
-	 */
-	public void resume() {
-		startedAt = System.currentTimeMillis();
-	}
+  /**
+   * Pause the stopwatch
+   */
+  public void pause() {
+    pausedAt = System.currentTimeMillis();
+    cumulativeTime += (pausedAt - startedAt);
+  }
 
-	/**
-	 * Return the cumulative time
-	 * 
-	 * @return cumulative time
-	 */
-	public long getTime() {
-		return cumulativeTime;
-	}
+  /**
+   * Resume the stopwatch
+   */
+  public void resume() {
+    startedAt = System.currentTimeMillis();
+  }
 
-	/**
-	 * Reset the stopwatch
-	 */
-	public void reset() {
-		cumulativeTime = 0L;
-	}
+  public void end() {
+    pause();
+    println("  ..ended");
+  }
 
-	@Override
-	public String toString() {
-		pause();
-		String text = "[" + getTime() + "ms]";
-		resume();
-		return text;
-	}
+  /**
+   * Return the cumulative time
+   * 
+   * @return cumulative time
+   */
+  public long getTime() {
+    return cumulativeTime;
+  }
 
-	public void println(String text) {
-		String msg = MessageFormat.format("{0} {1}", this, text);
-		output.println(msg);
-	}
+  /**
+   * Reset the stopwatch
+   */
+  public void reset() {
+    cumulativeTime = 0L;
+  }
+
+  @Override
+  public String toString() {
+    pause();
+    String text = "[" + getTime() + "ms]";
+    resume();
+    return text;
+  }
+
+  public void println(String text) {
+    String msg = MessageFormat.format("{0} {1}", this, text);
+    output.println(msg);
+  }
+
+
+
 }
