@@ -131,9 +131,8 @@ public class MoneyAmount {
 
   @Override
   public String toString() {
-    NumberFormat formatter = NumberFormat.getCurrencyInstance();
-    formatter.setCurrency(currency);
-    String formatted = formatter.format(value);
+    NumberFormat format = NumberFormat.getCurrencyInstance();
+    String formatted = format.format(value);
     return formatted;
   }
 
