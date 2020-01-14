@@ -1,19 +1,21 @@
-package com.marcosavard.commons.util;
+package com.marcosavard.commons.lang.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Introspection {
   public static String toString(Object object) {
     Field[] fields = object.getClass().getDeclaredFields();
-    Map<String, String> valuesByField = new TreeMap<>();
+    Map<String, String> valuesByField = new LinkedHashMap<>();
 
     for (Field f : fields) {
+      boolean isStatic = Modifier.isStatic(f.getModifiers());
       boolean isTransient = Modifier.isTransient(f.getModifiers());
+      boolean printable = (!isStatic) && (!isTransient);
 
-      if (!isTransient) {
+      if (printable) {
         try {
           f.setAccessible(true);
           String key = f.getName();
