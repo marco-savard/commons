@@ -3,6 +3,7 @@ package com.marcosavard.commons.io.csv;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,11 +58,15 @@ public class CsvBinder<T> {
     T row = (T) claz.newInstance();
 
     for (Field f : claz.getDeclaredFields()) {
-      String fieldName = f.getName();
-      int idx = columnIndexByFieldName.get(fieldName);
-      String value = values[idx];
-      f.setAccessible(true);
-      f.set(row, value);
+      boolean isStatic = Modifier.isStatic(f.getModifiers());
+
+      if (!isStatic) {
+        String fieldName = f.getName();
+        int idx = columnIndexByFieldName.get(fieldName);
+        String value = values[idx];
+        f.setAccessible(true);
+        f.set(row, value);
+      }
     }
 
     return row;

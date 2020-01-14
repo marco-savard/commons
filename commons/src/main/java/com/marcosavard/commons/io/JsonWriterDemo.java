@@ -21,7 +21,7 @@ public class JsonWriterDemo {
       StringWriter sw = new StringWriter();
       JsonWriter jw = builder.build(sw);
       jw.print(map);
-      sw.close();
+      jw.close();
       System.out.println(sw.toString());
 
     } catch (IOException e) {
