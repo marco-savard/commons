@@ -24,6 +24,14 @@ public class GeoCoordinate implements Serializable {
     DECIMAL, DEG_MIN_SEC, DEG_MIN_SEC_HTML
   };
 
+  public enum LatitudeHemisphere {
+    NORTH, SOUTH
+  };
+
+  public enum LongitudeHemisphere {
+    EAST, WEST
+  };
+
   private final Latitude latitude;
   private final Longitude longitude;
 
@@ -181,12 +189,15 @@ public class GeoCoordinate implements Serializable {
       return new Latitude(degree);
     }
 
-    public static Latitude of(int degree, int minute) {
-      return of(degree, minute, 0.0);
+    public static Latitude of(int degree, int minute, LatitudeHemisphere hemisphere) {
+      return of(degree, minute, 0.0, hemisphere);
     }
 
-    public static Latitude of(int degree, int minute, double second) {
-      return new Latitude(degree + (minute / 60.0) + (second / 3600.0));
+    public static Latitude of(int degree, int minute, double second,
+        LatitudeHemisphere hemisphere) {
+      double absDegrees = degree + (minute / 60.0) + (second / 3600.0);
+      double sign = hemisphere.equals(LatitudeHemisphere.NORTH) ? 1 : -1;
+      return Latitude.of(absDegrees * sign);
     }
 
     private Latitude(double value) {
@@ -206,8 +217,6 @@ public class GeoCoordinate implements Serializable {
     public double getValue() {
       return this.value;
     }
-
-
   }
 
   public static class Longitude {
@@ -217,12 +226,15 @@ public class GeoCoordinate implements Serializable {
       return new Longitude(degree);
     }
 
-    public static Longitude of(int degree, int minute) {
-      return of(degree, minute, 0.0);
+    public static Longitude of(int degree, int minute, LongitudeHemisphere hemisphere) {
+      return Longitude.of(degree, minute, 0, hemisphere);
     }
 
-    public static Longitude of(int degree, int minute, double second) {
-      return new Longitude(degree + (minute / 60.0) + (second / 3600.0));
+    public static Longitude of(int degree, int minute, double second,
+        LongitudeHemisphere hemisphere) {
+      double absDegrees = degree + (minute / 60.0) + (second / 3600.0);
+      double sign = hemisphere.equals(LongitudeHemisphere.EAST) ? 1 : -1;
+      return Longitude.of(absDegrees * sign);
     }
 
     private Longitude(double value) {
