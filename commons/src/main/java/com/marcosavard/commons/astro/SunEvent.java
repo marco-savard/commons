@@ -1,5 +1,6 @@
 package com.marcosavard.commons.astro;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.TimeZone;
 import com.marcosavard.commons.geog.GeoCoordinate;
@@ -26,6 +27,12 @@ public class SunEvent {
   private long sunriseTimeMs = 0, sunsetTimeMs = 0;
 
   public SunEvent(GeoCoordinate coord, TimeZone timezone, Date date) {
+    this.coordinate = coord;
+    this.timezone = timezone;
+    computeSunEvents(date);
+  }
+
+  public SunEvent(GeoCoordinate coord, TimeZone timezone, LocalDate date) {
     this.coordinate = coord;
     this.timezone = timezone;
     computeSunEvents(date);
@@ -58,15 +65,18 @@ public class SunEvent {
     return angle;
   }
 
-
   private void computeSunEvents(Date date) {
-    int year = 1900 + date.getYear();
-    int month = 1 + date.getMonth();
-    int day = date.getDate();
+    computeSunEvents(AstroDates.toLocalDate(date));
+  }
+
+  private void computeSunEvents(LocalDate date) {
+    int year = date.getYear();
+    int month = date.getMonthValue();
+    int day = date.getDayOfMonth();
     dayOfYear = computeDayOfYear(year, month, day);
     Date midnight = new Date(year - 1900, month - 1, day);
     long midnightTime = midnight.getTime();
-    boolean daylightTime = timezone.inDaylightTime(date);
+    boolean daylightTime = timezone.inDaylightTime(AstroDates.toDate(date));
 
     latitude = coordinate.getLatitude().getValue();
     double longitudeHour = coordinate.getLongitude().getValue() / 15.0;

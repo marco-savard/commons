@@ -1,8 +1,9 @@
 package com.marcosavard.commons.astro;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import com.marcosavard.commons.time.Dates;
 
 /**
  * File: MoonCalculation.java Author: Angus McIntyre angus@pobox.com Date: 31.05.96 Updated:
@@ -38,10 +39,10 @@ public class MoonEvent {
       {-1, 30, 58, 89, 119, 150, 180, 211, 241, 272, 303, 333};
   private static int SIX_PERIODS = (int) (6 * MoonPhase.MOON_PERIOD);
 
-  public static MoonPhase getPhaseOnDate(Date date) {
-    int year = 1900 + date.getYear();
-    int monthIdx = date.getMonth();
-    int day = date.getDate();
+  public static MoonPhase getPhaseOnDate(LocalDate date) {
+    int year = date.getYear();
+    int monthIdx = date.getMonthValue() - 1;
+    int day = date.getDayOfMonth();
 
     int julianDay = day + JULIAN_DATES[monthIdx];
 
@@ -54,20 +55,28 @@ public class MoonEvent {
     return phase;
   }
 
-  public static Date findNextFullMoon(Date date) {
+  public static MoonPhase getPhaseOnDate(Date date) {
+    MoonPhase phase = getPhaseOnDate(toLocalDate(date));
+    return phase;
+  }
+
+  public static LocalDate findNextFullMoon(LocalDate date) {
     return findNextMoonPhase(date, MoonPhase.PhaseName.FULL);
   }
 
-  public static Date findNextNewMoon(Date date) {
+  public static LocalDate findNextNewMoon(LocalDate date) {
     return findNextMoonPhase(date, MoonPhase.PhaseName.NEW);
   }
 
   public static Date findNextMoonPhase(Date date, MoonPhase.PhaseName moonPhase) {
-    LocalDate localDate = Dates.toLocalDate(date);
-    Date foundDate = null;
+    return toDate(findNextMoonPhase(toLocalDate(date), moonPhase));
+  }
+
+  public static LocalDate findNextMoonPhase(LocalDate localDate, MoonPhase.PhaseName moonPhase) {
+    LocalDate foundDate = null;
 
     for (int i = 0; i < MoonPhase.MOON_PERIOD; i++) {
-      Date dateInFuture = Dates.toDate(localDate.plusDays(i));
+      LocalDate dateInFuture = localDate.plusDays(i);
       MoonPhase.PhaseName phase = getPhaseOnDate(dateInFuture).getPhaseName();
       if (moonPhase.equals(phase)) {
         foundDate = dateInFuture;
@@ -78,6 +87,13 @@ public class MoonEvent {
     return foundDate;
   }
 
+  public static LocalDate toLocalDate(Date date) {
+    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+  }
+
+  public static Date toDate(LocalDate localDate) {
+    return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+  }
   //
   // private methods
   //

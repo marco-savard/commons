@@ -22,7 +22,8 @@ public class SunEventDemo {
     LocalDate startDate = LocalDate.of(2019, Month.JUNE, 1);
 
     for (int i = 0; i <= 28; i++) {
-      Date date = Dates.toDate(startDate.plusDays(i));
+      LocalDate currentDate = startDate.plusDays(i);
+      Date date = Dates.toDate(currentDate);
       SunEvent sunEvent = new SunEvent(qc, timezone, date);
       Date sunrise = sunEvent.getSunrise();
       Date sunset = sunEvent.getSunset();
@@ -35,6 +36,20 @@ public class SunEventDemo {
       String msg =
           MessageFormat.format("  {0} sunrise at {1}, sunset at {2} ({3})", day, sr, ss, tz);
       System.out.println(msg);
+
+      // part 2
+      sunEvent = new SunEvent(qc, timezone, currentDate);
+      sunrise = sunEvent.getSunrise();
+      sunset = sunEvent.getSunset();
+
+      day = dayFormatter.format(date);
+      sr = timeFormatter.format(sunrise);
+      ss = timeFormatter.format(sunset);
+      tz = tzFormatter.format(date);
+
+      msg = MessageFormat.format("  {0} sunrise at {1}, sunset at {2} ({3})", day, sr, ss, tz);
+      System.out.println(msg);
+      System.out.println();
     }
   }
 }

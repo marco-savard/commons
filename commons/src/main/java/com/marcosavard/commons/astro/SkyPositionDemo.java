@@ -1,5 +1,7 @@
 package com.marcosavard.commons.astro;
 
+import static com.marcosavard.commons.geog.GeoCoordinate.LatitudeHemisphere.NORTH;
+import static com.marcosavard.commons.geog.GeoCoordinate.LongitudeHemisphere.WEST;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
@@ -18,20 +20,21 @@ public class SkyPositionDemo {
   }
 
   private static void displayLondonUK() {
-    System.out.println("Position of some stars above London on August 10st, 1998 at 23:10");
+    System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
 
     // as seen at this location
-    GeoCoordinate london = GeoCoordinate.of(Latitude.of(52, 30), Longitude.of(1, 55));
+    GeoCoordinate birminghamUK =
+        GeoCoordinate.of(Latitude.of(52, 30, NORTH), Longitude.of(1, 55, WEST));
 
     // at this moment
     LocalDateTime localTime = LocalDateTime.of(1998, 8, 10, 23, 10, 0); // 2310 UT, 10th August 1998
     ZonedDateTime zonedTime = localTime.atZone(ZoneId.of("America/New_York"));
     Date moment = Dates.toDate(zonedTime);
-    double lst = LocalSideralTime.getLst(moment, london.getLongitude().getValue());
+    double lst = LocalSideralTime.of(moment, birminghamUK.getLongitude().getValue());
     SkyPosition skyPosition;
 
     // compute sky position
-    skyPosition = SkyPosition.compute(StarCoordinate.M13, london, lst);
+    skyPosition = SkyPosition.of(StarCoordinate.M13, birminghamUK, lst);
     System.out.println("  ..position of M13: " + skyPosition);
     System.out.println();
   }
@@ -40,29 +43,29 @@ public class SkyPositionDemo {
     System.out.println("Position of some stars above Quebec City on January 1st, 2019 at 6PM");
 
     // as seen at this location
-    GeoCoordinate qcCity = GeoCoordinate.of(Latitude.of(46, 49), Longitude.of(-71, 13));
+    GeoCoordinate qcCity = GeoCoordinate.of(Latitude.of(46, 49, NORTH), Longitude.of(71, 13, WEST));
 
     // at this moment
     LocalDateTime localTime = LocalDateTime.of(2019, Month.JANUARY, 1, 18, 0, 0); // Jan1st, 6PM
     ZonedDateTime zonedTime = localTime.atZone(ZoneId.of("America/New_York"));
     Date moment = Dates.toDate(zonedTime);
-    double lst = LocalSideralTime.getLst(moment, qcCity.getLongitude().getValue());
+    double lst = LocalSideralTime.of(moment, qcCity.getLongitude().getValue());
     SkyPosition skyPosition;
 
     // compute sky position
-    skyPosition = SkyPosition.compute(StarCoordinate.POLARIS, qcCity, lst);
+    skyPosition = SkyPosition.of(StarCoordinate.POLARIS, qcCity, lst);
     System.out.println("  ..position of Polaris: " + skyPosition);
 
-    skyPosition = SkyPosition.compute(StarCoordinate.URSA_MAJOR_EPSILON, qcCity, lst);
+    skyPosition = SkyPosition.of(StarCoordinate.URSA_MAJOR_EPSILON, qcCity, lst);
     System.out.println("  ..position of Ursa Major Epsilon: " + skyPosition);
 
-    skyPosition = SkyPosition.compute(StarCoordinate.SIRIUS, qcCity, lst);
+    skyPosition = SkyPosition.of(StarCoordinate.SIRIUS, qcCity, lst);
     System.out.println("  ..position of Sirius: " + skyPosition);
 
-    skyPosition = SkyPosition.compute(StarCoordinate.ANTARES, qcCity, lst);
+    skyPosition = SkyPosition.of(StarCoordinate.ANTARES, qcCity, lst);
     System.out.println("  ..position of Antares: " + skyPosition);
 
-    skyPosition = SkyPosition.compute(StarCoordinate.CRUX_ALPHA, qcCity, lst);
+    skyPosition = SkyPosition.of(StarCoordinate.CRUX_ALPHA, qcCity, lst);
     System.out.println("  ..position of Crux Alpha: " + skyPosition);
     System.out.println();
   }

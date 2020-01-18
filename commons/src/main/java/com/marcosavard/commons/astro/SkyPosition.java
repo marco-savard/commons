@@ -21,21 +21,28 @@ public class SkyPosition {
   }
 
   // compute position in the sky of star, as seen from a give coordinate, at lst
-  public static SkyPosition compute(StarCoordinate star, GeoCoordinate coord, double lst) {
-    double lha = lst - star.getRightAscension().toHms();
-    double dec = Math.toRadians(star.getDeclination().toDegrees());
-    double lat = Math.toRadians(coord.getLatitude().getValue());
-    double har = Math.toRadians(lha);
+  public static SkyPosition of(StarCoordinate star, GeoCoordinate coord, double lst) {
+    double ra = star.getRightAscension().toDegrees();
+    double dec = star.getDeclination().toDegrees();
+    double lat = coord.getLatitude().getValue();
+    double ha = lst - ra;
 
-    double sinh = Math.sin(dec) * Math.sin(lat) + Math.cos(dec) * Math.cos(lat) * Math.cos(har);
-    double h = Math.asin(sinh);
-    double x = (Math.sin(dec) - Math.sin(h) * Math.sin(lat));
-    double y = (Math.cos(h) * Math.cos(lat));
-    double cosAz = x / y;
-    double az = Math.acos(cosAz);
-    az = (sinh < 0) ? az : Math.PI * 2 - az;
+    double sinDec = Math.sin(Math.toRadians(dec));
+    double cosDec = Math.cos(Math.toRadians(dec));
+    double sinLat = Math.sin(Math.toRadians(lat));
+    double cosLat = Math.cos(Math.toRadians(lat));
+    double sinHa = Math.asin(Math.toRadians(lat));
+    double cosHa = Math.cos(Math.toRadians(ha));
 
-    SkyPosition skyPosition = new SkyPosition(Math.toDegrees(h), Math.toDegrees(az));
+    double sinAlt = (sinDec * sinLat) + (cosDec * cosLat * cosHa);
+    double alt = Math.toDegrees(Math.asin(sinAlt));
+    double cosAlt = Math.cos(Math.toRadians(alt));
+
+    double cosA = (sinDec - sinAlt * sinLat) / (cosAlt * cosLat);
+    double a = Math.toDegrees(Math.acos(cosA));
+    double az = (sinHa < 0) ? a : 360 - a;
+
+    SkyPosition skyPosition = new SkyPosition(alt, az);
     return skyPosition;
   }
 
