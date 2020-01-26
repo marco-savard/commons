@@ -5,19 +5,19 @@ import java.text.MessageFormat;
 public class StarCoordinate {
   // some famous stars
   public static final StarCoordinate ANTARES =
-      StarCoordinate.of(RightAscension.of(16, 29, 24.5), Declination.of(-26, 25, 55.2));
+      StarCoordinate.of(RightAscension.of(16, 29, 24.5), Declination.of(-26, -25, -55.2));
   public static final StarCoordinate BETELGEUSE =
       StarCoordinate.of(RightAscension.of(5, 55, 10.3), Declination.of(7, 24, 25.4));
   public static final StarCoordinate CENTAURI_ALPHA =
-      StarCoordinate.of(RightAscension.of(14, 39, 36.5), Declination.of(-60, 50, 2.3));
+      StarCoordinate.of(RightAscension.of(14, 39, 36.5), Declination.of(-60, -50, -2.3));
   public static final StarCoordinate CRUX_ALPHA =
-      StarCoordinate.of(RightAscension.of(12, 26, 35.9), Declination.of(-63, 5, 56.7));
+      StarCoordinate.of(RightAscension.of(12, 26, 35.9), Declination.of(-63, -5, -56.7));
   public static final StarCoordinate M13 =
       StarCoordinate.of(RightAscension.of(16, 41, 42), Declination.of(36, 28, 0));
   public static final StarCoordinate POLARIS =
       StarCoordinate.of(RightAscension.of(2, 31, 48.7), Declination.of(89, 15, 51));
   public static final StarCoordinate SIRIUS =
-      StarCoordinate.of(RightAscension.of(6, 45, 8.9), Declination.of(-16, 42, 58));
+      StarCoordinate.of(RightAscension.of(6, 45, 8.9), Declination.of(-16, -42, -58));
   public static final StarCoordinate URSA_MAJOR_EPSILON =
       StarCoordinate.of(RightAscension.of(12, 54, 1.6), Declination.of(55, 57, 34.4));
 

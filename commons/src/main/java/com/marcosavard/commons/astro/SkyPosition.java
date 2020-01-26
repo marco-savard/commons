@@ -1,7 +1,6 @@
 package com.marcosavard.commons.astro;
 
 import java.text.MessageFormat;
-import com.marcosavard.commons.geog.GeoCoordinate;
 
 public class SkyPosition {
   private static final char DEGREE = '\u00B0';
@@ -21,17 +20,16 @@ public class SkyPosition {
   }
 
   // compute position in the sky of star, as seen from a give coordinate, at lst
-  public static SkyPosition of(StarCoordinate star, GeoCoordinate coord, double lst) {
+  public static SkyPosition of(StarCoordinate star, double latitude, double lst) {
     double ra = star.getRightAscension().toDegrees();
     double dec = star.getDeclination().toDegrees();
-    double lat = coord.getLatitude().getValue();
     double ha = lst - ra;
 
     double sinDec = Math.sin(Math.toRadians(dec));
     double cosDec = Math.cos(Math.toRadians(dec));
-    double sinLat = Math.sin(Math.toRadians(lat));
-    double cosLat = Math.cos(Math.toRadians(lat));
-    double sinHa = Math.asin(Math.toRadians(lat));
+    double sinLat = Math.sin(Math.toRadians(latitude));
+    double cosLat = Math.cos(Math.toRadians(latitude));
+    double sinHa = Math.asin(Math.toRadians(latitude));
     double cosHa = Math.cos(Math.toRadians(ha));
 
     double sinAlt = (sinDec * sinLat) + (cosDec * cosLat * cosHa);

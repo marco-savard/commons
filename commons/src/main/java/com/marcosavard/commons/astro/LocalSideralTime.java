@@ -42,7 +42,8 @@ public class LocalSideralTime {
 
   private static double toDecimalHours(Date datetime) {
     double decimalHours = datetime.getHours();
-    decimalHours += datetime.getMinutes() / 60.0;
+    int minutes = datetime.getMinutes() + datetime.getTimezoneOffset();
+    decimalHours += minutes / 60.0;
     decimalHours += datetime.getSeconds() / 3600.0;
     return decimalHours;
   }

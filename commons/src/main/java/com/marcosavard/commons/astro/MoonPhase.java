@@ -3,7 +3,7 @@ package com.marcosavard.commons.astro;
 import com.marcosavard.commons.util.ToStringBuilder;
 
 public class MoonPhase {
-  public static final double MOON_PERIOD = 29.5; // Moon's period in days
+  public static final double MOON_PERIOD = 29.53; // Moon's period in days (synodic)
   private double percent;
 
   public enum Tendency {
@@ -36,7 +36,7 @@ public class MoonPhase {
   }
 
   public Tendency getTendency() {
-    Tendency tendency = (percent < 50) ? Tendency.INCREASING : Tendency.DECREASING;
+    Tendency tendency = (percent < 50.0) ? Tendency.INCREASING : Tendency.DECREASING;
     return tendency;
   }
 

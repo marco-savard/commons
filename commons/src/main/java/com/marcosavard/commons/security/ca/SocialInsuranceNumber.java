@@ -4,8 +4,8 @@ import com.marcosavard.commons.security.Ssn;
 
 public class SocialInsuranceNumber extends Ssn {
 
-  public static Ssn of(String text) {
-    Ssn ssn = new SocialInsuranceNumber(text);
+  public static SocialInsuranceNumber of(String text) {
+    SocialInsuranceNumber ssn = new SocialInsuranceNumber(text);
     return ssn;
   }
 

@@ -7,6 +7,7 @@ public class MoonEventDemo {
 
   public static void main(String[] args) {
     LocalDate date = LocalDate.of(2019, Month.JUNE, 7);
+
     MoonPhase phase = MoonEvent.getPhaseOnDate(date);
     System.out.println(" Phase : " + phase.toString());
 
