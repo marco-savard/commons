@@ -65,6 +65,11 @@ public class GeoCoordinate implements Serializable {
     return longitude;
   }
 
+  public double[] toCoordinates() {
+    double[] coordinates = new double[] {latitude.value, longitude.value};
+    return coordinates;
+  }
+
   @Override
   public String toString() {
     String msg = MessageFormat.format("{0}, {1}", toLatitudeString(), toLongitudeString());
