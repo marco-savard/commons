@@ -9,7 +9,7 @@ public class FormulaBuilderDemo {
 			FormulaBuilder builder = new FormulaBuilder(); 
 			builder.add(ChemicalElement.C, i);
 			builder.add(ChemicalElement.H, 2 + i * 2);
-			ChemicalFormula formula = builder.build(); 
+			Molecule formula = builder.build(); 
 			System.out.println("  " + formula); 
 		}
 	}

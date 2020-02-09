@@ -11,7 +11,7 @@ public class FormulaFinder {
 		weights.put(ca, quantity); 
 	}
 
-	public ChemicalFormula findFormula() {
+	public Molecule findFormula() {
 		Map<ChemicalElement, Double> relativeAmountByElement = new HashMap<>(); 
 		
 		for (ChemicalElement element : weights.keySet()) {
@@ -45,7 +45,7 @@ public class FormulaFinder {
 			formulaBuilder.add(element, (int)atomicNumber); 
 		}
 		
-		ChemicalFormula formula = formulaBuilder.build(); 
+		Molecule formula = formulaBuilder.build(); 
 		return formula;
 	}
 
