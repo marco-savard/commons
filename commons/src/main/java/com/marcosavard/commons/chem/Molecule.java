@@ -35,9 +35,9 @@ public class Molecule {
           throw new UnknownChemicalElementException(elementOrNumber);
         }
       } else {
-        int factor = Integer.valueOf(elementOrNumber);
+        int atomicNumber = Integer.valueOf(elementOrNumber);
         if (foundElement != null) {
-          atomicNumbersByElement.put(foundElement, factor);
+          atomicNumbersByElement.put(foundElement, atomicNumber);
         }
       }
     }
@@ -76,7 +76,7 @@ public class Molecule {
     this.atomicNumbersByElement = atomicNumbersByElement;
     StringBuilder builder = new StringBuilder();
 
-    List<ChemicalElement> orderedElements = new ArrayList(atomicNumbersByElement.keySet());
+    List<ChemicalElement> orderedElements = new ArrayList<>(atomicNumbersByElement.keySet());
     Comparator<ChemicalElement> comparator = new HillSystemChemicalElementComparator();
     orderedElements.sort(comparator);
     double totalWeight = 0.0;

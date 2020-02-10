@@ -37,7 +37,7 @@ public class FormulaFinder {
 			}
 		}
 		
-		FormulaBuilder formulaBuilder = new FormulaBuilder(); 
+		MoleculeBuilder formulaBuilder = new MoleculeBuilder(); 
 		
 		for (ChemicalElement element : atomicNumberByElement.keySet()) {
 			double atomicNumber = atomicNumberByElement.get(element) * factor; 
