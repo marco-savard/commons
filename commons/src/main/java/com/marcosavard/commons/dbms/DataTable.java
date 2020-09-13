@@ -1,4 +1,4 @@
-package com.marcosavard.commons.util;
+package com.marcosavard.commons.dbms;
 
 import java.util.ArrayList;
 import java.util.Arrays;

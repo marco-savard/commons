@@ -1,10 +1,13 @@
 package com.marcosavard.commons.astro;
 
+import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.TimeZone;
+import com.marcosavard.commons.geog.GeoCoordinate;
 
 /*
  * based on: http://williams.best.vwh.net/sunrise_sunset_algorithm.htm
@@ -22,6 +25,17 @@ public class SunEvent {
 
   private ZonedDateTime sunrise = null, sunset = null;
   private double angleAboveHorizonAtNoon;
+
+  public static SunEvent of(LocalDate date, GeoCoordinate coordinate) {
+    TimeZone timeZone = TimeZone.getTimeZone(ZoneOffset.UTC);
+    return of(date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(),
+        timeZone);
+  }
+
+  public static SunEvent of(LocalDate date, GeoCoordinate coordinate, TimeZone timeZone) {
+    return of(date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(),
+        timeZone);
+  }
 
   public static SunEvent of(LocalDate localDate, double[] coordinates, TimeZone timezone) {
     double latitude = coordinates[0];
@@ -109,6 +123,12 @@ public class SunEvent {
 
   public ZonedDateTime getSunset() {
     return sunset;
+  }
+
+  @Override
+  public String toString() {
+    String msg = MessageFormat.format("sun rises at {0}, sets at {1}", sunrise, sunset);
+    return msg;
   }
 
   private void computeAngleAboveHorizonAtNoon(int dayOfYear, double latitude) {
@@ -205,6 +225,7 @@ public class SunEvent {
     value = (value > 0) ? (value % max) : (max - Math.abs(value) % max) % max;
     return value;
   }
+
 
 
 }

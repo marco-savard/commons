@@ -1,5 +1,7 @@
 package com.marcosavard.commons.security;
 
+import java.time.LocalDateTime;
+
 /**
  * A class that computes password entropy.
  * 
@@ -7,18 +9,33 @@ package com.marcosavard.commons.security;
  *
  */
 public class Password {
+  private static final String MASKED_PASSWORD = "*****";
   private char[] charArray;
+  private boolean temporary;
+  private LocalDateTime creationTime;
 
   public enum Strenght {
     VERY_WEAK, WEAK, MEDIUM, STRONG, VERY_STRONG
   };
 
   public static Password of(char[] charArray) {
-    return new Password(charArray);
+    return Password.of(charArray, false);
   }
 
-  public Password(char[] original) {
+  public static Password of(char[] charArray, boolean temporary) {
+    LocalDateTime now = LocalDateTime.now();
+    return Password.of(charArray, temporary, now);
+  }
+
+  public static Password of(char[] charArray, boolean temporary, LocalDateTime creationTime) {
+    return new Password(charArray, temporary, creationTime);
+  }
+
+  // TODO allow inner blanks
+  private Password(char[] original, boolean temporary, LocalDateTime creationTime) {
     int i = 0, len = 0;
+    this.temporary = temporary;
+    this.creationTime = creationTime;
 
     // count non-space characters
     for (char c : original) {
@@ -32,6 +49,19 @@ public class Password {
         this.charArray[i++] = c;
       }
     }
+  }
+
+  @Override
+  public String toString() {
+    return MASKED_PASSWORD;
+  }
+
+  public boolean isTemporary() {
+    return temporary;
+  }
+
+  public LocalDateTime getCreationTime() {
+    return creationTime;
   }
 
   /**
@@ -109,6 +139,10 @@ public class Password {
     for (int i = 0; i < charArray.length; i++) {
       charArray[i] = '\0';
     }
+  }
+
+  public char[] getCharacters() {
+    return charArray;
   }
 
 

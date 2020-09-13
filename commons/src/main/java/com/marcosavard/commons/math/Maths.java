@@ -37,18 +37,6 @@ public class Maths {
   }
 
   /**
-   * Convert an angle in radian unit to degree units
-   * 
-   * @param radian angle in radian
-   * @return angle in degree
-   */
-  public double radianToDegree(double radian) {
-    double degrees = (radian * 180) / Math.PI;
-    degrees = (degrees > 0) ? (degrees % 360) : (degrees + 360);
-    return degrees;
-  }
-
-  /**
    * Round the full precision value at a given precision. For instance, round(Math.PI, 0.01) gives
    * 3.14
    * 
@@ -63,7 +51,7 @@ public class Maths {
 
   /**
    * Return value within the range [0..max]. For instance valueInRange(90, 360) gives 90
-   * valueInRange(361, 360) gives 1 valueInRange(-90, 360) gives 270
+   * valueInRange(361, 360) gives 1; valueInRange(-90, 360) gives 270
    * 
    * @param value a given value
    * @param max the upper bound of the range
@@ -71,7 +59,7 @@ public class Maths {
    * @return the ranged value
    * 
    */
-  public static double valueInRange(double value, int max) {
+  public static double valueInRange(double value, double max) {
     // keep in range [0..max]
     value = (value > 0) ? (value % max) : (max - Math.abs(value) % max) % max;
     return value;

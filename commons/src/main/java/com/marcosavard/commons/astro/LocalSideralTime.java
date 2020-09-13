@@ -1,10 +1,15 @@
 package com.marcosavard.commons.astro;
 
+import java.text.MessageFormat;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 public class LocalSideralTime {
   public static final double JULIAN_DAY_Y2K_AT_NOON_UTC = 2451545.0;
+  private double degrees;
+
+  public static LocalSideralTime of(ZonedDateTime moment) {
+    return of(moment, 0.0);
+  }
 
   /**
    * Return the local sideral time at a given moment, for a given logitude
@@ -13,7 +18,31 @@ public class LocalSideralTime {
    * @param longitude from -180 to +180
    * @return lst (0 to 360)
    */
-  public static double of(ZonedDateTime zdt, double longitude) {
+  public static LocalSideralTime of(ZonedDateTime moment, double longitude) {
+    // computation
+    double jd = JulianDay.of(moment).getValue();
+    double ut = toDecimalHours(moment);
+    double d = (jd - JULIAN_DAY_Y2K_AT_NOON_UTC);
+    double degrees = 100.46 + 0.985647 * d + longitude + 15 * ut;
+    degrees = valueInRange(degrees, 360);
+    LocalSideralTime lst = new LocalSideralTime(degrees);
+    return lst;
+  }
+
+  public LocalSideralTime(double degrees) {
+    this.degrees = degrees;
+  }
+
+  public double degrees() {
+    return degrees;
+  }
+
+  public double hours() {
+    double hours = (degrees / 360) * 24;
+    return hours;
+  }
+
+  public static double ofOld(ZonedDateTime zdt, double longitude) {
     // computation
     double jd = AstroDates.toJulianDay(zdt);
     double ut = toDecimalHours(zdt);
@@ -23,28 +52,10 @@ public class LocalSideralTime {
     return positiveLst;
   }
 
-  public static double of(Date moment, double longitude) {
-    // computation
-    double jd = AstroDates.toJulianDay(moment);
-    double ut = toDecimalHours(moment);
-    double d = (jd - JULIAN_DAY_Y2K_AT_NOON_UTC);
-    double lst = 100.46 + 0.985647 * d + longitude + 15 * ut;
-    lst = valueInRange(lst, 360);
-    return lst;
-  }
-
   private static double toDecimalHours(ZonedDateTime zdt) {
     double decimalHours = zdt.getHour();
     decimalHours += zdt.getMinute() / 60.0;
     decimalHours += zdt.getSecond() / 3600.0;
-    return decimalHours;
-  }
-
-  private static double toDecimalHours(Date datetime) {
-    double decimalHours = datetime.getHours();
-    int minutes = datetime.getMinutes() + datetime.getTimezoneOffset();
-    decimalHours += minutes / 60.0;
-    decimalHours += datetime.getSeconds() / 3600.0;
     return decimalHours;
   }
 
@@ -57,6 +68,13 @@ public class LocalSideralTime {
     value = (value > 0) ? (value % max) : (max - Math.abs(value) % max) % max;
     return value;
   }
+
+  @Override
+  public String toString() {
+    String msg = MessageFormat.format("{0} hr", String.format("%.2f", hours()));
+    return msg;
+  }
+
 
 
 }

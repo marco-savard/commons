@@ -1,14 +1,21 @@
 package com.marcosavard.commons.astro;
 
 import java.text.MessageFormat;
+import com.marcosavard.commons.math.InRange;
 
 public class SkyPosition {
+  public static final SkyPosition ZENITH = SkyPosition.of(90, 0);
+
   private static final char DEGREE = '\u00B0';
   private final double horizon, azimuth;
 
-  public SkyPosition(double horizon, double azimuth) {
+  public static SkyPosition of(double horizon, double azimuth) {
+    return new SkyPosition(horizon, azimuth);
+  }
+
+  private SkyPosition(double horizon, double azimuth) {
     this.horizon = horizon;
-    this.azimuth = azimuth;
+    this.azimuth = InRange.range(0, 360, azimuth);
   }
 
   public double getHorizon() {
@@ -17,31 +24,6 @@ public class SkyPosition {
 
   public double getAzimuth() {
     return azimuth;
-  }
-
-  // compute position in the sky of star, as seen from a give coordinate, at lst
-  public static SkyPosition of(StarCoordinate star, double latitude, double lst) {
-    double ra = star.getRightAscension().toDegrees();
-    double dec = star.getDeclination().toDegrees();
-    double ha = lst - ra;
-
-    double sinDec = Math.sin(Math.toRadians(dec));
-    double cosDec = Math.cos(Math.toRadians(dec));
-    double sinLat = Math.sin(Math.toRadians(latitude));
-    double cosLat = Math.cos(Math.toRadians(latitude));
-    double sinHa = Math.asin(Math.toRadians(latitude));
-    double cosHa = Math.cos(Math.toRadians(ha));
-
-    double sinAlt = (sinDec * sinLat) + (cosDec * cosLat * cosHa);
-    double alt = Math.toDegrees(Math.asin(sinAlt));
-    double cosAlt = Math.cos(Math.toRadians(alt));
-
-    double cosA = (sinDec - sinAlt * sinLat) / (cosAlt * cosLat);
-    double a = Math.toDegrees(Math.acos(cosA));
-    double az = (sinHa < 0) ? a : 360 - a;
-
-    SkyPosition skyPosition = new SkyPosition(alt, az);
-    return skyPosition;
   }
 
   @Override
@@ -57,5 +39,7 @@ public class SkyPosition {
     int idx = (int) Math.round(degree / 45.0);
     return directions[idx];
   }
+
+
 
 }

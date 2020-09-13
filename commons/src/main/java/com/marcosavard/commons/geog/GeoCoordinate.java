@@ -3,22 +3,31 @@ package com.marcosavard.commons.geog;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Locale;
+import com.marcosavard.commons.math.Maths;
 
 /**
- * A class that represent geographical coordinates (latitude and longitude). It provides methods to
+ * A class that represents geographical coordinates (latitude and longitude). It provides methods to
  * display coordinates in decimal or degrees/minutes/seconds formats. It computes distance to
  * another geographical coordinate. This class is immutable (values are set at construction, and
  * cannot be modified during the lifetime of an instance.
+ * 
+ * Ref: https://www.movable-type.co.uk/scripts/latlong.html
+ * http://www.edwilliams.org/avform.htm#Intermediate
  * 
  * @author Marco
  *
  */
 @SuppressWarnings("serial")
 public class GeoCoordinate implements Serializable {
+  public static final GeoCoordinate NORTH_POLE = GeoCoordinate.of(90, 0);
+  public static final GeoCoordinate SOUTH_POLE = GeoCoordinate.of(-90, 0);
+  public static final GeoCoordinate GREENWICH = GeoCoordinate.of(51.48, 0);
+
   private static final char DEGREE = '\u00B0';
   private static final char MINUTE = '\u2032';
   private static final char SECOND = '\u2033';
-  private static final double EARTH_RADIUS = 6371.01; // mean radius in km
+  private static final double EARTH_RADIUS = 6371.01; // Earth's mean radius in km
+  private static final double EPSILON = 0.01;
 
   public enum Format {
     DECIMAL, DEG_MIN_SEC, DEG_MIN_SEC_HTML
@@ -80,7 +89,7 @@ public class GeoCoordinate implements Serializable {
    * Return textual display of a coordinate, according a given format
    * 
    * @param format one of DECIMAL, DEG_MIN_SEC and DEG_MIN_SEC_HTML
-   * @return textual display of a coordinat
+   * @return textual display of a coordinate
    */
   public String toDisplayString(Format format) {
     String ns = getLatHemisphere();
@@ -120,13 +129,60 @@ public class GeoCoordinate implements Serializable {
     return text;
   }
 
+  @Override
+  public boolean equals(Object other) {
+    boolean equal = false;
+
+    if (other instanceof GeoCoordinate) {
+      GeoCoordinate otherCoordinate = (GeoCoordinate) other;
+      equal =
+          Maths.equal(otherCoordinate.getLatitude().getValue(), getLatitude().getValue(), EPSILON);
+      equal &= Maths.equal(otherCoordinate.getLongitude().getValue(), getLongitude().getValue(),
+          EPSILON);
+    }
+    return equal;
+  }
+
+  @Override
+  public int hashCode() {
+    int hash = (int) (getLatitude().getValue() + getLongitude().getValue());
+    return hash;
+  }
+
   /**
-   * Compute the distance, in kilometers, between that location.
+   * Compute the distance, in kilometers, between that location on the Earth.
    * 
    * @param location to which distance is computed
    * @return the distance in kilometers
    */
-  public double computeDistanceFrom(GeoCoordinate location) {
+  public double findDistanceFrom(GeoCoordinate location) {
+    return findDistanceFrom(location, EARTH_RADIUS);
+  }
+
+  /**
+   * Compute the distance, in kilometers, between that location.
+   * 
+   * @param location to which distance is computed
+   * @param radius of the planet (Earth's radius by default)
+   * @return the distance in kilometers
+   */
+  public double findDistanceFrom(GeoCoordinate location, double radius) {
+    double angularDistance = findRadianDistanceFrom(location);
+    double distance = radius * angularDistance;
+    return distance;
+  }
+
+  public double findDegreeDistanceFrom(GeoCoordinate location) {
+    return Math.toDegrees(findRadianDistanceFrom(location));
+  }
+
+  /**
+   * Compute the angular distance, in radians, between that location.
+   * 
+   * @param location to which distance is computed
+   * @return the distance in radians
+   */
+  public double findRadianDistanceFrom(GeoCoordinate location) {
     if (location == null) {
       return 0;
     }
@@ -140,9 +196,71 @@ public class GeoCoordinate implements Serializable {
     double greatCircle =
         (Math.sin(lat0) * Math.sin(lat1)) + (Math.cos(lat0) * Math.cos(lat1) * Math.cos(deltaLon));
     double deltaAngle = Math.acos(greatCircle);
-    double distance = EARTH_RADIUS * deltaAngle;
+    return deltaAngle;
+  }
 
-    return distance;
+  public double findInitialBearingTo(GeoCoordinate destination) {
+    double lat1 = Math.toRadians(this.getLatitude().getValue());
+    double lon1 = Math.toRadians(this.getLongitude().getValue());
+    double lat2 = Math.toRadians(destination.getLatitude().getValue());
+    double lon2 = Math.toRadians(destination.getLongitude().getValue());
+
+    double y = Math.sin(lon2 - lon1) * Math.cos(lat2);
+    double x =
+        Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+    double theta = Math.atan2(y, x);
+    double bearing = Math.toDegrees(theta);
+    bearing = (bearing + 360) % 360;
+    return bearing;
+  }
+
+  public double findTerminalBearingTo(GeoCoordinate destination) {
+    double oppposite = destination.findInitialBearingTo(this);
+    double bearing = (oppposite + 180) % 360;
+    return bearing;
+  }
+
+  public GeoCoordinate findMidpointTo(GeoCoordinate destination) {
+    double lat1 = Math.toRadians(this.getLatitude().getValue());
+    double lon1 = Math.toRadians(this.getLongitude().getValue());
+    double lat2 = Math.toRadians(destination.getLatitude().getValue());
+    double lon2 = Math.toRadians(destination.getLongitude().getValue());
+
+    double x = Math.cos(lat2) * Math.cos(lon2 - lon1);
+    double by = Math.cos(lat2) * Math.sin(lon2 - lon1);
+
+    double lat = Math.atan2(Math.sin(lat1) + Math.sin(lat2), //
+        Math.sqrt((Math.cos(lat1) + x) * (Math.cos(lat1) + x) + by * by));
+    double lon = lon1 + Math.atan2(by, Math.cos(lat1) + x);
+
+    double latitude = Math.toDegrees(lat);
+    double longitude = Math.toDegrees(lon);
+    GeoCoordinate point = GeoCoordinate.of(latitude, longitude);
+    return point;
+  }
+
+  public GeoCoordinate findIntermediatePointTo(GeoCoordinate destination, double f) {
+    double lat1 = Math.toRadians(this.getLatitude().getValue());
+    double lon1 = Math.toRadians(this.getLongitude().getValue());
+    double lat2 = Math.toRadians(destination.getLatitude().getValue());
+    double lon2 = Math.toRadians(destination.getLongitude().getValue());
+
+    double d = 2 * Math.asin(Math.sqrt(Math.pow((Math.sin((lat1 - lat2) / 2)), 2)
+        + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
+
+    double a = Math.sin((1 - f) * d) / Math.sin(d);
+    double b = Math.sin(f * d) / Math.sin(d);
+
+    double x = a * Math.cos(lat1) * Math.cos(lon1) + b * Math.cos(lat2) * Math.cos(lon2);
+    double y = a * Math.cos(lat1) * Math.sin(lon1) + b * Math.cos(lat2) * Math.sin(lon2);
+    double z = a * Math.sin(lat1) + b * Math.sin(lat2);
+    double lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+    double lon = Math.atan2(y, x);
+
+    double latitude = Math.toDegrees(lat);
+    double longitude = Math.toDegrees(lon);
+    GeoCoordinate point = GeoCoordinate.of(latitude, longitude);
+    return point;
   }
 
   //
@@ -243,7 +361,8 @@ public class GeoCoordinate implements Serializable {
     }
 
     private Longitude(double value) {
-      this.value = value;
+      // normalize to -180 .. + 180
+      this.value = (value + 540) % 360 - 180;
     }
 
     @Override

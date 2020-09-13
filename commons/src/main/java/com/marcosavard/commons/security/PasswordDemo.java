@@ -20,6 +20,8 @@ public class PasswordDemo {
       Strenght strength = password.getStrenght();
       System.out.println(ToStringBuilder.build(password));
       password.clear();
+
+
     }
 
 

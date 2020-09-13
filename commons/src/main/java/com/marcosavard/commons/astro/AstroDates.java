@@ -8,8 +8,6 @@ import java.time.temporal.JulianFields;
 import java.util.Date;
 
 public class AstroDates {
-  public static final long ONE_DAY = 24 * 60 * 60 * 1000L;
-  public static final double JULIAN_DAY_Y2K_AT_NOON_UTC = 2451545.0;
 
   public static int getDayOfYear(LocalDate date) {
     return date.getDayOfYear();
@@ -31,7 +29,7 @@ public class AstroDates {
     return julianDay;
   }
 
-  public static long toJulianDayNumber(Date date) {
+  private static long toJulianDayNumber(Date date) {
     int offset = date.getTimezoneOffset();
     Date utcDate = date;
 
@@ -53,7 +51,7 @@ public class AstroDates {
     return julianDayNumber;
   }
 
-  public static double toJulianDay(ZonedDateTime dateTime) {
+  static double toJulianDay(ZonedDateTime dateTime) {
     long julianDayNumber = toJulianDayNumber(dateTime);
     int hour = dateTime.getHour();
     int minute = dateTime.getMinute();
