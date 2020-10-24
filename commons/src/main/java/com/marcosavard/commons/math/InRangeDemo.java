@@ -7,32 +7,35 @@ public class InRangeDemo {
   public static void main(String[] args) {
 
     // degrees in range 0..360
-    demo(360, 0, 360);
-    demo(390, 0, 360);
+    System.out.println("in range 0..360");
+    for (int i = 0; i < 16; i++) {
+      double angle = -60 + i * 30;
+      demo(angle, 0, 360);
+    }
     System.out.println();
-
 
     // degrees in range -180..180
-    demo(-180, -180, 180);
-    demo(-20, -180, 180);
-    demo(180, -180, 180);
-    demo(270, -180, 180);
+    System.out.println("in range -180..180");
+    for (int i = 0; i < 16; i++) {
+      double angle = -60 + i * 30;
+      demo(angle, -180, 180);
+    }
     System.out.println();
 
-
+    // degrees in range -pi..pi
+    System.out.println("in range -pi..pi");
+    for (int i = 0; i < 16; i++) {
+      double angle = Math.toRadians(-60 + i * 30);
+      demo(angle, -Math.PI, Math.PI);
+    }
     System.out.println();
+
   }
 
   private static void demo(double value, double min, double max) {
-    double rangedValue = InRange.rangeOld(value, min, max);
-    String msg =
-        MessageFormat.format("{0} in range [{1}..{2}] -> {3}", value, min, max, rangedValue);
+    double ranged = InRange.range(value, min, max);
+    String msg = MessageFormat.format("  {0} -> {1}", value, ranged);
     System.out.println(msg);
-
-    msg = MessageFormat.format("{0} in range [{1}..{2}] -> {3}", value, min, max, rangedValue);
-    System.out.println(msg);
-
-    System.out.println();
   }
 
 }

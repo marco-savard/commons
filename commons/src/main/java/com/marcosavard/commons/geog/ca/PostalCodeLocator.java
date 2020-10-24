@@ -1,6 +1,6 @@
 package com.marcosavard.commons.geog.ca;
 
-import com.marcosavard.commons.geog.GeoCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
 
 /**
  * A locator that gives an approximate location (latitude/longitude) 
@@ -17,5 +17,5 @@ public abstract class PostalCodeLocator {
 	 * @param code a postal code
 	 * @return GeoCoordinate (latitude/longitude) 
 	 */
-	public abstract GeoCoordinate findLocation(PostalCode code); 
+	public abstract GeoLocation findLocation(PostalCode code); 
 }

@@ -3,9 +3,7 @@ package com.marcosavard.commons.geog.ca.qc.educ;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.marcosavard.commons.geog.GeoCoordinate;
-import com.marcosavard.commons.geog.GeoCoordinate.Latitude;
-import com.marcosavard.commons.geog.GeoCoordinate.Longitude;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.geog.ca.qc.RegionAdministrative;
 import com.marcosavard.commons.util.ToStringBuilder;
 
@@ -16,7 +14,7 @@ public abstract class Organization {
   protected String parentCode;
   private String name;
   private String codePostal;
-  private GeoCoordinate coordinate;
+  private GeoLocation coordinate;
   private List<Organization> components = null;
 
   protected Organization(EducationalNetwork network, RegionAdministrative region, String code,
@@ -27,7 +25,7 @@ public abstract class Organization {
     this.name = name;
     this.parentCode = parentCode;
     this.codePostal = codePostal;
-    this.coordinate = GeoCoordinate.of(Latitude.of(latitude), Longitude.of(longitude));
+    this.coordinate = GeoLocation.of(latitude, longitude);
   }
 
   public RegionAdministrative getRegion() {
@@ -46,7 +44,7 @@ public abstract class Organization {
     return codePostal;
   }
 
-  public GeoCoordinate getCoordinate() {
+  public GeoLocation getCoordinate() {
     return coordinate;
   }
 

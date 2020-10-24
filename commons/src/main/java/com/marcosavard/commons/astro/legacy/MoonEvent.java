@@ -1,9 +1,10 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.legacy;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import com.marcosavard.commons.astro.legacy.MoonPhase.PhaseName;
 
 /**
  * File: MoonCalculation.java Author: Angus McIntyre angus@pobox.com Date: 31.05.96 Updated:

@@ -42,16 +42,6 @@ public class LocalSideralTime {
     return hours;
   }
 
-  public static double ofOld(ZonedDateTime zdt, double longitude) {
-    // computation
-    double jd = AstroDates.toJulianDay(zdt);
-    double ut = toDecimalHours(zdt);
-    double d = (jd - JULIAN_DAY_Y2K_AT_NOON_UTC);
-    double lst = 100.46 + 0.985647 * d + longitude + 15 * ut;
-    double positiveLst = valueInRange(lst, 360);
-    return positiveLst;
-  }
-
   private static double toDecimalHours(ZonedDateTime zdt) {
     double decimalHours = zdt.getHour();
     decimalHours += zdt.getMinute() / 60.0;

@@ -5,15 +5,37 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import com.marcosavard.commons.geog.GeoCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.Angle;
-import com.marcosavard.commons.math.Angle.Unit;
+import com.marcosavard.commons.math.Base;
 import com.marcosavard.commons.math.InRange;
 
 // in equatorial coordinates
 public class SpaceLocation {
+  public enum Unit {
+    DEGREE, HOUR
+  };
+
+  public enum Format {
+    HMS, DMS
+  };
+
+  private static final char DEGREE_SIGN = '\u00B0';
+  private static final char MINUTE_SIGN = '\u2032';
+  private static final char SECOND_SIGN = '\u2033';
+
   private double rightAscension; // [0-24 hr]
   private double declination; // [0-360 degrees]
+
+  public static SpaceLocation of(int ra1, int ra2, int ra3, Unit raUnit, int dec1, int dec2,
+      int dec3, Unit declUnit) {
+    double ra = ra1 + (ra2 / 60.0) + (ra3 / 3600.0);
+    double dec = dec1 + (dec2 / 60.0) + (dec3 / 3600.0);
+    double rightAscensionHours = (raUnit == Unit.HOUR) ? ra : ra / 15.0;
+    double declinationDegrees = (declUnit == Unit.DEGREE) ? dec : dec * 15.0;
+    SpaceLocation location = SpaceLocation.of(rightAscensionHours, declinationDegrees);
+    return location;
+  }
 
   public static SpaceLocation of(RightAscension ascension, Declination declination) {
     return of(ascension.toHour(), declination.toDegrees());
@@ -36,7 +58,30 @@ public class SpaceLocation {
     return declination;
   }
 
-  public static SpaceLocation findZenithPositionAbove(GeoCoordinate coordinate,
+  public static SpaceLocation findSpaceLocation(SpaceLocation location1, LocalDate date1,
+      LocalDate date2) {
+    double n = getDecimalYear(date2) - getDecimalYear(date1);
+    double ra1 = location1.getRightAscensionDegrees();
+    double decl1 = location1.getDeclination();
+    double da =
+        n * (3.07327 + 1.33617 * Math.sin(Math.toRadians(ra1)) * Math.tan(Math.toRadians(decl1)));
+    double dd = n * (20.0468 * Math.cos(Math.toRadians(ra1)));
+    double daDeg = da / 240.0;
+    double ddDeg = dd / 3600.0;
+
+    double ra2 = ra1 + daDeg;
+    double decl2 = decl1 + ddDeg;
+    SpaceLocation location2 = SpaceLocation.of(ra2 / 15.0, decl2);
+    return location2;
+  }
+
+  private static double getDecimalYear(LocalDate date) {
+    int nbDays = date.isLeapYear() ? 366 : 365;
+    double decimalYear = date.getYear() + ((date.getDayOfYear() - 1) / (double) nbDays);
+    return decimalYear;
+  }
+
+  public static SpaceLocation findZenithPositionAbove(GeoLocation coordinate,
       ZonedDateTime moment) {
     double declination = coordinate.getLatitude().getValue();
     double n = moment.getDayOfYear();
@@ -49,7 +94,7 @@ public class SpaceLocation {
 
     double longitude = coordinate.getLongitude().getValue();
     double rightAscensionDegrees = longitude + a + b + 98.971;
-    Angle ra = Angle.of(rightAscensionDegrees, Unit.DEGREES);
+    Angle ra = Angle.of(rightAscensionDegrees, Angle.Unit.DEG);
     double rightAscensionHours = (ra.degrees() / 360) * 24;
     SpaceLocation position = new SpaceLocation(rightAscensionHours, declination);
     return position;
@@ -60,7 +105,7 @@ public class SpaceLocation {
     this.declination = declination;
   }
 
-  public GeoCoordinate getZenithAt(ZonedDateTime moment) {
+  public GeoLocation getZenithAt(ZonedDateTime moment) {
     double rightAscensionDegrees = rightAscension * 15.0;
     double n = moment.getDayOfYear();
     int h = moment.getHour();
@@ -71,13 +116,27 @@ public class SpaceLocation {
     double b = 15.0405 * decimalHour;
     double latitude = declination;
     double longitude = rightAscensionDegrees - a - b - 98.971;
-    GeoCoordinate coordinate = GeoCoordinate.of(latitude, longitude);
+    GeoLocation coordinate = GeoLocation.of(latitude, longitude);
     return coordinate;
   }
 
   @Override
   public String toString() {
-    String str = MessageFormat.format("asc={0} hr decl={1} degrees", rightAscension, declination);
+    Base hms = Base.of(24, 60, 60);
+    long[] rae = hms.encode((long) (rightAscension * 3600));
+    String h = String.format("%02d", rae[0]);
+    String m = String.format("%02d", rae[1]);
+    String s = String.format("%02d", rae[2]);
+    String raStr = h + "h" + m + "m" + s + "s";
+
+    Base dms = Base.of(90, 60, 60);
+    long[] de = dms.encode((long) (declination * 3600));
+    String d = String.format("%02d", de[0]);
+    m = String.format("%02d", de[1]);
+    s = String.format("%02d", de[2]);
+    String declStr = d + DEGREE_SIGN + m + MINUTE_SIGN + s + SECOND_SIGN;
+
+    String str = MessageFormat.format("asc={0} decl={1}", raStr, declStr);
     return str;
   }
 

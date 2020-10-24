@@ -1,16 +1,14 @@
 package com.marcosavard.commons.astro;
 
-import static com.marcosavard.commons.geog.GeoCoordinate.LatitudeHemisphere.NORTH;
-import static com.marcosavard.commons.geog.GeoCoordinate.LongitudeHemisphere.WEST;
+import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
+import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import org.junit.Assert;
-import com.marcosavard.commons.geog.GeoCoordinate;
-import com.marcosavard.commons.geog.GeoCoordinate.Latitude;
-import com.marcosavard.commons.geog.GeoCoordinate.Longitude;
+import com.marcosavard.commons.geog.GeoLocation;
 
 
 public class LocalSideralTimeDemo {
@@ -48,7 +46,7 @@ public class LocalSideralTimeDemo {
 
   private static void test2() {
     // at this location (Birmingham UK)
-    GeoCoordinate city = GeoCoordinate.of(Latitude.of(52, 30, NORTH), Longitude.of(1, 55, WEST));
+    GeoLocation city = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);
 
     // .. at this moment
     LocalDate date = LocalDate.of(1998, 8, 10); // 10th August 1998

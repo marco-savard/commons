@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.legacy;
 
 import java.time.Instant;
 import java.time.LocalDate;

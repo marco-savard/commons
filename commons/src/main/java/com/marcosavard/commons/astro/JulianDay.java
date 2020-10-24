@@ -3,6 +3,7 @@ package com.marcosavard.commons.astro;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.JulianFields;
@@ -26,7 +27,7 @@ public class JulianDay {
   private double value;
 
   public static JulianDay of(LocalDate date) {
-    ZonedDateTime moment = ZonedDateTime.of(date, LocalTime.NOON, ZoneOffset.UTC);
+    ZonedDateTime moment = ZonedDateTime.of(date, LocalTime.MIDNIGHT, ZoneOffset.UTC);
     return of(moment);
   }
 
@@ -144,8 +145,40 @@ public class JulianDay {
     e = (e < 13.5) ? e - 1 : e - 13;
     int month = (int) Math.floor(e);
     int year = (int) Math.floor((e > 2.5) ? c - 4716 : c - 4715);
+
+    YearMonth yearMonth = YearMonth.of(year, month);
+    int daysInMonth = yearMonth.lengthOfMonth();
+
+    if (dayOfMonth > daysInMonth) {
+      dayOfMonth = daysInMonth;
+    }
+
     LocalDate date = LocalDate.of(year, month, dayOfMonth);
     return date;
+  }
+
+  public ZonedDateTime toDateTime() {
+    LocalDate date = toLocalDate();
+    LocalTime noon = LocalTime.NOON;
+    ZonedDateTime utcNoon = ZonedDateTime.of(date, noon, ZoneOffset.UTC);
+    JulianDay jd = JulianDay.of(utcNoon);
+    double delta = value - jd.getValue();
+    long deltaSeconds = (long) (delta * 24 * 60 * 60);
+
+    long secondOfDayAtNoon = (12 * 60 * 60L);
+    long secondOfDay = secondOfDayAtNoon + deltaSeconds;
+
+    if (secondOfDay < 0) {
+      secondOfDay += 24 * 60 * 60L;
+      date = date.minusDays(1);
+    } else if (secondOfDay > 24 * 60 * 60L) {
+      secondOfDay -= 24 * 60 * 60L;
+      date = date.plusDays(1);
+    }
+
+    LocalTime time = LocalTime.ofSecondOfDay(secondOfDay);
+    ZonedDateTime dateTime = ZonedDateTime.of(date, time, ZoneOffset.UTC);
+    return dateTime;
   }
 
   private JulianDay(double value) {

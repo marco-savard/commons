@@ -34,8 +34,8 @@ public class Season {
       double dj = (ji - 2_415_020) / 36525.0;
       double lm = 279.69668 + (36000.76892 * dj);
       double m = 358.47583 + (35999.04975 * dj);
-      Angle lma = Angle.of(lm, Unit.DEGREES);
-      Angle ma = Angle.of(m, Unit.DEGREES);
+      Angle lma = Angle.of(lm, Unit.DEG);
+      Angle ma = Angle.of(m, Unit.DEG);
       double c = 0.01396 * (year - 1950);
       double sin = Math.sin(ma.rads());
       double ls = lma.degrees() + EXCENTRICITY * sin - c;

@@ -1,13 +1,15 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.legacy;
 
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.TimeZone;
-import com.marcosavard.commons.geog.GeoCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
 
 /*
  * based on: http://williams.best.vwh.net/sunrise_sunset_algorithm.htm
@@ -26,13 +28,13 @@ public class SunEvent {
   private ZonedDateTime sunrise = null, sunset = null;
   private double angleAboveHorizonAtNoon;
 
-  public static SunEvent of(LocalDate date, GeoCoordinate coordinate) {
+  public static SunEvent of(LocalDate date, GeoLocation coordinate) {
     TimeZone timeZone = TimeZone.getTimeZone(ZoneOffset.UTC);
     return of(date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(),
         timeZone);
   }
 
-  public static SunEvent of(LocalDate date, GeoCoordinate coordinate, TimeZone timeZone) {
+  public static SunEvent of(LocalDate date, GeoLocation coordinate, TimeZone timeZone) {
     return of(date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(),
         timeZone);
   }
@@ -48,7 +50,14 @@ public class SunEvent {
       TimeZone timezone) {
     int dayOfYear = localDate.getDayOfYear();
     Date date = AstroDates.toDate(localDate);
+    System.out.println("date = " + date);
     long midnightTime = date.getTime();
+    System.out.println("midnightTime = " + midnightTime);
+
+    ZonedDateTime midnight = ZonedDateTime.of(localDate, LocalTime.MIDNIGHT, ZoneOffset.UTC);
+    long midnightTime2 = midnight.toEpochSecond() * 1000L;
+    System.out.println("midnightTime2 = " + midnightTime2);
+
     boolean isDaylight = timezone.inDaylightTime(date);
     SunEvent sunEvent =
         new SunEvent(dayOfYear, midnightTime, isDaylight, latitude, longitude, timezone);
@@ -62,6 +71,7 @@ public class SunEvent {
     Date midnight = new Date(year, month, dayOfMonth);
     int dayOfYear = computeDayOfYear(year, month, dayOfMonth);
     long midnightTime = midnight.getTime();
+
     boolean isDaylight = timezone.inDaylightTime(date);
     SunEvent sunEvent =
         new SunEvent(dayOfYear, midnightTime, isDaylight, latitude, longitude, timezone);
@@ -79,13 +89,25 @@ public class SunEvent {
     double sunriseRightAsc = computeRightAscention(sunriseTrueLongitude);
     double cosH = computeCosH(sunriseTrueLongitude, latitude);
 
+    System.out.println("sunriseTime = " + sunriseTime);
+
     if (cosH <= 1) {
       double sunriseEventHour =
           computeSunEventHour(sunriseRightAsc, sunriseTime, longitudeHour, cosH, true);
+      System.out.println("sunriseEventHour = " + sunriseEventHour);
+
       long sunriseTimeMs = (long) (midnightTime + (sunriseEventHour * ONE_HOUR));
+      System.out.println("midnightTime = " + midnightTime);
+      System.out.println("ONE_HOUR = " + ONE_HOUR);
+      System.out.println("sunriseTimeMs = " + sunriseTimeMs);
+
       sunriseTimeMs -= SUN_CIRCLE;
       sunriseTimeMs = isDaylight ? sunriseTimeMs + ONE_HOUR : sunriseTimeMs;
-      sunrise = toZonedDateTime(sunriseTimeMs / 1000L, timezone);
+      System.out.println("sunriseTimeMs = " + sunriseTimeMs);
+
+      long epochSecond = sunriseTimeMs / 1000L;
+      System.out.println("epochSecond = " + epochSecond);
+      sunrise = toZonedDateTime(epochSecond, timezone);
     }
 
     // compute sunset
@@ -114,7 +136,10 @@ public class SunEvent {
   }
 
   private ZonedDateTime toZonedDateTime(long epochSecond, TimeZone timezone) {
-    return Instant.ofEpochSecond(epochSecond).atZone(timezone.toZoneId());
+    ZoneId zoneId = timezone.toZoneId();
+    Instant instant = Instant.ofEpochSecond(epochSecond);
+    ZonedDateTime moment = instant.atZone(zoneId);
+    return moment;
   }
 
   public ZonedDateTime getSunrise() {

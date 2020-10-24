@@ -18,10 +18,10 @@ import com.marcosavard.commons.math.Maths;
  *
  */
 @SuppressWarnings("serial")
-public class GeoCoordinate implements Serializable {
-  public static final GeoCoordinate NORTH_POLE = GeoCoordinate.of(90, 0);
-  public static final GeoCoordinate SOUTH_POLE = GeoCoordinate.of(-90, 0);
-  public static final GeoCoordinate GREENWICH = GeoCoordinate.of(51.48, 0);
+public class GeoLocation implements Serializable {
+  public static final GeoLocation NORTH_POLE = GeoLocation.of(90, 0);
+  public static final GeoLocation SOUTH_POLE = GeoLocation.of(-90, 0);
+  public static final GeoLocation GREENWICH = GeoLocation.of(51.48, 0);
 
   private static final char DEGREE = '\u00B0';
   private static final char MINUTE = '\u2032';
@@ -53,15 +53,22 @@ public class GeoCoordinate implements Serializable {
    * @param latitude
    * @param longitude
    */
-  public static GeoCoordinate of(double latitude, double longitude) {
-    return GeoCoordinate.of(Latitude.of(latitude), Longitude.of(longitude));
+  public static GeoLocation of(double latitude, double longitude) {
+    return GeoLocation.of(Latitude.of(latitude), Longitude.of(longitude));
   }
 
-  public static GeoCoordinate of(Latitude latitude, Longitude longitude) {
-    return new GeoCoordinate(latitude, longitude);
+  public static GeoLocation of(int deg1, int min1, LatitudeHemisphere lat, int deg2, int min2,
+      LongitudeHemisphere lon) {
+    Latitude latitude = Latitude.of(deg1, min1, lat);
+    Longitude longitude = Longitude.of(deg2, min2, lon);
+    return of(latitude, longitude);
   }
 
-  private GeoCoordinate(Latitude latitude, Longitude longitude) {
+  private static GeoLocation of(Latitude latitude, Longitude longitude) {
+    return new GeoLocation(latitude, longitude);
+  }
+
+  private GeoLocation(Latitude latitude, Longitude longitude) {
     this.latitude = latitude;
     this.longitude = longitude;
   }
@@ -133,8 +140,8 @@ public class GeoCoordinate implements Serializable {
   public boolean equals(Object other) {
     boolean equal = false;
 
-    if (other instanceof GeoCoordinate) {
-      GeoCoordinate otherCoordinate = (GeoCoordinate) other;
+    if (other instanceof GeoLocation) {
+      GeoLocation otherCoordinate = (GeoLocation) other;
       equal =
           Maths.equal(otherCoordinate.getLatitude().getValue(), getLatitude().getValue(), EPSILON);
       equal &= Maths.equal(otherCoordinate.getLongitude().getValue(), getLongitude().getValue(),
@@ -155,7 +162,7 @@ public class GeoCoordinate implements Serializable {
    * @param location to which distance is computed
    * @return the distance in kilometers
    */
-  public double findDistanceFrom(GeoCoordinate location) {
+  public double findDistanceFrom(GeoLocation location) {
     return findDistanceFrom(location, EARTH_RADIUS);
   }
 
@@ -166,13 +173,13 @@ public class GeoCoordinate implements Serializable {
    * @param radius of the planet (Earth's radius by default)
    * @return the distance in kilometers
    */
-  public double findDistanceFrom(GeoCoordinate location, double radius) {
+  public double findDistanceFrom(GeoLocation location, double radius) {
     double angularDistance = findRadianDistanceFrom(location);
     double distance = radius * angularDistance;
     return distance;
   }
 
-  public double findDegreeDistanceFrom(GeoCoordinate location) {
+  public double findDegreeDistanceFrom(GeoLocation location) {
     return Math.toDegrees(findRadianDistanceFrom(location));
   }
 
@@ -182,7 +189,7 @@ public class GeoCoordinate implements Serializable {
    * @param location to which distance is computed
    * @return the distance in radians
    */
-  public double findRadianDistanceFrom(GeoCoordinate location) {
+  public double findRadianDistanceFrom(GeoLocation location) {
     if (location == null) {
       return 0;
     }
@@ -199,7 +206,7 @@ public class GeoCoordinate implements Serializable {
     return deltaAngle;
   }
 
-  public double findInitialBearingTo(GeoCoordinate destination) {
+  public double findInitialBearingTo(GeoLocation destination) {
     double lat1 = Math.toRadians(this.getLatitude().getValue());
     double lon1 = Math.toRadians(this.getLongitude().getValue());
     double lat2 = Math.toRadians(destination.getLatitude().getValue());
@@ -214,13 +221,13 @@ public class GeoCoordinate implements Serializable {
     return bearing;
   }
 
-  public double findTerminalBearingTo(GeoCoordinate destination) {
+  public double findTerminalBearingTo(GeoLocation destination) {
     double oppposite = destination.findInitialBearingTo(this);
     double bearing = (oppposite + 180) % 360;
     return bearing;
   }
 
-  public GeoCoordinate findMidpointTo(GeoCoordinate destination) {
+  public GeoLocation findMidpointTo(GeoLocation destination) {
     double lat1 = Math.toRadians(this.getLatitude().getValue());
     double lon1 = Math.toRadians(this.getLongitude().getValue());
     double lat2 = Math.toRadians(destination.getLatitude().getValue());
@@ -235,11 +242,11 @@ public class GeoCoordinate implements Serializable {
 
     double latitude = Math.toDegrees(lat);
     double longitude = Math.toDegrees(lon);
-    GeoCoordinate point = GeoCoordinate.of(latitude, longitude);
+    GeoLocation point = GeoLocation.of(latitude, longitude);
     return point;
   }
 
-  public GeoCoordinate findIntermediatePointTo(GeoCoordinate destination, double f) {
+  public GeoLocation findIntermediatePointTo(GeoLocation destination, double f) {
     double lat1 = Math.toRadians(this.getLatitude().getValue());
     double lon1 = Math.toRadians(this.getLongitude().getValue());
     double lat2 = Math.toRadians(destination.getLatitude().getValue());
@@ -259,7 +266,7 @@ public class GeoCoordinate implements Serializable {
 
     double latitude = Math.toDegrees(lat);
     double longitude = Math.toDegrees(lon);
-    GeoCoordinate point = GeoCoordinate.of(latitude, longitude);
+    GeoLocation point = GeoLocation.of(latitude, longitude);
     return point;
   }
 

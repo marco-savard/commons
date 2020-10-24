@@ -1,6 +1,6 @@
 package com.marcosavard.commons.geog.ca.qc.educ;
 
-import com.marcosavard.commons.geog.GeoCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.geog.ca.PostalCode;
 import com.marcosavard.commons.geog.ca.PostalCodeLocator;
 
@@ -14,9 +14,9 @@ import com.marcosavard.commons.geog.ca.PostalCodeLocator;
  
 public class EducPostalCodeLocator extends PostalCodeLocator {
 
-	public GeoCoordinate findLocation(PostalCode postalCode) {
+	public GeoLocation findLocation(PostalCode postalCode) {
 		EducationalNetwork network = EducationalNetworkReader.read(); 
-		GeoCoordinate coordinate = network.findNearestSchoolFrom(postalCode).getCoordinate(); 
+		GeoLocation coordinate = network.findNearestSchoolFrom(postalCode).getCoordinate(); 
 		return coordinate;
 	}
 

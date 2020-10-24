@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-import com.marcosavard.commons.geog.GeoCoordinate;
-import com.marcosavard.commons.geog.GeoCoordinate.Latitude;
-import com.marcosavard.commons.geog.GeoCoordinate.Longitude;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.io.csv.CsvReader;
 
 /**
@@ -18,9 +16,9 @@ import com.marcosavard.commons.io.csv.CsvReader;
  *
  */
 public class SimplePostalCodeLocator extends PostalCodeLocator {
-  private Map<String, GeoCoordinate> locations = new HashMap<>();
+  private Map<String, GeoLocation> locations = new HashMap<>();
 
-  public GeoCoordinate findLocation(PostalCode code) {
+  public GeoLocation findLocation(PostalCode code) {
     if (locations.isEmpty()) {
       loadLocations();
     }
@@ -51,7 +49,7 @@ public class SimplePostalCodeLocator extends PostalCodeLocator {
     String prefix = values[0];
     double lat = Double.parseDouble(values[1]);
     double lon = Double.parseDouble(values[2]);
-    GeoCoordinate coord = GeoCoordinate.of(Latitude.of(lat), Longitude.of(lon));
+    GeoLocation coord = GeoLocation.of(lat, lon);
     locations.put(prefix, coord);
   }
 

@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.legacy;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -6,7 +6,7 @@ import java.time.Month;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
-import com.marcosavard.commons.geog.GeoCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
 
 public class SunEventDemo {
 
@@ -17,7 +17,7 @@ public class SunEventDemo {
 
   private static void test1() {
     LocalDate date = LocalDate.of(1983, 3, 1);
-    GeoCoordinate ajaccio = GeoCoordinate.of(41.9, 8.7);
+    GeoLocation ajaccio = GeoLocation.of(41.9, 8.7);
     TimeZone timezone = TimeZone.getTimeZone("Europe/Paris");
     SunEvent sunEvent1 = SunEvent.of(date, ajaccio, timezone);
 
@@ -26,7 +26,7 @@ public class SunEventDemo {
 
   private static void test2() {
     LocalDate startDate = LocalDate.of(2019, Month.JUNE, 1);
-    GeoCoordinate qc = GeoCoordinate.of(46.8, -71.2);
+    GeoLocation qc = GeoLocation.of(46.8, -71.2);
     TimeZone timezone = TimeZone.getTimeZone("America/Montreal");
 
     for (int i = 0; i <= 28; i++) {

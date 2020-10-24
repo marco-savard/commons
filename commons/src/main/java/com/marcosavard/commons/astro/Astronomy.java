@@ -1,9 +1,13 @@
 package com.marcosavard.commons.astro;
 
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import com.marcosavard.commons.astro.SpaceLocation.Declination;
 import com.marcosavard.commons.astro.SpaceLocation.RightAscension;
-import com.marcosavard.commons.geog.GeoCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.Maths;
 
 // Ref: http://www-star.st-and.ac.uk/~fv/webnotes/index.html
@@ -40,7 +44,7 @@ public class Astronomy {
   }
 
   public static SkyPosition findSkyPositionOf(SpaceLocation spaceLocation, ZonedDateTime moment,
-      GeoCoordinate place) {
+      GeoLocation place) {
     return findSkyPositionOf(spaceLocation, moment, place.toCoordinates());
   }
 
@@ -96,13 +100,32 @@ public class Astronomy {
     return position;
   }
 
-  private static SpaceLocation findSpaceLocationForZenithOf(GeoCoordinate coordinate2,
+  public static ZonedDateTime findTimeAtMeridian(SpaceLocation spaceLocation,
+      GeoLocation geoLocation, LocalDate date) {
+
+    for (int h = 0; h < 24; h++) {
+      for (int m = 0; m < 6; m++) {
+        LocalTime time = LocalTime.of(h, m * 10);
+        ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
+        SkyPosition position = findSkyPositionOf(spaceLocation, moment, geoLocation);
+        System.out.println(MessageFormat.format("  {0} {1}", moment, position));
+      }
+
+    }
+
+
+    return null;
+  }
+
+
+
+  private static SpaceLocation findSpaceLocationForZenithOf(GeoLocation coordinate2,
       ZonedDateTime moment) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public static GeoCoordinate findGeoCoordinateForZenithOf(SpaceLocation spaceCoordinate,
+  public static GeoLocation findGeoCoordinateForZenithOf(SpaceLocation spaceCoordinate,
       ZonedDateTime moment) {
     // TODO Auto-generated method stub
     return null;
