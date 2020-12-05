@@ -21,8 +21,15 @@ public class Color implements Serializable {
   private static final double BLUE_LUMINENCE = 0.114;
 
   // constants
-  public static final Color WHITE = new Color(255, 255, 255);
   public static final Color BLACK = new Color(0, 0, 0);
+  public static final Color RED = new Color(255, 0, 0);
+  public static final Color YELLOW = new Color(255, 255, 0);
+  public static final Color GREEN = new Color(0, 127, 0);
+  public static final Color LIME = new Color(0, 255, 0);
+  public static final Color CYAN = new Color(0, 255, 255);
+  public static final Color BLUE = new Color(0, 0, 255);
+  public static final Color MAGENTA = new Color(0, 255, 255);
+  public static final Color WHITE = new Color(255, 255, 255);
 
   private final int red, green, blue;
   private double alpha;
@@ -471,6 +478,13 @@ public class Color implements Serializable {
     double degrees = (radian * 180) / Math.PI;
     degrees = (degrees > 0) ? (degrees % 360) : (degrees + 360);
     return degrees;
+  }
+
+  public int distanceFrom(Color other) {
+    int distance = Math.abs(this.red - other.red);
+    distance += Math.abs(this.green - other.green);
+    distance += Math.abs(this.blue - other.blue);
+    return distance;
   }
 
 
