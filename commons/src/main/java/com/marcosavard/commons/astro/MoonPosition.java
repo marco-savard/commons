@@ -70,15 +70,6 @@ public class MoonPosition {
     double sunLongitude = sunPosition.getSunLongitude();
     double sunAnomaly = sunPosition.getSunAnomaly();
 
-    System.out.println("  sunAnomaly = " + sunAnomaly);
-    System.out.println("  sunLongitude = " + sunLongitude);
-
-    double sunAnomaly2 = sunPosition.getSunAnomaly();
-    double sunLongitude2 = sunPosition.getSunLongitude();
-    System.out.println("  sunAnomaly = " + sunAnomaly2);
-    System.out.println("  sunLongitude = " + sunLongitude2);
-
-
     // Calculation of the Moon's position.
 
     // Moon's mean longitude.
@@ -256,25 +247,8 @@ public class MoonPosition {
     return msg;
   }
 
-  // kepler - solve the equation of Kepler
-  private static double kepler(double degrees, double ecc) {
-    double rads = Math.toRadians(degrees);
-    double e, delta;
-
-    e = rads;
-    do {
-      delta = e - ecc * Math.sin(e) - rads;
-      e -= delta / (1 - ecc * Math.cos(e));
-    } while (Math.abs(delta) > KEPLER_EPSILON);
-    return e;
-  }
-
   private static double torad(double degs) {
     return Math.toRadians(degs);
-  }
-
-  private static double todeg(double rads) {
-    return Math.toDegrees(rads);
   }
 
   private static double degRange(double d) {

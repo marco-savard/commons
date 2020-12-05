@@ -3,23 +3,19 @@ package com.marcosavard.commons.astro;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import com.marcosavard.commons.math.Iota;
+import com.marcosavard.commons.time.TextCalendar;
 
 // validate w/ https://mooncalendar.astro-seek.com/moon-phases-calendar-february-1984
 public class MoonPositionDemo {
 
   public static void main(String[] args) {
-    demoFebruary2nd1984();
+    // demoFebruary2nd1984();
     // demoFebruary1984();
     // demoFindPhaseTime();
     // demoMonth(2020, 10);
-    // demoCalendarMonth(2020, 10);
+    demoCalendarMonth(2020, 10);
   }
 
   private static void demoFebruary2nd1984() {
@@ -106,45 +102,19 @@ public class MoonPositionDemo {
     System.out.println();
   }
 
-
   private static void demoCalendarMonth(int year, int month) {
     LocalDate firstOfMonth = LocalDate.of(year, month, 1);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY MMM");
-    String monthYear = firstOfMonth.format(formatter);
-
-    System.out.println("           " + monthYear);
-    System.out.println("  Sun Mon Tue Wed Thu Fri Sat");
-
-    int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
-    List<String> beforeMonth = new ArrayList<String>();
-    for (int i = 0; i < dayOfWeek; i++) {
-      beforeMonth.add("");
-    }
-
-    int lengthOfMonth = YearMonth.from(firstOfMonth).lengthOfMonth();
-    List<String> days = Iota.of(lengthOfMonth).toStrings();
+    TextCalendar calendar = TextCalendar.of(year, month);
     String[] phaseAbbreviation = new String[] {"NM", "FQ", "FM", "LQ"};
+
     for (int i = 0; i < 4; i++) {
       ZonedDateTime moment = MoonPosition.findNextMoonAge(firstOfMonth, i * 90);
       int dayOfMonth = moment.getDayOfMonth();
-      days.set(dayOfMonth - 1, phaseAbbreviation[i]);
+      String fmt = String.format("%2d", dayOfMonth);
+      calendar.replace(fmt, phaseAbbreviation[i]);
     }
 
-    List<String> wholeMonth = new ArrayList<String>();
-    wholeMonth.addAll(beforeMonth);
-    wholeMonth.addAll(days);
-    int nbWeeks = (int) Math.ceil(wholeMonth.size() / 7);
-
-    for (int i = 0; i < nbWeeks; i++) {
-      List<String> week = wholeMonth.subList(i * 7, i * 7 + 7);
-      for (int d = 0; d < 7; d++) {
-        String s = String.format("%4s", week.get(d));
-        System.out.print(s);
-      }
-
-      System.out.println();
-    }
-    System.out.println();
+    calendar.print(System.out);
   }
 
 }
