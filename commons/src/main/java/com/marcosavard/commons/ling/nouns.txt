@@ -18492,7 +18492,7 @@ cinquante-deuxième;sg
 cinquante-deuxièmes;pl
 cinquante-et-unième;sg
 cinquante-et-unièmes;pl
-cinquante-huitième;sg
+cinquantehuitième;sg
 cinquante-huitièmes;pl
 cinquante-neuvième;sg
 cinquante-neuvièmes;pl

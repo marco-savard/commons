@@ -31,6 +31,10 @@ public class Noun implements Comparable<Noun> {
     return (this.number == Number.PLUR);
   }
 
+  public boolean isMasculine() {
+    return (this.gender == Gender.MASC);
+  }
+
   public String getText() {
     return text;
   }
@@ -40,6 +44,7 @@ public class Noun implements Comparable<Noun> {
     int comparison = this.text.compareTo(other.getText());
     return comparison;
   }
+
 
 
 }

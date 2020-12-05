@@ -1,14 +1,14 @@
 package com.marcosavard.commons.ling;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import com.marcosavard.commons.io.csv.CsvReader;
 
 public class NounReader {
   private CsvReader csvReader;
 
-  private NounReader(CsvReader reader) {
+  public NounReader(CsvReader reader) {
     csvReader = reader;
   }
 
@@ -17,8 +17,8 @@ public class NounReader {
     return reader;
   }
 
-  public List<Noun> read(int nb) throws IOException {
-    List<Noun> nouns = new ArrayList<>();
+  public Map<String, Noun> read(int nb) throws IOException {
+    Map<String, Noun> nouns = new HashMap<String, Noun>();
 
     for (int i = 0; i < nb; i++) {
       String[] entries = csvReader.readNext();
@@ -38,7 +38,7 @@ public class NounReader {
       }
 
       Noun noun = new Noun(entries[0], gender, number);
-      nouns.add(noun);
+      nouns.put(entries[0], noun);
     }
 
     return nouns;

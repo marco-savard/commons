@@ -8,8 +8,8 @@ public class NounReaderDemo {
 
   public static void main(String[] args) {
     try {
-      findPlural();
-      // listPlurals();
+      // findPlural();
+      listPlurals();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -17,33 +17,28 @@ public class NounReaderDemo {
   }
 
   private static void findPlural() {
-    PluralFinder finder = new PluralFinder();
-    String plural = finder.findPlural("amical");
-    System.out.println(plural);
+    // PluralFinder finder = new PluralFinder();
+    // String plural = finder.findPlural("amical");
+    // System.out.println(plural);
 
   }
 
   private static void listPlurals() throws IOException {
     int nb = 70 * 1000;
     int nbIrregular = 0;
-    PluralFinder finder = new PluralFinder();
+    // PluralFinder finder = new PluralFinder();
     NounReader reader = NounReader.of(NounReader.class, "nouns.txt");
-    List<Noun> nouns = reader.read(nb);
-
-    for (Noun noun : nouns) {
-      if (noun.isSingular()) {
-        String pluralText = finder.findPlural(noun.getText());
-
-        Noun plural = findByName(nouns, pluralText);
-
-        if (plural == null) {
-          String text = "  .." + noun.getText() + ", ";
-          System.out.println(text);
-          nbIrregular++;
-        }
-      }
-    }
-
+    /*
+     * List<Noun> nouns = reader.read(nb);
+     * 
+     * for (Noun noun : nouns) { if (noun.isSingular()) { String pluralText =
+     * finder.findPlural(noun.getText());
+     * 
+     * Noun plural = findByName(nouns, pluralText);
+     * 
+     * if (plural == null) { String text = "  .." + noun.getText() + ", "; System.out.println(text);
+     * nbIrregular++; } } }
+     */
     String text = "nbIrregular : " + nbIrregular;
     System.out.println(text);
 
