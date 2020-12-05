@@ -1,10 +1,13 @@
 package com.marcosavard.commons.security;
 
+import com.marcosavard.commons.debug.ExceptionHandler;
 import com.marcosavard.commons.security.Authentification.AuthentificationFailedException;
 
 public class AuthentificationDemo {
+  private static ExceptionHandler exceptionHandler = new ExceptionHandler();
 
   public static void main(String[] args) {
+
     createValidAccount();
 
     // testValidConnection();
@@ -41,7 +44,7 @@ public class AuthentificationDemo {
       user.logout();
       System.out.println(user);
     } catch (AuthentificationFailedException e) {
-      e.printStackTrace();
+      exceptionHandler.handle(e);
     }
   }
 
@@ -57,7 +60,7 @@ public class AuthentificationDemo {
       System.out.println(user);
 
     } catch (AuthentificationFailedException e) {
-      e.printStackTrace();
+      exceptionHandler.handle(e);
     }
 
   }
@@ -76,8 +79,7 @@ public class AuthentificationDemo {
       System.out.println(user);
 
     } catch (AuthentificationFailedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      exceptionHandler.handle(e);
     }
   }
 
@@ -98,8 +100,7 @@ public class AuthentificationDemo {
       System.out.println("  duration = " + duration);
 
     } catch (AuthentificationFailedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      exceptionHandler.handle(e);
     }
   }
 
@@ -113,7 +114,7 @@ public class AuthentificationDemo {
       user.logout();
       System.out.println("  user = " + user);
     } catch (AuthentificationFailedException e) {
-      e.printStackTrace();
+      exceptionHandler.handle(e);
     }
 
     for (int i = 0; i < nb; i++) {
@@ -132,7 +133,7 @@ public class AuthentificationDemo {
       user = manager.login("user@company.com", "abc".toCharArray());
       System.out.println("  user = " + user);
     } catch (AuthentificationFailedException e) {
-      e.printStackTrace();
+      exceptionHandler.handle(e);
     }
 
   }

@@ -1,6 +1,7 @@
 package com.marcosavard.commons.security;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 
 public class Account {
   private enum AccountStatus {
@@ -70,6 +71,15 @@ public class Account {
 
   void login() {
     status = AccountStatus.LOGGED_IN;
+  }
+
+  public boolean validate(char[] password) {
+    SecurityContext context = SecurityContext.getContext();
+    PasswordHasher passwordHasher = context.getPasswordHasher();
+    String hash = passwordHasher.hash(password);
+    Arrays.fill(password, ' ');
+    boolean valid = hash.equals(passwordHash);
+    return valid;
   }
 
 

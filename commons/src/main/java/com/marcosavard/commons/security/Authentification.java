@@ -6,14 +6,9 @@ import java.util.Map;
 public class Authentification {
   private static Authentification accountManager;
   private static final long SLEEP_DURATION = 1000L;
-  private PasswordHasher passwordHasher;
-  private PasswordPolicy policy;
   private Map<String, Account> accounts = new HashMap<>();
 
-  private Authentification() {
-    passwordHasher = new PasswordHasher.SimplePasswordHasher();
-    policy = new PasswordPolicy();
-  }
+  private Authentification() {}
 
   public static Authentification getInstance() {
     if (accountManager == null) {
@@ -40,6 +35,9 @@ public class Authentification {
 
     if (account != null) {
       int nbAttempts = account.getAttempts();
+      SecurityContext context = SecurityContext.getContext();
+      PasswordPolicy policy = context.getPasswordPolicy();
+      PasswordHasher passwordHasher = context.getPasswordHasher();
 
       if (nbAttempts <= policy.getMaxAttempts()) {
 
@@ -72,13 +70,14 @@ public class Authentification {
     return account;
   }
 
-  public void changePassword(Account user, char[] password) {
-    // TODO validate
-    boolean valid = true;
+  public void changePassword(Account account, char[] password) {
+    SecurityContext context = SecurityContext.getContext();
+    PasswordHasher passwordHasher = context.getPasswordHasher();
+    boolean valid = account.validate(password);
 
     if (valid) {
       String hash = passwordHasher.hash(password);
-      user.setPasswordHash(hash);
+      account.setPasswordHash(hash);
     }
   }
 
