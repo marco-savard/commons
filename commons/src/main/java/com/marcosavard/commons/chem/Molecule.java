@@ -5,50 +5,51 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class Molecule {
   private final Map<ChemicalElement, Integer> atomicNumbersByElement;
-  private final String text;
   private final double molecularWeight;
+  private final String name;
 
-  private static final Pattern integerPattern = Pattern.compile("-?\\d+");
+  public static Molecule of(String formula) {
+    MoleculeParser parser = new MoleculeParser();
+    Map<String, Integer> atoms = parser.parse(formula);
+    Molecule molecule = Molecule.ofNamedElements(atoms);
+    return molecule;
+  }
 
-  public static Molecule of(String chemicalFormula) {
-    // insert "1" in atom-atom boundary
-    chemicalFormula =
-        chemicalFormula.replaceAll("(?<=[A-Z])(?=[A-Z])|(?<=[a-z])(?=[A-Z])|(?<=\\D)$", "1");
-
-    // split at letter-digit or digit-letter boundary
-    String regex = "(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)";
-    String[] elementsOrNumbers = chemicalFormula.split(regex);
-    Map<ChemicalElement, Integer> atomicNumbersByElement = new HashMap<>();
-    ChemicalElement foundElement = null;
-
-    for (String elementOrNumber : elementsOrNumbers) {
-      boolean numeric = isNumeric(elementOrNumber);
-
-      if (!numeric) {
-        foundElement = ChemicalElement.of(elementOrNumber);
-
-        if (foundElement == null) {
-          throw new UnknownChemicalElementException(elementOrNumber);
-        }
-      } else {
-        int atomicNumber = Integer.valueOf(elementOrNumber);
-        if (foundElement != null) {
-          atomicNumbersByElement.put(foundElement, atomicNumber);
-        }
-      }
-    }
-
+  private static Molecule ofNamedElements(Map<String, Integer> namedElements) {
+    Map<ChemicalElement, Integer> atomicNumbersByElement = toElements(namedElements);
     Molecule molecule = Molecule.of(atomicNumbersByElement);
     return molecule;
   }
 
-  public static Molecule of(Object... parameters) {
+  private static Map<ChemicalElement, Integer> toElements(Map<String, Integer> namedElements) {
+    Map<ChemicalElement, Integer> elements = new HashMap<>();
+
+    for (String namedElement : namedElements.keySet()) {
+      ChemicalElement element = ChemicalElement.of(namedElement);
+
+      if (element == null) {
+        throw new UnknownChemicalElementException(namedElement);
+      }
+
+      int atomicNumber = namedElements.get(namedElement);
+      elements.put(element, atomicNumber);
+    }
+
+    return elements;
+  }
+
+  public static Molecule of(ChemicalElement element, Object... others) {
     Map<ChemicalElement, Integer> atomicNumbersByElement = new HashMap<>();
     ChemicalElement foundElement = null;
+    List<Object> parameters = new ArrayList<>();
+    parameters.add(element);
+
+    for (Object other : others) {
+      parameters.add(other);
+    }
 
     for (Object parameter : parameters) {
       if (parameter instanceof ChemicalElement) {
@@ -67,30 +68,47 @@ public class Molecule {
     return molecule;
   }
 
-  public static Molecule of(Map<ChemicalElement, Integer> atomicNumbers) {
-    Molecule molecule = new Molecule(atomicNumbers);
+  public static Molecule of(Map<ChemicalElement, Integer> atomicNumbersByElement) {
+    Molecule molecule = new Molecule(atomicNumbersByElement);
     return molecule;
   }
 
+
   private Molecule(Map<ChemicalElement, Integer> atomicNumbersByElement) {
     this.atomicNumbersByElement = atomicNumbersByElement;
-    StringBuilder builder = new StringBuilder();
+    this.molecularWeight = computeMolecularWeight(atomicNumbersByElement);
+    this.name = buildMoleculeName(atomicNumbersByElement);
+  }
 
-    List<ChemicalElement> orderedElements = new ArrayList<>(atomicNumbersByElement.keySet());
-    Comparator<ChemicalElement> comparator = new HillSystemChemicalElementComparator();
-    orderedElements.sort(comparator);
+  private static double computeMolecularWeight(Map<ChemicalElement, Integer> elements) {
     double totalWeight = 0.0;
 
-    for (ChemicalElement element : orderedElements) {
-      Integer atomicNumber = atomicNumbersByElement.get(element);
-      builder.append(element.toString());
-      builder.append((atomicNumber == 1) ? "" : atomicNumber.toString());
-
+    for (ChemicalElement element : elements.keySet()) {
+      Integer atomicNumber = elements.get(element);
       totalWeight += element.getAtomicWeight() * atomicNumber;
     }
 
-    text = builder.toString();
-    molecularWeight = totalWeight;
+    return totalWeight;
+  }
+
+  private static String buildMoleculeName(Map<ChemicalElement, Integer> elements) {
+    List<ChemicalElement> orderedElements = new ArrayList<>(elements.keySet());
+    Comparator<ChemicalElement> comparator = new HillSystemChemicalElementComparator();
+    orderedElements.sort(comparator);
+    StringBuilder builder = new StringBuilder();
+
+    for (ChemicalElement element : orderedElements) {
+      Integer atomicNumber = elements.get(element);
+      builder.append(element.toString());
+      builder.append((atomicNumber == 1) ? "" : atomicNumber.toString());
+    }
+
+    String name = builder.toString();
+    return name;
+  }
+
+  public double getMolecularWeight() {
+    return molecularWeight;
   }
 
   @Override
@@ -112,9 +130,14 @@ public class Molecule {
 
   @Override
   public String toString() {
-    return text;
+    return name;
   }
 
+  public String toLongString() {
+    return name + " - " + molecularWeight + " g/mol";
+  }
+
+  // inner class
   private static class HillSystemChemicalElementComparator implements Comparator<ChemicalElement> {
     @Override
     public int compare(ChemicalElement element1, ChemicalElement element2) {
@@ -136,18 +159,5 @@ public class Molecule {
       }
     }
   }
-
-  private static boolean isNumeric(String strNum) {
-    if (strNum == null) {
-      return false;
-    }
-    return integerPattern.matcher(strNum).matches();
-  }
-
-  public double getMolecularWeight() {
-    return molecularWeight;
-  }
-
-
 
 }

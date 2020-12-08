@@ -8,7 +8,7 @@ public class FormulaFinderDemo {
     formulaFinder.addWeight(39.2, ChemicalElement.P);
     formulaFinder.addWeight(35.5, ChemicalElement.O);
     Molecule molecule = formulaFinder.findFormula();
-    System.out.println(molecule);
+    System.out.println("molecule : " + molecule);
 
   }
 
