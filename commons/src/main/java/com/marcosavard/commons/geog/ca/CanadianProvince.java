@@ -1,5 +1,8 @@
 package com.marcosavard.commons.geog.ca;
 
+import java.util.Locale;
+import com.marcosavard.commons.geog.ca.res.ProvinceName;
+
 /**
  * An enumeration for Canadian provinces and territories. Codes follow naming convention of Canada
  * Post.
@@ -8,40 +11,28 @@ package com.marcosavard.commons.geog.ca;
  *
  */
 public enum CanadianProvince {
-  //@formatter:off
-  NL("Newfoundland and Labrador", "Terre-Neuve-et-Labrador"), 
-  NS("Nova Scotia", "Nouvelle-\u00c9cosse"), 
-  PE("Prince Edward Island", "\u00cele-du-Prince-\\u00c9douard"), 
-  NB("New Brunswick", "Nouveau-Brunswick"), 
-  QC("Quebec", "Qu\u00e9bec"), 
-  ON("Ontario"), 
-  MB("Manitoba"), 
-  SK("Saskatchewan"), 
-  AB("Alberta"), 
-  BC("British Columnbia", "Colombie-Britannique"), 
-  NU("Nunavut"), 
-  NT("North West Territories", "Territoires du Nord-Ouest"), 
-  YK("Yukon");
-//@formatter:on
+  NL, //
+  NS, //
+  PE, //
+  NB, //
+  QC, //
+  ON, //
+  MB, //
+  SK, //
+  AB, //
+  BC, //
+  NU, //
+  NT, //
+  YK;
 
-  private final String englishName, frenchName;
-
-  public String getEnglishName() {
-    return englishName;
+  public String getDisplayName() {
+    return getDisplayName(Locale.getDefault());
   }
 
-  public String getFrenchName() {
-    return frenchName;
+  public String getDisplayName(Locale locale) {
+    String provinceCode = this.toString();
+    String displayName = ProvinceName.getString(provinceCode, locale);
+    return displayName;
   }
 
-  private CanadianProvince(String englishName, String frenchName) {
-    this.englishName = englishName;
-    this.frenchName = frenchName;
-  }
-
-  // if French and English names are the same
-  private CanadianProvince(String name) {
-    this.englishName = name;
-    this.frenchName = name;
-  }
 }

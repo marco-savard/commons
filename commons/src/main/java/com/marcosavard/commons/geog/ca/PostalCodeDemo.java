@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog.ca;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 
 public class PostalCodeDemo {
 
@@ -19,11 +20,13 @@ public class PostalCodeDemo {
   }
 
   private static void findProvinceByPostalCode() {
+    Locale fr = Locale.FRENCH;
+
     for (String code : POSTAL_CODES) {
       PostalCode postalCode = PostalCode.of(code);
 
       PostalCode.Region region = postalCode.getRegion();
-      CanadianProvince province = postalCode.getProvince();
+      String province = postalCode.getProvince().getDisplayName(fr);
       String msg = MessageFormat.format("  {0} : province={1} region={2}",
           postalCode.toDisplayString(), province, region);
       System.out.println(msg);

@@ -1,634 +1,246 @@
 package com.marcosavard.commons.ling.fr;
 
+import static com.marcosavard.commons.ling.fr.Gender.FEMININE;
+import static com.marcosavard.commons.ling.fr.Gender.MASCULINE;
+import static com.marcosavard.commons.ling.fr.Gender.UNKNOWN;
+import java.util.Arrays;
+import java.util.List;
+
 public class GenderFinder {
 
-  public boolean isMasculine(String word) {
-    boolean masculine = true;
-    GenderRule[] rules = new GenderRule[] { //
-        new PrefixRule(), //
-        new EndingPithequeRule(), //
-        // new EndingCephaleRule(), //
-        new EndingGrammeRule(), //
-        new EndingGrapheRule(), //
-        new EndingOptereRule(), //
-        new EndingPhylleRule(), //
-        new EndingThermeRule(), //
-        new EndingZoaireRule(), //
-        new EndingAisonRule(), //
-        new EndingDermeRule(), //
-        new EndingIntheRule(), //
-        new EndingLitheRule(), //
-        new EndingMetreRule(), //
-        new EndingOxydeRule(), //
-        new EndingPhaleRule(), //
-        new EndingPhareRule(), //
-        new EndingPheneRule(), //
-        new EndingPhoneRule(), //
-        new EndingPhoreRule(), //
-        new EndingPhyteRule(), //
-        new EndingSaureRule(), //
-        new EndingScopeRule(), //
-        new EndingTexteRule(), //
-        new EndingThemeRule(), //
-        new EndingToireRule(), //
-        new EndingTropeRule(), //
-        new EndingCeteRule(), //
-        new EndingCideRule(), //
-        new EndingCyteRule(), //
-        new EndingGeneRule(), //
-        new EndingGoneRule(), //
-        new EndingIomeRule(), //
-        new EndingIsmeRule(), //
-        new EndingNomeRule(), //
-        new EndingNymeRule(), //
-        new EndingOideRule(), //
-        new EndingPodeRule(), //
-        new EndingSionRule(), //
-        // new EndingSsonRule(), //
-        new EndingTionRule(), //
-        // new EndingTomeRule(), //
-        new EndingTypeRule(), //
-        new EndingXionRule(), //
-        new EndingAgeRule(), //
-        new EndingYleRule(), //
-        new EndingTeRule(), //
-        new GeneralRule() //
-    };
+  public Gender findGender(String word) {
 
-    for (GenderRule rule : rules) {
-      if (rule.applies(word)) {
-        masculine = rule.isMasculine(word);
-        break;
+    WordGender wordGender = new WordGender(word);
+
+    boolean hasPrefixVerb = findForPrefixVerb(wordGender);
+
+    if (!hasPrefixVerb) {
+      int beginning = Math.max(0, word.length() - 2);
+      String suffix = word.substring(beginning);
+
+      boolean suffixE = suffix.equals("ae");
+      suffixE |= suffix.equals("be");
+      suffixE |= suffix.equals("ce");
+      // suffixE |= suffix.equals("de");
+
+      if (suffixE) {
+        findSuffixE(wordGender);
       }
     }
 
-    return masculine;
+    return wordGender.gender;
   }
 
-  // inner classes
+  private void findSuffixE(WordGender wordGender) {
+    wordGender.apply("ae", MASCULINE, "");
+    wordGender.apply("ee", MASCULINE, "");
+    wordGender.apply("oe", FEMININE, "");
 
-  private static abstract class GenderRule {
-    protected boolean applies(String word) {
-      return true;
-    }
+    wordGender.apply("rabe", UNKNOWN, "");
+    wordGender.apply("abe", MASCULINE, "souabe,syllabe,trabe");
+    wordGender.apply("bbe", MASCULINE, "");
+    wordGender.apply("èbe", MASCULINE, "glèbe,plèbe");
+    wordGender.apply("ibe", FEMININE, "caribe,scribe");
+    wordGender.apply("lbe", MASCULINE, "");
+    wordGender.apply("ambe", MASCULINE, "flambe,gambe,jambe");
+    wordGender.apply("ombe", FEMININE, "rhombe,strombe");
+    wordGender.apply("mbe", FEMININE, "corymbe,djembe,limbe,nimbe");
+    wordGender.apply("phobe", UNKNOWN, "");
+    wordGender.apply("robe", FEMININE, "microbe,orobe");
+    wordGender.apply("obe", MASCULINE, "");
+    wordGender.apply("orbe", MASCULINE, "euphorbe,sanguisorbe,sorbe");
+    wordGender.apply("verbe", MASCULINE, "");
+    wordGender.apply("irbe", MASCULINE, "");
+    wordGender.apply("ube", MASCULINE, "aube,cachoube,caroube,daube,kachoube");
+    wordGender.apply("ybe", MASCULINE, "");
 
-    protected abstract boolean isMasculine(String word);
+    wordGender.apply("space", MASCULINE, "espace");
+    wordGender.apply("ace", FEMININE,
+        "ace,androsace,biface,biplace,lovelace,palace,pancrace,surplace");
+    wordGender.apply("ance", FEMININE, "inespérance");
+    wordGender.apply("thèce", MASCULINE, "");
+    wordGender.apply("cice", MASCULINE, "");
+    wordGender.apply("dice", MASCULINE, "blandice,immondice");
+    wordGender.apply("ence", FEMININE, "silence");
+    wordGender.apply("fice", MASCULINE, "office");
+    wordGender.apply("ince", FEMININE, "prince");
+    wordGender.apply("lice", FEMININE, "calice,cilice,délice,slice,supplice");
+    wordGender.apply("pice", MASCULINE, "épice");
+    wordGender.apply("mice", MASCULINE, "");
+    wordGender.apply("rice", FEMININE, "caprice,dentifrice,patrice");
+    wordGender.apply("tice", FEMININE, "armistice,interstice,solstice");
+    wordGender.apply("novice", UNKNOWN, "");
+    wordGender.apply("vice", MASCULINE, "");
+    wordGender.apply("nonce", MASCULINE, "");
+    wordGender.apply("once", FEMININE, "oponce,quinconce");
+    wordGender.apply("oce", MASCULINE, "féroce,noce,précoce");
+
+    wordGender.apply("merce", MASCULINE, "");
+    wordGender.apply("terce", MASCULINE, "");
+    wordGender.apply("rce", FEMININE, "chaource,divorce");
+    wordGender.apply("uce", FEMININE, "capuce,duce,pouce,prépuce");
+
+    wordGender.apply("e", FEMININE, "");
   }
 
-  private static class PrefixRule extends GenderRule {
-    protected boolean applies(String word) {
-      boolean hasPrefix = word.startsWith("abat-");
-      hasPrefix = hasPrefix || word.startsWith("aide-");
-      hasPrefix = hasPrefix || word.startsWith("allume-");
-      hasPrefix = hasPrefix || word.startsWith("amuse-");
-      hasPrefix = hasPrefix || word.startsWith("appuie-");
-      hasPrefix = hasPrefix || word.startsWith("arrache-");
-      hasPrefix = hasPrefix || word.startsWith("attrape-");
-      hasPrefix = hasPrefix || word.startsWith("bouche-");
-      hasPrefix = hasPrefix || word.startsWith("bourre-");
-      hasPrefix = hasPrefix || word.startsWith("brise-");
-      hasPrefix = hasPrefix || word.startsWith("brule-");
-      hasPrefix = hasPrefix || word.startsWith("cache-");
-      hasPrefix = hasPrefix || word.startsWith("capte-");
-      hasPrefix = hasPrefix || word.startsWith("casse-");
-      hasPrefix = hasPrefix || word.startsWith("chasse-");
-      hasPrefix = hasPrefix || word.startsWith("chauffe-");
-      hasPrefix = hasPrefix || word.startsWith("compte-");
-      hasPrefix = hasPrefix || word.startsWith("coupe-");
-      hasPrefix = hasPrefix || word.startsWith("couvre-");
-      hasPrefix = hasPrefix || word.startsWith("croche-");
-      hasPrefix = hasPrefix || word.startsWith("croque-");
-      hasPrefix = hasPrefix || word.startsWith("crève-");
-      hasPrefix = hasPrefix || word.startsWith("cure-");
-      hasPrefix = hasPrefix || word.startsWith("emporte-");
-      hasPrefix = hasPrefix || word.startsWith("essuie-");
-      hasPrefix = hasPrefix || word.startsWith("épluche-");
-      hasPrefix = hasPrefix || word.startsWith("fixe-");
-      hasPrefix = hasPrefix || word.startsWith("fume-");
-      hasPrefix = hasPrefix || word.startsWith("garde-");
-      hasPrefix = hasPrefix || word.startsWith("gobe-");
-      hasPrefix = hasPrefix || word.startsWith("gâte-");
-      hasPrefix = hasPrefix || word.startsWith("hache-");
-      hasPrefix = hasPrefix || word.startsWith("hors-");
-      hasPrefix = hasPrefix || word.startsWith("lance-");
-      hasPrefix = hasPrefix || word.startsWith("lave-");
-      hasPrefix = hasPrefix || word.startsWith("lâcher-");
-      hasPrefix = hasPrefix || word.startsWith("lèche-");
-      hasPrefix = hasPrefix || word.startsWith("lève-");
-      hasPrefix = hasPrefix || word.startsWith("marque-");
-      hasPrefix = hasPrefix || word.startsWith("monte-");
-      hasPrefix = hasPrefix || word.startsWith("ouvre-");
+  private boolean findForPrefixVerb(WordGender wordGender) {
+    boolean startWithVerb = false;
+    String word = wordGender.word;
 
-      hasPrefix = hasPrefix || word.startsWith("pare-");
-      hasPrefix = hasPrefix || word.startsWith("passe-");
-      hasPrefix = hasPrefix || word.startsWith("pense-");
-      hasPrefix = hasPrefix || word.startsWith("perce-");
-      hasPrefix = hasPrefix || word.startsWith("pince-");
-      hasPrefix = hasPrefix || word.startsWith("pique-");
-      hasPrefix = hasPrefix || word.startsWith("pleure-");
-      hasPrefix = hasPrefix || word.startsWith("porte-");
-      hasPrefix = hasPrefix || word.startsWith("presse-");
-      hasPrefix = hasPrefix || word.startsWith("protège-");
-      hasPrefix = hasPrefix || word.startsWith("pèse-");
+    startWithVerb |= word.startsWith("abat-");
+    startWithVerb |= word.startsWith("aide-");
+    startWithVerb |= word.startsWith("appuie-");
+    startWithVerb |= word.startsWith("bourre-");
+    startWithVerb |= word.startsWith("brise-");
 
-      hasPrefix = hasPrefix || word.startsWith("rabat-");
-      hasPrefix = hasPrefix || word.startsWith("ramasse-");
-      hasPrefix = hasPrefix || word.startsWith("rase-");
-      hasPrefix = hasPrefix || word.startsWith("remonte-");
-      hasPrefix = hasPrefix || word.startsWith("remue-");
-      hasPrefix = hasPrefix || word.startsWith("repose-");
-      hasPrefix = hasPrefix || word.startsWith("rince-");
-      hasPrefix = hasPrefix || word.startsWith("ruine-");
+    startWithVerb |= word.startsWith("cache-");
+    startWithVerb |= word.startsWith("capte-");
+    startWithVerb |= word.startsWith("casse-");
+    startWithVerb |= word.startsWith("chasse-");
+    startWithVerb |= word.startsWith("coupe-");
+    startWithVerb |= word.startsWith("cure-");
 
-      hasPrefix = hasPrefix || word.startsWith("saute-");
-      hasPrefix = hasPrefix || word.startsWith("serre-");
-      hasPrefix = hasPrefix || word.startsWith("sèche-");
+    startWithVerb |= word.startsWith("emporte-");
+    startWithVerb |= word.startsWith("entre-");
+    startWithVerb |= word.startsWith("essuie-");
+    startWithVerb |= word.startsWith("fume-");
+    startWithVerb |= word.startsWith("garde-");
+    startWithVerb |= word.startsWith("gâte-");
+    startWithVerb |= word.startsWith("gobe-");
+    startWithVerb |= word.startsWith("hors-");
 
-      hasPrefix = hasPrefix || word.startsWith("taille-");
-      hasPrefix = hasPrefix || word.startsWith("tire-");
-      hasPrefix = hasPrefix || word.startsWith("tourne-");
-      hasPrefix = hasPrefix || word.startsWith("traine-");
-      hasPrefix = hasPrefix || word.startsWith("trousse-");
-      hasPrefix = hasPrefix || word.startsWith("tue-");
-      hasPrefix = hasPrefix || word.startsWith("vide-");
+    startWithVerb |= word.startsWith("lâcher-");
+    startWithVerb |= word.startsWith("lance-");
+    startWithVerb |= word.startsWith("lave-");
+    startWithVerb |= word.startsWith("lève-");
+    startWithVerb |= word.startsWith("monte-");
+    startWithVerb |= word.startsWith("ouvre-");
+    startWithVerb |= word.startsWith("pare-");
+    startWithVerb |= word.startsWith("pince-");
+    startWithVerb |= word.startsWith("porte-");
 
-      return hasPrefix;
-    }
+    startWithVerb |= word.startsWith("ramasse-");
+    startWithVerb |= word.startsWith("remonte-");
+    startWithVerb |= word.startsWith("remue-");
+    startWithVerb |= word.startsWith("sèche-");
+    startWithVerb |= word.startsWith("taille-");
+    startWithVerb |= word.startsWith("tire-");
 
-    protected boolean isMasculine(String word) {
-      return true;
-    }
+    return startWithVerb;
   }
 
-  private static class EndingPithequeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("pithèque");
-    }
+  private boolean startWithVerb(String word) {
+    boolean startWithVerb = false;
+    startWithVerb |= word.startsWith("abat-");
+    startWithVerb |= word.startsWith("aide-");
+    startWithVerb |= word.startsWith("appuie-");
+    startWithVerb |= word.startsWith("bourre-");
 
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
+    startWithVerb |= word.startsWith("cache-");
+    startWithVerb |= word.startsWith("capte-");
+    startWithVerb |= word.startsWith("casse-");
+    startWithVerb |= word.startsWith("chasse-");
+    startWithVerb |= word.startsWith("coupe-");
+    startWithVerb |= word.startsWith("cure-");
 
-  private static class EndingCephaleRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("céphale");
-    }
+    startWithVerb |= word.startsWith("emporte-");
+    startWithVerb |= word.startsWith("entre-");
+    startWithVerb |= word.startsWith("essuie-");
+    startWithVerb |= word.startsWith("fume-");
+    startWithVerb |= word.startsWith("garde-");
+    startWithVerb |= word.startsWith("gobe-");
+    startWithVerb |= word.startsWith("hors-");
 
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
+    startWithVerb |= word.startsWith("lâcher-");
+    startWithVerb |= word.startsWith("lance-");
+    startWithVerb |= word.startsWith("lave-");
+    startWithVerb |= word.startsWith("ouvre-");
+    startWithVerb |= word.startsWith("pare-");
+    startWithVerb |= word.startsWith("pince-");
+    startWithVerb |= word.startsWith("porte-");
 
-  private static class EndingGrammeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("gramme");
-    }
+    startWithVerb |= word.startsWith("ramasse-");
+    startWithVerb |= word.startsWith("remonte-");
+    startWithVerb |= word.startsWith("remue-");
+    startWithVerb |= word.startsWith("sèche-");
+    startWithVerb |= word.startsWith("taille-");
+    startWithVerb |= word.startsWith("tire-");
 
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingGrapheRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("graphe");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingOptereRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("optère");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPhylleRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phylle");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
+    return startWithVerb;
   }
 
 
-  private static class EndingThermeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("therme");
-    }
+  private boolean findSuffixE(String word) {
+    Boolean gender = null;
 
-    protected boolean isMasculine(String word) {
-      return true;
-    }
+    // findSuffix();
+
+    gender = findIfSuffix(word, gender, "ae", true, ""); // reggae
+    gender = findIfSuffix(word, gender, "ee", true, ""); // frisbee
+    gender = findIfSuffix(word, gender, "oe", true, "");
+
+    gender = findIfSuffix(word, gender, "abe", true, "souabe,syllabe,trabe");
+    gender = findIfSuffix(word, gender, "bbe", true, "");
+    gender = findIfSuffix(word, gender, "èbe", true, "glèbe,plèbe");
+    gender = findIfSuffix(word, gender, "ibe", false, "caribe,scribe");
+    gender = findIfSuffix(word, gender, "lbe", true, "");
+    gender = findIfSuffix(word, gender, "ambe", true, "flambe,gambe,jambe");
+    gender = findIfSuffix(word, gender, "ombe", false, "rhombe,strombe");
+    gender = findIfSuffix(word, gender, "mbe", true, "corymbe,djembe,limbe,nimbe");
+    gender = findIfSuffix(word, gender, "obe", true, "");
+    gender = findIfSuffix(word, gender, "ube", true, "aube,cachoube,caroube,daube,kachoube");
+    gender = findIfSuffix(word, gender, "ybe", true, "");
+
+
+
+    gender = findIfSuffix(word, gender, "sme", true, "");
+
+    gender = (gender == null) ? false : gender;
+
+    return gender;
   }
 
-  private static class EndingZoaireRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("zoaire");
+  private Boolean findIfSuffix(String word, Boolean gender, String suffix, boolean expected,
+      String exceptions) {
+    if (gender == null) {
+      if (word.endsWith(suffix)) {
+        List<String> exceptionList = Arrays.asList(exceptions.split(","));
+        boolean exception = exceptionList.contains(word);
+        gender = exception ? !expected : expected;
+      }
     }
 
-    protected boolean isMasculine(String word) {
-      return true;
-    }
+    return gender;
   }
 
-  private static class EndingAisonRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("aison");
-    }
-
-    protected boolean isMasculine(String word) {
-      return false;
-    }
-  }
-
-  private static class EndingDermeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("derme");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingIntheRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("inthe");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingLitheRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("lithe");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingMetreRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("mètre");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingOxydeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("oxyde");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPhaleRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phale");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPhareRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phare");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPheneRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phène");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPhoneRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phone");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPhoreRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phore");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingPhyteRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("phyte");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingSaureRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("saure");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingScopeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("scope");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingTexteRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("texte");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingThemeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("thème");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingToireRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("toire");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingTropeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("trope");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingCeteRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("cète");
-    }
+  private static final class WordGender {
+    private String word;
+    private Gender gender;
 
-    protected boolean isMasculine(String word) {
-      return true;
+    public WordGender(String word) {
+      this.word = word;
     }
-  }
 
-  private static class EndingCideRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("cide");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingCyteRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("cyte");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingGeneRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("gène");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingGoneRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("gone");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingIomeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("iome");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingIsmeRule extends GenderRule {
-    protected boolean applies(String word) {
-      boolean endsInIsme = word.endsWith("isme") || word.endsWith("ïsme");
-      return endsInIsme;
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingNomeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("nome");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingNymeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("nyme");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingOideRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("oïde");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-
-  private static class EndingPodeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("pode");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingSionRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("sion");
-    }
-
-    protected boolean isMasculine(String word) {
-      return false;
-    }
-  }
-
-  private static class EndingSsonRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("sson");
-    }
-
-    protected boolean isMasculine(String word) {
-      return false;
-    }
-  }
-
-
-  private static class EndingTionRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("tion");
-    }
-
-    protected boolean isMasculine(String word) {
-      return false;
-    }
-  }
-
-  private static class EndingTomeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("tome");
-    }
+    public void apply(String suffix, Gender gender, String exceptions) {
+      Gender opposite = null;
+      if (gender == Gender.FEMININE) {
+        opposite = Gender.MASCULINE;
+      } else if (gender == Gender.MASCULINE) {
+        opposite = Gender.FEMININE;
+      }
 
-    protected boolean isMasculine(String word) {
-      return false;
+      if (this.gender == null) {
+        if (word.endsWith(suffix)) {
+          List<String> exceptionList = Arrays.asList(exceptions.split(","));
+          boolean exception = exceptionList.contains(word);
+          this.gender = exception ? opposite : gender;
+        }
+      }
     }
-  }
 
-  private static class EndingTypeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("type");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingXionRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("xion");
-    }
-
-    protected boolean isMasculine(String word) {
-      return false;
-    }
-  }
-
-  private static class EndingAgeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("age");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingYleRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("yle");
-    }
-
-    protected boolean isMasculine(String word) {
-      return true;
-    }
-  }
-
-  private static class EndingTeRule extends GenderRule {
-    protected boolean applies(String word) {
-      return word.endsWith("té");
-    }
-
-    protected boolean isMasculine(String word) {
-      return false;
-    }
-  }
+    public void find(String string, Gender masculine, String string2) {
+      // TODO Auto-generated method stub
 
-  private static class GeneralRule extends GenderRule {
-    @Override
-    protected boolean isMasculine(String word) {
-      boolean masculine = !word.endsWith("e");
-      return masculine;
     }
 
   }

@@ -40,15 +40,15 @@ public class PluralFinderDemo {
         singulars++;
 
         if (pluralNoun == null) {
-
           if (text.endsWith("ail")) {
             endingAil++;
             exceptions.add(noun.getText());
           } else if (text.endsWith("al")) {
             endingAl++;
+            exceptions.add(noun.getText());
           } else if (text.endsWith("au")) {
             endingAu++;
-
+            exceptions.add(noun.getText());
           } else if (text.endsWith("eu")) {
             endingEu++;
           } else if (text.endsWith("ou")) {
@@ -56,6 +56,7 @@ public class PluralFinderDemo {
 
           } else if (text.endsWith("um")) {
             endingUm++;
+            exceptions.add(noun.getText());
           } else if (text.endsWith("us")) {
             endingUs++;
           } else {
@@ -66,8 +67,10 @@ public class PluralFinderDemo {
       }
     }
 
-    Percent percent = Percent.of(pluralsFound, singulars);
-    String msg = MessageFormat.format("{0} words : {1} plurals found", singulars, percent);
+    double pluralNotFound = singulars - pluralsFound;
+    Percent percent = Percent.of(pluralNotFound, singulars);
+    String msg = MessageFormat.format("{0} words : {1} plurals not found ({2})", singulars,
+        pluralNotFound, percent);
     System.out.println(msg);
 
     Collections.sort(exceptions);

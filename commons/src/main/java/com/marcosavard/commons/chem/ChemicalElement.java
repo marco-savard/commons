@@ -2,7 +2,9 @@ package com.marcosavard.commons.chem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
+import com.marcosavard.commons.chem.res.ChemicalElementBundle;
 
 public enum ChemicalElement {
   H(1.008), He(4.0026), //
@@ -121,6 +123,15 @@ public enum ChemicalElement {
     int startIdx = (int) Math.signum(group - start);
     int endIdx = (int) Math.signum(group - end);
     return (startIdx * Math.abs(endIdx)) + 1;
+  }
+
+  public String getDisplayName() {
+    return getDisplayName(Locale.getDefault());
+  }
+
+  public String getDisplayName(Locale locale) {
+    String displayName = ChemicalElementBundle.getString(toString(), locale);
+    return displayName;
   }
 
 

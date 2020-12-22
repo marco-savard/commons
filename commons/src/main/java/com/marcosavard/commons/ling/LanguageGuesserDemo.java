@@ -1,7 +1,11 @@
-package com.marcosavard.commons.text;
+package com.marcosavard.commons.ling;
 
 import java.util.Map;
 import com.marcosavard.commons.io.ContentReader;
+import com.marcosavard.commons.text.TextCounter;
+import com.marcosavard.commons.text.TextCounterDemo;
+import com.marcosavard.commons.text.TextCounter.Characters;
+import com.marcosavard.commons.text.TextCounter.TextCounterResult;
 
 public class LanguageGuesserDemo {
 

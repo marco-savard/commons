@@ -1,4 +1,4 @@
-package com.marcosavard.commons.text;
+package com.marcosavard.commons.ling;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;

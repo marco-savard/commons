@@ -13,37 +13,53 @@ import com.marcosavard.commons.math.Percent;
 public class GenderFinderDemo {
 
   public static void main(String[] args) {
+    Map<String, Noun> allNouns = loadDictionary();
+    EndingFinder finder = new EndingFinder();
+    List<String> wordsE = finder.getWordsEndingIn(allNouns, "e");
+    findGender(allNouns, wordsE);
+
+
+  }
+
+  private static Map<String, Noun> loadDictionary() {
+    int nb = 96 * 1000;
+    NounReader reader = NounReader.of(NounReader.class, "nouns.txt");
+    Map<String, Noun> nouns = null;
     try {
-      Map<String, Noun> nouns = loadDictionary();
-      findGender(nouns);
+      nouns = reader.read(nb);
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  private static Map<String, Noun> loadDictionary() throws IOException {
-    int nb = 96 * 1000;
-    NounReader reader = NounReader.of(NounReader.class, "nouns.txt");
-    Map<String, Noun> nouns = reader.read(nb);
     return nouns;
   }
 
-  private static void findGender(Map<String, Noun> nouns) {
+  private static void findGender(Map<String, Noun> nouns, List<String> words) {
     GenderFinder finder = new GenderFinder();
     List<String> exceptions = new ArrayList<String>();
     int nbSuccess = 0;
     int total = 0;
 
-    for (Noun noun : nouns.values()) {
-      if (noun.isSingular()) {
-        String text = noun.getText();
-        boolean result = finder.isMasculine(text);
+    for (String word : words) {
+
+      int beginning = Math.max(0, word.length() - 2);
+      String suffix = word.substring(beginning);
+      boolean suffixE = suffix.equals("ae");
+      suffixE |= suffix.equals("be");
+      suffixE |= suffix.equals("ce");
+      suffixE |= suffix.equals("de");
+
+      if (suffixE) {
+        Noun noun = nouns.get(word);
+        Gender gender = finder.findGender(word);
         boolean expected = noun.isMasculine();
-        nbSuccess += (result == expected) ? 1 : 0;
+
+        boolean failed = (gender == Gender.MASCULINE) && !noun.isMasculine();
+        failed |= (gender == Gender.FEMININE) && noun.isMasculine();
+        nbSuccess += failed ? 0 : 1;
         total++;
 
-        if ((result != expected) && exceptions.size() < 800) {
-          exceptions.add(text);
+        if (failed && exceptions.size() < 200) {
+          exceptions.add(word);
         }
       }
     }

@@ -1,4 +1,4 @@
-package com.marcosavard.commons.text;
+package com.marcosavard.commons.ling;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
