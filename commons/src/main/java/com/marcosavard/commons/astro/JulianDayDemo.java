@@ -91,8 +91,6 @@ public class JulianDayDemo {
   }
 
   private static void demoBeforeGregorianEra() {
-    // TODO Auto-generated method stub
-
     // date = LocalDate.of(-4713, 1, 1);
     // jd = JulianDay.of(date);
     // System.out.println(date + " : " + jd);

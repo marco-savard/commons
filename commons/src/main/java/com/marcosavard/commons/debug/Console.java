@@ -8,8 +8,8 @@ public class Console {
     System.out.println();
   }
 
-  public static void println(String line) {
-    System.out.println(line);
+  public static void println(Object object) {
+    System.out.println(object);
   }
 
   public static void println(String pattern, Object... parameters) {

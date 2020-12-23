@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.io.csv.CsvReader;
 
@@ -16,18 +16,47 @@ import com.marcosavard.commons.io.csv.CsvReader;
  *
  */
 public class SimplePostalCodeLocator extends PostalCodeLocator {
-  private Map<String, GeoLocation> locations = new HashMap<>();
+  private Map<String, GeoLocation> locationsByPostalCode = null;
 
+  @Override
   public GeoLocation findLocation(PostalCode code) {
-    if (locations.isEmpty()) {
-      loadLocations();
-    }
-
+    Map<String, GeoLocation> locations = getLocations();
     String prefix = code.toString().substring(0, 3);
     return locations.get(prefix);
   }
 
+  @Override
+  public PostalCode findPostalCode(GeoLocation location) {
+    Map<String, GeoLocation> locations = getLocations();
+    double nearestDistance = Double.MAX_VALUE;
+    String nearestPrefix = null;
+
+    for (String prefix : locations.keySet()) {
+      GeoLocation loc = locations.get(prefix);
+      double distance = loc.findDistanceFrom(location);
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestPrefix = prefix;
+      }
+    }
+
+    PostalCode postalCode = PostalCode.of(nearestPrefix + "1A1");
+    return postalCode;
+  }
+
+
+  private Map<String, GeoLocation> getLocations() {
+    if (locationsByPostalCode == null) {
+      loadLocations();
+    }
+
+    return locationsByPostalCode;
+  }
+
   private void loadLocations() {
+    locationsByPostalCode = new TreeMap<>();
+
     try {
       InputStream input = SimplePostalCodeLocator.class.getResourceAsStream("postalCodes.csv");
       Reader r = new InputStreamReader(input, "UTF-8");
@@ -50,7 +79,9 @@ public class SimplePostalCodeLocator extends PostalCodeLocator {
     double lat = Double.parseDouble(values[1]);
     double lon = Double.parseDouble(values[2]);
     GeoLocation coord = GeoLocation.of(lat, lon);
-    locations.put(prefix, coord);
+    locationsByPostalCode.put(prefix, coord);
   }
+
+
 
 }

@@ -17,7 +17,7 @@ public class EducationalNetworkReader {
 
     try {
       Reader r = new InputStreamReader(input, StandardCharsets.ISO_8859_1.name());
-      CsvReader cr = CsvReader.of(r);
+      CsvReader cr = CsvReader.of(r).withHeader(1, ';');
       network = readOrganizations(cr);
     } catch (IOException ex) {
       throw new RuntimeException(ex);

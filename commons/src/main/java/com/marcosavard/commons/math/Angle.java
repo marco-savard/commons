@@ -1,14 +1,16 @@
 package com.marcosavard.commons.math;
 
-// TODO isRight, isAigu, isObtu
-// TODO difference(), isLess(), Comparable
-public class Angle {
+public class Angle implements Comparable<Angle> {
   private static final String DEGREE_SIGN = "\u00B0";
   private double rads;
 
   public enum Unit {
     DEG, RAD
   };
+
+  public enum Category {
+    ZERO, ACUTE, RIGHT, OBTUSE, FLAT, REFLEX, UNKNOWN
+  }
 
   public static Angle of(double value, Unit unit) {
     Angle angle;
@@ -50,6 +52,12 @@ public class Angle {
     return str;
   }
 
+  @Override
+  public int compareTo(Angle other) {
+    int comparison = (int) (rads * 1000) - (int) (other.rads * 1000);
+    return comparison;
+  }
+
   public double degrees() {
     return Math.toDegrees(rads);
   }
@@ -84,6 +92,56 @@ public class Angle {
     return isBefore;
   }
 
+  public boolean isZero() {
+    double delta = Math.abs(this.rads);
+    boolean zero = (delta < 0.001);
+    return zero;
+  }
 
+  public boolean isAcute() {
+    boolean acute = (this.rads < Math.PI / 2);
+    return acute;
+  }
 
+  public boolean isRight() {
+    double delta = Math.abs(this.rads - Math.PI / 2);
+    boolean right = (delta < 0.001);
+    return right;
+  }
+
+  public boolean isObtuse() {
+    boolean obtuse = (this.rads > Math.PI / 2) && (this.rads < Math.PI);
+    return obtuse;
+  }
+
+  public boolean isFlat() {
+    double delta = Math.abs(this.rads - Math.PI);
+    boolean right = (delta < 0.001);
+    return right;
+  }
+
+  public boolean isReflex() {
+    boolean reflex = (this.rads > Math.PI);
+    return reflex;
+  }
+
+  public Category getCategory() {
+    Category category = Category.UNKNOWN;
+
+    if (isZero()) {
+      category = Category.ZERO;
+    } else if (isAcute()) {
+      category = Category.ACUTE;
+    } else if (isRight()) {
+      category = Category.RIGHT;
+    } else if (isFlat()) {
+      category = Category.FLAT;
+    } else if (isObtuse()) {
+      category = Category.OBTUSE;
+    } else if (isReflex()) {
+      category = Category.REFLEX;
+    }
+
+    return category;
+  }
 }

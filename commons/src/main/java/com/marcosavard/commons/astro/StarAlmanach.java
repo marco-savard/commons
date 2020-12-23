@@ -23,5 +23,4 @@ public class StarAlmanach {
   public static final SpaceLocation URSA_MAJOR_EPSILON =
       SpaceLocation.of(RightAscension.of(12, 54, 1.6), Declination.of(55, 57, 34.4));
 
-  // TODO find closest star from ra, decl
 }

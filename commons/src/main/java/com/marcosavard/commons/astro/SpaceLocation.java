@@ -203,6 +203,15 @@ public class SpaceLocation {
 
     // TODO validate all positive or all negative
     public static Declination of(int degree, int minute, double second) {
+      boolean allPositive = (degree >= 0) && (minute >= 0) && (second >= 0);
+      boolean allNegative = (degree <= 0) && (minute <= 0) && (second <= 0);
+      boolean valid = allPositive && allNegative;
+
+      if (!valid) {
+        ArithmeticException ex = new InvalidDeclinationException();
+        throw ex;
+      }
+
       return new Declination(degree + (minute / 60.0) + (second / 3600.0));
     }
 
@@ -229,6 +238,40 @@ public class SpaceLocation {
     }
   }
 
+  /**
+   * Compute the angular distance, in radians, between that location.
+   * 
+   * @param location to which distance is computed
+   * @return the distance in radians
+   */
+  public double distanceFrom(SpaceLocation other) {
+    if (other == null) {
+      return 0;
+    }
+
+    double ra0 = Math.toRadians(rightAscension * 15.0);
+    double ra1 = Math.toRadians(other.rightAscension * 15.0);
+
+    double decl0 = Math.toRadians(declination);
+    double decl1 = Math.toRadians(other.declination);
+
+    double deltaLon = Math.abs(ra0 - ra1);
+    double greatCircle = (Math.sin(decl0) * Math.sin(decl1))
+        + (Math.cos(decl0) * Math.cos(decl1) * Math.cos(deltaLon));
+    double deltaAngle = Math.acos(greatCircle);
+    return deltaAngle;
+  }
+
+  @SuppressWarnings("serial")
+  private static class InvalidDeclinationException extends ArithmeticException {
+    private static final String MESSAGE =
+        "Degrees, minutes, seconds must be all positive or all negative";
+
+    InvalidDeclinationException() {
+      super(MESSAGE);
+    }
+
+  }
 
 
 }

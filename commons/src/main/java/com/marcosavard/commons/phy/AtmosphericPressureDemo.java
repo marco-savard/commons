@@ -2,26 +2,37 @@ package com.marcosavard.commons.phy;
 
 import java.text.MessageFormat;
 import org.junit.Assert;
+import com.marcosavard.commons.debug.Console;
 
 public class AtmosphericPressureDemo {
 
   public static void main(String[] args) {
+    demoPressureConversion();
     demoPressureAtAltitude();
     demoFindPressureCorrection();
     demoFindAltitudeFromPressureLoss();
   }
 
-  private static void demoPressureAtAltitude() {
-    double altitude = 0;
-    AtmosphericPressure pa = AtmosphericPressure.atAltitude(altitude);
-    String msg =
-        MessageFormat.format("Pressure at {0} m is normally {1} Kpa", altitude, pa.toKpa());
-    System.out.println(msg);
+  private static void demoPressureConversion() {
+    AtmosphericPressure pressure = AtmosphericPressure.atSeaLevel();
+    Console.println(pressure);
+    Console.println("  " + pressure.toKpa() + " kPa");
+    Console.println("  " + pressure.toMmHg() + " mmHg");
+    Console.println("  " + pressure.toPsi() + " psi");
+    Console.println();
 
-    altitude = 8800;
-    pa = AtmosphericPressure.atAltitude(altitude);
-    msg = MessageFormat.format("Pressure at {0} m is normally {1} Kpa", altitude, pa.toKpa());
-    System.out.println(msg);
+  }
+
+  private static void demoPressureAtAltitude() {
+    Console.println("Atmospheric Pressure vs Altitude");
+
+    for (int altitude = 0; altitude <= 9000; altitude += 1000) {
+      AtmosphericPressure pa = AtmosphericPressure.atAltitude(altitude);
+      double boilingPoint = pa.computeWaterBoilingTemperature();
+      AtmosphericPressure pap = AtmosphericPressure.computeWaterBoilingPressure(boilingPoint);
+      Console.println("  at {0} meters, pressure is {1} kPa and water boils at {2} C, {3} kPa",
+          altitude, pa.toKpa(), boilingPoint, pap.toKpa());
+    }
 
     System.out.println();
   }

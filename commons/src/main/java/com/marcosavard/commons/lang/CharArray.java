@@ -8,6 +8,17 @@ import java.util.List;
 public class CharArray implements CharSequence {
   private char[] characters;
 
+
+  public static CharArray of(char... characters) {
+    int nb = characters.length;
+    char[] array = new char[nb];
+    for (int i = 0; i < nb; i++) {
+      array[i] = characters[i];
+    }
+
+    return new CharArray(array);
+  }
+
   public static CharArray of(CharSequence... charSequences) {
     int nb = charSequences.length;
     char[][] arrays = new char[nb][];
@@ -314,9 +325,26 @@ public class CharArray implements CharSequence {
     return dest;
   }
 
+  // FIXME
+  public CharArray trim() {
+    int len = length();
+    char[] trimmed = new char[len];
+    int j = 0;
+    boolean hasNonBlank = false;
 
+    for (int i = 0; i < len; i++) {
+      char ch = this.charAt(i);
+      boolean isBlank = (ch == ' ');
+      hasNonBlank = hasNonBlank || !isBlank;
+      boolean doCopy = !isBlank || hasNonBlank;
 
-  // TODO trim
+      if (doCopy) {
+        trimmed[j++] = ch;
+      }
+    }
+
+    return CharArray.of(trimmed);
+  }
 
 
 

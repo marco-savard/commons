@@ -1,60 +1,91 @@
 package com.marcosavard.commons.lang;
 
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.debug.StopWatch;
 
 public class CharArrayDemo {
 
   public static void main(String[] args) {
-    demoUsage();
-    // demoPerformance();
+    demoCharArrayEquality();
+    demoCharSequenceOperations();
+    demoStringOperations();
+    demoCharArrayOperations();
+    demoPerformance();
   }
 
-  private static void demoUsage() {
-    CharArray c6 = CharArray.of("qwertyui".toCharArray());
-    CharArray c6b = c6.transcode("qwertyui");
-    System.out.println("c6 = " + c6);
-    System.out.println("c6b = " + c6b);
 
-    CharArray c5 = CharArray.of("12345678".toCharArray());
-    CharArray c5b = c5.removeSequantialCharacters();
-    System.out.println("c5 = " + c5);
-    System.out.println("c5b = " + c5b);
 
-    String s1 = "password";
-    CharArray c1 = CharArray.of(s1.toCharArray());
+  // compare different ways to create CharArray
+  private static void demoCharArrayEquality() {
+    CharArray qwerty1 = CharArray.of('q', 'w', 'e', 'r', 't', 'y');
+    CharArray qwerty2 = CharArray.of("qwerty".toCharArray());
+    Console.println("  {0} equal to {1} : {2}", qwerty1, qwerty2, qwerty1.equals(qwerty2));
 
-    System.out.println("equal = " + s1.equals("password"));
-    System.out.println("equal = " + c1.equals("password"));
+    String qwerty3 = "qwerty";
+    Console.println("  {0} equal to {1} : {2}", qwerty1, qwerty3, qwerty1.equals(qwerty3));
 
-    int idx1 = s1.indexOf("word");
-    int idx2 = c1.indexOf("word");
-
-    System.out.println("idx = " + idx1);
-    System.out.println("idx = " + idx2);
-
-    CharSequence cs1 = s1.subSequence(4, 8);
-    CharSequence cs2 = c1.subSequence(4, 8);
-
-    System.out.println("cs1 = " + cs1);
-    System.out.println("cs2 = " + cs2);
-
-    String s2 = "pass" + "word";
-    CharArray c2 = CharArray.of("pass", "word");
-
-    System.out.println("s2 = " + s2);
-    System.out.println("c2 = " + c2);
-
-    CharArray c3 = CharArray.of("pass");
-    CharArray c4 = c3.concat("word");
-    System.out.println("c4 = " + c4);
-
-    boolean startWithPass1 = s1.startsWith("pass");
-    boolean startWithPass2 = c1.startsWith("pass");
-    System.out.println("startWithPass2 = " + startWithPass2);
-
-    boolean endsWithWord = c1.endsWith("word");
-    System.out.println("endsWithWord = " + endsWithWord);
+    CharArray qwerty4 = CharArray.of("qwer", "ty");
+    Console.println("  {0} equal to {1} : {2}", qwerty1, qwerty4, qwerty1.equals(qwerty4));
+    Console.println();
   }
+
+  private static void demoCharSequenceOperations() {
+    CharSequence qwerty1 = CharArray.of('p', 'a', 's', 's', 'w', 'o', 'r', 'd');
+    CharSequence qwerty2 = "password";
+
+    Console.println("  qwerty1.charAt(4) : " + qwerty1.charAt(4));
+    Console.println("  qwerty2.charAt(4) : " + qwerty2.charAt(4));
+
+    CharSequence subsquence1 = qwerty1.subSequence(4, 8);
+    CharSequence subsquence2 = qwerty2.subSequence(4, 8);
+    Console.println("  {0} = {1} ", subsquence1, subsquence2);
+
+    Console.println();
+  }
+
+  private static void demoStringOperations() {
+    CharArray qwerty1 = CharArray.of('p', 'a', 's', 's', 'w', 'o', 'r', 'd');
+    String qwerty2 = "password";
+
+    Console.println("  qwerty1.indexOf(\"word\") : " + qwerty1.indexOf("word"));
+    Console.println("  qwerty2.indexOf(\"word\") : " + qwerty2.indexOf("word"));
+
+    Console.println("  qwerty1.startsWith(\"pass\") : " + qwerty1.startsWith("pass"));
+    Console.println("  qwerty2.startsWith(\"pass\") : " + qwerty2.startsWith("pass"));
+
+    Console.println("  qwerty1.endsWith(\"word\") : " + qwerty1.endsWith("word"));
+    Console.println("  qwerty2.endsWith(\"word\") : " + qwerty2.endsWith("word"));
+
+    Console.println("  qwerty1.concat(\"s\") : " + qwerty1.concat("s"));
+    Console.println("  qwerty2.concat(\"s\") : " + qwerty2.concat("s"));
+
+    qwerty1 = CharArray.of(' ', 'p', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ');
+    qwerty2 = " password ";
+    Console.println("  qwerty1.trim() : " + qwerty1.trim());
+    Console.println("  qwerty2.trim() : " + qwerty2.trim());
+
+    Console.println();
+  }
+
+  private static void demoCharArrayOperations() {
+    CharArray password = CharArray.of("qwertyui".toCharArray());
+    CharArray transcoded = password.transcode("qwertyui");
+    Console.println("  {0} transcoded : {1}", password, transcoded);
+
+    password = CharArray.of("abcdefgh".toCharArray());
+    CharArray trimmed = password.removeSequantialCharacters();
+    Console.println("  {0} trimmed : {1}", password, trimmed);
+
+    password = CharArray.of("12345678".toCharArray());
+    trimmed = password.removeSequantialCharacters();
+    Console.println("  {0} trimmed : {1}", password, trimmed);
+
+    password = CharArray.of("abc123".toCharArray());
+    trimmed = password.removeSequantialCharacters();
+    Console.println("  {0} trimmed : {1}", password, trimmed);
+    Console.println();
+  }
+
 
   private static void demoPerformance() {
     String s1 = "long character string that contains a password inside";

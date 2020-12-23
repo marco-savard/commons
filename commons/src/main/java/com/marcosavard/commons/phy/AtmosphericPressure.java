@@ -2,8 +2,6 @@ package com.marcosavard.commons.phy;
 
 import java.text.MessageFormat;
 
-// TODO to kipoPascal
-// TODO compute dew point, compute boiling point of water for pressure
 public class AtmosphericPressure {
   private static final AtmosphericPressure AT_SEA_LEVEL = AtmosphericPressure.ofMillibars(1013.25);
   private double millibars;
@@ -29,7 +27,8 @@ public class AtmosphericPressure {
     this.millibars = millibars;
   }
 
-  public Object toKpa() {
+  // convert to kPa
+  public double toKpa() {
     return (this.millibars / 10.0);
   }
 
@@ -43,7 +42,10 @@ public class AtmosphericPressure {
     return (this.millibars * 0.75);
   }
 
-  // TODO toPsi()
+  // to millimeters of mercury
+  public double toPsi() {
+    return (this.millibars * 0.0145037738);
+  }
 
   public static AtmosphericPressure atSeaLevel() {
     return AT_SEA_LEVEL;
@@ -52,6 +54,23 @@ public class AtmosphericPressure {
   public double differenceInMb(AtmosphericPressure p1) {
     double diff = this.millibars - p1.toMb();
     return diff;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    boolean equal = false;
+
+    if (other instanceof AtmosphericPressure) {
+      AtmosphericPressure otherPressure = (AtmosphericPressure) other;
+      double delta = Math.abs(otherPressure.toMb() - toMb());
+      equal = (delta < 0.01);
+    }
+    return equal;
+  }
+
+  @Override
+  public int hashCode() {
+    return (int) this.millibars;
   }
 
   @Override
@@ -66,6 +85,25 @@ public class AtmosphericPressure {
     double p4 = normalPressure.toMb() - startMb + endMb;
     double elevation = 44.3 * (1 - Math.pow(p4 / 1013.25, 0.19));
     return elevation * 1000;
+  }
+
+  // constant to solve Antoine equation (for water, for temperature in range 0-100 'C)
+  private static final double A = 8.07131;
+  private static final double B = 1730.63;
+  private static final double C = 233.426;
+
+  // compute water boiling temperature for this pressure (Antoine formula)
+  public double computeWaterBoilingTemperature() {
+    double boilingPoint = B / (A - Math.log10(toMmHg())) - C;
+    return boilingPoint;
+  }
+
+  // compute water boiling pressure for this temperature, in Celcius (Antoine formula)
+  public static AtmosphericPressure computeWaterBoilingPressure(double temperature) {
+    double logPressure = A - B / (temperature + C);
+    double pressureMmHg = Math.pow(10.0, logPressure);
+    AtmosphericPressure pressure = AtmosphericPressure.ofMillimeterHg(pressureMmHg);
+    return pressure;
   }
 
 

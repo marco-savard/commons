@@ -10,17 +10,41 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import com.marcosavard.commons.astro.SpaceLocation.Unit;
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class SpaceLocationDemo {
 
   public static void main(String[] args) {
-    // demoConversion();
+    demoEquinoxPrecession();
+    demoConversion();
+    demoFindPolaris();
+
     // demoBirminghamUK();
     // demoQuebecCity();
-    demoEquinoxPrecession();
+
+  }
+
+  private static void demoFindPolaris() {
+    SpaceLocation northPole = SpaceLocation.of(0, 90);
+
+    List<SpaceLocation> almanach = new ArrayList<>();
+    almanach.add(StarAlmanach.ANTARES);
+    almanach.add(StarAlmanach.BETELGEUSE);
+    almanach.add(StarAlmanach.CENTAURI_ALPHA);
+    almanach.add(StarAlmanach.CRUX_ALPHA);
+    almanach.add(StarAlmanach.POLARIS);
+
+    for (SpaceLocation location : almanach) {
+      double distanceRad = location.distanceFrom(northPole);
+      double distance = Math.toDegrees(distanceRad);
+      Console.println("  " + distance);
+    }
+
   }
 
   private static void demoConversion() {
