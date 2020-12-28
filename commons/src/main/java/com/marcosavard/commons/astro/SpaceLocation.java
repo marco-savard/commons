@@ -201,7 +201,7 @@ public class SpaceLocation {
 
     private final double value; // range -90..+90
 
-    // TODO validate all positive or all negative
+    // validate all positive or all negative
     public static Declination of(int degree, int minute, double second) {
       boolean allPositive = (degree >= 0) && (minute >= 0) && (second >= 0);
       boolean allNegative = (degree <= 0) && (minute <= 0) && (second <= 0);

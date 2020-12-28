@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.method;
 
 import java.util.ArrayList;
 import java.util.List;

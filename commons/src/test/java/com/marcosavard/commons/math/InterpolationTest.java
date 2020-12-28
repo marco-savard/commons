@@ -2,6 +2,7 @@ package com.marcosavard.commons.math;
 
 import org.junit.Assert;
 import org.junit.Test;
+import com.marcosavard.commons.math.method.Interpolation;
 
 public class InterpolationTest {
 	private static double DELTA = 0.01;
