@@ -1,77 +1,87 @@
 package com.marcosavard.commons.geom;
 
+// immutable ellipse, purely mathematical and independent from awt
 public class Ellipse extends Shape {
-	private final double centerX, centerY, radiusX, radiusY;
-	
-	public static Ellipse of(double centerX, double centerY, double radiusX, double radiusY) {
-		return new Ellipse(centerX, centerY, radiusX, radiusY); 
-	}
-	
-	public static Ellipse circleOf(double centerX, double centerY, double radius) {
-		return new Ellipse(centerX, centerY, radius, radius); 
-	}
-	
-	private Ellipse(double centerX, double centerY, double radiusX, double radiusY) {
-		this.centerX = centerX;
-		this.centerY = centerY; 
-		this.radiusX = radiusX;
-		this.radiusY = radiusY; 
-	}
-	
-	public double getCenterX() {
-		return centerX;
-	}
-	
-	public double getCenterY() {
-		return centerY;
-	}
-	
-	public double getRadiusX() {
-		return radiusX;
-	}
-	
-	public double getRadiusY() {
-		return radiusY;
-	}
-	
-	public double getWidth() {
-		return radiusX * 2;
-	}
-	
-	public double getHeight() {
-		return radiusY * 2;
-	}
+  private final double x, y, width, height;
 
-	@Override
-	public double getArea() {
-		double area = Math.PI * radiusX * radiusY;
-		return area;
-	}
+  public static Ellipse of(double centerX, double centerY, double radiusX, double radiusY) {
+    double x = centerX - radiusX;
+    double y = centerY - radiusY;
+    double w = radiusX * 2;
+    double h = radiusY * 2;
+    return new Ellipse(x, y, w, h);
+  }
 
-	@Override
-	public boolean contains(double x, double y) {
-		// Normalize the coordinates compared to the ellipse
-        // having a center at 0,0 and a radius of 0.5.
-        double ellw = getWidth();
-        if (ellw <= 0.0) {
-            return false;
-        }
-        double normx = (x + getRadiusX() - getCenterX()) / ellw - 0.5;
-        double ellh = getHeight();
-        if (ellh <= 0.0) {
-            return false;
-        }
-        double normy = (y + getRadiusY() - getCenterY()) / ellh - 0.5;
-        return (normx * normx + normy * normy) < 0.25;
+  public static Ellipse circleOf(double centerX, double centerY, double radius) {
+    double x = centerX - radius;
+    double y = centerY - radius;
+    double w = radius * 2;
+    double h = radius * 2;
+    return new Ellipse(x, y, w, h);
+  }
+
+  private Ellipse(double x, double y, double w, double h) {
+    this.x = x;
+    this.y = y;
+    this.width = w;
+    this.height = h;
+  }
+
+  public double getCenterX() {
+    return x + (width / 2);
+  }
+
+  public double getCenterY() {
+    return y + (height / 2);
+  }
+
+  public double getRadiusX() {
+    return (width / 2);
+  }
+
+  public double getRadiusY() {
+    return (height / 2);
+  }
+
+  public double getWidth() {
+    return width;
+  }
+
+  public double getHeight() {
+    return height;
+  }
+
+  @Override
+  public double getArea() {
+    double area = Math.PI * getRadiusX() * getRadiusY();
+    return area;
+  }
+
+  @Override
+  public boolean contains(double x, double y) {
+    // Normalize the coordinates compared to the ellipse
+    // having a center at 0,0 and a radius of 0.5.
+    double ellw = getWidth();
+    if (ellw <= 0.0) {
+      return false;
     }
+    double normx = (x + getRadiusX() - getCenterX()) / ellw - 0.5;
+    double ellh = getHeight();
+    if (ellh <= 0.0) {
+      return false;
+    }
+    double normy = (y + getRadiusY() - getCenterY()) / ellh - 0.5;
+    boolean contained = (normx * normx + normy * normy) < 0.25;
+    return contained;
+  }
 
-	@Override
-	public Rectangle getBounds() {
-		double x = centerX - radiusX;  
-		double y = centerY - radiusY; 
-		Rectangle bounds = Rectangle.of(x, y, getWidth(), getHeight()); 
-		return bounds;
-	}
+  @Override
+  public Rectangle getBounds() {
+    double x = getCenterX() - getRadiusX();
+    double y = getCenterY() - getRadiusY();
+    Rectangle bounds = Rectangle.of(x, y, getWidth(), getHeight());
+    return bounds;
+  }
 
-	
+
 }

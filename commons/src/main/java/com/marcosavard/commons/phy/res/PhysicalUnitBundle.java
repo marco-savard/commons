@@ -1,14 +1,14 @@
-package com.marcosavard.commons.chem.res;
+package com.marcosavard.commons.phy.res;
 
 import java.util.Locale;
 import com.marcosavard.commons.res.CommonResourceBundle;
 
-public class ChemicalElementBundle extends CommonResourceBundle {
-  private static ChemicalElementBundle bundle;
+public class PhysicalUnitBundle extends CommonResourceBundle {
+  private static PhysicalUnitBundle bundle;
 
-  public static ChemicalElementBundle getBundle() {
+  public static PhysicalUnitBundle getBundle() {
     if (bundle == null) {
-      bundle = new ChemicalElementBundle();
+      bundle = new PhysicalUnitBundle();
     }
 
     return bundle;

@@ -1,9 +1,9 @@
 package com.marcosavard.commons.geog.ca.res;
 
 import java.util.Locale;
-import com.marcosavard.commons.res.AbstractResourceBundle;
+import com.marcosavard.commons.res.CommonResourceBundle;
 
-public class CanadianAirport extends AbstractResourceBundle {
+public class CanadianAirport extends CommonResourceBundle {
   private static CanadianAirport bundle;
 
   public static CanadianAirport getBundle() {

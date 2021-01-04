@@ -1,14 +1,14 @@
-package com.marcosavard.commons.soc.res;
+package com.marcosavard.commons.text.res;
 
 import java.util.Locale;
 import com.marcosavard.commons.res.CommonResourceBundle;
 
-public class CivilityResources extends CommonResourceBundle {
-  private static CivilityResources bundle;
+public class TimeResources extends CommonResourceBundle {
+  private static TimeResources bundle;
 
-  public static CivilityResources getBundle() {
+  public static TimeResources getBundle() {
     if (bundle == null) {
-      bundle = new CivilityResources();
+      bundle = new TimeResources();
     }
 
     return bundle;
