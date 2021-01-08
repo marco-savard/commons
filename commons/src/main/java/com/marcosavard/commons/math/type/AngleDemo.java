@@ -1,11 +1,11 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.type;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.marcosavard.commons.debug.Console;
-import com.marcosavard.commons.math.Angle.Unit;
+import com.marcosavard.commons.math.type.Angle.Unit;
 
 public class AngleDemo {
 

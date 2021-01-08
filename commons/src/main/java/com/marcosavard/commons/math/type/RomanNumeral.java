@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.type;
 
 /**
  * A class that converts numbers to roman numeral.

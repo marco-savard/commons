@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.type;
 
 import java.text.MessageFormat;
 

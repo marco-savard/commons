@@ -1,4 +1,6 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.type;
+
+import com.marcosavard.commons.math.Maths;
 
 public class Angle implements Comparable<Angle> {
   private static final String DEGREE_SIGN = "\u00B0";

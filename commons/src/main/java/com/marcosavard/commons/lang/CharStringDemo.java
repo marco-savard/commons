@@ -1,0 +1,60 @@
+package com.marcosavard.commons.lang;
+
+public class CharStringDemo {
+
+  public static void main(String[] args) {
+    String str = "éléphant";
+    testStringOperations(str);
+    testStringOperations(CharString.of(str));
+    testCharStringOperations(str);
+  }
+
+  private static void testStringOperations(String str) {
+    String result = str.concat("s");
+    boolean hasSuffix = str.endsWith("s");
+    boolean equal = str.equalsIgnoreCase("ÉLÉPHANT");
+    int index = str.indexOf("é");
+    index = str.indexOf("é", 2);
+    index = str.lastIndexOf("é");
+    index = str.lastIndexOf("é", 1);
+    int len = str.length();
+    result = str.replaceAll("é", "e");
+    String[] splitted = str.split("r");
+    boolean hasPrefix = str.startsWith("é");
+    result = str.substring(3);
+    result = str.substring(0, 3);
+    result = str.toUpperCase();
+    result = str.toLowerCase();
+    result = str.trim();
+  }
+
+  private static void testStringOperations(CharString str) {
+    String result = str.concat("s");
+    boolean hasSuffix = str.endsWith("s");
+    boolean equal = str.equalsIgnoreCase("ÉLÉPHANT");
+    int index = str.indexOf("é");
+    index = str.indexOf("é", 2);
+    index = str.lastIndexOf("é");
+    index = str.lastIndexOf("é", 1);
+    int len = str.length();
+    result = str.replaceAll("é", "e");
+    String[] splitted = str.split("r");
+    boolean hasPrefix = str.startsWith("é");
+    result = str.substring(3);
+    result = str.substring(0, 3);
+    result = str.toUpperCase();
+    result = str.toLowerCase();
+    result = str.trim();
+  }
+
+  private static void testCharStringOperations(String str) {
+    CharString cs = CharString.of(str);
+    String result = cs.stripAccents();
+    boolean equal = cs.equalsIgnoreAccents("elephant");
+    result = cs.stripBlanks();
+
+    int len = CharString.of(null).length();
+    System.out.println("len = " + len);
+  }
+
+}

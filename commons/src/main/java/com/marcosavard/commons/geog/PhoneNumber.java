@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Random;
 import com.marcosavard.commons.geog.ca.PostalCode;
-import com.marcosavard.commons.util.StringUtil;
+import com.marcosavard.commons.lang.CharString;
 
 /**
  * A class to store a North American phone number, with formatting and validating methods
@@ -42,7 +42,7 @@ public class PhoneNumber implements Serializable {
    * @param extension optional
    */
   private PhoneNumber(String fullNumber, String extension) {
-    String digits = StringUtil.stripNonDigit(fullNumber);
+    String digits = CharString.of(fullNumber).stripNonDigit();
 
     _areaCode = digits.substring(0, 3);
     _number = digits.substring(3);

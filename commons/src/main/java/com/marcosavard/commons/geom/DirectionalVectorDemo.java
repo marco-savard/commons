@@ -2,14 +2,14 @@ package com.marcosavard.commons.geom;
 
 import java.text.MessageFormat;
 
-import com.marcosavard.commons.geom.Vector.AngleUnit;
+import com.marcosavard.commons.geom.DirectionalVector.AngleUnit;
 
-public class VectorDemo {
+public class DirectionalVectorDemo {
 
 	public static void main(String[] args) {
-		Vector boatVelocity = Vector.ofPolarCoordinates(20, 0, AngleUnit.DEGREES);
-		Vector currentVelocity = Vector.ofPolarCoordinates(15, 90, AngleUnit.DEGREES);
-		Vector sum = currentVelocity.add(boatVelocity); 
+		DirectionalVector boatVelocity = DirectionalVector.ofPolarCoordinates(20, 0, AngleUnit.DEGREES);
+		DirectionalVector currentVelocity = DirectionalVector.ofPolarCoordinates(15, 90, AngleUnit.DEGREES);
+		DirectionalVector sum = currentVelocity.add(boatVelocity); 
 		
 		String msg = MessageFormat.format("{0} + {1} = {2}", currentVelocity, boatVelocity, sum );
 		System.out.println(msg);

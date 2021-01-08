@@ -6,9 +6,9 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import com.marcosavard.commons.geog.GeoLocation;
-import com.marcosavard.commons.math.Angle;
-import com.marcosavard.commons.math.Base;
 import com.marcosavard.commons.math.InRange;
+import com.marcosavard.commons.math.type.Angle;
+import com.marcosavard.commons.math.type.Base;
 
 // in equatorial coordinates
 public class SpaceLocation {

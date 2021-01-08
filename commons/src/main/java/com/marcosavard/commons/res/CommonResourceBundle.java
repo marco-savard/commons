@@ -25,7 +25,7 @@ public abstract class CommonResourceBundle {
     }
 
     if (string == null) {
-      string = key;
+      string = "[" + key + "]";
     }
 
     return string;

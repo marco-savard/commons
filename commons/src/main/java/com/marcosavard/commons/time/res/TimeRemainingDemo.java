@@ -1,11 +1,13 @@
-package com.marcosavard.commons.text.res;
+package com.marcosavard.commons.time.res;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import com.marcosavard.commons.math.Base;
+import com.marcosavard.commons.math.type.Base;
 import com.marcosavard.commons.util.Joiner;
 
 public class TimeRemainingDemo {
@@ -28,12 +30,34 @@ public class TimeRemainingDemo {
   }
 
   private static void printTime(Locale locale) {
-    System.out.println(locale);
+    print(locale);
+    // System.out.println(locale);
+
+
     for (int i = 0; i < COUNTDOWN.length; i++) {
       int remaining = COUNTDOWN[i];
       printTimeRemaining(remaining, locale);
     }
     System.out.println();
+  }
+
+  private static void print(Object object) {
+    Class claz = TimeRemainingDemo.class;
+
+    try {
+      Method method = claz.getMethod("print", Object.class);
+      Parameter p = method.getParameters()[0];
+
+    } catch (NoSuchMethodException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (SecurityException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    Parameter p;
+
   }
 
   private static void printTimeRemaining(int seconds, Locale locale) {
@@ -53,7 +77,7 @@ public class TimeRemainingDemo {
     }
 
     String suffix = " " + TimeResources.getString("and", locale) + " ";
-    String joined = Joiner.ofDelimiter(", ").ofSuffix(suffix).join(list);
+    String joined = Joiner.ofDelimiter(", ").withSuffix(suffix).join(list);
     long sum = Arrays.stream(encoded).sum();
     String key = (sum < 2) ? "0_remaining" : "0_remaining_pl";
     String pattern = TimeResources.getString(key, locale);

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import com.marcosavard.commons.math.Iota;
+import com.marcosavard.commons.math.type.IntegerList;
 import com.marcosavard.commons.util.Array;
 
 public class TextCalendar {
@@ -36,8 +36,8 @@ public class TextCalendar {
     // build calendar
     int dayOfWeek = firstOfMonth.getDayOfWeek().getValue() % 7;
     int lengthOfMonth = YearMonth.from(firstOfMonth).lengthOfMonth();
-    days = Iota.of(dayOfWeek).multiplyBy(0).format("%d");
-    days.addAll(Iota.of(lengthOfMonth).format("%2d"));
+    days = IntegerList.of(dayOfWeek).multiplyBy(0).format("%d");
+    days.addAll(IntegerList.of(lengthOfMonth).format("%2d"));
     Collections.replaceAll(days, "0", "  ");
   }
 

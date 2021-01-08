@@ -2,7 +2,7 @@ package com.marcosavard.commons.pseudo;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.marcosavard.commons.math.PseudoRandom;
+import com.marcosavard.commons.math.type.PseudoRandom;
 import com.marcosavard.commons.text.SyllableSplitter;
 
 public class PseudoLanguage {

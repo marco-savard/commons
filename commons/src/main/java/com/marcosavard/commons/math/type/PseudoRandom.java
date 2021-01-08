@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.type;
 
 public class PseudoRandom {
   private double current = Math.PI;

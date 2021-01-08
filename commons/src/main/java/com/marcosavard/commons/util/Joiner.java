@@ -15,7 +15,7 @@ public class Joiner {
     this.delimiter = delimiter;
   }
 
-  public Joiner ofSuffix(String suffix) {
+  public Joiner withSuffix(String suffix) {
     this.suffix = suffix;
     return this;
   }

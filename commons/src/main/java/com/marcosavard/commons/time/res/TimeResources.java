@@ -1,4 +1,4 @@
-package com.marcosavard.commons.text.res;
+package com.marcosavard.commons.time.res;
 
 import java.util.Locale;
 import com.marcosavard.commons.res.CommonResourceBundle;

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import com.marcosavard.commons.ling.Noun;
 import com.marcosavard.commons.ling.NounReader;
-import com.marcosavard.commons.math.Percent;
+import com.marcosavard.commons.math.type.Percent;
 
 public class GenderStatDemo {
 
