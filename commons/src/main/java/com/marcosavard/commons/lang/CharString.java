@@ -14,13 +14,28 @@ import java.util.List;
  *
  */
 public class CharString implements CharSequence, StringOperations, CharStringOperations {
-  private static final String ELLIPSIS = "\u2026"; // ... character
+  private static final CharString EMPTY = new CharString("");
+  private static final String ELLIPSIS = "\u2026"; // ...character
   private static final Character[] VOYELS = new Character[] {'a', 'e', 'i', 'o', 'u'};
 
   private String value; // nullSafe value
 
   public static CharString of(String string) {
-    CharString cs = new CharString(string);
+    CharString cs;
+
+    if (isNullOrEmpty(string)) {
+      cs = EMPTY;
+    } else {
+      cs = new CharString(string);
+    }
+
+    return cs;
+  }
+
+  public static CharString of(char ch, int len) {
+    char[] chars = new char[len];
+    Arrays.fill(chars, ch);
+    CharString cs = new CharString(new String(chars));
     return cs;
   }
 
@@ -186,6 +201,8 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
     return equal;
   }
 
+
+
   @Override
   public String padLeft(int totalLength) {
     String padded = String.format("%1$" + totalLength + "s", this);
@@ -318,6 +335,7 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
     boolean voyel = voyels.contains(c);
     return voyel;
   }
+
 
 
 }

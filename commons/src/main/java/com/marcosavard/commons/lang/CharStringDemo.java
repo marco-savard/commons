@@ -4,9 +4,25 @@ public class CharStringDemo {
 
   public static void main(String[] args) {
     String str = "éléphant";
-    testStringOperations(str);
-    testStringOperations(CharString.of(str));
-    testCharStringOperations(str);
+    // testStringOperations(str);
+    // testStringOperations(CharString.of(str));
+    // testCharStringOperations(str);
+
+    testCSharpOperations();
+    testSqlOperations();
+  }
+
+  private static void testCSharpOperations() {
+
+    System.out.println(CharString.of('t', 10));
+
+    String joined = String.join(", ", CharString.of("Alpha"), CharString.of("Beta"));
+    System.out.println(joined);
+  }
+
+  private static void testSqlOperations() {
+    // is cs between "a" and "be" or like "?"
+
   }
 
   private static void testStringOperations(String str) {
