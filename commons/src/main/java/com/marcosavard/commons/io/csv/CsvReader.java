@@ -18,6 +18,7 @@ public class CsvReader {
   private BufferedReader bf;
   private int nbHeaders = 1;
   private char headerSeparator = ';', separator = ';';
+  private String commentCharacter;
   private boolean hasNext = true;
 
   public static CsvReader of(Class<?> claz, String filename) {
@@ -48,6 +49,11 @@ public class CsvReader {
     return this;
   }
 
+  public CsvReader withCommentCharacter(char commentCharacter) {
+    this.commentCharacter = Character.toString(commentCharacter);
+    return this;
+  }
+
   /**
    * Builds a CSV reader from a standard Reader instance.
    * 
@@ -68,7 +74,9 @@ public class CsvReader {
    * @throws IOException when I/O exception occurs
    */
   public String[] readHeaderColumns() throws IOException {
-    return readHeaders().get(0);
+    List<String[]> headers = readHeaders();
+    String[] header = headers.size() == 0 ? new String[] {} : headers.get(0);
+    return header;
   }
 
   /**
@@ -142,23 +150,26 @@ public class CsvReader {
     String line = bf.readLine();
 
     if (line != null) {
-      char[] chars = line.toCharArray();
+      boolean comment = line.startsWith(commentCharacter);
 
-      for (char ch : chars) {
-        if (ch == '\"') {
-          inQuotes = !inQuotes;
-        } else if ((ch == separator) && !inQuotes) {
+      if (!comment) {
+        char[] chars = line.toCharArray();
+
+        for (char ch : chars) {
+          if (ch == '\"') {
+            inQuotes = !inQuotes;
+          } else if ((ch == separator) && !inQuotes) {
+            values.add(sb.toString().trim());
+            sb.setLength(0);
+          } else {
+            sb.append(ch);
+          }
+        }
+
+        if (!sb.toString().isEmpty()) {
           values.add(sb.toString().trim());
-          sb.setLength(0);
-        } else {
-          sb.append(ch);
         }
       }
-
-      if (!sb.toString().isEmpty()) {
-        values.add(sb.toString().trim());
-      }
-
     } else {
       hasNext = false;
     }

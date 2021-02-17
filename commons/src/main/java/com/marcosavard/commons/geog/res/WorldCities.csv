@@ -1,0 +1,69 @@
+TimeZoneId;Country;State;Lat;Lon
+America/Adak;us;hk;51.872°N;176.636°W    
+America/Anchorage;us;ak;61°13′N;149°54′W 
+America/Atka;us;ak;52°11′57″N;174°12′48″W  
+America/Blanc-Sablon;ca;qc;51°25′N;57°08′W  
+America/Boise;us;idaho;43°36′57″N;116°12′6″W
+America/Cambridge_Bay;ca;nu;69°06′50″N;105°03′10″W  
+America/Chicago;us;il;41°52′55″N;87°37′40″W
+America/Creston;ca;bc;49°05′24″N;116°30′36″W 
+America/Dawson;ca;yk;64°03′30″N;139°26′00″W
+America/Dawson_Creek;ca;bc;55°45′38″N;120°14′08″W
+America/Denver;us;co;39°44′21″N;04°59′25″W
+America/Detroit;us;mich;42°19′53″N;83°02′45″W
+America/Edmonton;ca;ab;53°32′4″N;113°29′25″W
+America/Fort_Nelson;ca;bc;58°48′21.3″N;122°41′47.3″W
+America/Fort_Wayne;us;ia;41°04′50″N;85°08′21″W
+
+
+#America/Glace_Bay;ca;ns;Atlantic Daylight Time
+#America/Goose_Bay;ca;nl;Atlantic Daylight Time
+#America/Halifax;ca;ns;Atlantic Daylight Time
+#America/Indiana/Indianapolis;us;ia;Eastern Daylight Time
+#America/Indiana/Knox;us;ia;Central Daylight Time
+#America/Indiana/Marengo;us;ia;Eastern Daylight Time
+#America/Indiana/Petersburg;us;ia;Eastern Daylight Time
+#America/Indiana/Tell_City;us;ia;Central Daylight Time
+#America/Indiana/Vevay;us;ia;Eastern Daylight Time
+#America/Indiana/Vincennes;us;ia;Eastern Daylight Time
+#America/Indiana/Winamac;us;ia;Eastern Daylight Time
+#America/Indianapolis;us;iaEastern Daylight Time
+#America/Inuvik;ca;nt;Mountain Daylight Time
+#America/Iqaluit;ca;nu;Eastern Daylight Time
+#America/Juneau;us;ak;Alaska Daylight Time
+#America/Kentucky/Louisville;us;ky;Eastern Daylight Time
+#America/Kentucky/Monticello;us;ky;Eastern Daylight Time
+#America/Knox_IN;us;ia;Central Daylight Time
+#America/Los_Angeles;us;ca;Pacific Daylight Time
+#America/Louisville;Eastern Daylight Time
+#America/Metlakatla;Alaska Daylight Time
+#America/Miquelon;Pierre & Miquelon Daylight Time
+#America/Moncton;Atlantic Daylight Time
+#America/Monterrey;Central Daylight Time
+#America/Montreal;Eastern Daylight Time
+#America/New_York;Eastern Daylight Time
+#America/Nipigon;Eastern Daylight Time
+#America/Nome;Alaska Daylight Time
+#America/North_Dakota/Beulah;Central Daylight Time
+#America/North_Dakota/Center;Central Daylight Time
+#America/North_Dakota/New_Salem;Central Daylight Time
+#America/Ojinaga;Mountain Daylight Time
+#America/Phoenix;Mountain Daylight Time
+#America/Rainy_River;Central Daylight Time
+#America/Rankin_Inlet;Central Daylight Time
+#America/Regina;Central Daylight Time
+#America/Resolute;Central Daylight Time
+#America/Shiprock;Mountain Daylight Time
+#America/Sitka;Alaska Daylight Time
+#America/St_Johns;Newfoundland Daylight Time
+#America/Swift_Current;Central Daylight Time
+#America/Thunder_Bay;Eastern Daylight Time
+#America/Toronto;Eastern Daylight Time
+#America/Vancouver;Pacific Daylight Time
+#America/Whitehorse;Pacific Daylight Time
+#America/Winnipeg;Central Daylight Time
+#America/Yakutat;Alaska Daylight Time
+#America/Yellowknife;Mountain Daylight Time
+
+
+

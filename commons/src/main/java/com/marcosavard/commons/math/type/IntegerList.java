@@ -2,8 +2,11 @@ package com.marcosavard.commons.math.type;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -13,6 +16,14 @@ public class IntegerList extends ArrayList<Integer> {
   public static IntegerList of(List<Integer> original) {
     IntegerList list = new IntegerList(original);
     return list;
+  }
+
+  public static IntegerList of(String original) {
+    String[] splitted = original.split(" +");
+    Function<String, Integer> parse = Integer::parseInt;
+    List<Integer> list = Arrays.stream(splitted).map(parse).collect(Collectors.toList());
+
+    return of(list);
   }
 
   public static IntegerList of(int length) {
@@ -87,9 +98,9 @@ public class IntegerList extends ArrayList<Integer> {
     return products;
   }
 
-  public int addAll() {
-    int sum = this.stream().reduce(0, Integer::sum);
-    return sum;
+  public Integer forAll(int first, BinaryOperator<Integer> oper) {
+    int result = this.stream().reduce(first, oper);
+    return result;
   }
 
 

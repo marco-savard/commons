@@ -1,54 +1,41 @@
 package com.marcosavard.commons.geog.ca.qc.educ;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.List;
 import com.marcosavard.commons.geog.ca.qc.RegionAdministrative;
-import com.marcosavard.commons.io.csv.CsvReader;
+import com.marcosavard.commons.geog.ca.qc.educ.res.QuebecSchools;
 
 public class EducationalNetworkReader {
 
-  public static EducationalNetwork read() {
-    InputStream input = EducationalNetworkReader.class.getResourceAsStream("QuebecSchools.csv");
-    EducationalNetwork network;
+  static EducationalNetwork read() {
+    // get data
+    QuebecSchools quebecSchools = new QuebecSchools();
+    quebecSchools.loadAll();
+    List<String> columns = quebecSchools.getColumns();
+    List<String[]> rows = quebecSchools.getRows();
 
-    try {
-      Reader r = new InputStreamReader(input, StandardCharsets.ISO_8859_1.name());
-      CsvReader cr = CsvReader.of(r).withHeader(1, ';');
-      network = readOrganizations(cr);
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    }
-
+    // build objects from data
+    EducationalNetwork network = readOrganizations(columns, rows);
     return network;
   }
 
   //
   // private methods
   //
-
-  private static EducationalNetwork readOrganizations(CsvReader reader) throws IOException {
+  private static EducationalNetwork readOrganizations(List<String> columns, List<String[]> rows) {
     EducationalNetwork network = new EducationalNetwork();
-    String[] columns = reader.readHeaderColumns();
 
-    while (reader.hasNext()) {
-      String[] line = reader.readNext();
-      if (line.length > 0) {
-        Organization organization = readOrganization(network, columns, line);
+    for (String[] row : rows) {
+      Organization organization = readOrganization(network, columns, row);
 
-        if (organization != null) {
-          network.add(organization);
-        }
+      if (organization != null) {
+        network.add(organization);
       }
     }
 
     return network;
   }
 
-  private static Organization readOrganization(EducationalNetwork network, String[] columns,
+  private static Organization readOrganization(EducationalNetwork network, List<String> columns,
       String[] line) {
     String code = readValue(columns, line, "Code d'organisme");
     String type = readValue(columns, line, "Type d'organisme");
@@ -128,7 +115,6 @@ public class EducationalNetworkReader {
     return organization;
   }
 
-  //
 
   private static RegionAdministrative getRegion(String regionText) {
     int regionCode = Integer.parseInt(regionText);
@@ -136,8 +122,8 @@ public class EducationalNetworkReader {
     return region;
   }
 
-  private static String readValue(String[] columns, String[] line, String fieldName) {
-    int idx = Arrays.asList(columns).indexOf(fieldName);
+  private static String readValue(List<String> columns, String[] line, String fieldName) {
+    int idx = columns.indexOf(fieldName);
     String value = line[idx].replaceAll("\"", "");
     return value;
   }
