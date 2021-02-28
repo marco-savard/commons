@@ -1,6 +1,6 @@
 package com.marcosavard.commons.util;
 
-public class WildcardsToRegex {
+public class Wildcards {
 	
 	/**
 	 * Convert a limited but simpler wildcard pattern to a standard regex. 

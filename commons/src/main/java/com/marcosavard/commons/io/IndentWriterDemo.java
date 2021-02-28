@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import com.marcosavard.commons.util.WildcardsToRegex;
+import com.marcosavard.commons.util.Wildcards;
 
 public class IndentWriterDemo implements Runnable {
 
@@ -76,7 +76,7 @@ public class IndentWriterDemo implements Runnable {
     String javaHome = System.getProperty("java.home");
     System.out.println(javaHome);;
 
-    String regex = WildcardsToRegex.toRegex(wildcards);
+    String regex = Wildcards.toRegex(wildcards);
     List<Package> allPackages = Arrays.asList(Package.getPackages());
     Comparator<Package> comparator = Comparator.comparing(Package::getName);
     List<Package> javaPackages = allPackages.stream().filter(p -> p.getName().matches(regex))
