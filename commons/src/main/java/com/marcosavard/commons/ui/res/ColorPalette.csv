@@ -1,0 +1,147 @@
+Color Code;Color Name
+0x00ff00;Lime
+
+0xcd5c5c;Indian Red
+0xf08080;Light Coral
+0xfa8072;Salmon
+0xe9967a;Dark Salmon
+0xffa07a;Light Salmon
+0xdc143c;Crimson
+0xff0000;Red
+0xb22222;Fire Brick
+0x8b0000;Dark Red
+
+0xffc0cb;Pink
+0xffb6c1;Light Pink
+0xff69b4;Hot Pink
+0xff1494;Deep Pink
+0xc71585;Medium Violet Red
+0xdb7093;Pale Violet Red
+
+0xff7f50;Coral
+0xff6347;Tomato
+0xff4500;Orange Red
+0xff8c00;Dark Orange
+0xffa500;Orange
+
+0xffd700;Gold
+0xffff00;Yellow
+0xffffe0;Light Yellow
+0xfffacd;Lemon Chiffon
+0xfafad2;Light Goldenrod Yellow
+0xffefd5;Papaya Whip
+0xffe4b5;Moccasin
+0xffdab9;Peach Puff
+0xeee8aa;Pale Goldenrod
+0xf0e68c;Khaki
+0xbdb76b;Dark Khaki
+
+0xadff2f;Green Yellow
+0x7fff00;Chartreuse
+0x7cfc00;Lawn Green
+0x00ff00;Lime
+0x32cd32;Lime Green
+0x98fb98;Pale Green
+0x90ee90;Light Green
+0x00fa9a;Medium Spring Green
+0x00ff7f;Spring Green
+0x3cb371;Medium Sea Green
+0x2e8b57;Sea Green
+0x228b22;Forest Green
+0x008000;Green
+0x006400;Dark Green
+0x9acd32;Yellow Green
+0x6b8e23;Olive Drab
+0x808000;Olive
+0x526b2f;Dark Olive Green
+0x66cdaa;Medium Aquamarine
+0x8fbc8f;Dark Sea Green
+0x20b2aa;Light Sea Green
+
+0x008b8b;Dark Cyan
+0x008080;Teal
+0x00ffff;Cyan
+0xe0ffff;Light Cyan
+0xafeeee;Pale Turquoise
+0x7fffd4;Aqua Marine
+0x40e0d0;Turquoise
+0x48d1cc;Medium Turquoise
+0x00ced1;Dark Turquoise 
+0x5f9ea0;Cadet Blue
+0x4682b4;Steel Blue 
+0xb0c4de;Light Steel Blue
+0xb0e0e6;Powder Blue
+0xadd8e6;Light Blue
+0x87ceeb;Sky Blue
+0x87cefa;Light Sky Blue
+0x00bfff;Deep Sky Blue
+0x1e90ff;Dodger Blue
+0x6495ed;Cornflower Blue
+0x7b68ee;Medium Slate Blue
+0x4169e1;Royal Blue
+0x0000ff;Blue
+0x0000cd;Medium Blue
+0x00008b;Dark Blue
+0x000080;Navy Blue
+0x191970;Midnight Blue
+0xe6e6fa;Lavender
+0xd8bfd8;Thistle
+0xdda0dd;Plum
+0xee82ee;Violet
+0xda70d6;Orchid
+0xff00ff;Magenta
+0xba55d3;Medium Orchid
+0x9370db;Medium Purple
+0x9966cc;Amethyst
+0x8a2be2;Blue Violet
+0x9400d3;Dark Violet
+0x9932cc;Dark Orchid 
+0x8b008b;Dark Magenta
+0x800080;Purple
+0x4b0082;Indigo
+0x6a5acd;Slate Blue
+0x483d8b;Dark Slate Blue
+0x7b68ee;Medium Slate Blue
+0xfff8dc;Cornsilk
+0xffebcd;Blanched Almond
+0xffe4c4;Bisque
+0xffdead;Navajo White
+0xf5deb3;Wheat
+0xdeb887;Burly Wood
+0xd2b48c;Tan
+0xbc8f8f;Rosy Brown
+0xf4a460;Sandy Brown
+0xdaa520;Goldenrod
+0xb8860b;Peru
+0xcd853f;Chocolate
+0xd2691e;Saddle Brown
+0x8b4513;Sienna
+0xa0522d;Brown
+0xa52a2a;Marron
+0xffffff;White
+0xfffafa;Snow
+0xf0fff0;Honey Dew
+0xf5fffa;Mint Cream
+0xf0ffff;Azure
+0xf0f8ff;Alice Blue
+0xf8f8ff;Ghost White
+0xf5f5f5;White Smoke
+0xfff5ee;Seashell
+0xf5f5dc;Beige
+0xfdf5e6;Old Lace
+0xfffaf0;Floral White
+0xfffff0;Ivory
+0xfaebd7;Antique White
+0xfaf0e6;Linen
+0xfff0f5;Lavender Blush
+0xffe4e1;Misty Rose
+0xdcdcdc;Gainboro
+0xd3d3d3;Light Grey
+0xc0c0c0;Silver
+0x090909;Dark Grey
+0x808080;Grey
+0x696969;Dim Grey
+0x778899;Light Slate Gray
+0x708090;Slate Grey
+0x2f4f4f;Dark Slate Grey
+0x000000;Black

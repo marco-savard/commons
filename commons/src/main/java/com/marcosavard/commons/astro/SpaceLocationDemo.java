@@ -58,7 +58,7 @@ public class SpaceLocationDemo {
     String msg = MessageFormat.format("({0}) is above ({1}) at {2}", sl, madrid, moment);
     System.out.println(msg);
 
-    sl = SpaceLocation.findZenithPositionAbove(madrid, moment);
+    sl = SpaceLocation.findZenithPositionAbove(madrid.toCoordinates(), moment);
     msg = MessageFormat.format("({0}) is above ({1}) at {2}", sl, madrid, moment);
     System.out.println(msg);
 
@@ -113,8 +113,9 @@ public class SpaceLocationDemo {
     System.out.println("  ..position of M13: " + skyPosition);
     System.out.println();
 
-    GeoLocation coordinate = position.getZenithAt(moment);
-    String msg = MessageFormat.format("({0}) is above ({1}) at {2}", position, coordinate, moment);
+    double[] coordinates = position.getZenithAt(moment);
+    GeoLocation location = GeoLocation.of(coordinates[0], coordinates[1]); 
+    String msg = MessageFormat.format("({0}) is above ({1}) at {2}", position, location, moment);
     System.out.println(msg);
   }
 

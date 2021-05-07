@@ -6,30 +6,23 @@ public class QuebecSchoolsDemo {
 
   public static void main(String[] args) {
     // get data
-    QuebecSchools quebecSchools = new QuebecSchools();
-    quebecSchools.loadAll();
-    List<String> columns = quebecSchools.getColumns();
-    List<String[]> rows = quebecSchools.getRows();
-
-    // display data
-    List<String> displayColumns = columns.subList(0, Math.min(3, columns.size()));
-    List<String[]> displayRows = rows.subList(0, Math.min(8, rows.size()));
-
-    for (String col : displayColumns) {
-      System.out.print(col + "|");
+    QuebecSchools quebecSchools = QuebecSchools.ofType(QuebecSchool.class);
+    List<QuebecSchool> schools = quebecSchools.read(8); 
+    quebecSchools.close();
+    
+    // print columns
+    List<String> columns = quebecSchools.getColumnNames(); 
+    for (String col : columns) {
+        System.out.print(col + "|");
     }
     System.out.println();
-
-
-    for (String[] row : displayRows) {
-      for (int i = 0; i < displayColumns.size(); i++) {
-        String value = row[i];
-        System.out.print(value + "|");
-      }
-
-      System.out.println();
+    
+    // print values
+    for (QuebecSchool school : schools) { 
+    	System.out.println(school);
     }
-
+    
+    System.out.println();
   }
 
 }

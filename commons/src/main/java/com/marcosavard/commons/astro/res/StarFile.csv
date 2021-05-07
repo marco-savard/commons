@@ -1,0 +1,25 @@
+#List of notable stars (zodiac) 
+Rank; Constell; Name;           Magn;   Distance; Right Ascension; Declination
+A;    Ari;      Hamal;          2.00;   66;       02h 07m 10.4057; 23° 27′ 44.7032″
+A;    Ari;      Hamal;          2.00;   66;       02h 07m 10.4057; 23° 27′ 44.7032″
+A;    Tau;      Aldebaran;      0.86;   65;        4h 35m 55.23s;  16° 30′ 33.5″      
+A;    Gem;      Castor;         1.62;   52;       07h 34m 35.863s; 31° 53′ 17.79″
+B;    Cnc;      Tarf;           3.53;   290;      08h 16m 30.95s;  09° 11′ 08.4″
+A;    Leo;      Regulus;        1.39;   79;       10h 08m 22.311s; 11° 58′ 01.95″
+A;    Vir;      Spica;          0.97;   250;      13h 25m 11.58s; −11° 09′ 40.75″
+B;    Lib;      Zubeneschamali; 2.61;   160;      15h 17m 00.47s; −09° 22′ 58.3″
+A;    Sco;      Antares;        0.96;   550;      16h 29m 24.46s; −26° 25′ 55.2″ 
+A;    Oph;      Rasalhague;     2.08;   47;       17h 34m 56.00s;  12° 33′ 38.1″
+A;    Sgr;      Kaus Australis; 1.85;   140;      18h 24m 10.3184;–34° 23′ 04.6193″
+D;    Cap;      Deneb Algedi;   2.85;   39;       21h 47m 02.29s; −16° 07′ 35.6″
+A;    Aqr;      Sadalmelik;     2.95;   758;      22h 05m 47.03s;  −0° 19′ 11.4″
+H;    Psc;      Alpherg;        3.62;	294;      01h 31m 28.99s;  15° 20′ 45.0″	
+#List of notable stars (northern hemisphere)
+A;    Aql;      Altair;         0.76;   17;       19h 50m 47s;     08° 52′ 05.9563″
+A;    Boo;      Arcturus;      -0.05;   37;       14h 15m 39.7s;   19°  10′ 56″
+A;    Uma;      Dubhe;          1.81;   124;      11h 03m 43.84s;  61° 45′ 04.0″
+A;    UMi;      Polaris;        1.98;   430;       2h 31m 48.7s;   89°  15′ 51″
+#List of notable stars (southern hemisphere)
+A;    CMa;      Sirius;        -1.46;   8.6;       6h 45m 8.9s;   -16° -42′ -58″
+A;    Cen;      Alpha Centauri; -0.27;  4.4;      14h 39m 36.5s;  -60° -50′ -2.3″
+A;    Cru;      Acrux;          0.76;   320;      12h 26m 35.9s;  -63° -05′ -56.7″ 

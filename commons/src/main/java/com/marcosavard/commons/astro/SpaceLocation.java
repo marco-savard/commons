@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import com.marcosavard.commons.geog.GeoLocation;
+//import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.InRange;
 import com.marcosavard.commons.math.type.Angle;
 import com.marcosavard.commons.math.type.Base;
@@ -81,9 +81,9 @@ public class SpaceLocation {
     return decimalYear;
   }
 
-  public static SpaceLocation findZenithPositionAbove(GeoLocation coordinate,
+  public static SpaceLocation findZenithPositionAbove(double[] coordinates,
       ZonedDateTime moment) {
-    double declination = coordinate.getLatitude().getValue();
+    double declination = coordinates[0]; //latitude
     double n = moment.getDayOfYear();
     int h = moment.getHour();
     int m = moment.getMinute();
@@ -92,7 +92,7 @@ public class SpaceLocation {
     double a = 0.98563 * n;
     double b = 15.0405 * decimalHour;
 
-    double longitude = coordinate.getLongitude().getValue();
+    double longitude =coordinates[1];
     double rightAscensionDegrees = longitude + a + b + 98.971;
     Angle ra = Angle.of(rightAscensionDegrees, Angle.Unit.DEG);
     double rightAscensionHours = (ra.degrees() / 360) * 24;
@@ -105,7 +105,7 @@ public class SpaceLocation {
     this.declination = declination;
   }
 
-  public GeoLocation getZenithAt(ZonedDateTime moment) {
+  public double[] getZenithAt(ZonedDateTime moment) {
     double rightAscensionDegrees = rightAscension * 15.0;
     double n = moment.getDayOfYear();
     int h = moment.getHour();
@@ -116,8 +116,8 @@ public class SpaceLocation {
     double b = 15.0405 * decimalHour;
     double latitude = declination;
     double longitude = rightAscensionDegrees - a - b - 98.971;
-    GeoLocation coordinate = GeoLocation.of(latitude, longitude);
-    return coordinate;
+    double[] coordinates = new double[] {latitude, longitude};
+    return coordinates;
   }
 
   @Override
@@ -205,7 +205,7 @@ public class SpaceLocation {
     public static Declination of(int degree, int minute, double second) {
       boolean allPositive = (degree >= 0) && (minute >= 0) && (second >= 0);
       boolean allNegative = (degree <= 0) && (minute <= 0) && (second <= 0);
-      boolean valid = allPositive && allNegative;
+      boolean valid = allPositive || allNegative;
 
       if (!valid) {
         ArithmeticException ex = new InvalidDeclinationException();

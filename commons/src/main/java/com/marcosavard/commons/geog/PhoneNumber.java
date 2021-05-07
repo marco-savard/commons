@@ -131,7 +131,8 @@ public class PhoneNumber implements Serializable {
     return areaCode;
   }
 
-  private static final String[] AREA_CODES = new String[] {"709", // A
+  private static final String[] AREA_CODES = new String[] {//
+      "709", // A
       "782", // B
       "782", // C
       null, "506", // E

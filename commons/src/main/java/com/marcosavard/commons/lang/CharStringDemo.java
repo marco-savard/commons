@@ -7,10 +7,33 @@ public class CharStringDemo {
     // testStringOperations(str);
     // testStringOperations(CharString.of(str));
     // testCharStringOperations(str);
+    
+    testUtilOperations(str);
+    testI18nOperations(str);
 
     testCSharpOperations();
     testSqlOperations();
   }
+
+
+  private static void testUtilOperations(String str) {
+	  CharString cs = CharString.of(str); 
+	 // cs.padRight(20, ' '); 
+	  
+	  System.out.println(cs.isBoolean());
+	  System.out.println(cs.isInteger());
+	  System.out.println(cs.isNumber());
+	  System.out.println(cs.isDate());
+	  
+	  String multiline = cs.wordWrap(80, " ", System.lineSeparator());
+	
+  }
+
+  private static void testI18nOperations(String str) {
+	  CharString cs = CharString.of(str); 
+	  String stripped = cs.stripAccents().toLowerCase(); 
+  }
+
 
   private static void testCSharpOperations() {
 

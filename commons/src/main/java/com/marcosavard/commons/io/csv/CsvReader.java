@@ -18,7 +18,7 @@ public class CsvReader {
   private BufferedReader bf;
   private int nbHeaders = 1;
   private char headerSeparator = ';', separator = ';';
-  private String commentCharacter;
+  private String commentCharacter = "#";
   private boolean hasNext = true;
 
   public static CsvReader of(Class<?> claz, String filename) {

@@ -1,15 +1,26 @@
 package com.marcosavard.commons.geog.ca.qc.educ.res;
 
 import java.nio.charset.StandardCharsets;
-import com.marcosavard.commons.res.CommaSeparatedValueResource;
+import java.util.List;
 
-public class QuebecSchools extends CommaSeparatedValueResource {
+import com.marcosavard.commons.res.CsvResourceFile;
 
-  public QuebecSchools() {
-    super("QuebecSchools.csv", StandardCharsets.ISO_8859_1);
-    super.withNbHeaders(1);
-    super.withDelimiter(';');
+public class QuebecSchools extends CsvResourceFile<QuebecSchool> {
+
+  public static QuebecSchools ofType(Class<QuebecSchool> type) {
+		return new QuebecSchools(type); 
   }
+	
+  private QuebecSchools(Class type) {
+    super("QuebecSchools.csv", StandardCharsets.ISO_8859_1, type);
+    super.withSeparator(';');
+  }
+
+
+
+
+
+
 
 
 

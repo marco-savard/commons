@@ -7,22 +7,22 @@ package com.marcosavard.commons.geog.ca.qc;
  */
 public enum RegionAdministrative {
 	BAS_ST_LAURENT("Bas-Saint-Laurent"),
-	SAGUENAY_LAC_ST_JEAN("Saguenayï¿½Lac-Saint-Jean"),
+	SAGUENAY_LAC_ST_JEAN("Saguenay--Lac-Saint-Jean"),
 	CAPITALE_NATIONALE("Capitale-Nationale"),
 	MAURICIE("Mauricie"),
 	ESTRIE("Estrie"),
-	MONTREAL("Montrï¿½al"),
+	MONTREAL("Montréal"),
 	OUTAOUAIS("Outaouais"),
-	ABITIBI("Abitibi-Tï¿½miscamingue"),
-	COTE_NORD("Cï¿½te-Nord"),
-	NORD_DU_QUEBEC("Nord-du-Quï¿½bec"),
-	GASPESIE("Gaspï¿½sieï¿½ï¿½les-de-la-Madeleine"),
-	CHAUDIERE_APPALACHES("Chaudiï¿½re-Appalaches"),
+	ABITIBI("Abitibi-Témiscamingue"),
+	COTE_NORD("Cote-Nord"),
+	NORD_DU_QUEBEC("Nord-du-Québec"),
+	GASPESIE("Gaspésie--Iles-de-la-Madeleine"),
+	CHAUDIERE_APPALACHES("Chaudière-Appalaches"),
 	LAVAL("Laval"),
-	LANAUDIERE("Lanaudiï¿½re"),
+	LANAUDIERE("Lanaudière"),
 	LAURENTIDES("Laurentides"),
-	MONTEREGIE("Montï¿½rï¿½gie"),
-	CENTRE_DU_QUEBEC("Centre-du-Quï¿½bec"); 
+	MONTEREGIE("Montérégie"),
+	CENTRE_DU_QUEBEC("Centre-du-Québec"); 
 
 	private String name; 
 	

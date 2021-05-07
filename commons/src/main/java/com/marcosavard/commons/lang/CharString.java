@@ -336,6 +336,31 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
     return voyel;
   }
 
+  //TODO
+public boolean isDate() {
+	return false;
+}
+
+//TODO
+public boolean isNumber() {
+	return false;
+}
+
+//TODO
+public boolean isInteger() {
+	return false;
+}
+
+//TODO
+public boolean isBoolean() {
+	return false;
+}
+
+public String wordWrap(int lineLength, String delimitor, String separator) {
+	// TODO Auto-generated method stub
+	return this.toString();
+}
+
 
 
 }
