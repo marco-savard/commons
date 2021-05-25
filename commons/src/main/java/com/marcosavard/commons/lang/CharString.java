@@ -1,7 +1,5 @@
 package com.marcosavard.commons.lang;
 
-import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,8 +13,7 @@ import java.util.List;
  */
 public class CharString implements CharSequence, StringOperations, CharStringOperations {
   private static final CharString EMPTY = new CharString("");
-  private static final String ELLIPSIS = "\u2026"; // ...character
-  private static final Character[] VOYELS = new Character[] {'a', 'e', 'i', 'o', 'u'};
+
 
   private String value; // nullSafe value
 
@@ -167,95 +164,56 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
 
   @Override
   public String capitalize() {
-    boolean empty = (this.length() == 0);
-    String firstLetter = this.substring(0, 1).toUpperCase();
-    String capitalized = empty ? this.toString() : firstLetter + this.substring(1);
+	String capitalized = StringUtil.capitalize(this.toString()); 
     return capitalized;
   }
 
   @Override
   public String capitalizeWords() {
-    List<String> words = Arrays.asList(this.split(" "));
-    List<String> capitalizedWords = new ArrayList<>();
-
-    for (String word : words) {
-      CharString cs = CharString.of(word);
-      capitalizedWords.add(cs.capitalize());
-    }
-
-    String joined = String.join(" ", capitalizedWords);
-    return joined;
+	String capitalized = StringUtil.capitalizeWords(this.toString());
+    return capitalized;
   }
 
   // count occurrences of substring in str
-  public int countOccurences(String substring) {
-    int count = this.length() - this.replace(substring, "").length();
+  public int countMatches(String substring) {
+	int count = StringUtil.countMatches(this, substring); 
     return count;
   }
 
-
   @Override
-  public boolean equalsIgnoreAccents(String that) {
-    String stripped = CharString.of(that).stripAccents();
-    boolean equal = value.equals(stripped);
+  public boolean equalsIgnoreAccents(String other) {
+    boolean equal = StringUtil.equalsIgnoreAccents(this.toString(), other);  
     return equal;
   }
 
-
-
   @Override
   public String padLeft(int totalLength) {
-    String padded = String.format("%1$" + totalLength + "s", this);
+    String padded = StringUtil.padLeft(this, totalLength); 
     return padded;
   }
 
   @Override
   public String padRight(int totalLength) {
-    String padded = String.format("%1$-" + totalLength + "s", this);
+	String padded = StringUtil.padRight(this, totalLength);  
     return padded;
   }
 
   @Override
-  public String pad(int width) {
-    StringBuilder sb = new StringBuilder();
-    int n = Math.max(0, width - this.length());
-
-    for (int i = 0; i < n; i++) {
-      sb.append(" ");
-    }
-
-    sb.append(this);
-    return sb.toString();
-  }
-
-
-  @Override
   public String stripAccents() {
-    String stripped = Normalizer.normalize(this, Normalizer.Form.NFD);
-    stripped = stripped.replaceAll("[^\\p{ASCII}]", "");
+    String stripped = StringUtil.stripAccents(this);
     return stripped;
   }
 
   @Override
   public String stripBlanks() {
-    // remove whitespaces and tabs
-    String stripped = this.replaceAll("\\s", "");
+	String stripped = StringUtil.stripBlanks(this);
     return stripped;
   }
 
   @Override
   public String stripNonDigit() {
-    StringBuilder sb = new StringBuilder();
-    int nb = this.length();
-
-    for (int i = 0; i < nb; i++) {
-      char ch = this.charAt(i);
-      if (Character.isDigit(ch)) {
-        sb.append(ch);
-      }
-    }
-
-    return sb.toString();
+	String stripped = StringUtil.stripNonDigit(this);
+	return stripped;
   }
 
   @Override
@@ -266,40 +224,17 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
     return displayed;
   }
 
-
   @Override
   public String trimDoubleBlanks() {
-    String trimmed = this.replace(" +", " ");
+    String trimmed = StringUtil.trimDoubleBlanks(this);
     return trimmed;
   }
 
   @Override
-  public String truncate(int lenght) {
-    return truncate(lenght, ELLIPSIS);
-  }
-
-  @Override
-  public String truncate(int lenght, String suffix) {
-    boolean trunk = this.length() > lenght;
-    String truncated = trunk ? this.substring(0, lenght - 1) + suffix : value;
-    return truncated;
-  }
-
-  @Override
   public String unquote(char quoteCharacter) {
-    String target = "";
-
-    if (!isNullOrBlank(value)) {
-      char ch = this.charAt(0);
-      target = (ch == quoteCharacter) ? this.substring(1) : value;
-      int len = target.length() - 1;
-      ch = target.charAt(len);
-      target = (ch == quoteCharacter) ? target.substring(0, len) : target;
-    }
-
-    return target;
+	String unquoted = StringUtil.unquote(this, quoteCharacter).toString(); 
+    return unquoted;
   }
-
 
   /**
    * Tells if text is null or blank
@@ -308,7 +243,7 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
    * @return true if null or blank
    */
   public static boolean isNullOrBlank(String text) {
-    boolean nullOrBlank = (text == null) || text.trim().isEmpty();
+    boolean nullOrBlank = StringUtil.isNullOrBlank(text);   
     return nullOrBlank;
   }
 
@@ -319,47 +254,34 @@ public class CharString implements CharSequence, StringOperations, CharStringOpe
    * @return true if null or empty
    */
   public static boolean isNullOrEmpty(String text) {
-    boolean nullOrEmpty = (text == null) || text.isEmpty();
+    boolean nullOrEmpty = StringUtil.isNullOrEmpty(text);   
     return nullOrEmpty;
   }
 
-  /**
-   * Tells if c is a voyel
-   * 
-   * @param c given character
-   * @return true if voyel
-   */
-  public static boolean isVoyel(char c) {
-    c = Character.toLowerCase(c);
-    List<Character> voyels = Arrays.asList(VOYELS);
-    boolean voyel = voyels.contains(c);
-    return voyel;
-  }
-
-  //TODO
-public boolean isDate() {
-	return false;
-}
-
-//TODO
-public boolean isNumber() {
-	return false;
-}
-
-//TODO
-public boolean isInteger() {
-	return false;
-}
-
-//TODO
-public boolean isBoolean() {
-	return false;
-}
 
 public String wordWrap(int lineLength, String delimitor, String separator) {
 	// TODO Auto-generated method stub
 	return this.toString();
 }
+
+public boolean isBoolean() {
+	return StringUtil.isBoolean(this);
+}
+
+public boolean isDate() {
+	return StringUtil.isDate(this);
+}
+
+public boolean isInteger() {
+	return StringUtil.isInteger(this); 
+}
+
+public boolean isNumber() {
+	return StringUtil.isNumber(this);
+}
+
+
+
 
 
 

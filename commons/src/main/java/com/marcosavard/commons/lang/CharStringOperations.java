@@ -18,8 +18,6 @@ public interface CharStringOperations {
 
   public boolean equalsIgnoreAccents(String that);
 
-  public String pad(int width);
-
   /**
    * Pad n blanks at left until totalLength is reached
    * 
@@ -74,16 +72,6 @@ public interface CharStringOperations {
 
   public String trimDoubleBlanks();
 
-  /**
-   * Truncate source at a given length
-   * 
-   * @param lenght to be truncate
-   * @return a string having at most 'lenght' characters
-   */
-
-  public String truncate(int lenght);
-
-  public String truncate(int lenght, String suffix);
 
   /**
    * Returns the same String, but without the quotes. For instance,

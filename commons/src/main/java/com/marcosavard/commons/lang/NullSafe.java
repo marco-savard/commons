@@ -1,4 +1,4 @@
-package com.marcosavard.commons.util;
+package com.marcosavard.commons.lang;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class NullSafe {
+	private static final String EMPTY = "";
   private static final List<Object> EMPTY_LIST =
       Collections.unmodifiableList(new ArrayList<Object>());
 
@@ -16,47 +17,53 @@ public class NullSafe {
   private static final int[] EMPTY_INT_ARRAY = new int[0];
   private static final long[] EMPTY_LONG_ARRAY = new long[0];
   private static final short[] EMPTY_SHORT_ARRAY = new short[0];
-
+  
   private NullSafe() {}
 
+  public static CharSequence of(CharSequence original) {
+	  CharSequence nullSafe = (original == null) ? EMPTY : original;
+	  return nullSafe;
+  }
+  
+  public static final byte[] of(byte[] array) {
+    return (array != null) ? array : EMPTY_BYTE_ARRAY;
+  }
+
+  public static final char[] of(char[] array) {
+    return (array != null) ? array : EMPTY_CHAR_ARRAY;
+  }
+
+  public static final double[] of(double[] array) {
+    return (array != null) ? array : EMPTY_DOUBLE_ARRAY;
+  }
+
+  public static final int[] of(int[] array) {
+    return (array != null) ? array : EMPTY_INT_ARRAY;
+  }
+
+  public static final long[] of(long[] array) {
+    return (array != null) ? array : EMPTY_LONG_ARRAY;
+  }
+
+  public static final short[] of(short[] array) {
+    return (array != null) ? array : EMPTY_SHORT_ARRAY;
+  }
+
   @SuppressWarnings("unchecked")
-  public static final <T> Collection<T> nullSafe(Collection<T> collection) {
+  public static final <T> Collection<T> of(Collection<T> collection) {
     return (collection != null) ? collection : (Collection<T>) EMPTY_LIST;
   }
 
   @SuppressWarnings("unchecked")
-  public static final <T> List<T> nullSafe(List<T> list) {
+  public static final <T> List<T> of(List<T> list) {
     return (list != null) ? list : (List<T>) EMPTY_LIST;
   }
 
   @SuppressWarnings("unchecked")
-  public static final <T extends Object> T[] nullSafe(T[] array, Class<T> type) {
+  public static final <T extends Object> T[] of(T[] array, Class<T> type) {
     return (array != null) ? array : (T[]) Array.newInstance(type, 0);
   }
 
-  public static final byte[] nullSafe(byte[] array) {
-    return (array != null) ? array : EMPTY_BYTE_ARRAY;
-  }
-
-  public static final char[] nullSafe(char[] array) {
-    return (array != null) ? array : EMPTY_CHAR_ARRAY;
-  }
-
-  public static final double[] nullSafe(double[] array) {
-    return (array != null) ? array : EMPTY_DOUBLE_ARRAY;
-  }
-
-  public static final int[] nullSafe(int[] array) {
-    return (array != null) ? array : EMPTY_INT_ARRAY;
-  }
-
-  public static final long[] nullSafe(long[] array) {
-    return (array != null) ? array : EMPTY_LONG_ARRAY;
-  }
-
-  public static final short[] nullSafe(short[] array) {
-    return (array != null) ? array : EMPTY_SHORT_ARRAY;
-  }
 
   // a equals() method that is both robust and efficient
   public static <T> boolean equals(T obj1, T obj2) {
@@ -120,5 +127,7 @@ public class NullSafe {
     boolean safe = (s != null) && (startIdx >= 0) && (endIdx < s.length() && (startIdx < endIdx));
     return safe;
   }
+
+
 
 }

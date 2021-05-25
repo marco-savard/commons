@@ -1,10 +1,11 @@
 package com.marcosavard.commons.util;
 
-import static com.marcosavard.commons.util.NullSafe.nullSafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import com.marcosavard.commons.lang.NullSafe;
 
 public class ListUtil {
   /**
@@ -33,7 +34,7 @@ public class ListUtil {
   public static List<String> toStringList(Collection<Object> list) {
     List<String> strings = new ArrayList<>();
 
-    for (Object element : nullSafe(list)) {
+    for (Object element : NullSafe.of(list)) {
       strings.add(element.toString());
     }
 
