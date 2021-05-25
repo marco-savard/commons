@@ -1,6 +1,8 @@
 package com.marcosavard.commons.astro;
 
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 public class LocalSideralTime {
@@ -19,9 +21,9 @@ public class LocalSideralTime {
    * @return lst (0 to 360)
    */
   public static LocalSideralTime of(ZonedDateTime moment, double longitude) {
-    // computation
-    double jd = JulianDay.of(moment).getValue();
-    double ut = toDecimalHours(moment);
+	ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
+    double jd = JulianDay.of(momentUt).getValue();
+    double ut = toDecimalHours(momentUt);
     double d = (jd - JULIAN_DAY_Y2K_AT_NOON_UTC);
     double degrees = 100.46 + 0.985647 * d + longitude + 15 * ut;
     degrees = valueInRange(degrees, 360);
@@ -64,7 +66,6 @@ public class LocalSideralTime {
     String msg = MessageFormat.format("{0} hr", String.format("%.2f", hours()));
     return msg;
   }
-
 
 
 }

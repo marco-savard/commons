@@ -136,7 +136,7 @@ public class SpaceLocation {
     s = String.format("%02d", de[2]);
     String declStr = d + DEGREE_SIGN + m + MINUTE_SIGN + s + SECOND_SIGN;
 
-    String str = MessageFormat.format("asc={0} decl={1}", raStr, declStr);
+    String str = MessageFormat.format("ra={0} dec={1}", raStr, declStr);
     return str;
   }
 

@@ -142,6 +142,7 @@ public abstract class CsvResourceFile<T> {
 	
 	private String getFieldName(String columnName) {
 		//remove apostrophe, blanks
+		columnName = columnName.replaceAll("-", " ");
 		columnName = columnName.replaceAll("'", " ");
 		columnName = stripAccents(columnName);
 		columnName = toTitleCase(columnName); 
@@ -157,7 +158,7 @@ public abstract class CsvResourceFile<T> {
 	  }
 	
 	public String toTitleCase(String word) {
-	    return Stream.of(word.split(" "))
+	    return Stream.of(word.split("\\s+"))
 	            .map(w -> w.toUpperCase().charAt(0)+ w.toLowerCase().substring(1))
 	            .reduce((s, s2) -> s + " " + s2).orElse("");
 	}

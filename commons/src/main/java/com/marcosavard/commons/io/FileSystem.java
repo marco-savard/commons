@@ -133,6 +133,10 @@ public class FileSystem {
    * @param claz (default value FileSystem.class)
    * @return the location of this class.
    */
+  public static File getClassFolder() {
+	    return getClassFolder(FileSystem.class);
+  }
+  
   public static File getClassFolder(Class claz) {
     String className = claz.getSimpleName() + ".class";
     URL url = FileSystem.class.getResource(className);
@@ -141,9 +145,7 @@ public class FileSystem {
     return folder;
   }
 
-  public static File getClassFolder() {
-    return getClassFolder(FileSystem.class);
-  }
+
 
   public static File getRootFolder(Class entity) {
     File rootFolder;

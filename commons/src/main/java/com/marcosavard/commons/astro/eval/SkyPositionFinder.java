@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.SkyPosition;
 import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.TimeConverter;
 
 import static com.marcosavard.commons.astro.AstroMath.range;
 import static com.marcosavard.commons.astro.AstroMath.sind;
@@ -31,7 +32,7 @@ public class SkyPositionFinder {
 		int n = moment.getDayOfYear(); 
 
 		//convert to UT
-		ZonedDateTime momentUt = toZonedDateTime(moment, ZoneOffset.UTC);
+		ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
 		double hr = momentUt.toLocalTime().toSecondOfDay() / 3600.0;  
 		
 		//compute tsl
@@ -104,12 +105,6 @@ public class SkyPositionFinder {
 		System.out.println("  position(1) = " + position);
 				
 		return position;
-	}
-	
-	private static ZonedDateTime toZonedDateTime(ZonedDateTime moment, ZoneOffset utc) {
-		Instant instant = moment.toInstant(); 
-		ZonedDateTime ut = instant.atZone( utc );
-		return ut;
 	}
 	
 	private static double computeTsl(int dayOfYear, double hour, double lon) {

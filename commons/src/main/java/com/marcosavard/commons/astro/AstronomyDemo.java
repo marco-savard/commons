@@ -1,13 +1,10 @@
 package com.marcosavard.commons.astro;
 
-import static com.marcosavard.commons.astro.AstroMath.range;
-import static com.marcosavard.commons.astro.AstroMath.sind;
 
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
