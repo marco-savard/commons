@@ -33,16 +33,16 @@ public class AstroMath {
 		return 1 / tand(degree); 
 	}
 	
-	public static double asind(double degree) { 
-		return range(Math.toDegrees(Math.asin(degree)), 360);
+	public static double asind(double value) { 
+		return range(Math.toDegrees(Math.asin(value)), 360);
 	}
 	
-	public static double acosd(double degree) { 
-		return range(Math.toDegrees(Math.acos(degree)), 360);
+	public static double acosd(double value) { 
+		return range(Math.toDegrees(Math.acos(value)), 360);
 	}
 	
-	public static double atand(double a) {
-		return range(Math.toDegrees(Math.atan(a)), 360);
+	public static double atand(double value) {
+		return range(Math.toDegrees(Math.atan(value)), 360);
 	}
 
 	public static double atan2d(double y, double x) {

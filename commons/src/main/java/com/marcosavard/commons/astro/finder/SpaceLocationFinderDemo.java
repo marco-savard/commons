@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro.eval;
+package com.marcosavard.commons.astro.finder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,14 +8,24 @@ import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.SkyPosition;
 import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class SpaceLocationFinderDemo {
 
 	public static void main(String[] args) {
+		findTimeAtMeridian(); 
 		//findStarAtZenithAboveMadrid();  
 	    //findStarAtAjaccio();
-	    findStarInCentralScandinavia();
+	    //findStarInCentralScandinavia();
+	}
+
+	private static void findTimeAtMeridian() {
+	    GeoLocation besancon = GeoLocation.of(47, 6);
+		SpaceLocation polaris = StarAlmanach.POLARIS;
+		LocalDate date = LocalDate.of(1982, 1, 20);
+		ZonedDateTime moment = SpaceLocationFinder.findTimeAtMeridian(polaris, besancon.toCoordinates(), date);  
+		System.out.println(moment);
 	}
 
 	private static void findStarInCentralScandinavia() {
@@ -62,7 +72,9 @@ public class SpaceLocationFinderDemo {
 	}
 
 	private static void findStarAtZenithAboveMadrid() {
-		// star at zenith above madrid on 1st feb 1983, at 22:00
+	  
+   
+		// which star is at zenith above madrid on 1st feb 1983, at 22:00
 	    GeoLocation madrid = GeoLocation.of(41, -3);
 	    LocalDate date = LocalDate.of(1983, 2, 1);
 	    LocalTime time = LocalTime.of(22, 0);

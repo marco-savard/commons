@@ -1,72 +1,20 @@
 package com.marcosavard.commons.astro;
 
-
-import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class AstronomyDemo {
 
   public static void main(String[] args) {
-	  //findSunPositionAtAngers(); 
-	  
-	  //findSkyPositionOfAustin(); 
-	  
-    // gives asc=6.57 hr decl=41 degrees
-    // GeoCoordinate madrid = GeoCoordinate.of(41, -3);
-    // date = LocalDate.of(1983, 2, 1);
-    // time = LocalTime.of(22, 0);
-    // moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
-    // location = findSpaceLocation(SkyPosition.ZENITH, madrid, moment);
-    // findSkyPosition(location, madrid, moment);
 
-    //GeoLocation besancon = GeoLocation.of(47, 6);
-   // SpaceLocation polaris = StarAlmanach.POLARIS;
-   // date = LocalDate.of(1982, 1, 20);
-  //  moment = Astronomy.findTimeAtMeridian(polaris, besancon, date);
 
   }
-
-
-  
-
-  
-  private static void findSunPositionAtAngers() {
-	  LocalDate date = LocalDate.of(1981, 2, 5);
-      LocalTime time = LocalTime.of(10, 15); 
-	  ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneId.of("Europe/Paris")); 
-		
-	  GeoLocation angers = GeoLocation.of(47.5, -0.6);
-	  double lat = angers.toCoordinates()[0]; 
-	  double lon = angers.toCoordinates()[1];  
-	  
-	  //compute ecliptic coordinate (https://en.wikipedia.org/wiki/Position_of_the_Sun)
-	  JulianDay jd =  JulianDay.of(moment);  
-	  double n = jd.getValue() -2451545.0; 
-	  double sunLon = range(280.460 + 0.9856474 * n, 360); 
-	  double ma = range(357.528 + 0.9856003 * n, 360); 
-	  
-	  double eclLon = sunLon + (1.915 * sind(ma)) + (0.02 * sind(2 * ma)); 
-	  double ecl = 23.439; 
-	  double y = cosd(ecl) * sind(eclLon); 
-	  double x = cosd(eclLon); 
-	  double ra = atan2d(y, x); 
-	  double dec = asind(sind(ecl) * sind(eclLon));
-	  	  
-	  SpaceLocation sunLocation =SpaceLocation.of(ra/15, dec); 
-	  System.out.println("sunLocation(1) = " + sunLocation);  	
-	  
-	  SkyPosition position = findSkyPositionOfOld(sunLocation, moment, angers.toCoordinates()); 
-	    
-	  //should give azimuth=122° (SE), horizon=7°
-	  System.out.println("position = " + position);  
-  }
-  
 
 
 private static void findSunPositionAtAngers2() {
@@ -84,7 +32,7 @@ private static void findSunPositionAtAngers2() {
 	  int n = (int)range(dayOfYear - 79, 366);
 	  boolean springSummer = (n < 107); 
 		
-	  //expecting Declination:	-15.905°
+	  //expecting Declination:	-15.905ï¿½
 	  //RightAscension:	21h 15m 37.53s
 	  
 		double dec, ra; 
@@ -155,7 +103,7 @@ private static void findSunPositionAtAngers2() {
       
       position = SkyPosition.of(altitude, azimuth) ; 
 			  
-	  //should give azimuth=113° (SW), horizon=21°
+	  //should give azimuth=113ï¿½ (SW), horizon=21ï¿½
       //az=134, hor=15 deg, according :
       //https://www.suncalc.org/#/47.4707,-0.5532,6/1981.02.05/10:30/1/3
 	  System.out.println(position);  
@@ -183,7 +131,7 @@ private static void findSunPositionAtAngers2() {
 	double ecLon = mlon + 1.915 * sind(ma) + 0.020 * sind(2 * ma); 
 	System.out.println("  ecLon : " + ecLon);   
 	
-	//decl +23°26 summer Solstice, -23°26 winter solstice, 0 at equinox
+	//decl +23ï¿½26 summer Solstice, -23ï¿½26 winter solstice, 0 at equinox
 	double sinDecl = sind(23.44) * sind(ecLon);
 	//decl = asind(sinDecl); 
 	System.out.println("  sind(23.44) : " + sind(23.44));  
@@ -309,10 +257,10 @@ private static SkyPosition findSkyPositionOfOld(SpaceLocation spaceLocation, Zon
 
 
 
-private static double range(double value, double range) {
-	double ranged = value - Math.floor(value/range)*range;
-	return ranged;
-}
+  private static double range(double value, double range) {
+		double ranged = value - Math.floor(value/range)*range;
+		return ranged;
+	}
 
 private static double tand(double degree) {
 	return Math.tan(Math.toRadians(degree)); 
@@ -348,45 +296,11 @@ private static ZonedDateTime toZonedDateTime(ZonedDateTime moment, ZoneOffset ut
 
 
 
-private static void findSkyPositionOfAustin() {
-	  // find equatorial coordinates, from sky position
-	  LocalDate date = LocalDate.of(1984, 9, 5);
-	  LocalTime time = LocalTime.of(21, 6);
-	  ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneId.of("Europe/Paris")); 
-	  
-	  // find location of austin at clairmontFerrand
-	  SkyPosition austin = SkyPosition.of(14, 320);
-	  GeoLocation clairmontFerrand = GeoLocation.of(46, 3);
-	  SpaceLocation location = findSpaceLocation(austin, clairmontFerrand, moment);
-	   
-	  // gives asc=12.28 hr decl=43.658 degrees
-	  findSkyPosition(location, clairmontFerrand, moment);
-}
 
 
 
-private static SpaceLocation findSpaceLocation(SkyPosition position, GeoLocation place,
-      ZonedDateTime moment) {
-    double[] coordinates = place.toCoordinates();
-    SpaceLocation spaceLocation = Astronomy.findSpaceLocationOf(position, moment, coordinates);
-    String msg = MessageFormat.format("Q: Which star is seen at {0} from {1} when {2}", position,
-        place, moment);
-    System.out.println(msg);
-    System.out.println("A: " + spaceLocation);
-    System.out.println();
-    return spaceLocation;
-  }
 
-  private static SkyPosition findSkyPosition(SpaceLocation spaceLocation, GeoLocation place,
-      ZonedDateTime moment) {
-    double[] coordinates = place.toCoordinates();
-    SkyPosition position = Astronomy.findSkyPositionOf(spaceLocation, moment, coordinates);
-    String msg = MessageFormat.format("Q: Where to see star {0} from {1} where {2}", spaceLocation,
-        place, moment);
-    System.out.println(msg);
-    System.out.println("A: " + position);
-    System.out.println();
-    return position;
-  }
+
+
 
 }

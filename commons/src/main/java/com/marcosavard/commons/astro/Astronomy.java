@@ -100,25 +100,6 @@ public class Astronomy {
     return position;
   }
 
-  public static ZonedDateTime findTimeAtMeridian(SpaceLocation spaceLocation,
-      GeoLocation geoLocation, LocalDate date) {
-
-    for (int h = 0; h < 24; h++) {
-      for (int m = 0; m < 6; m++) {
-        LocalTime time = LocalTime.of(h, m * 10);
-        ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
-        SkyPosition position = findSkyPositionOf(spaceLocation, moment, geoLocation);
-        System.out.println(MessageFormat.format("  {0} {1}", moment, position));
-      }
-
-    }
-
-
-    return null;
-  }
-
-
-
   private static SpaceLocation findSpaceLocationForZenithOf(GeoLocation coordinate2,
       ZonedDateTime moment) {
     // TODO Auto-generated method stub

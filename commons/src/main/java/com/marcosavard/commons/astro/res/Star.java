@@ -1,5 +1,10 @@
 package com.marcosavard.commons.astro.res;
 
+import java.text.MessageFormat;
+
+import com.marcosavard.commons.astro.Constellation;
+import com.marcosavard.commons.astro.SpaceLocation;
+
 public class Star { 
   private String rank;
   private String constell; 
@@ -11,8 +16,15 @@ public class Star {
   
   @Override
   public String toString() {
-	  String str = name + " ra=" + rightAscension + ", dec=" + declination; 
+	  Constellation constellation = Constellation.of(constell); 
+	  String starname = constellation.getDisplayName(rank);
+	  SpaceLocation spaceLocation = SpaceLocation.of(rightAscension.hours, declination.degrees);
+	  String str = MessageFormat.format("{0} ({1} {2})", name, starname, spaceLocation); 
 	  return str;
+  }
+  
+  public String getConstellation() {
+		return constell;
   }
   
   public double getMagnitude() {
@@ -34,17 +46,17 @@ public class Star {
   }
   
   public double findDistance2From(double ra, double dec) {
-	double ra2 = (ra - rightAscension.hours) * (ra - rightAscension.hours); 
+	double ra2 = (ra - rightAscension.hours) * (ra - rightAscension.hours) * 15; 
 	double dec2 = (dec - declination.degrees) * (dec - declination.degrees); 
 	double distance2 = ra2 + dec2;
 	return distance2;
   }
   
-  private static String[] stripAlpha(String[] coordinates) {
+  private static String[] stripNonNumeric(String[] coordinates) {
 	  String[] stripped = new String[coordinates.length];
 	  
 	  for (int i=0; i<coordinates.length; i++) { 
-		  stripped[i] = coordinates[i].replaceAll("[^\\d.]", ""); 
+		  stripped[i] = coordinates[i].replaceAll("[^0-9.-]", ""); 
 	  }
 	  
 	  return stripped;
@@ -55,7 +67,7 @@ public class Star {
 	  
 	public static RightAscension valueOf(String value) { 
 		  String[] coordinates = value.split("\\s+");
-		  coordinates = stripAlpha(coordinates); 
+		  coordinates = stripNonNumeric(coordinates); 
 		  int deg = Integer.parseInt(coordinates[0].trim()); 
 		  int min = Integer.parseInt(coordinates[1].trim()); 
 		  double sec = Double.parseDouble(coordinates[2].trim()); 
@@ -79,7 +91,7 @@ public class Star {
 		  
 		public static Declination valueOf(String value) { 
 			  String[] coordinates = value.split("\\s+");
-			  coordinates = stripAlpha(coordinates); 
+			  coordinates = stripNonNumeric(coordinates); 
 			  
 			  int deg = Integer.parseInt(coordinates[0].trim()); 
 			  int min = Integer.parseInt(coordinates[1].trim()); 
@@ -89,7 +101,9 @@ public class Star {
 		}
 		
 		private Declination(int deg, int min, double sec) {
-			degrees = deg + (min / 60.0) + (sec / 3600.0); 
+			degrees = deg; 
+			degrees += Math.signum(deg) * (min / 60.0); 
+			degrees += Math.signum(deg) * (sec / 3600.0);  
 		}
 		
 		@Override
@@ -98,6 +112,7 @@ public class Star {
 			return str;
 		}
 	  }
+
 
 
 

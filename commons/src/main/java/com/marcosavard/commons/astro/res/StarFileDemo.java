@@ -7,21 +7,110 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.marcosavard.commons.astro.Constellation;
+import com.marcosavard.commons.astro.SpaceLocation;
 import com.marcosavard.commons.res.CsvReader;
 import com.marcosavard.commons.res.CsvReaderImpl;
-import com.marcosavard.commons.res.CsvResourceFile;
 
 public class StarFileDemo {
 
 	public static void main(String[] args) {
-		printAllLines();
-		//findNeareastStar();
-		//printAllInstances(); 
+		// get data
+		StarFile starFile = StarFile.ofType(Star.class); 
+		List<Star> allStars = starFile.readAll(); 
+		
+		// stats
+		printAll(allStars); 
+		printZodiac(allStars);
+		findBrightestStar(allStars);
+		findMostNorthernStar(allStars);
+		findStarNearestFromVernalPoint(allStars);
+		printUrsaMajor(allStars);
 	}
 
+	private static void printAll(List<Star> allStars) {
+		System.out.println(allStars.size() + " stars read in file StarFile.csv"); 
+	}
+	
+	private static void printUrsaMajor(List<Star> allStars) {
+		List<Star> umaStars = allStars.stream().filter(s -> s.getConstellation().equals("UMa")).collect(Collectors.toList());
+		System.out.println(); 
+		System.out.println("Stars in Ursa Major :"); 
+		
+		for (Star star : umaStars) { 
+			System.out.println("  " + star); 
+		}
+		
+		System.out.println(); 
+	}
+	
+	private static void printZodiac(List<Star> allStars) {
+		List<Star> zodiacStars = allStars.stream().filter(s -> Constellation.of(s.getConstellation()).isZodiac()).collect(Collectors.toList());
+		
+		System.out.println(zodiacStars.size() + " stars in Zodiac constellations"); 
+	}
+	
+	private static void findBrightestStar(List<Star> stars) {
+		// sort by magnitude
+		Comparator<Star> comparator = new MagnitureComparator(); 
+		Star brightestStar = stars.stream().sorted(comparator).findFirst().orElse(null); 
+		System.out.println("Brightest star : " + brightestStar); 
+	}
+	
+	private static void findMostNorthernStar(List<Star> stars) {
+		// sort by declination
+		Comparator<Star> comparator = new DeclinationComparator();
+		Star northestStar = stars.stream().sorted(comparator).findFirst().orElse(null); 
+		System.out.println("Most Northern star : " + northestStar); 
+	}
+	
+	private static void findStarNearestFromVernalPoint(List<Star> stars) {
+		SpaceLocation location = SpaceLocation.VERNAL_POINT; 
+		Star nearestStar = findStarNearestFromLocation(stars, location.getRightAscensionHour(), location.getDeclination()); 
+		System.out.println("Nearest star from vernal point : " + nearestStar); 
+	}
+	
+	private static Star findStarNearestFromLocation(List<Star> stars, double ra, double dec) {
+		Star nearestStar = stars.get(0); 
+		double neareastDistance2 = Double.MAX_VALUE; 
+		
+		for (Star star : stars) { 
+			double distance2 = star.findDistance2From(ra, dec); 
+			
+			if (distance2 < neareastDistance2) { 
+				neareastDistance2 = distance2; 
+				nearestStar = star; 
+			}
+		}
+		
+		return nearestStar;
+	}
+	
+	private static class MagnitureComparator implements Comparator<Star> {
+
+		@Override
+		public int compare(Star s1, Star s2) {
+			int comparison = (int)(s1.getMagnitude() - s2.getMagnitude());
+			return comparison;
+		}
+		
+	}
+
+	private static class DeclinationComparator implements Comparator<Star> {
+
+		@Override
+		public int compare(Star s1, Star s2) {
+			int comparison = (int)(s2.getDeclination() - s1.getDeclination());
+			return comparison;
+		}
+		
+	}
+	
 	private static void printAllLines() {
 		// get data
 		Class<?> claz = StarFile.class; 
@@ -50,82 +139,6 @@ public class StarFileDemo {
 		}
 		
 		System.out.println(); 
-	}
-
-	private static void printAllInstances() {
-		// get data
-		CsvResourceFile<Star> starsFile = StarFile.ofType(Star.class); 		
-		List<Star> stars = starsFile.readAll(); 
-		starsFile.close(); 
-
-		for (Star star : stars) { 
-			System.out.println(star); 
-		}
-
-		System.out.println(); 
-	}
-	
-	private static void findNeareastStar() {
-		// get data
-		CsvResourceFile<Star> starsFile = StarFile.ofType(Star.class); 
-		List<Star> stars = starsFile.readAll();
-		starsFile.close(); 
-		
-		findNearestStar(stars, 0, 0); //Sun at vernal 
-		findNearestStar(stars, 0, 90); //above North Pole
-		findNearestStar(stars, 0, -90); //above South Pole
-		findBrightestStar(stars); //above South Pole
-		System.out.println(); 
-	}
-	
-	private static void findBrightestStar(List<Star> stars) {
-		// sort by magnitude
-		Comparator<Star> comparator = new MagnitureComparator(); 
-		Star brightestStar = stars.stream().sorted(comparator).findFirst().orElse(null); 
-		System.out.println("Brightest star : " + brightestStar); 
-	}
-	
-	private static void findNorthestStar(List<Star> stars) {
-		// sort by declination
-		Comparator<Star> comparator = new DeclinationComparator();
-		Star northestStar = stars.stream().sorted(comparator).findFirst().orElse(null); 
-		System.out.println("Northest star : " + northestStar); 
-	}
-	
-	private static void findNearestStar(List<Star> stars, int ra, int dec) {
-		Star nearestStar = stars.get(0); 
-		double neareastDistance2 = Double.MAX_VALUE; 
-		
-		for (Star star : stars) { 
-			double distance2 = star.findDistance2From(ra, dec); 
-			
-			if (distance2 < neareastDistance2) { 
-				neareastDistance2 = distance2; 
-				nearestStar = star; 
-			}
-		}
-		
-		System.out.println("Nearest star : " + nearestStar); 
-	}
-	
-	private static class MagnitureComparator implements Comparator<Star> {
-
-		@Override
-		public int compare(Star s1, Star s2) {
-			int comparison = (int)(s1.getMagnitude() - s2.getMagnitude());
-			return comparison;
-		}
-		
-	}
-
-	private static class DeclinationComparator implements Comparator<Star> {
-
-		@Override
-		public int compare(Star s1, Star s2) {
-			int comparison = (int)(s1.getDeclination() - s2.getDeclination());
-			return comparison;
-		}
-		
 	}
 
 }

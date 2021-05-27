@@ -6,7 +6,7 @@ import java.time.ZoneId;
 
 import org.junit.Test;
 
-import com.marcosavard.commons.astro.eval.SunTimes;
+import com.marcosavard.commons.astro.finder.SunTimes;
 
 import junit.framework.Assert;
 

@@ -1,6 +1,8 @@
-package com.marcosavard.commons.astro.eval;
+package com.marcosavard.commons.astro.finder;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
@@ -34,21 +36,19 @@ public class SpaceLocationFinder {
 	    ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
 	    double hr = momentUt.toLocalTime().toSecondOfDay() / 3600.0;  
 	    double tsl = computeTsl(n, hr, lon); 
-		System.out.println("  tsl = " + tsl);
+		//System.out.println("  tsl = " + tsl);
 	    
 	    //compute dec 
 	    double a1 = sind(h) * sind(lat); 
 	    double a2 = cosd(h) * cosd(lat) * cosd(az); 
 	    double dec = asind(a1 + a2); 
 
-	    //compute ra 
-	    double b1 = sind(h) - sind(lat) * sind(dec); 
-	    double b2 = cosd(lat) * cosd(dec); 
-	    double b = b1 / b2;
-        b = Maths.equal(b, 1, 0.01) ? 1.0 : b; 
-        double c = acosd(b); 
-        double ra = lst.hours() - (c / 15);
-	    
+	    //compute ra         
+        double a = (sind(h) - sind(lat) * sind(dec)) / (cosd(lat) * cosd(dec));
+        a = Math.min(1.0, a); //correct precision error
+        double acosA = acosd(a); 
+        double ra = lst.hours() - (acosA / 15); 
+        	    
         SpaceLocation location = SpaceLocation.of(ra, dec); 
 		return location;
 	}
@@ -71,5 +71,19 @@ public class SpaceLocationFinder {
 		
 		return tsl;
     }
+
+	public static ZonedDateTime findTimeAtMeridian(SpaceLocation spaceLocation, double[] coordinates, LocalDate date) {
+		for (int h = 0; h < 24; h++) {
+		      for (int m = 0; m < 6; m++) {
+		        LocalTime time = LocalTime.of(h, m * 10);
+		        ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
+		        //SkyPosition position = findSkyPositionOf(spaceLocation, moment, geoLocation);
+		        //System.out.println(MessageFormat.format("  {0} {1}", moment, position));
+		      }
+
+		    }
+
+		return null;
+	}
 
 }

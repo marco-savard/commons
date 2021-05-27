@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro.eval;
+package com.marcosavard.commons.astro.finder;
 
 import java.text.MessageFormat;
 import java.time.Instant;
@@ -37,14 +37,14 @@ public class SkyPositionFinder {
 		
 		//compute tsl
 		double tsl = computeTsl(n, hr, lon); 
-		System.out.println("  tsl = " + tsl);
+		//System.out.println("  tsl = " + tsl);
 		
 		//compute ah 
 		double ha = (tsl - ra) * 15; 
-		System.out.println("  ha = " + ha);
+		//System.out.println("  ha = " + ha);
 		
 		SkyPosition position = findPosition(ha, dec, lat); 
-		System.out.println("  position(2) = " + position);
+		//System.out.println("  position(2) = " + position);
 		
 		return position;
 	}
@@ -68,7 +68,7 @@ public class SkyPositionFinder {
 		//compute az
 		double az  = atan2d( yhor, xhor ) + 180;
 		SkyPosition position = SkyPosition.of(h, az); 
-		System.out.println("  position(2) = " + position);
+		//System.out.println("  position(2) = " + position);
 		
 		return position;
 	}
@@ -116,12 +116,12 @@ public class SkyPositionFinder {
 		
 		String msg = MessageFormat.format("tsl = {0} + {1} + {2} + {3}", //
 			k, n, h, l); 
-		System.out.println(msg); 
+		//System.out.println(msg); 
 		
-		System.out.println("  tsl = " + tsl);
+		//System.out.println("  tsl = " + tsl);
 		tsl = range(tsl, 24);  
 		
-		System.out.println("  tsl = " + tsl);
+		//System.out.println("  tsl = " + tsl);
 		
 		return tsl;
     }

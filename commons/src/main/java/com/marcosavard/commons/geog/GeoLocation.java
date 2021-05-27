@@ -21,6 +21,7 @@ import com.marcosavard.commons.math.Maths;
 public class GeoLocation implements Serializable {
   public static final GeoLocation NORTH_POLE = GeoLocation.of(90, 0);
   public static final GeoLocation SOUTH_POLE = GeoLocation.of(-90, 0);
+  public static final GeoLocation NULL_ISLAND = GeoLocation.of(0, 0);
   public static final GeoLocation GREENWICH = GeoLocation.of(51.48, 0);
 
   private static final char DEGREE = '\u00B0';

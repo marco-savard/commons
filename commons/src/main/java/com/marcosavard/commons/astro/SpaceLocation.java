@@ -12,6 +12,15 @@ import com.marcosavard.commons.math.type.Base;
 
 // in equatorial coordinates
 public class SpaceLocation {
+  //celestrial north, south poles
+  public static final SpaceLocation NORTH_POLE = SpaceLocation.of(0, 90); 
+  public static final SpaceLocation SOUTH_POLE = SpaceLocation.of(0, -90); 
+  public static final SpaceLocation VERNAL_POINT = SpaceLocation.of(0, 0); 
+  
+  private static final char DEGREE_SIGN = '\u00B0';
+  private static final char MINUTE_SIGN = '\u2032'; 
+  private static final char SECOND_SIGN = '\u2033';
+  
   public enum Unit {
     DEGREE, HOUR
   };
@@ -19,10 +28,6 @@ public class SpaceLocation {
   public enum Format {
     HMS, DMS
   };
-
-  private static final char DEGREE_SIGN = '\u00B0';
-  private static final char MINUTE_SIGN = '\u2032';
-  private static final char SECOND_SIGN = '\u2033';
 
   private double rightAscension; // [0-24 hr]
   private double declination; // [0-360 degrees]

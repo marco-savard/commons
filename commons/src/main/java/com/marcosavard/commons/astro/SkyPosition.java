@@ -8,9 +8,11 @@ import static com.marcosavard.commons.astro.AstroMath.asind;
 import static com.marcosavard.commons.astro.AstroMath.acosd;
 
 public class SkyPosition {
-  public static final SkyPosition ZENITH = SkyPosition.of(90, 0);
+  public static final SkyPosition HORIZON_NORTH = SkyPosition.of(0, 0);
+  public static final SkyPosition HORIZON_SOUTH = SkyPosition.of(0, 180);
   public static final SkyPosition NADIR = SkyPosition.of(-90, 0);
-
+  public static final SkyPosition ZENITH = SkyPosition.of(90, 0);
+  
   private static final char DEGREE = '\u00B0';
   private final double horizon, azimuth;
 

@@ -1,8 +1,9 @@
-package com.marcosavard.commons.astro.eval;
+package com.marcosavard.commons.astro.finder;
 
 import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
 import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,13 +23,76 @@ import com.marcosavard.commons.geog.GeoLocation;
 public class SkyPositionFinderDemo {
 
 	public static void main(String[] args) {
-		findVenusPositionAtAjaccio(); 
-		findMarsPositionAtAvignon();
-		findSunPositionInCentralScandinavia();
-		findM13PositionInBirmingham();
-		findStarsInQuebecCity();
+		findSkyPositionOfAustinComet(); 
+		
+		//findVernalPointAtSpring();
+		//findVenusPositionAtAjaccio(); 
+		//findMarsPositionAtAvignon();
+		//findSunPositionInCentralScandinavia();
+		//findM13PositionInBirmingham();
+		//findStarsInQuebecCity();
 	}
 	
+
+private static void findSkyPositionOfAustinComet() {
+	  // find equatorial coordinates, from sky position
+	  LocalDate date = LocalDate.of(1982, 9, 5);
+	  LocalTime time = LocalTime.of(21, 6);
+	  ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneId.of("Europe/Paris")); 
+	  
+	  // find location of austin at clairmontFerrand
+	  SkyPosition austin = SkyPosition.of(14, 320);
+	  GeoLocation clairmontFerrand = GeoLocation.of(46, 3);
+	  SpaceLocation location = findSpaceLocation(austin, clairmontFerrand, moment);
+	   
+	  // gives asc=12.28 hr decl=43.658 degrees
+	  findSkyPosition(location, clairmontFerrand, moment);
+}
+
+private static SpaceLocation findSpaceLocation(SkyPosition position, GeoLocation place,
+	      ZonedDateTime moment) {
+	    double[] coordinates = place.toCoordinates();
+	    SpaceLocation spaceLocation = SpaceLocationFinder.find(position, coordinates, moment); 
+	    SpaceLocation spaceLocation2 = Astronomy.findSpaceLocationOf(position, moment, coordinates);
+	    
+	    String msg = MessageFormat.format("Q: Which star is seen at {0} from {1} when {2}", position,
+	        place, moment);
+	    System.out.println(msg);
+	    System.out.println("A1: " + spaceLocation);
+	    System.out.println("A2: " + spaceLocation2);
+	    System.out.println();
+	    return spaceLocation;
+	  }
+
+private static SkyPosition findSkyPosition(SpaceLocation spaceLocation, GeoLocation place,
+	      ZonedDateTime moment) {
+	    double[] coordinates = place.toCoordinates();
+	    SkyPosition position = Astronomy.findSkyPositionOf(spaceLocation, moment, coordinates);
+	    SkyPosition position2 = SkyPositionFinder.findPosition(spaceLocation, moment, coordinates); 
+	    
+	    String msg = MessageFormat.format("Q: Where to see star {0} from {1} where {2}", spaceLocation,
+	        place, moment);
+	    System.out.println(msg);
+	    System.out.println("A1: " + position);
+	    System.out.println("A2: " + position2);
+	    System.out.println();
+	    return position;
+	  }
+
+
+
+	private static void findVernalPointAtSpring() {
+		// 31 july 1981, at 21:30 
+		LocalDate date = LocalDate.of(2021, 3, 20); //20th mars
+		LocalTime time = LocalTime.NOON; 
+		ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC); 
+		
+		SpaceLocation vernalPoint = SpaceLocation.VERNAL_POINT; 
+		SkyPosition position = SkyPositionFinder.findPosition(vernalPoint, moment, GeoLocation.NULL_ISLAND.toCoordinates()); 
+		//the vernal point is located at Zenith for Null Island point of view 
+		System.out.println("Null Island : " + position);  
+	}
+
 	private static void findVenusPositionAtAjaccio() {
 		// 31 july 1981, at 21:30 
 		LocalDate date = LocalDate.of(1981, 7, 31); //31 july
@@ -41,7 +105,7 @@ public class SkyPositionFinderDemo {
 	    SpaceLocation venusLocation = SpaceLocation.of(10.667, 10); 
 	    SkyPosition position = SkyPositionFinder.findPosition(venusLocation, moment, ajaccio.toCoordinates()); 
 	    
-	    //should give azimuth=278° (NW), horizon=6.2°
+	    //should give azimuth=278ï¿½ (NW), horizon=6.2ï¿½
 	    //according http://www.convertalot.com/celestial_horizon_co-ordinates_calculator.html
 	    System.out.println(position);  
 	}
@@ -58,7 +122,7 @@ public class SkyPositionFinderDemo {
 	    SpaceLocation marsLocation = SpaceLocation.of(5.138, 23.2); 
 	    SkyPosition position = SkyPositionFinder.findPosition(marsLocation, moment, avignon.toCoordinates()); 
 	    
-	    //should give azimuth=61.2° (NE), horizon=4.0°
+	    //should give azimuth=61.2ï¿½ (NE), horizon=4.0ï¿½
 	    System.out.println(position);  
 	}
 	
@@ -74,7 +138,7 @@ public class SkyPositionFinderDemo {
 	    SpaceLocation sunLocation = SpaceLocation.of(1.77720, 11.0084); 
 	    SkyPosition position = SkyPositionFinder.findPosition(sunLocation, moment, scandinavia.toCoordinates()); 
 	    
-	    //should give azimuth=15.68° (N), horizon=-17.96°
+	    //should give azimuth=15.68ï¿½ (N), horizon=-17.96ï¿½
 	    System.out.println(position);  
 	}
 	
