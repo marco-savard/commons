@@ -30,7 +30,6 @@ public class SpaceLocationFinder {
 	    
 	    //compute lst
 	    LocalSideralTime lst = LocalSideralTime.of(moment, lon);
-	    System.out.println("  lst = " + lst); 
 	    
 	    int n = moment.getDayOfYear(); 
 	    ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
@@ -62,12 +61,8 @@ public class SpaceLocationFinder {
 		
 		String msg = MessageFormat.format("tsl = {0} + {1} + {2} + {3}", //
 			k, n, h, l); 
-		System.out.println(msg); 
 		
-		System.out.println("  tsl = " + tsl);
 		tsl = range(tsl, 24);  
-		
-		System.out.println("  tsl = " + tsl);
 		
 		return tsl;
     }

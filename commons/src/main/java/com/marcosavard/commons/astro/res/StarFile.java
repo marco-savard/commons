@@ -4,9 +4,9 @@ import java.nio.charset.StandardCharsets;
 
 import com.marcosavard.commons.res.CsvResourceFile;
 
-public class StarFile extends CsvResourceFile<Star> {
+class StarFile extends CsvResourceFile<Star> {
 	
-	public static StarFile ofType(Class<Star> type) {
+	static StarFile ofType(Class<Star> type) {
 		return new StarFile(type); 
 	}
 	
@@ -15,7 +15,6 @@ public class StarFile extends CsvResourceFile<Star> {
 		super.withSeparator(';'); 
 		super.withQuoteChar('\"');
 	    super.withCommentPrefix("#");
-		
 	    //super.withNbHeaders(1);
 	}
 

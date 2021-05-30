@@ -5,7 +5,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+
 //import com.marcosavard.commons.geog.GeoLocation;
+import static com.marcosavard.commons.astro.AstroMath.sind; 
+import static com.marcosavard.commons.astro.AstroMath.cosd; 
+import static com.marcosavard.commons.astro.AstroMath.asind; 
+import static com.marcosavard.commons.astro.AstroMath.acosd; 
+import static com.marcosavard.commons.astro.AstroMath.atan2d; 
+
 import com.marcosavard.commons.math.InRange;
 import com.marcosavard.commons.math.type.Angle;
 import com.marcosavard.commons.math.type.Base;
@@ -31,6 +38,8 @@ public class SpaceLocation {
 
   private double rightAscension; // [0-24 hr]
   private double declination; // [0-360 degrees]
+  private double distance; 
+  private double x, y, z;
 
   public static SpaceLocation of(int ra1, int ra2, int ra3, Unit raUnit, int dec1, int dec2,
       int dec3, Unit declUnit) {
@@ -45,10 +54,22 @@ public class SpaceLocation {
   public static SpaceLocation of(RightAscension ascension, Declination declination) {
     return of(ascension.toHour(), declination.toDegrees());
   }
-
+  
   public static SpaceLocation of(double rightAscensionInHours, double declinationInDegrees) {
-    SpaceLocation position = new SpaceLocation(rightAscensionInHours, declinationInDegrees);
+	 return of(rightAscensionInHours, declinationInDegrees, 1);
+  }
+
+  public static SpaceLocation of(double rightAscensionInHours, double declinationInDegrees, double distance) {
+    SpaceLocation position = new SpaceLocation(rightAscensionInHours, declinationInDegrees, distance);
     return position;
+  }
+  
+  public static SpaceLocation rectangleOf(double x, double y, double z) {
+	  double r = Math.sqrt( x*x + y*y + z*z );	
+	  double ra = atan2d(y, x);
+	  double dec = asind( z / r );
+	  SpaceLocation location = SpaceLocation.of(ra/15, dec, r); 
+	  return location;
   }
 
   public double getRightAscensionDegrees() {
@@ -62,6 +83,24 @@ public class SpaceLocation {
   public double getDeclination() {
     return declination;
   }
+  
+  public double getX() {
+		return x;
+  }
+
+  public double getY() {
+		return y;
+  }
+
+  //rotate around x-axis
+  public SpaceLocation rotateX(double angle) {
+		double x1 = x;
+		double y1 = y * cosd(angle) - z * sind(angle);
+		double z1 = y * sind(angle) + z * cosd(angle);
+		SpaceLocation rotated = rectangleOf(x1, y1, z1);
+		return rotated;
+  }
+  
 
   public static SpaceLocation findSpaceLocation(SpaceLocation location1, LocalDate date1,
       LocalDate date2) {
@@ -101,13 +140,17 @@ public class SpaceLocation {
     double rightAscensionDegrees = longitude + a + b + 98.971;
     Angle ra = Angle.of(rightAscensionDegrees, Angle.Unit.DEG);
     double rightAscensionHours = (ra.degrees() / 360) * 24;
-    SpaceLocation position = new SpaceLocation(rightAscensionHours, declination);
+    SpaceLocation position = SpaceLocation.of(rightAscensionHours, declination);
     return position;
   }
 
-  private SpaceLocation(double rightAscension, double declination) {
+  private SpaceLocation(double rightAscension, double declination, double distanceFromCenter) {
     this.rightAscension = rightAscension;
     this.declination = declination;
+    this.distance = distanceFromCenter;
+    this.x = distanceFromCenter * cosd(rightAscension * 15) * cosd(declination);
+    this.y = distanceFromCenter * sind(rightAscension * 15) * cosd(declination);
+    this.z = distanceFromCenter * sind(declination);
   }
 
   public double[] getZenithAt(ZonedDateTime moment) {
@@ -128,6 +171,7 @@ public class SpaceLocation {
   @Override
   public String toString() {
     Base hms = Base.of(24, 60, 60);
+    String ra = Double.toString(Math.round(rightAscension * 15.0)) + DEGREE_SIGN;
     long[] rae = hms.encode((long) (rightAscension * 3600));
     String h = String.format("%02d", rae[0]);
     String m = String.format("%02d", rae[1]);
@@ -141,7 +185,7 @@ public class SpaceLocation {
     s = String.format("%02d", de[2]);
     String declStr = d + DEGREE_SIGN + m + MINUTE_SIGN + s + SECOND_SIGN;
 
-    String str = MessageFormat.format("ra={0} dec={1}", raStr, declStr);
+    String str = MessageFormat.format("ra={0} ({1}), dec={2}", raStr, ra, declStr);
     return str;
   }
 
@@ -242,6 +286,23 @@ public class SpaceLocation {
       return this.value;
     }
   }
+  
+  /**
+   * Compute the angular distance, in degrees, between that location.
+   * 
+   * @param location to which distance is computed
+   * @return the distance in degrees
+   */
+  public double distanceFrom(SpaceLocation other) {
+	  double dec1 = declination; 
+	  double ra1 = rightAscension; 
+	  double dec2 = other.declination; 
+	  double ra2 = other.declination; 
+	  
+	  double cosDist = sind(dec1) * sind(dec2) + cosd(dec1) * cosd(dec2) * cosd(ra1 - ra2);
+	  double dist = acosd(cosDist); 
+	  return dist;
+  }
 
   /**
    * Compute the angular distance, in radians, between that location.
@@ -249,7 +310,7 @@ public class SpaceLocation {
    * @param location to which distance is computed
    * @return the distance in radians
    */
-  public double distanceFrom(SpaceLocation other) {
+  public double distanceFromOld(SpaceLocation other) {
     if (other == null) {
       return 0;
     }
@@ -277,6 +338,19 @@ public class SpaceLocation {
     }
 
   }
+
+  public SpaceLocation addTo(SpaceLocation addend) {
+	  double x1 = this.x + addend.x;
+	  double y1 = this.y + addend.y;
+	  double z1 = this.z + addend.z;
+	  SpaceLocation summation = SpaceLocation.rectangleOf(x1, y1, z1);
+	  return summation;
+  }
+
+
+
+
+
 
 
 }

@@ -121,7 +121,7 @@ public enum Constellation {
 		return code;
 	}
 	
-	String getName() {
+	public String getName() {
 		return name;
 	}
 	

@@ -17,6 +17,8 @@ import java.time.temporal.JulianFields;
  * TODO isComparable, daysBetween(otherJd), addTo(), lessThan()
  */
 public class JulianDay {
+	public static final double JD2000 = 2451543.5; //Julian day of 2000 Jan 0th 00:00 UT (= 1999 Dec 31 00:00 UT) 
+	
   // Gregorian Calendar adopted Oct. 15, 1582 (2299161)
   public static final LocalDate COMMON_ERA = LocalDate.of(1, 1, 1);
   public static final LocalDate GREGORIAN_ERA = LocalDate.of(1582, 10, 15);

@@ -61,9 +61,8 @@ public class SkyPositionFinder {
 		double yhor = y; 
 		double zhor = x * cosd(lat) + z * sind(lat);
 		 
-		//compute h
-		double h = asind(zhor);
-		h = range(h, -180, 180); 
+		//compute h, in range -180..180
+		double h = range(asind(zhor), -180, 180);
 		
 		//compute az
 		double az  = atan2d( yhor, xhor ) + 180;

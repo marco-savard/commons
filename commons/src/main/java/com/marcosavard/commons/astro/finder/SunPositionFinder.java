@@ -11,9 +11,11 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import com.marcosavard.commons.astro.AstroMath;
 import com.marcosavard.commons.astro.JulianDay;
 import com.marcosavard.commons.astro.SkyPosition;
 import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.TimeConverter;
 
 public class SunPositionFinder {
 	
@@ -25,15 +27,12 @@ public class SunPositionFinder {
 	  double ma = range(357.528 + 0.9856003 * n, 360); 
 		  
 	  double eclLon = sunLon + (1.915 * sind(ma)) + (0.02 * sind(2 * ma)); 
-	  double ecl = 23.439; 
+	  double ecl = AstroMath.ECLIPTIC;
 	  double y = cosd(ecl) * sind(eclLon); 
 	  double x = cosd(eclLon); 
-	  double ra = atan2d(y, x); 
-	  
-	  LocalDate date = moment.toLocalDate();
-	  int dayOfYear = date.getDayOfYear(); 
-	  double dec = - asind(0.39779 * cosd( 0.98565*(dayOfYear+10) + 1.914 * sind(0.98565 * (dayOfYear-2))));
-	  
+	  double ra = range(atan2d(y, x), 0, 360); 
+	  double dec = asind(sind(ecl) * sind(eclLon));
+
 	  SpaceLocation location = SpaceLocation.of(ra/15, dec);
 	  return location;
 	}
@@ -46,7 +45,7 @@ public class SunPositionFinder {
 		int dayOfYear = date.getDayOfYear(); 
 		
 		//convert to UT
-		ZonedDateTime momentUt = toZonedDateTime(moment, ZoneOffset.UTC);
+		ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
 		double hourUT = momentUt.toLocalTime().toSecondOfDay() / 3600.0;  
 		System.out.println("hr : " + hourUT); 
 		
@@ -69,7 +68,7 @@ public class SunPositionFinder {
 
 	public static SkyPosition findPosition(ZonedDateTime moment, double[] coordinates) {
 		//compute momentUt 		
-		ZonedDateTime momentUt = toZonedDateTime(moment, ZoneOffset.UTC);
+		ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
 	
 		//compute location
 		SpaceLocation location = findLocation(moment); 
@@ -115,11 +114,7 @@ public class SunPositionFinder {
 		return position;
 	}
 	
-	private static ZonedDateTime toZonedDateTime(ZonedDateTime moment, ZoneOffset utc) {
-		Instant instant = moment.toInstant(); 
-		ZonedDateTime ut = instant.atZone( utc );
-		return ut;
-	}
+
 
 
 
