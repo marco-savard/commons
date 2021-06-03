@@ -12,8 +12,8 @@ import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.asind; 
 import static com.marcosavard.commons.astro.AstroMath.acosd; 
 import static com.marcosavard.commons.astro.AstroMath.atan2d; 
+import static com.marcosavard.commons.astro.AstroMath.range;
 
-import com.marcosavard.commons.math.InRange;
 import com.marcosavard.commons.math.type.Angle;
 import com.marcosavard.commons.math.type.Base;
 
@@ -194,7 +194,7 @@ public class SpaceLocation {
     double n = date.getDayOfYear();
     double a = 0.985635 * n;
     double h = (ra - longitude - a - 98.9715) / 15.0405;
-    h = InRange.range(0, 24, h); // ramener h dans 0..24
+    h = range(h, 0, 24); // ramener h dans 0..24
     int hour = (int) Math.floor(h);
     int minute = (int) Math.floor((h - hour) * 60);
     LocalTime time = LocalTime.of(hour, minute);

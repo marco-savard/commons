@@ -7,9 +7,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class NullSafe {
-	private static final String EMPTY = "";
+  private static final String NULL_STRING = String.valueOf((String)null);
   private static final List<Object> EMPTY_LIST =
       Collections.unmodifiableList(new ArrayList<Object>());
+  private static final Object NULL_SAFE_OBJECT = new Object();
 
   private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
   private static final char[] EMPTY_CHAR_ARRAY = new char[0];
@@ -20,11 +21,51 @@ public class NullSafe {
   
   private NullSafe() {}
 
+  public static Byte of(Byte b) {
+	  b = (b == null) ? (byte)0 : b;
+	  return b;
+  }
+  
+  public static Character of(Character c) {
+	  c = (c == null) ? '\0' : c;
+	  return c;
+  }
+  
   public static CharSequence of(CharSequence original) {
-	  CharSequence nullSafe = (original == null) ? EMPTY : original;
+	  CharSequence nullSafe = (original == null) ? (String)getNull(String.class) : original;
 	  return nullSafe;
   }
   
+  public static Double of(Double d) {
+	  d = (d == null) ? (Double)getNull(Double.class) : d;
+	  return d;
+  }
+  
+  public static Float of(Float f) {
+	  f = (f == null) ? (Float)getNull(Float.class) : f;
+	  return f;
+  }
+  
+  public static Integer of(Integer i) {
+	  i = (i == null) ? (Integer)getNull(Integer.class) : i;
+	  return i;
+  }
+  
+  public static Short of(Short s) {
+	  s = (s == null) ? (Short)getNull(Short.class) : s;
+	  return s;
+  }
+  
+  public static Long of(Long l) {
+	  l = (l == null) ? (Long)getNull(Long.class) : l;
+	  return l;
+  }
+  
+  public static Object of(Object obj) {
+	  obj = (obj == null) ? NULL_SAFE_OBJECT: obj;
+	  return obj;
+  }
+
   public static final byte[] of(byte[] array) {
     return (array != null) ? array : EMPTY_BYTE_ARRAY;
   }
@@ -64,8 +105,8 @@ public class NullSafe {
     return (array != null) ? array : (T[]) Array.newInstance(type, 0);
   }
 
-
-  // a equals() method that is both robust and efficient
+  // an equals() method that is both robust and efficient
+  @SuppressWarnings("unchecked")
   public static <T> boolean equals(T obj1, T obj2) {
     boolean equal;
 
@@ -74,7 +115,7 @@ public class NullSafe {
     } else if ((obj1 == null) || (obj2 == null)) {
       equal = false;
     } else if (obj1 instanceof Comparable) {
-      Comparable<T> comparable = (Comparable) obj1;
+      Comparable<T> comparable = (Comparable<T>) obj1;
       equal = comparable.compareTo(obj2) == 0;
     } else if (obj1.hashCode() != obj2.hashCode()) {
       equal = false;
@@ -83,6 +124,11 @@ public class NullSafe {
     }
 
     return equal;
+  }
+  
+  public static <T> int hashCode(T obj) { 
+	  int hashCode = (obj == null) ? getNull(Object.class).hashCode() : obj.hashCode();
+	  return hashCode; 
   }
 
   public static <T extends Comparable<T>> int compareTo(T obj1, T obj2) {
@@ -101,31 +147,33 @@ public class NullSafe {
     return comparison;
   }
 
-  public static <T> boolean indexSafe(Collection<T> collection, int idx) {
-    boolean safe = (collection != null) && (idx >= 0) && (idx < collection.size());
-    return safe;
-  }
-
-  public static <T> boolean indexSafe(List<T> list, int idx) {
-    boolean safe = (list != null) && (idx >= 0) && (idx < list.size());
-    return safe;
-  }
-
-  public static <T> boolean indexSafe(T[] array, int idx) {
-    boolean safe = (array != null) && (idx >= 0) && (idx < array.length);
-    return safe;
-  }
-
-  // verify if safe before calling String.charAt()
-  public static <T> boolean indexSafe(String s, int idx) {
-    boolean safe = (s != null) && (idx >= 0) && (idx < s.length());
-    return safe;
-  }
-
-  // verify if safe before calling String.sublist()
-  public static <T> boolean indexSafe(String s, int startIdx, int endIdx) {
-    boolean safe = (s != null) && (startIdx >= 0) && (endIdx < s.length() && (startIdx < endIdx));
-    return safe;
+ 
+  private static Object getNull(Class<?> claz) {
+	  Object obj; 
+	  
+	  if (claz.equals(Byte.class)) { 
+		  obj = (byte)0;
+	  } else if (claz.equals(Character.class)) {
+		  obj = '\0'; 
+	  } else if (claz.equals(CharSequence.class)) {
+		  obj = "";
+	  } else if (claz.equals(Double.class)) {
+		  obj = 0.0;
+	  } else if (claz.equals(Float.class)) {
+		  obj = 0.0f;
+	  } else if (claz.equals(Integer.class)) {
+		  obj = 0;
+	  } else if (claz.equals(Long.class)) {
+		  obj = 0L;
+	  } else if (claz.equals(Short.class)) {
+		  obj = (short)0;
+	  } else if (claz.equals(String.class)) {
+		  obj = NULL_STRING;
+	  } else {
+		  obj = NULL_SAFE_OBJECT; 
+	  }
+	  
+	  return obj;
   }
 
 

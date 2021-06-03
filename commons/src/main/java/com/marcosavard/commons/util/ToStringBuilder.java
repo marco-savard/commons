@@ -5,10 +5,13 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A generic implementation for the toString() method, based by introspection. 
@@ -19,6 +22,32 @@ import java.util.List;
 public class ToStringBuilder {
 	
 	public static String build(Object object) {
+		boolean toStringPermitted = isToStringSafe(object) || isToStringDefined(object); 
+		String str = toStringPermitted ? object.toString() : relectiveToString(object); 
+		return str; 
+	}
+	
+	private static boolean isToStringSafe(Object object) {
+		boolean toStringSafe = (object instanceof Collection); 
+		toStringSafe = toStringSafe || (object instanceof Map); 
+		return toStringSafe;
+	}
+
+	private static boolean isToStringDefined(Object object) {
+		Class claz = object.getClass(); 
+		boolean toStringDefined; 
+		
+		try {
+			Method method = claz.getDeclaredMethod("toString", null);
+			toStringDefined = true; 
+		} catch (NoSuchMethodException | SecurityException e) {
+			toStringDefined = false;
+		} 
+		
+		return toStringDefined;
+	}
+
+	private static String relectiveToString(Object object) {
 		List<String> values = new ArrayList<>(); 
 		List<PropertyDescriptor> descriptors = getDescriptors(object);
 		
@@ -40,7 +69,9 @@ public class ToStringBuilder {
 		Object value; 
 		
 		try {
-			value = descriptor.getReadMethod().invoke(object);
+			Method reader = descriptor.getReadMethod(); 
+			reader.setAccessible(true);
+			value = reader.invoke(object);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			value = null;
 		} 

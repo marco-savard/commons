@@ -7,8 +7,8 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import static com.marcosavard.commons.astro.AstroMath.range;
 import com.marcosavard.commons.geog.GeoLocation;
-import com.marcosavard.commons.math.InRange;
 import com.marcosavard.commons.math.type.Angle;
 import com.marcosavard.commons.math.type.Angle.Unit;
 
@@ -105,7 +105,7 @@ public class SunPosition {
   }
 
   private static double degRange(double d) {
-    return InRange.range(d, 0, 360);
+    return range(d, 0, 360);
   }
 
   // kepler - solve the equation of Kepler

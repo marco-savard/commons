@@ -8,9 +8,9 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import com.marcosavard.commons.math.InRange;
 import com.marcosavard.commons.math.type.Angle;
 import com.marcosavard.commons.math.type.Angle.Unit;
+import static com.marcosavard.commons.math.Maths.range;
 
 public class MoonPosition {
   public enum PhaseName {
@@ -209,18 +209,18 @@ public class MoonPosition {
     long days = REFERENCE_DATE.until(moment, ChronoUnit.DAYS) + 1;
     double ms = 0.98563 * fractionalDayOfYear - 3.4689;
 
-    double m1 = InRange.range(13.17634 * days, 0, 360);
-    double m2 = InRange.range(0.11137 * days, 0, 360);
-    double mm = InRange.range(m1 - m2 - 21.0845, 0, 360);
+    double m1 = range(13.17634 * days, 0, 360);
+    double m2 = range(0.11137 * days, 0, 360);
+    double mm = range(m1 - m2 - 21.0845, 0, 360);
 
     double t = moment.getYear() - 1900 + (fractionalDayOfYear / (double) nbDaysInYear);
-    double t1 = InRange.range(4452.67114 * t, 0, 360);
+    double t1 = range(4452.67114 * t, 0, 360);
 
     double t2 = 0.0000144 * t * t;
     double e1 = t1 - t2;
-    e1 = InRange.range(e1, 0, 360);
+    e1 = range(e1, 0, 360);
     double e = 350.7375 + e1;
-    e = InRange.range(e, 0, 360);
+    e = range(e, 0, 360);
 
     double sinMm = Math.sin(Math.toRadians(mm));
     double sin2Mm = Math.sin(Math.toRadians(2 * mm));
@@ -231,7 +231,7 @@ public class MoonPosition {
 
     double angle = 180 - e - (6.289 * sinMm) - (0.214 * sin2Mm) + (2.1 * sinMs) - (0.658 * sin2E)
         - (0.112 * sinE) - (1.1274 * sin2EMm);
-    angle = InRange.range(angle, 0, 360);
+    angle = range(angle, 0, 360);
     MoonPosition position = new MoonPosition(angle, 0);
     return position;
   }
@@ -252,7 +252,7 @@ public class MoonPosition {
   }
 
   private static double degRange(double d) {
-    return InRange.range(d, 0, 360);
+    return range(d, 0, 360);
   }
 
   private static double getFractionalDayOfYear(ZonedDateTime moment) {

@@ -1,6 +1,6 @@
 package com.marcosavard.commons.lang;
 
-public interface CharStringOperations {
+interface CharStringOperations {
 
   /**
    * Capitalize the original string.

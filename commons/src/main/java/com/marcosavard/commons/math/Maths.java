@@ -50,18 +50,22 @@ public class Maths {
   }
 
   /**
-   * Return value within the range [0..max]. For instance valueInRange(90, 360) gives 90
-   * valueInRange(361, 360) gives 1; valueInRange(-90, 360) gives 270
+   * Keep in range [min..max]. Return value within the range [0..max]. For instance :
+   *   range(90, 360) gives 90
+   *   range(361, 360) gives 1
+   *   range(-90, 360) gives 270
    * 
    * @param value a given value
+   * @param min the lower bound of the range
    * @param max the upper bound of the range
    * 
    * @return the ranged value
    * 
    */
-  public static double valueInRange(double value, double max) {
-    // keep in range [0..max]
-    value = (value > 0) ? (value % max) : (max - Math.abs(value) % max) % max;
-    return value;
-  }
+	public static double range(double value, double min, double max) {
+	    double span = max - min;
+	    double ranged = min + ((value - min) % span + span) % span;
+	    return ranged;
+	}
+	
 }

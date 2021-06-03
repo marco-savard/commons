@@ -1,6 +1,6 @@
 package com.marcosavard.commons.lang;
 
-public interface StringOperations {
+interface StringOperations {
   public String concat(String suffix);
 
   public boolean endsWith(String suffix);

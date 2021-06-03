@@ -1,6 +1,7 @@
 package com.marcosavard.commons.math.type;
 
 import com.marcosavard.commons.math.Maths;
+import static com.marcosavard.commons.math.Maths.range;
 
 public class Angle implements Comparable<Angle> {
   private static final String DEGREE_SIGN = "\u00B0";
@@ -18,10 +19,10 @@ public class Angle implements Comparable<Angle> {
     Angle angle;
 
     if (unit == Unit.DEG) {
-      value = Maths.valueInRange(value, 360);
+      value = range(value, 0, 360);
       angle = new Angle(Math.toRadians(value));
     } else {
-      value = Maths.valueInRange(value, 2 * Math.PI);
+      value = range(value, 0, 2 * Math.PI);
       angle = new Angle(value);
     }
 
