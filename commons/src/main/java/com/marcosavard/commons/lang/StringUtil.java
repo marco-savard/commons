@@ -9,11 +9,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A utility class that provides useful methods that handle strings. It includes
+ * methods to predicate whether a string is null or empty, to pad strings with
+ * blanks, to remove quotes from strings, to strip accents from a string.
+ *
+ * @author Marco
+ *
+ */
 public class StringUtil {
 	private static final String ELLIPSIS = "\u2026"; // ...character
 	private static final Character[] BOOLEANS = new Character[] {'0', '1', 't', 'f', 'y', 'n'};
 	private static final Character[] VOYELS = new Character[] {'a', 'e', 'i', 'o', 'u'};
-	
+
+	// Utility class is not instantiable
+	private StringUtil() {
+	}
+
 	  /**
 	   * Abbreviate source at a given length
 	   * 
@@ -31,7 +43,13 @@ public class StringUtil {
 		String abbreviated = tooLong ? original.subSequence(0, lenght-1) + suffix : original.toString(); 
 		return abbreviated; 
 	}
-	
+
+	/**
+	 * Capitalize the original string.
+	 *
+	 * @param original string
+	 * @return capitalized string
+	 */
 	public static String capitalize(CharSequence original) {
 	    return capitalize(original, Locale.getDefault()); 
    }
@@ -47,7 +65,13 @@ public class StringUtil {
 	public static String capitalizeWords(CharSequence original) {
 	    return capitalizeWords(original, Locale.getDefault()); 
    }
-	
+
+	/**
+	 * Capitalize each words in sentence
+	 *
+	 * @param sentence
+	 * @return
+	 */
 	public static String capitalizeWords(CharSequence original, Locale locale) {
 		original = NullSafe.of(original);
 		List<String> words = Arrays.asList(original.toString().split(" "));
@@ -100,6 +124,31 @@ public class StringUtil {
 		int comparison = stripAccents(toLowerCase(original, locale)).compareToIgnoreCase(stripAccents(toLowerCase(other, locale))); 
 		return comparison;
 	}
+
+	// count occurrences of substring in str
+	public static int countMatches(CharSequence original, CharSequence substring) {
+		original = NullSafe.of(original);
+		int count = original.length() - original.toString().replace(substring, "").length();
+		return count;
+	}
+
+
+	//count occurrences of substring in str
+	public static int countOccurences(String str, String substring) {
+		int count = str.length() - str.replace(substring, "").length();
+		return count;
+	}
+
+	/**
+	 * Returns the same string, but empty is null.
+	 *
+	 * @param text to check
+	 * @return text or "" is text is empty
+	 */
+	public static String emptyIfNull(String text) {
+		String dest = (text == null) ? "" : text;
+		return dest;
+	}
 	
 	public boolean endsWith(CharSequence original, CharSequence suffix) {
 		boolean endsWith = original.toString().endsWith(suffix.toString()); 
@@ -120,14 +169,7 @@ public class StringUtil {
 		boolean endsWith = stripAccents(original).toLowerCase().endsWith(stripAccents(suffix).toLowerCase()); 
 		return endsWith;
 	}
-	
-	// count occurrences of substring in str
-	public static int countMatches(CharSequence original, CharSequence substring) {
-		original = NullSafe.of(original);
-	    int count = original.length() - original.toString().replace(substring, "").length();
-	    return count;
-	}
-	  
+
     public static boolean equalsIgnoreAccents(CharSequence original, CharSequence other) {
     	boolean oneNull = (original == null) || (other == null); 
     	boolean bothNull = (original == null) && (other == null); 
@@ -200,6 +242,28 @@ public class StringUtil {
 		}
 		
 		return integer;
+	}
+
+	/**
+	 * Tells if text is null or blank
+	 *
+	 * @param text a given string
+	 * @return true if null or blank
+	 */
+	public static boolean isNullOrBlank(String text) {
+		boolean nullOrBlank = (text == null) || text.trim().isEmpty();
+		return nullOrBlank;
+	}
+
+	/**
+	 * Tells if text is null or empty
+	 *
+	 * @param text a given string
+	 * @return true if null or empty
+	 */
+	public static boolean isNullOrEmpty(String text) {
+		boolean nullOrEmpty = (text == null) || text.isEmpty();
+		return nullOrEmpty;
 	}
 
 	public static boolean isNumber(CharSequence cs) {
@@ -277,7 +341,14 @@ public class StringUtil {
 
 		return largestIdx;
 	}
-    
+
+	/**
+	 * Pad n blanks at left
+	 *
+	 * @param source a given string
+	 * @param n of blanks
+	 * @return padded string
+	 */
     public static String padLeft(CharSequence original, int totalLength) {
       String padded = String.format("%1$" + totalLength + "s", original);
       return padded;
@@ -322,20 +393,40 @@ public class StringUtil {
 		boolean startsWith = toLowerCase(original).startsWith(toLowerCase(prefix)); 
 		return startsWith;
 	}
-	
+
+	/**
+	 * Strip off accents from characters
+	 *
+	 * @param text with accents
+	 * @return stripped text
+	 */
 	public static String stripAccents(CharSequence original) {
 	    String stripped = Normalizer.normalize(NullSafe.of(original), Normalizer.Form.NFD);
 	    stripped = stripped.replaceAll("[^\\p{ASCII}]", "");
 	    return stripped;
 	}
 
+	/**
+	 * Return a string in which all the blanks (whitespaces and tabs) of the text
+	 * parameter are stripped off. For instance, stripBlanks("hello world") returns
+	 * "helloworld".
+	 *
+	 * @param text the original String, that may contain characters with blanks.
+	 * @return the same String, but without blanks
+	 */
 	public static String stripBlanks(CharSequence original) {
 	    // remove whitespaces and tabs
 		original = NullSafe.of(original);
 	    String stripped = original.toString().replaceAll("\\s", "");
 	    return stripped;
 	}
-	
+
+	/**
+	 * Strip off non digit characters
+	 *
+	 * @param text a given string
+	 * @return stripped string
+	 */
 	public static String stripNonDigit(CharSequence original) {
 		original = NullSafe.of(original);
 	    StringBuilder sb = new StringBuilder();
@@ -355,6 +446,19 @@ public class StringUtil {
 		original = NullSafe.of(original);
 		CharSequence substr = original.subSequence(beginIdx, original.length()); 
 		return substr;
+	}
+
+	/**
+	 * Convert "HELLO_WORLD" to "Hello World"
+	 *
+	 * @param original
+	 * @return
+	 */
+	public static String toDisplayString(String original) {
+		String displayed = original.replaceAll("_", " ");
+		displayed = displayed.toLowerCase();
+		displayed = capitalizeWords(displayed);
+		return displayed;
 	}
 	
 	public static String toLowerCase(CharSequence original) {
@@ -382,14 +486,29 @@ public class StringUtil {
 	    String trimmed = original.toString().replace(" +", " ");
 	    return trimmed;
 	}
-	
+
+	/**
+	 * Truncate source at a given length
+	 *
+	 * @param source a given string
+	 * @param lenght to be truncate
+	 * @return a string having at most 'lenght' characters
+	 */
 	public static String truncate(CharSequence original, int lenght) { 
 		original = NullSafe.of(original);
 		boolean tooLong = original.length() > lenght;
 		String truncated = tooLong ? original.subSequence(0, lenght).toString() : original.toString(); 
 		return truncated; 
 	}
-	
+
+	/**
+	 * Returns the same String, but without the quotes. For instance,
+	 * removeSurroundingQuotes("'text'", '\'') returns "text".
+	 *
+	 * @param text whose the first and last characters may be quote characters.
+	 * @param quoteCharacter such as ' or "
+	 * @return the text without the quotes, if any
+	 */
 	public static CharSequence unquote(CharSequence original) {
 		CharSequence unquoted = unquote(original, '\"');
 		return unquoted;
