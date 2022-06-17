@@ -4,15 +4,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Class that gives a calendar of holidays (and other events). 
+ * Class that gives a calendar of holidays (and other events).
+ *
+ * TODO convert Date to LocalDate
  * 
  * @author Marco
  *
  */
 public class HolidayCalendar {
 	public enum Holiday {
-		NEW_YEAR, 
-		SAINT_VALENTINE, FAMILY_DAY, 
+		NEW_YEAR,
+		VALENTINES_DAY, FAMILY_DAY,
 		DAYLIGHT_SAVING, SAINT_PATRICK, 
 		EASTER, 
 		MOTHERS_DAY, VICTORIA_DAY,
@@ -59,7 +61,7 @@ public class HolidayCalendar {
 		
 		if (holiday == Holiday.NEW_YEAR) {
 			date = findNewYearDay(year); 
-		} else if (holiday == Holiday.SAINT_VALENTINE) {
+		} else if (holiday == Holiday.VALENTINES_DAY) {
 			date = findSaintValentineDay(year); 
 		} else if (holiday == Holiday.FAMILY_DAY) {
 			date = findFamilyDay(year); 
