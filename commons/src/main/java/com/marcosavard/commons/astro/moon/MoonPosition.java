@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.moon;
 
 import java.text.MessageFormat;
 import java.time.Duration;
@@ -8,6 +8,9 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+
+import com.marcosavard.commons.astro.JulianDay;
+import com.marcosavard.commons.astro.SunPosition;
 import com.marcosavard.commons.math.type.Angle;
 import com.marcosavard.commons.math.type.Angle.Unit;
 import static com.marcosavard.commons.math.Maths.range;

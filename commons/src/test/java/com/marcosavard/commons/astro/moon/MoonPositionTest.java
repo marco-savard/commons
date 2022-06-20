@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.moon;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
