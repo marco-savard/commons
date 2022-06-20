@@ -1,9 +1,10 @@
 package com.marcosavard.commons.geog;
 
-import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
-import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
+import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 
 public class GeoLocationTest {
 
@@ -47,6 +48,16 @@ public class GeoLocationTest {
     Assert.assertEquals(midPoint, midPoint2);
   }
 
+    @Test
+    public void demoBearing() {
+        GeoLocation baghdad = GeoLocation.of(35, 45);
+        GeoLocation osaka = GeoLocation.of(35, 125);
+        double initial = baghdad.findInitialBearingTo(osaka);
+        double terminal = baghdad.findTerminalBearingTo(osaka);
+
+        Assert.assertEquals(60, initial, 1.0); // initial heading of 60°
+        Assert.assertEquals(120, terminal, 1.0); // terminal heading of 120°
+    }
 
 
 }

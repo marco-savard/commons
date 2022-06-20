@@ -3,14 +3,13 @@ package com.marcosavard.commons.geog;
 import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
 import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 import java.text.MessageFormat;
-import org.junit.Assert;
+//import org.junit.Assert;
 
 public class GeoLocationDemo {
 
   public static void main(String[] args) {
     demoQuebecMtl();
     demoParisNice();
-    demoBearing();
     demoMoon();
   }
 
@@ -65,16 +64,6 @@ public class GeoLocationDemo {
     System.out.println(MessageFormat.format(" {0} km from Luna 15 ({1})", distance,
         luna15.toDisplayString(format)));
     System.out.println();
-  }
-
-  private static void demoBearing() {
-    GeoLocation baghdad = GeoLocation.of(35, 45);
-    GeoLocation osaka = GeoLocation.of(35, 125);
-    double initial = baghdad.findInitialBearingTo(osaka);
-    double terminal = baghdad.findTerminalBearingTo(osaka);
-
-    Assert.assertEquals(60, initial, 1.0); // initial heading of 60°
-    Assert.assertEquals(120, terminal, 1.0); // terminal heading of 120°
   }
 
 }
