@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import org.junit.Assert;
+//import org.junit.Assert;
 import com.marcosavard.commons.geog.GeoLocation;
 
 
@@ -17,8 +17,8 @@ public class LocalSideralTimeDemo {
 
   public static void main(String[] args) {
     test0();
-    // test1();
-    // test2();
+    test1();
+    test2();
   }
 
   private static void test0() {
@@ -26,7 +26,6 @@ public class LocalSideralTimeDemo {
     LocalTime time = LocalTime.of(19, 6); //
     ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
     LocalSideralTime lst = LocalSideralTime.of(moment);
-    Assert.assertEquals(18.262, lst.hours(), 0.2);
     System.out.println("gst : " + lst);
   }
 
@@ -62,16 +61,9 @@ public class LocalSideralTimeDemo {
 
     // .. the position of the star M13..
     SpaceLocation spaceCoordinate = StarAlmanach.M13;
-
     SkyPosition skyPosition2 = Astronomy.findSkyPositionOf(spaceCoordinate, moment, city);
 
     // .. can be seen at
-
     System.out.println("can be seen at: " + skyPosition2);
-    Assert.assertEquals(skyPosition2.getAzimuth(), 269.146, 0.01);
-    Assert.assertEquals(skyPosition2.getHorizon(), 49.169, 0.01);
   }
-
-
-
 }
