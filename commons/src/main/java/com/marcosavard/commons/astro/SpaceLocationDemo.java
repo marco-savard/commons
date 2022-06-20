@@ -12,7 +12,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
 import com.marcosavard.commons.astro.SpaceLocation.Unit;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
@@ -106,9 +105,6 @@ public class SpaceLocationDemo {
         Astronomy.findSkyPositionOf(starM13, moment, birminghamUK.toCoordinates());
 
     SkyPosition skyPosition = Astronomy.findSkyPositionOf(starM13, moment, birminghamUK);
-    Assert.assertEquals(skyPosition.getAzimuth(), 269.146, 0.01);
-    Assert.assertEquals(skyPosition.getHorizon(), 49.169, 0.01);
-
     System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
     System.out.println("  ..position of M13: " + skyPosition);
     System.out.println();
@@ -145,9 +141,6 @@ public class SpaceLocationDemo {
     skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, qcCity);
     System.out.println("  ..position of Crux Alpha: " + skyPosition);
     System.out.println();
-
-    Assert.assertEquals(skyPosition.getAzimuth(), 220.889, 0.01);
-    Assert.assertEquals(skyPosition.getHorizon(), -50.569, 0.01);
   }
 
   private static void demoEquinoxPrecession() {

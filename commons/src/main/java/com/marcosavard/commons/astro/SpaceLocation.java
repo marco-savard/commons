@@ -15,7 +15,7 @@ import static com.marcosavard.commons.astro.AstroMath.atan2d;
 import static com.marcosavard.commons.astro.AstroMath.range;
 
 import com.marcosavard.commons.math.type.Angle;
-import com.marcosavard.commons.math.type.Base;
+import com.marcosavard.commons.math.arithmetic.Base;
 
 // in equatorial coordinates
 public class SpaceLocation {
@@ -290,7 +290,7 @@ public class SpaceLocation {
   /**
    * Compute the angular distance, in degrees, between that location.
    * 
-   * @param location to which distance is computed
+   * @param other to which distance is computed
    * @return the distance in degrees
    */
   public double distanceFrom(SpaceLocation other) {
@@ -307,7 +307,7 @@ public class SpaceLocation {
   /**
    * Compute the angular distance, in radians, between that location.
    * 
-   * @param location to which distance is computed
+   * @param other to which distance is computed
    * @return the distance in radians
    */
   public double distanceFromOld(SpaceLocation other) {
