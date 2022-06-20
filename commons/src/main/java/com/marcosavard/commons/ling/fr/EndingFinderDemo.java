@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import com.marcosavard.commons.ling.Noun;
 import com.marcosavard.commons.ling.NounReader;
-import com.marcosavard.commons.math.type.Percent;
+import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class EndingFinderDemo {
 

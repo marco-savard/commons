@@ -8,8 +8,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import com.marcosavard.commons.astro.JulianDay;
-import com.marcosavard.commons.math.type.Angle;
-import com.marcosavard.commons.math.type.Angle.Unit;
+import com.marcosavard.commons.math.trigonometry.Angle;
+import com.marcosavard.commons.math.trigonometry.Angle.Unit;
 
 public class Season {
   private static final double JULIAN_ERA = 1_721_141; // JulianDate.of(0, 3, 24);

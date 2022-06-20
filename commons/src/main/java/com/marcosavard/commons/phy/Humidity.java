@@ -1,7 +1,7 @@
 package com.marcosavard.commons.phy;
 
-import com.marcosavard.commons.math.algo.NewtonSolver;
-import com.marcosavard.commons.math.algo.NewtonSolver.SolverException;
+import com.marcosavard.commons.math.algebra.NewtonSolver;
+import com.marcosavard.commons.math.algebra.NewtonSolver.SolverException;
 
 public class Humidity {
 

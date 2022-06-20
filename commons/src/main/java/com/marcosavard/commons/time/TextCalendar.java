@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import com.marcosavard.commons.math.type.IntegerList;
+import com.marcosavard.commons.math.arithmetic.IntegerList;
 import com.marcosavard.commons.util.Array;
 
 public class TextCalendar {

@@ -14,7 +14,7 @@ import static com.marcosavard.commons.astro.AstroMath.acosd;
 import static com.marcosavard.commons.astro.AstroMath.atan2d; 
 import static com.marcosavard.commons.astro.AstroMath.range;
 
-import com.marcosavard.commons.math.type.Angle;
+import com.marcosavard.commons.math.trigonometry.Angle;
 import com.marcosavard.commons.math.arithmetic.Base;
 
 // in equatorial coordinates

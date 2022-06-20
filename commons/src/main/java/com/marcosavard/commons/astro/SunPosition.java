@@ -9,8 +9,8 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import static com.marcosavard.commons.astro.AstroMath.range;
 import com.marcosavard.commons.geog.GeoLocation;
-import com.marcosavard.commons.math.type.Angle;
-import com.marcosavard.commons.math.type.Angle.Unit;
+import com.marcosavard.commons.math.trigonometry.Angle;
+import com.marcosavard.commons.math.trigonometry.Angle.Unit;
 
 public class SunPosition {
   private static final double J1980 = JulianDay.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
