@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math.algo;
+package com.marcosavard.commons.math.algebra;
 
 public class NewtonSolver {
   /**
@@ -8,7 +8,7 @@ public class NewtonSolver {
    * @param y y
    * @param x0 x0
    * @return x x
-   * @throws eu.sergehelfrich.ersa.solver.SolverException Solver does not converge
+   * @throws SolverException Solver does not converge
    */
   public double solve(FunctionCallable functionCallable, double y, double x0)
       throws SolverException, IllegalArgumentException {

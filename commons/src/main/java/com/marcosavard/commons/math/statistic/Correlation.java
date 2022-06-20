@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math.algo;
+package com.marcosavard.commons.math.statistic;
 
 import java.util.List;
 

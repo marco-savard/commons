@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math.algo;
+package com.marcosavard.commons.math.arithmetic;
 
 import java.text.MessageFormat;
 import java.util.List;

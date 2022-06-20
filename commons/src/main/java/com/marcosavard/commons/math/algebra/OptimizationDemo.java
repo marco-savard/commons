@@ -1,8 +1,8 @@
-package com.marcosavard.commons.math.algo;
+package com.marcosavard.commons.math.algebra;
 
 import java.text.MessageFormat;
-import com.marcosavard.commons.math.algo.Optimization.Category;
-import com.marcosavard.commons.math.algo.Optimization.Formula;
+import com.marcosavard.commons.math.algebra.Optimization.Category;
+import com.marcosavard.commons.math.algebra.Optimization.Formula;
 
 //https://brownmath.com/calc/optimiz.htm
 public class OptimizationDemo {

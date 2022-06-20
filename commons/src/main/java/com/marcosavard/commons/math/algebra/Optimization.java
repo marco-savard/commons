@@ -1,4 +1,4 @@
-package com.marcosavard.commons.math.algo;
+package com.marcosavard.commons.math.algebra;
 
 public class Optimization {
 	public enum Category {MINIMALIZE, MAXIMILIZE}; 
