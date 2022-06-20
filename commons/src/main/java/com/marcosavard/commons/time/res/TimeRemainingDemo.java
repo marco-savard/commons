@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import com.marcosavard.commons.math.type.Base;
+import com.marcosavard.commons.math.arithmetic.Base;
 import com.marcosavard.commons.util.Joiner;
 
 public class TimeRemainingDemo {
