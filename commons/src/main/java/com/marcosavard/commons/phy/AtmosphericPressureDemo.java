@@ -1,7 +1,7 @@
 package com.marcosavard.commons.phy;
 
 import java.text.MessageFormat;
-import org.junit.Assert;
+//import org.junit.Assert;
 import com.marcosavard.commons.debug.Console;
 
 public class AtmosphericPressureDemo {
@@ -50,8 +50,6 @@ public class AtmosphericPressureDemo {
     System.out.println("  Sea level : " + p0);
     System.out.println("  At " + meters + " : " + p1);
     System.out.println();
-    double expected = 120;
-    Assert.assertEquals(expected, differenceMb, 1);
   }
 
   private static void demoFindAltitudeFromPressureLoss() {
@@ -66,8 +64,6 @@ public class AtmosphericPressureDemo {
 
     msg = MessageFormat.format("  if pressure is {0} mb then new altitude is {1} m", endMb, endAlt);
     System.out.println(msg);
-    double expected = 1034;
-    Assert.assertEquals(expected, elevation, 1);
   }
 
 
