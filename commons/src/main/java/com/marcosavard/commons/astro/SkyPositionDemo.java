@@ -7,7 +7,6 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import org.junit.Assert;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class SkyPositionDemo {
@@ -32,8 +31,6 @@ public class SkyPositionDemo {
     // get sky position
     SkyPosition skyPosition =
         Astronomy.findSkyPositionOf(coordinate, moment, birminghamUK.toCoordinates());
-    Assert.assertEquals(skyPosition.getAzimuth(), 269.146, 0.01);
-    Assert.assertEquals(skyPosition.getHorizon(), 49.169, 0.01);
 
     System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
     System.out.println("  ..position of M13: " + skyPosition);
