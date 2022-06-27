@@ -1,288 +1,265 @@
 package com.marcosavard.commons.lang;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * A class that provides useful methods that handle strings. It includes methods to predicate
  * whether a string is null or empty, to pad strings with blanks, to remove quotes from strings, to
  * strip accents from a string.
- * 
- * @author Marco
  *
+ * @author Marco
  */
-public class CharString implements CharSequence, StringOperations, CharStringOperations {
-  private static final CharString EMPTY = new CharString("");
+public class CharString implements CharSequence, StringInterface, CharStringInterface {
+    private static final CharString EMPTY = new CharString("");
 
+    private final String value; // nullSafe value
 
-  private String value; // nullSafe value
-
-  public static CharString of(String string) {
-    CharString cs;
-
-    if (isNullOrEmpty(string)) {
-      cs = EMPTY;
-    } else {
-      cs = new CharString(string);
+    private CharString(String value) {
+        this.value = (value == null ? "" : value);
     }
 
-    return cs;
-  }
+    public static CharString of(String string) {
+        CharString cs;
 
-  public static CharString of(char ch, int len) {
-    char[] chars = new char[len];
-    Arrays.fill(chars, ch);
-    CharString cs = new CharString(new String(chars));
-    return cs;
-  }
+        if (isNullOrEmpty(string)) {
+            cs = EMPTY;
+        } else {
+            cs = new CharString(string);
+        }
 
-  private CharString(String value) {
-    this.value = (value == null ? "" : value);
-  }
-
-  @Override
-  public char charAt(int index) {
-    return value.charAt(index);
-  }
-
-  @Override
-  public int length() {
-    return value.length();
-  }
-
-  @Override
-  public CharSequence subSequence(int beginIndex, int endIndex) {
-    return value.subSequence(beginIndex, endIndex);
-  }
-
-  @Override
-  public boolean equals(Object that) {
-    boolean equal = false;
-
-    if (that instanceof CharSequence) {
-      CharSequence thatSequence = (CharSequence) that;
-      equal = thatSequence.equals(this);
+        return cs;
     }
 
-    return equal;
-  }
+    public static CharString of(char ch, int len) {
+        char[] chars = new char[len];
+        Arrays.fill(chars, ch);
+        String s = new String(chars);
+        return new CharString(s);
+    }
 
-  @Override
-  public int hashCode() {
-    return this.value.hashCode();
-  }
+    /**
+     * Tells if text is null or blank
+     *
+     * @param text a given string
+     * @return true if null or blank
+     */
+    public static boolean isNullOrBlank(String text) {
+        return StringUtil.isNullOrBlank(text);
+    }
 
-  @Override
-  public String concat(String suffix) {
-    return value.concat(suffix);
-  }
+    /**
+     * Tells if text is null or empty
+     *
+     * @param text a given string
+     * @return true if null or empty
+     */
+    public static boolean isNullOrEmpty(String text) {
+        return StringUtil.isNullOrEmpty(text);
+    }
 
-  @Override
-  public boolean endsWith(String suffix) {
-    return value.endsWith(suffix);
-  }
+    @Override
+    public char charAt(int index) {
+        return value.charAt(index);
+    }
 
-  @Override
-  public boolean equalsIgnoreCase(String that) {
-    return value.equalsIgnoreCase(that);
-  }
+    @Override
+    public int length() {
+        return value.length();
+    }
 
-  @Override
-  public int indexOf(String str) {
-    return value.indexOf(str);
-  }
+    @Override
+    public CharSequence subSequence(int beginIndex, int endIndex) {
+        return value.subSequence(beginIndex, endIndex);
+    }
 
-  @Override
-  public int indexOf(String str, int index) {
-    return value.indexOf(str, index);
-  }
+    @Override
+    public boolean equals(Object that) {
+        boolean equal = false;
 
-  @Override
-  public int lastIndexOf(String str) {
-    return value.lastIndexOf(str);
-  }
+        if (that instanceof CharSequence thatSequence) {
+            equal = thatSequence.equals(this);
+        }
 
-  @Override
-  public int lastIndexOf(String str, int fromIndex) {
-    return value.lastIndexOf(str, fromIndex);
-  }
+        return equal;
+    }
 
-  @Override
-  public String replace(String original, String replacement) {
-    return this.replace(original, replacement);
-  }
+    @Override
+    public int hashCode() {
+        return this.value.hashCode();
+    }
 
-  @Override
-  public String replaceAll(String original, String replacement) {
-    return value.replace(original, replacement);
-  }
+    @Override
+    public String concat(String suffix) {
+        return value.concat(suffix);
+    }
 
-  @Override
-  public String[] split(String regex) {
-    return value.split(regex);
-  }
+    @Override
+    public boolean endsWith(String suffix) {
+        return value.endsWith(suffix);
+    }
 
-  @Override
-  public String[] splitLine() {
-    return value.split("\\r?\\n");
-  }
+    @Override
+    public boolean equalsIgnoreCase(String that) {
+        return value.equalsIgnoreCase(that);
+    }
 
-  @Override
-  public boolean startsWith(String prefix) {
-    return value.startsWith(prefix);
-  }
+    @Override
+    public int indexOf(String str) {
+        return value.indexOf(str);
+    }
 
-  @Override
-  public String substring(int beginIndex) {
-    return value.substring(beginIndex);
-  }
+    @Override
+    public int indexOf(String str, int index) {
+        return value.indexOf(str, index);
+    }
 
-  @Override
-  public String substring(int beginIndex, int endIndex) {
-    return value.substring(beginIndex, endIndex);
-  }
+    @Override
+    public int lastIndexOf(String str) {
+        return value.lastIndexOf(str);
+    }
 
-  @Override
-  public String toString() {
-    return value;
-  }
+    @Override
+    public int lastIndexOf(String str, int fromIndex) {
+        return value.lastIndexOf(str, fromIndex);
+    }
 
-  @Override
-  public String toUpperCase() {
-    return value.toUpperCase();
-  }
+    @Override
+    public String replace(CharSequence original, CharSequence replacement) {
+        return value.replace(original, replacement);
+    }
 
-  @Override
-  public String toLowerCase() {
-    return value.toLowerCase();
-  }
+    @Override
+    public String replaceAll(String original, String replacement) {
+        return value.replace(original, replacement);
+    }
 
-  @Override
-  public String trim() {
-    return value.trim();
-  }
+    @Override
+    public String[] split(String regex) {
+        return value.split(regex);
+    }
 
-  @Override
-  public String capitalize() {
-	String capitalized = StringUtil.capitalize(this.toString()); 
-    return capitalized;
-  }
+    @Override
+    public String[] splitLine() {
+        return value.split("\\r?\\n");
+    }
 
-  @Override
-  public String capitalizeWords() {
-	String capitalized = StringUtil.capitalizeWords(this.toString());
-    return capitalized;
-  }
+    @Override
+    public boolean startsWith(String prefix) {
+        return value.startsWith(prefix);
+    }
 
-  // count occurrences of substring in str
-  public int countMatches(String substring) {
-	int count = StringUtil.countMatches(this, substring); 
-    return count;
-  }
+    @Override
+    public String substring(int beginIndex) {
+        return value.substring(beginIndex);
+    }
 
-  @Override
-  public boolean equalsIgnoreAccents(String other) {
-    boolean equal = StringUtil.equalsIgnoreAccents(this.toString(), other);  
-    return equal;
-  }
+    @Override
+    public String substring(int beginIndex, int endIndex) {
+        return value.substring(beginIndex, endIndex);
+    }
 
-  @Override
-  public String padLeft(int totalLength) {
-    String padded = StringUtil.padLeft(this, totalLength); 
-    return padded;
-  }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-  @Override
-  public String padRight(int totalLength) {
-	String padded = StringUtil.padRight(this, totalLength);  
-    return padded;
-  }
+    @Override
+    public String toUpperCase() {
+        return value.toUpperCase();
+    }
 
-  @Override
-  public String stripAccents() {
-    String stripped = StringUtil.stripAccents(this);
-    return stripped;
-  }
+    @Override
+    public String toLowerCase() {
+        return value.toLowerCase();
+    }
 
-  @Override
-  public String stripBlanks() {
-	String stripped = StringUtil.stripBlanks(this);
-    return stripped;
-  }
+    @Override
+    public String trim() {
+        return value.trim();
+    }
 
-  @Override
-  public String stripNonDigit() {
-	String stripped = StringUtil.stripNonDigit(this);
-	return stripped;
-  }
+    @Override
+    public String capitalize() {
+        return StringUtil.capitalize(this.toString());
+    }
 
-  @Override
-  public String toDisplayString() {
-    String displayed = this.replaceAll("_", " ");
-    displayed = displayed.toLowerCase();
-    displayed = CharString.of(displayed).capitalizeWords();
-    return displayed;
-  }
+    @Override
+    public String capitalizeWords() {
+        return StringUtil.capitalizeWords(this.toString());
+    }
 
-  @Override
-  public String trimDoubleBlanks() {
-    String trimmed = StringUtil.trimDoubleBlanks(this);
-    return trimmed;
-  }
+    // count occurrences of substring in str
+    public int countMatches(String substring) {
+        return StringUtil.countMatches(this, substring);
+    }
 
-  @Override
-  public String unquote(char quoteCharacter) {
-	String unquoted = StringUtil.unquote(this, quoteCharacter).toString(); 
-    return unquoted;
-  }
+    @Override
+    public boolean equalsIgnoreAccents(String other) {
+        return StringUtil.equalsIgnoreAccents(this.toString(), other);
+    }
 
-  /**
-   * Tells if text is null or blank
-   * 
-   * @param text a given string
-   * @return true if null or blank
-   */
-  public static boolean isNullOrBlank(String text) {
-    boolean nullOrBlank = StringUtil.isNullOrBlank(text);   
-    return nullOrBlank;
-  }
+    public boolean isBoolean() {
+        return StringUtil.isBoolean(this);
+    }
 
-  /**
-   * Tells if text is null or empty
-   * 
-   * @param text a given string
-   * @return true if null or empty
-   */
-  public static boolean isNullOrEmpty(String text) {
-    boolean nullOrEmpty = StringUtil.isNullOrEmpty(text);   
-    return nullOrEmpty;
-  }
+    public boolean isDate() {
+        return StringUtil.isDate(this);
+    }
+
+    public boolean isInteger() {
+        return StringUtil.isInteger(this);
+    }
+
+    public boolean isNumber() {
+        return StringUtil.isNumber(this);
+    }
 
 
-public String wordWrap(int lineLength, String delimitor, String separator) {
-	// TODO Auto-generated method stub
-	return this.toString();
-}
+    @Override
+    public String padLeft(int totalLength) {
+        return StringUtil.padLeft(this, totalLength);
+    }
 
-public boolean isBoolean() {
-	return StringUtil.isBoolean(this);
-}
+    @Override
+    public String padRight(int totalLength) {
+        return StringUtil.padRight(this, totalLength);
+    }
 
-public boolean isDate() {
-	return StringUtil.isDate(this);
-}
+    @Override
+    public String stripAccents() {
+        return StringUtil.stripAccents(this);
+    }
 
-public boolean isInteger() {
-	return StringUtil.isInteger(this); 
-}
+    @Override
+    public String stripBlanks() {
+        return StringUtil.stripBlanks(this);
+    }
 
-public boolean isNumber() {
-	return StringUtil.isNumber(this);
-}
+    @Override
+    public String stripNonDigit() {
+        return StringUtil.stripNonDigit(this);
+    }
 
+    @Override
+    public String toDisplayString() {
+        String displayed = this.replaceAll("_", " ");
+        displayed = displayed.toLowerCase();
+        displayed = CharString.of(displayed).capitalizeWords();
+        return displayed;
+    }
 
+    @Override
+    public String trimDoubleBlanks() {
+        return StringUtil.trimDoubleBlanks(this);
+    }
 
+    @Override
+    public String unquote(char quoteCharacter) {
+        return StringUtil.unquote(this, quoteCharacter).toString();
+    }
 
-
+    public String wordWrap(int lineLength, String delimitor, String separator) {
+        return StringUtil.wordWrap(this, lineLength, delimitor, separator);
+    }
 
 }

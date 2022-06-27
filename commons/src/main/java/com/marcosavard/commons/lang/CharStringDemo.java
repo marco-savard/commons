@@ -4,9 +4,9 @@ public class CharStringDemo {
 
   public static void main(String[] args) {
     String str = "éléphant";
-    // testStringOperations(str);
-    // testStringOperations(CharString.of(str));
-    // testCharStringOperations(str);
+    testStringInterface(str);
+    testStringInterface(CharString.of(str));
+    testCharStringInterface(str);
     
     testUtilOperations(str);
     testI18nOperations(str);
@@ -48,7 +48,7 @@ public class CharStringDemo {
 
   }
 
-  private static void testStringOperations(String str) {
+  private static void testStringInterface(String str) {
     String result = str.concat("s");
     boolean hasSuffix = str.endsWith("s");
     boolean equal = str.equalsIgnoreCase("ÉLÉPHANT");
@@ -67,7 +67,7 @@ public class CharStringDemo {
     result = str.trim();
   }
 
-  private static void testStringOperations(CharString str) {
+  private static void testStringInterface(CharString str) {
     String result = str.concat("s");
     boolean hasSuffix = str.endsWith("s");
     boolean equal = str.equalsIgnoreCase("ÉLÉPHANT");
@@ -86,7 +86,7 @@ public class CharStringDemo {
     result = str.trim();
   }
 
-  private static void testCharStringOperations(String str) {
+  private static void testCharStringInterface(String str) {
     CharString cs = CharString.of(str);
     String result = cs.stripAccents();
     boolean equal = cs.equalsIgnoreAccents("elephant");

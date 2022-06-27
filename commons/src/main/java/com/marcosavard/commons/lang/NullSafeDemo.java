@@ -17,7 +17,6 @@ public class NullSafeDemo {
 	public static void main(String[] args) {
 		demoNullSafeString();
 		demoNullSafeList();
-		demoNullSafeObject();
 		demoNullSafeInteger();
 		demoNullSafeEquals();
 		demoNullSafeHashCode();
@@ -89,14 +88,7 @@ public class NullSafeDemo {
 		System.out.println("hashCode = " + hashCode); 
 		System.out.println(); 
 	}
-	
-	private static void demoNullSafeObject() {
-		Object obj = null;
-        int code = NullSafe.of(obj).hashCode();
-        System.out.println("hashcode = " + code); 
-		System.out.println(); 
-	}
-	
+
 	private static void demoNullSafeInteger() {
 		Integer number = null;
 		int i = NullSafe.of(number).intValue(); 

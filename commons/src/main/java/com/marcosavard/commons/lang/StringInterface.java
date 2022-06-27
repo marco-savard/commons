@@ -1,6 +1,9 @@
 package com.marcosavard.commons.lang;
 
-interface StringOperations {
+/**
+ * Contains method signatures of String class
+ */
+interface StringInterface {
   public String concat(String suffix);
 
   public boolean endsWith(String suffix);
@@ -15,7 +18,7 @@ interface StringOperations {
 
   public int lastIndexOf(String str, int index);
 
-  public String replace(String original, String replacement);
+  public String replace(CharSequence original, CharSequence replacement);
 
   public String replaceAll(String original, String replacement);
 
