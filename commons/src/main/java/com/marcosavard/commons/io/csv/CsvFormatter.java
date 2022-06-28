@@ -7,30 +7,55 @@ import java.util.*;
 public abstract class CsvFormatter<T> {
     private Class<T> claz;
     private List<String> columns = new ArrayList<>();
-    private Map<String, String> formatByColumn = new HashMap<>();
+
+    private List<Decorator> decorators = new ArrayList<>();
+
     private Map<String, Method> methodByColumn = new HashMap<>();
 
     protected CsvFormatter(Class<T> claz) {
-        try {
-            this.claz = claz;
-            addColumns();
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        this.claz = claz;
+        addColumns();
+        addDecorators();
     }
 
-    public abstract void addColumns() throws NoSuchMethodException;
+    public abstract void addColumns();
 
-    protected void addColumn(String column) throws NoSuchMethodException {
-        addColumn(column, "%s");
-    }
+    public abstract void addDecorators();
 
-    protected void addColumn(String column, String format) throws NoSuchMethodException {
+    protected void addColumn(String column) {
         columns.add(column);
-        formatByColumn.put(column, format);
-        String getter = "get" + column;
-        Method method = claz.getDeclaredMethod(getter);
+        Method method = findMethod(column);
         methodByColumn.put(column, method);
+    }
+
+    private Method findMethod(String column) {
+        Method foundMethod = null;
+        Method[] methods = claz.getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getParameterCount() == 0) {
+                String methodName = method.getName();
+                if (methodName.equals("get" + column)) {
+                    foundMethod = method;
+                    break;
+                }
+
+                if (methodName.equals("is" + column)) {
+                    foundMethod = method;
+                    break;
+                }
+
+                if (methodName.equals(column)) {
+                    foundMethod = method;
+                    break;
+                }
+            }
+        }
+
+        return foundMethod;
+    }
+
+    public void addDecorator(Decorator decorator) {
+        decorators.add(decorator);
     }
 
     public List<String[]> format(T[] items) {
@@ -61,18 +86,49 @@ public abstract class CsvFormatter<T> {
     }
 
     private String[] formatRow(T item) throws InvocationTargetException, IllegalAccessException {
-        List<String> values = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        List<String> data = new ArrayList<>();
 
         for (String column : columns) {
             Method method = methodByColumn.get(column);
-            String format = formatByColumn.get(column);
-            String raw = method.invoke(item).toString();
-            String formatted = String.format(format, raw);
-            values.add(formatted);
+            Object raw = method.invoke(item);
+            Object decorated = decorate(column, raw);
+            values.add(decorated);
         }
 
-        String[] row = values.toArray(new String[0]);
+        for (Object value : values) {
+            data.add(value.toString());
+        }
+
+        String[] row = data.toArray(new String[0]);
         return row;
     }
 
+    private Object decorate(String column, Object value) {
+        for (Decorator decorator : decorators) {
+            value = decorator.decorate(column, value);
+        }
+
+        return value;
+    }
+
+    public static abstract class Decorator<T> {
+        private List<String> columns;
+
+        protected Decorator(String[] columns) {
+            this.columns = Arrays.asList(columns);
+        }
+
+        public Object decorate(String column, T value) {
+            Object decorated = value;
+
+            if (columns.contains(column)) {
+                decorated = decorateValue(value);
+            }
+
+            return decorated;
+        }
+
+        public abstract Object decorateValue(T value);
+    }
 }

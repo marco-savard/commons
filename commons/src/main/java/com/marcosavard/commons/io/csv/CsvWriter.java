@@ -53,7 +53,12 @@ public class CsvWriter {
         printWriter.println();
     }
 
+    public void flush() {
+        printWriter.flush();
+    }
+
     public void close() {
         printWriter.close();
     }
+
 }
