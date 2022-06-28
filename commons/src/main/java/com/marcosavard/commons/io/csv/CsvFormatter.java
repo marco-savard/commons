@@ -1,5 +1,7 @@
 package com.marcosavard.commons.io.csv;
 
+import com.marcosavard.commons.io.csv.decorator.StringFormatter;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -12,6 +14,8 @@ public abstract class CsvFormatter<T> {
 
     private Map<String, Method> methodByColumn = new HashMap<>();
 
+    private Map<String, String> titleByColumn = new HashMap<>();
+
     protected CsvFormatter(Class<T> claz) {
         this.claz = claz;
         addColumns();
@@ -23,9 +27,14 @@ public abstract class CsvFormatter<T> {
     public abstract void addDecorators();
 
     protected void addColumn(String column) {
+        addColumn(column, column);
+    }
+
+    protected void addColumn(String column, String title) {
         columns.add(column);
         Method method = findMethod(column);
         methodByColumn.put(column, method);
+        titleByColumn.put(column, title);
     }
 
     private Method findMethod(String column) {
@@ -76,13 +85,39 @@ public abstract class CsvFormatter<T> {
 
     private List<String[]> formatRows(List<T> items) throws InvocationTargetException, IllegalAccessException {
         List<String[]> rows = new ArrayList<>();
+        String[] row = formatHeader();
+        rows.add(row);
 
         for (T item : items) {
-            String[] row = formatRow(item);
+            row = formatRow(item);
             rows.add(row);
         }
 
         return rows;
+    }
+
+    private String[] formatHeader() {
+        List<String> data = new ArrayList<>();
+
+        for (String column : columns) {
+            String title = titleByColumn.get(column);
+            title = decorateTitle(column, title);
+            data.add(title);
+        }
+
+        String[] row = data.toArray(new String[0]);
+        return row;
+    }
+
+    private String decorateTitle(String column, String title) {
+
+        for (Decorator decorator : decorators) {
+            if (decorator instanceof StringFormatter) {
+                title = (String)decorator.decorate(column, title);
+            }
+        }
+
+        return title;
     }
 
     private String[] formatRow(T item) throws InvocationTargetException, IllegalAccessException {
