@@ -8,9 +8,9 @@ import java.util.*;
 
 public abstract class CsvFormatter<T> {
     private Class<T> claz;
-    private List<String> columns = new ArrayList<>();
+    private List<String> columns = null;
 
-    private List<Decorator> decorators = new ArrayList<>();
+    private List<Decorator> decorators = null;
 
     private Map<String, Method> methodByColumn = new HashMap<>();
 
@@ -18,8 +18,6 @@ public abstract class CsvFormatter<T> {
 
     protected CsvFormatter(Class<T> claz) {
         this.claz = claz;
-        addColumns();
-        addDecorators();
     }
 
     public abstract void addColumns();
@@ -39,7 +37,7 @@ public abstract class CsvFormatter<T> {
 
     private Method findMethod(String column) {
         Method foundMethod = null;
-        Method[] methods = claz.getDeclaredMethods();
+        Method[] methods = (claz == null) ? new Method[] {} : claz.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getParameterCount() == 0) {
                 String methodName = method.getName();
@@ -68,7 +66,20 @@ public abstract class CsvFormatter<T> {
     }
 
     public List<String[]> format(T[] items) {
+        init();
         return format(Arrays.asList(items));
+    }
+
+    private void init() {
+        if (columns == null) {
+            columns = new ArrayList<>();
+            addColumns();
+        }
+
+        if (decorators == null) {
+            decorators = new ArrayList<>();
+            addDecorators();
+        }
     }
 
     public List<String[]> format(List<T> items) {

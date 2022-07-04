@@ -5,6 +5,11 @@ import com.marcosavard.commons.io.csv.CsvFormatter;
 public class MultiplyDecorator extends CsvFormatter.Decorator<Number> {
     private final double factor;
 
+    public MultiplyDecorator(String factor, String... columns) {
+        this(Double.parseDouble(factor), columns);
+    }
+
+
     public MultiplyDecorator(double factor, String... columns) {
         super(columns);
         this.factor = factor;
