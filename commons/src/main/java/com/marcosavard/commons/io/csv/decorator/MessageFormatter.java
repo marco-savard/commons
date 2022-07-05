@@ -4,7 +4,7 @@ import com.marcosavard.commons.io.csv.CsvFormatter;
 
 import java.text.MessageFormat;
 
-public class MessageFormatter extends CsvFormatter.Decorator<String>  {
+public class MessageFormatter extends CsvFormatter.Decorator<Object>  {
     private final String pattern;
 
     public MessageFormatter(String pattern, String... columns) {
@@ -13,7 +13,7 @@ public class MessageFormatter extends CsvFormatter.Decorator<String>  {
     }
 
     @Override
-    public Object decorateValue(String value) {
+    public Object decorateValue(Object value) {
         return MessageFormat.format(pattern, value);
     }
 }
