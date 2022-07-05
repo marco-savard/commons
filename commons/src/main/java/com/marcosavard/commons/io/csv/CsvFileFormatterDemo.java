@@ -75,7 +75,8 @@ public class CsvFileFormatterDemo {
             addDecorator(new NumberFormatter(nf, "length"));
             addDecorator(new MessageFormatter("{0} KB", "length"));
             addDecorator(new LocalDateConverter("lastModified"));
-            addDecorator(new DateTimeDecorator("yyyy MMM dd", "lastModified"));
+            addDecorator(new DateTimeDecorator("yyyy MMM dd", Locale.FRENCH.getLanguage(),"lastModified"));
+            addDecorator(new StringStripper(StringStripper.STRIP_ACCENT, "lastModified"));
             addDecorator(new StringFormatter("%-8s", "Directory", "length", "lastModified"));
             addDecorator(new StringFormatter("%-14s", "Directory", "length", "lastModified"));
         }

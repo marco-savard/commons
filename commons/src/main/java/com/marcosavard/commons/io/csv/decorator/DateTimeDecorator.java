@@ -4,13 +4,15 @@ import com.marcosavard.commons.io.csv.CsvFormatter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class DateTimeDecorator extends CsvFormatter.Decorator<LocalDate> {
     private final DateTimeFormatter dateTimeFormatter;
 
-    public DateTimeDecorator(String pattern, String... columns) {
+    public DateTimeDecorator(String pattern, String localeText, String... columns) {
         super(columns);
-        dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        Locale locale = new Locale(localeText);
+        dateTimeFormatter = DateTimeFormatter.ofPattern(pattern).withLocale(locale);
     }
 
     @Override
