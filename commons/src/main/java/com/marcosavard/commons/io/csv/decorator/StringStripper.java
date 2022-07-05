@@ -2,7 +2,10 @@ package com.marcosavard.commons.io.csv.decorator;
 
 import com.marcosavard.commons.io.csv.CsvFormatter;
 
+import java.lang.reflect.Field;
 import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -19,10 +22,31 @@ public class StringStripper extends CsvFormatter.Decorator<String> {
     private boolean stripLeading;
     private boolean stripTrailing;
 
+    public StringStripper(String flagLiterals, String... columns) {
+        this(toFlags(flagLiterals), columns);
+    }
 
     public StringStripper(int flags, String... columns) {
         super(columns);
         this.flags = flags;
+    }
+
+    private static int toFlags(String flagLiterals) {
+        int flags = 0;
+        String[] literals = flagLiterals.split("|");
+        Class claz = StringStripper.class;
+        List<Field> fields = Arrays.asList(StringStripper.class.getDeclaredFields());
+
+        for (String literal : literals) {
+            try {
+                Field foundField = fields.stream().filter(f -> f.getName().equals(literal)).findFirst().orElse(null);
+                flags = (foundField == null) ? flags : flags | foundField.getInt(null);;
+            } catch (IllegalAccessException e) {
+                //ignore
+            }
+        }
+
+        return flags;
     }
 
     @Override
