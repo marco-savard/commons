@@ -66,7 +66,6 @@ public abstract class CsvFormatter<T> {
     }
 
     public List<String[]> format(T[] items) {
-        init();
         return format(Arrays.asList(items));
     }
 
@@ -83,6 +82,7 @@ public abstract class CsvFormatter<T> {
     }
 
     public List<String[]> format(List<T> items) {
+        init();
         List<String[]> rows;
 
         try {
