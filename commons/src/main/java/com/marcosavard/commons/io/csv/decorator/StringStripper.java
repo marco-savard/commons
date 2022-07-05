@@ -33,7 +33,7 @@ public class StringStripper extends CsvFormatter.Decorator<String> {
 
     private static int toFlags(String flagLiterals) {
         int flags = 0;
-        String[] literals = flagLiterals.split("|");
+        String[] literals = flagLiterals.split("\\|");
         Class claz = StringStripper.class;
         List<Field> fields = Arrays.asList(StringStripper.class.getDeclaredFields());
 

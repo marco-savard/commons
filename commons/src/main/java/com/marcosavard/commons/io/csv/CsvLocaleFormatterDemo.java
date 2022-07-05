@@ -16,7 +16,7 @@ import java.util.*;
 public class CsvLocaleFormatterDemo {
 
     public static void main(String[] args) throws ClassNotFoundException {
-        formatLocales1();
+        //formatLocales1();
         formatLocales2();
     }
 
