@@ -15,12 +15,48 @@ import java.util.List;
 public class NullSafeDemo {
 
 	public static void main(String[] args) {
+		demoCountingCharactersWithoutNullSafe();
+		demoCountingCharactersWithNullSafe();
 		demoNullSafeString();
 		demoNullSafeList();
 		demoNullSafeInteger();
 		demoNullSafeEquals();
 		demoNullSafeHashCode();
-		demoIndexSafe();
+		demoCoalese();
+	}
+
+	private static void demoCountingCharactersWithoutNullSafe() {
+		System.out.println("Counting number of characters in list of words");
+		List<String> words = getWordList();
+		int totalCount = 0;
+
+		if (words != null) {
+			for (String word : words) {
+				if (word != null) {
+					totalCount += word.length();
+				}
+			}
+		}
+
+		System.out.println("  totalCount = " + totalCount);
+		System.out.println();
+	}
+
+	private static void demoCountingCharactersWithNullSafe() {
+		System.out.println("Counting number of characters in list of words");
+		List<String> words = getWordList();
+		int totalCount = 0;
+
+		for (String word : NullSafe.of(words)) {
+			totalCount += NullSafe.of(word).length();
+		}
+
+		System.out.println("  totalCount = " + totalCount);
+		System.out.println();
+	}
+
+	private static List<String> getWordList() {
+		return null;
 	}
 
 	private static void demoNullSafeString() {
@@ -95,29 +131,15 @@ public class NullSafeDemo {
 		System.out.println("i = " + i); 
 		System.out.println(); 
 	}
-	
-	private static void demoIndexSafe() {
-		String qwerty = "qwerty"; 
-		int idx = -1; 
-		char c;
-		
-		try {
-			c = qwerty.charAt(idx);
-		} catch (StringIndexOutOfBoundsException e) {
-			c = '\0';
-		}
-		
-		System.out.println("c = " + c); 
-		
-		c = ((idx >=0 ) && (idx < qwerty.length())) ? qwerty.charAt(idx) : '\0';
-		System.out.println("c = " + c);  
-		
-		c = IndexSafe.of(qwerty, idx) ? qwerty.charAt(idx) : '\0';
-		System.out.println("c = " + c);  
-		
-		System.out.println(); 
-		
+
+	private static void demoCoalese() {
+		String nullString = null;
+		String safeString = NullSafe.coalesce(nullString, "");
+		System.out.println("safeString.length() = " + safeString.length());
+		System.out.println();
 	}
+	
+
 
 
 

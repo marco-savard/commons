@@ -108,6 +108,10 @@ public class NullSafe {
       return (obj == null) ? (T)createObject(type) : obj;
     }
 
+  public static String coalesce(String givenString, String defaultValue) {
+    return (givenString == null) ? defaultValue : givenString;
+  }
+
     private static <T> List<T> nullsafe(List<T> list, Class<T> type) {
       return list.contains(null) ? buildNullSafeList(list, type) : list;
     }
@@ -187,7 +191,9 @@ public class NullSafe {
        return (nullValue == null) ? NULL_SAFE_OBJECT : nullValue.nullValue;
   }
 
-  private static class NullValue<T> {
+
+
+    private static class NullValue<T> {
       private Class type;
       private Object nullValue;
 
