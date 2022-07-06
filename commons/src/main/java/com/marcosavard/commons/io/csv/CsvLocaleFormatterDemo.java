@@ -8,7 +8,6 @@ import com.marcosavard.commons.io.csv.decorator.StringStripper;
 import com.marcosavard.commons.res.PropertyLoader;
 import com.marcosavard.commons.util.PropertiesConverter;
 
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.*;
@@ -16,11 +15,11 @@ import java.util.*;
 public class CsvLocaleFormatterDemo {
 
     public static void main(String[] args) throws ClassNotFoundException {
-        //formatLocales1();
-        formatLocales2();
+        formatLocalesUsingSubclass();
+        formatLocalesUsingProperties();
     }
 
-    private static void formatLocales1() {
+    private static void formatLocalesUsingSubclass() {
         //get data
         Locale[] locales = Locale.getAvailableLocales();
         List<Locale> languages = Arrays.asList(locales).stream().filter(l -> ! l.getLanguage().equals("")).toList().subList(0, 220);
@@ -37,7 +36,7 @@ public class CsvLocaleFormatterDemo {
         System.out.println();
     }
 
-    private static void formatLocales2() throws ClassNotFoundException {
+    private static void formatLocalesUsingProperties() throws ClassNotFoundException {
         //get data
         Locale[] locales = Locale.getAvailableLocales();
         List<Locale> languages = Arrays.asList(locales).stream().filter(l -> ! l.getLanguage().equals("")).toList().subList(0, 220);
@@ -57,6 +56,20 @@ public class CsvLocaleFormatterDemo {
         System.out.println();
     }
 
+    public static class ItemComparator implements Comparator<Locale> {
+
+        @Override
+        public int compare(Locale l1, Locale l2) {
+            return l1.getLanguage().compareTo(l2.getLanguage());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
+    }
+
+
     private static class LocaleFormatter extends CsvFormatter<Locale> {
 
         public LocaleFormatter(Class<Locale> claz) {
@@ -75,11 +88,16 @@ public class CsvLocaleFormatterDemo {
 
         @Override
         public void addDecorators() {
-            addDecorator(new StringFormatter("%-3s", "Language", "ISO3Language"));
-            addDecorator(new StringFormatter("%-15s", "DisplayLanguage"));
             addDecorator(new BooleanDecorator("Yes", "No", "hasExtensions"));
             addDecorator(new StringStripper(StringStripper.STRIP_ACCENT, "DisplayLanguage", "DisplayCountry"));
             addDecorator(new StringReplacer("&", "and", "DisplayCountry"));
+            //addDecorator(new StringFormatter("%-3s", "Language", "ISO3Language"));
+            //addDecorator(new StringFormatter("%-15s", "DisplayLanguage"));
+        }
+
+        @Override
+        public void addSortKeys() {
+            addSortKey("Language");
         }
     }
 }

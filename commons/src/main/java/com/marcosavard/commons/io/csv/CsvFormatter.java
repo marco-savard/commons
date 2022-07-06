@@ -7,8 +7,13 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public abstract class CsvFormatter<T> {
+
+    public enum Sorting {ASCENDING, DESCENDING}
+
     private Class<T> claz;
     private List<String> columns = null;
+
+    private List<SortKey> sortKeys = null;
 
     private List<Decorator> decorators = null;
 
@@ -22,6 +27,9 @@ public abstract class CsvFormatter<T> {
 
     public abstract void addColumns();
 
+    public void addSortKeys() {
+    }
+
     public abstract void addDecorators();
 
     protected void addColumn(String column) {
@@ -33,6 +41,18 @@ public abstract class CsvFormatter<T> {
         Method method = findMethod(column);
         methodByColumn.put(column, method);
         titleByColumn.put(column, title);
+    }
+
+    protected void addSortKey(String column) {
+        addSortKey(column, Sorting.ASCENDING);
+    }
+
+    protected void addSortKey(String column, Sorting sorting) {
+        sortKeys.add(new SortKey(column, sorting));
+    }
+
+    public void addDecorator(Decorator decorator) {
+        decorators.add(decorator);
     }
 
     private Method findMethod(String column) {
@@ -61,10 +81,6 @@ public abstract class CsvFormatter<T> {
         return foundMethod;
     }
 
-    public void addDecorator(Decorator decorator) {
-        decorators.add(decorator);
-    }
-
     public List<String[]> format(T[] items) {
         return format(Arrays.asList(items));
     }
@@ -73,6 +89,11 @@ public abstract class CsvFormatter<T> {
         if (columns == null) {
             columns = new ArrayList<>();
             addColumns();
+        }
+
+        if (sortKeys == null) {
+            sortKeys = new ArrayList<>();
+            addSortKeys();
         }
 
         if (decorators == null) {
@@ -96,14 +117,17 @@ public abstract class CsvFormatter<T> {
 
     private List<String[]> formatRows(List<T> items) throws InvocationTargetException, IllegalAccessException {
         List<String[]> rows = new ArrayList<>();
+        List<String[]> bodyRows = new ArrayList<>();
         String[] row = formatHeader();
         rows.add(row);
 
         for (T item : items) {
             row = formatRow(item);
-            rows.add(row);
+            bodyRows.add(row);
         }
 
+        sortRows(bodyRows);
+        rows.addAll(bodyRows);
         return rows;
     }
 
@@ -118,6 +142,11 @@ public abstract class CsvFormatter<T> {
 
         String[] row = data.toArray(new String[0]);
         return row;
+    }
+
+    private void sortRows(List<String[]> rows) {
+        Comparator<String[]> comparator = new ItemComparator(sortKeys);
+        Collections.sort(rows, comparator);
     }
 
     private String decorateTitle(String column, String title) {
@@ -158,6 +187,39 @@ public abstract class CsvFormatter<T> {
         return value;
     }
 
+    public class ItemComparator implements Comparator<String[]> {
+
+        public ItemComparator(List<SortKey> sortKeys) {
+        }
+
+        @Override
+        public int compare(String[] row1, String[] row2) {
+            int comparison = 0;
+
+            for (SortKey sortKey : sortKeys) {
+                comparison = compare(row1, row2, sortKey);
+
+                if (comparison != 0) {
+                    break;
+                }
+            }
+
+            return comparison;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
+
+        private int compare(String[] row1, String[] row2, SortKey sortKey) {
+            int idx = columns.indexOf(sortKey.getColumn());
+            int comparison = row1[idx].compareTo(row2[idx]);
+            comparison = (sortKey.getSorting().equals(Sorting.ASCENDING)) ? comparison : - comparison;
+            return comparison;
+        }
+    }
+
     public static abstract class Decorator<T> {
         private List<String> columns;
 
@@ -176,5 +238,22 @@ public abstract class CsvFormatter<T> {
         }
 
         public abstract Object decorateValue(T value);
+    }
+
+    public static class SortKey {
+        private String column;
+        private Sorting sorting;
+        public SortKey(String column, Sorting sorting) {
+            this.column = column;
+            this.sorting = sorting;
+        }
+
+        public String getColumn() {
+            return column;
+        }
+
+        public Sorting getSorting() {
+            return sorting;
+        }
     }
 }

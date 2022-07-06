@@ -49,6 +49,15 @@ public class PropertyCsvFormatter extends CsvFormatter {
         }
     }
 
+    @Override
+    public void addSortKeys() {
+        List<String> sortKeys = (List<String>)propertyMap.get("sortKey");
+
+        for (String sortKey : NullSafe.of(sortKeys)) {
+            addSortKeyParameter(sortKey);
+        }
+    }
+
     private void reportException(ReflectiveOperationException e) {
         //e.printStackTrace();
     }
@@ -61,25 +70,14 @@ public class PropertyCsvFormatter extends CsvFormatter {
         Class claz = Class.forName(className);
         Constructor constructor = findConstructor(claz, array);
         Object[] arguments = findArguments(constructor, array);
-
-
-        /*
-        List<Object> objectList = new ArrayList();
-
-        for (int i=1; i<array.length-1; i++) {
-            objectList.sadd(normalize(array[i]));
-        }
-
-        int last = array.length - 1;
-        String lastParameter = normalize((String)array[last]);
-        objectList.add(new String[] {lastParameter});
-        Object[] parameters = objectList.toArray(new Object[0]);
-
-
-         */
-
         Decorator decorator = (Decorator)constructor.newInstance(arguments);
         addDecorator(decorator);
+    }
+
+    private void addSortKeyParameter(String sortKey) {
+        sortKey = (String) NullSafe.of(sortKey);
+        String[] array = sortKey.split(",");
+        addSortKey(normalize(array[0]));
     }
 
     private Object[] findArguments(Constructor constructor, String[] array) {
@@ -97,21 +95,10 @@ public class PropertyCsvFormatter extends CsvFormatter {
         String[] lastParameter = Arrays.copyOfRange(array, parameterCount, array.length);
         arguments[parameterCount-1] = lastParameter;
 
-        /*
-        List<Object> arguments = Arrays.asList(array);
-        arguments = arguments.subList(1, arguments.size());
-
-        if (arguments.size() > parameterCount) {
-            int arraySize = arguments.size() - parameterCount;
-            String[] lastParameter = Arrays.copyOfRange(array, parameterCount, arguments.size() + 1);
-            arguments = arguments.subList(0, lastParameter.length - 1);
-            arguments.add(lastParameter);
-        }
-*/
         return arguments;
     }
 
-    private Constructor findConstructor(Class claz, String[] array) throws NoSuchMethodException {
+    private Constructor findConstructor(Class claz, String[] array) {
         int argumentCount = array.length - 1;
         Constructor[] constructors = claz.getConstructors();
         List<Constructor> constructorList = Arrays.asList(constructors);
@@ -127,18 +114,6 @@ public class PropertyCsvFormatter extends CsvFormatter {
         }
 
         return foundConstructor;
-    }
-
-    private Class[] findParameters(String[] array) {
-        List<Class> parameterList = new ArrayList<>();
-
-        for (int i=1; i<array.length-1; i++) {
-            parameterList.add(String.class);
-        }
-
-        parameterList.add(String[].class);
-
-        return parameterList.toArray(new Class[0]);
     }
 
     private static String normalize(String quoted) {
