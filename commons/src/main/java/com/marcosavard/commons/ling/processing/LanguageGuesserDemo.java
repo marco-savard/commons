@@ -1,4 +1,4 @@
-package com.marcosavard.commons.ling;
+package com.marcosavard.commons.ling.processing;
 
 import java.util.Map;
 import com.marcosavard.commons.io.ContentReader;

@@ -1,4 +1,4 @@
-package com.marcosavard.commons.ling;
+package com.marcosavard.commons.ling.processing;
 
 public class Transliteration {
   public static final String ALPHA = "\u03b1";

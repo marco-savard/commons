@@ -1,4 +1,4 @@
-package com.marcosavard.commons.ling;
+package com.marcosavard.commons.ling.processing;
 
 import java.util.Locale;
 import java.util.Map;

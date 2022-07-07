@@ -1,4 +1,4 @@
-package com.marcosavard.commons.ling;
+package com.marcosavard.commons.ling.processing;
 
 public class Noun implements Comparable<Noun> {
   public enum Gender {
