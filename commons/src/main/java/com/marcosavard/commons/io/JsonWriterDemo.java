@@ -2,7 +2,7 @@ package com.marcosavard.commons.io;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import com.marcosavard.commons.util.NestedMap;
+import com.marcosavard.commons.util.collection.NestedMap;
 
 public class JsonWriterDemo {
 

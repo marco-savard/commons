@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.marcosavard.commons.util.UniqueList;
-
 public class CountryTimeZonesDemo {
 
 	public static void main(String[] args) {

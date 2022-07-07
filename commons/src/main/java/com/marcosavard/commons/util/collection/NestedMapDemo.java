@@ -1,4 +1,6 @@
-package com.marcosavard.commons.util;
+package com.marcosavard.commons.util.collection;
+
+import com.marcosavard.commons.util.collection.NestedMap;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

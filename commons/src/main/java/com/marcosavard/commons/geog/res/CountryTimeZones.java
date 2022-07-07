@@ -13,7 +13,7 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import com.marcosavard.commons.geog.res.CountryTimeZoneData.TimeZoneEntry;
-import com.marcosavard.commons.util.UniqueList;
+import com.marcosavard.commons.util.collection.UniqueList;
 
 public class CountryTimeZones {
 	private static CountryTimeZoneData instance; 
