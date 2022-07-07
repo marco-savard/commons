@@ -27,7 +27,7 @@ public class ComparatorDemo {
     }
 
     private static void sortAndPrint(List<String> list, String sortName, Comparator<String> comparator) {
-        List<String> nullsafeList = (List<String>) NullSafe.of(list, String.class);
+        List<String> nullsafeList = (List<String>) NullSafe.of(list);
         Collections.sort(nullsafeList, comparator);
         System.out.println(sortName + " : " + String.join(", ", StringUtil.stripAccents(list)));
     }

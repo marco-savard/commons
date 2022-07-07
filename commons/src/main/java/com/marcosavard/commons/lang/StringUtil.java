@@ -224,6 +224,11 @@ public class StringUtil {
         return integer;
     }
 
+    //Same as org.apache.commons.lang3.StringUtils.isNotEmpty()
+    public static boolean isNotEmpty(String str) {
+        return (str != null);
+    }
+
     /**
      * Tells if text is null or blank
      *
@@ -483,6 +488,7 @@ public class StringUtil {
     public static String wordWrap(CharSequence original, int lineLength, String delimitor, String separator) {
         return original.toString();
     }
+
 
 
 }
