@@ -22,7 +22,7 @@ public class IndexSafeDemo {
         c = ((idx >=0 ) && (idx < qwerty.length())) ? qwerty.charAt(idx) : '\0';
         System.out.println("c = " + c);
 
-        c = IndexSafe.of(qwerty, idx) ? qwerty.charAt(idx) : '\0';
+        c = IndexSafe.of(qwerty).charAt(idx);
         System.out.println("c = " + c);
 
         System.out.println();

@@ -1,4 +1,4 @@
-package com.marcosavard.commons.text;
+package com.marcosavard.commons.text.format;
 
 import java.util.Locale;
 
