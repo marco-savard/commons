@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import com.marcosavard.commons.ling.Noun;
-import com.marcosavard.commons.ling.NounReader;
+import com.marcosavard.commons.ling.processing.Noun;
+import com.marcosavard.commons.ling.processing.NounReader;
 import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class GenderFinderDemo {

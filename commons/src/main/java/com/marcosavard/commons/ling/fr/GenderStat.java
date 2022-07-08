@@ -2,7 +2,7 @@ package com.marcosavard.commons.ling.fr;
 
 import java.util.Map;
 import java.util.TreeMap;
-import com.marcosavard.commons.ling.Noun;
+import com.marcosavard.commons.ling.processing.Noun;
 
 public class GenderStat {
   int nbMasculine = 0;

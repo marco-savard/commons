@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import com.marcosavard.commons.ling.Noun;
+import com.marcosavard.commons.ling.processing.Noun;
 
 public class EndingFinder {
 

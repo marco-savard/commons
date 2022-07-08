@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import com.marcosavard.commons.ling.Noun;
-import com.marcosavard.commons.ling.NounReader;
+import com.marcosavard.commons.ling.processing.Noun;
+import com.marcosavard.commons.ling.processing.NounReader;
 import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class GenderStatDemo {
