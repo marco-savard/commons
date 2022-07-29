@@ -89,11 +89,24 @@ public class TreeNode<T> {
 
     @Override
     public String toString() {
+        return this.data.toString();
+    }
+
+    public String toNestedString() {
         String nodeData = this.data.toString();
-        String childrenData = children.isEmpty() ? "" : " " + children.toString();
+        String childrenData = children.isEmpty() ? "" : " " + toNestedString(children);
         return nodeData + childrenData;
     }
 
+    public String toNestedString(List<TreeNode<T>> nodes) {
+        List<String> items = new ArrayList<>();
+
+        for (TreeNode<T> node : nodes) {
+            items.add(node.toNestedString());
+        }
+
+        return "[" + String.join(", ", items) + "]";
+    }
 
 
 }

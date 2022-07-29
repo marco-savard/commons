@@ -20,7 +20,7 @@ public class TreeNodeDemo {
         TreeNode vt = newEngland.addChild("VT");
         TreeNode nh = newEngland.addChild("NH");
 
-        Console.println(usa);
+        Console.println(usa.toNestedString());
         Console.println(usa.isRoot());
         Console.println(usa.isLeaf());
         Console.println(usa.getLevel());
