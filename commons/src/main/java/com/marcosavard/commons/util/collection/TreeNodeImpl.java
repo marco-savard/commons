@@ -1,6 +1,5 @@
 package com.marcosavard.commons.util.collection;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
@@ -13,14 +12,12 @@ public class TreeNodeImpl<T> implements MutableTreeNode {
     private MutableTreeNode parent;
     private List<MutableTreeNode> children = new ArrayList<>();
 
-    private DefaultMutableTreeNode nd;
-
-    public static TreeNodeImpl createRoot(String data) {
+    public static <T> TreeNodeImpl createRoot(T data) {
         TreeNodeImpl root = new TreeNodeImpl(null, data);
         return root;
     }
 
-    public TreeNodeImpl addChild(String childData) {
+    public TreeNodeImpl addChild(T childData) {
         TreeNodeImpl child = new TreeNodeImpl(this, childData);
         return child;
     }
@@ -121,7 +118,7 @@ public class TreeNodeImpl<T> implements MutableTreeNode {
 
     @Override
     public void setParent(MutableTreeNode newParent) {
-        this.parent = parent;
+        this.parent = newParent;
     }
 
     private Object getUserObject() {
