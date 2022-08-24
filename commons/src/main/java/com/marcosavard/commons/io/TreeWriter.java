@@ -1,7 +1,6 @@
 package com.marcosavard.commons.io;
 
-import com.marcosavard.commons.util.collection.TreeNode;
-
+import javax.swing.tree.TreeNode;
 import java.io.Writer;
 
 public class TreeWriter extends IndentWriter {

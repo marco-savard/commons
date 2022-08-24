@@ -15,8 +15,8 @@ public class ReflectionTreeBuilder {
         this.fieldName = fieldName;
     }
 
-    public TreeNode build() {
-        TreeNode root = TreeNode.createRoot(fieldName);
+    public TreeNodeImpl build() {
+        TreeNodeImpl root = TreeNodeImpl.createRoot(fieldName);
 
         try {
             Field field = claz.getDeclaredField(fieldName);
@@ -32,15 +32,15 @@ public class ReflectionTreeBuilder {
         return root;
     }
 
-    private void buildChildren(TreeNode root, Object[] children) throws IllegalAccessException {
+    private void buildChildren(TreeNodeImpl root, Object[] children) throws IllegalAccessException {
         for (Object childValue : children) {
             buildChild(root, childValue);
         }
     }
 
-    private void buildChild(TreeNode root, Object childValue) throws IllegalAccessException {
+    private void buildChild(TreeNodeImpl root, Object childValue) throws IllegalAccessException {
         Field field = findFieldByValue(childValue);
-        TreeNode child = root.addChild(field.getName());
+        TreeNodeImpl child = root.addChild(field.getName());
 
         if (childValue instanceof String[]) {
             addLeaves(child, (String[])childValue);
@@ -49,7 +49,7 @@ public class ReflectionTreeBuilder {
         }
     }
 
-    private void addLeaves(TreeNode node, String[] leaves) {
+    private void addLeaves(TreeNodeImpl node, String[] leaves) {
         for (String leaf : leaves) {
             node.addChild(leaf);
         }

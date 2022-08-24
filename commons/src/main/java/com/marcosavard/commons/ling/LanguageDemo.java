@@ -56,7 +56,7 @@ public class LanguageDemo {
         List<Language> foundLanguages = languages
                 .stream()
              //   .filter(l -> l.isLatinScript() &&  ! (l.isOceanianLanguage() || l.isAmericanLanguage() || l.isEuropeanLanguage() || l.isWorldLanguage() || l.isIndianLanguage() || l.isFarEastLanguage() ||  l.isCentralAsiaLanguage() || l.isSouthAfricaLanguage() || l.isCentralAfricaLanguage() || l.isEastAfricaLanguage()))
-                .filter(l -> l.isLatinScript() &&  l.isEuropeanLanguage() && ! (l.isRomanceLanguage() || l.isCelticLanguage() || l.isGermanicLanguage() || l.isSlavicLanguage() ))
+                .filter(l -> l.isLatinScript() &&  l.isCentralEuropeanLanguage( ))
                 .toList();
 
         for (Language language : foundLanguages) {

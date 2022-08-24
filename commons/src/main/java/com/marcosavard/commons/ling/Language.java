@@ -22,6 +22,8 @@ public class Language {
             new String[]{"vi", "VN"}
     };
 
+
+
     private final Locale languageLocale;
 
     private final List<Locale> countryLocales = new ArrayList<>();
@@ -148,9 +150,63 @@ public class Language {
         return (countryLocale != null);
     }
 
-    public boolean isRomanceLanguage() {
-        List<String> romanceLanguages = Arrays.asList(new String[] {"an", "ca", "co", "es", "fr", "gl", "it", "mo", "oc", "pt", "rm", "ro", "sc", "wa"});
+    public boolean isWestEuropeanLanguage() {
+        List<String> westEuropeCountries = Arrays.asList(new String[] {"BE", "FR", "GB", "IR", "LU", "NL"});
+        Locale countryLocale = countryLocales
+                .stream()
+                .filter(l -> ! l.getCountry().isEmpty() && westEuropeCountries.contains(l.getCountry()))
+                .findFirst()
+                .orElse(null);
+        return (countryLocale != null);
+    }
+
+    public boolean isSouthEuropeanLanguage() {
+        List<String> southEuropeCountries = Arrays.asList(new String[] {"ES", "IT", "PT"});
+        Locale countryLocale = countryLocales
+                .stream()
+                .filter(l -> ! l.getCountry().isEmpty() && southEuropeCountries.contains(l.getCountry()))
+                .findFirst()
+                .orElse(null);
+        return (countryLocale != null);
+    }
+
+    public boolean isNorthEuropeanLanguage() {
+        List<String> northEuropeCountries = Arrays.asList(new String[] {"DK", "FI", "IS", "NO", "SE"});
+        Locale countryLocale = countryLocales
+                .stream()
+                .filter(l -> ! l.getCountry().isEmpty() && northEuropeCountries.contains(l.getCountry()))
+                .findFirst()
+                .orElse(null);
+        return (countryLocale != null);
+    }
+
+    public boolean isCentralEuropeanLanguage() {
+        List<String> centralEuropeCountries = Arrays.asList(new String[] {"AT", "CH", "CZ", "DE", "ET", "HR", "HU", "LT", "LV", "PL", "SK", "SL"});
+        Locale countryLocale = countryLocales
+                .stream()
+                .filter(l -> ! l.getCountry().isEmpty() && centralEuropeCountries.contains(l.getCountry()))
+                .findFirst()
+                .orElse(null);
+        return (countryLocale != null);
+    }
+
+    public boolean isWesternRomanceLanguage() {
+        List<String> romanceLanguages = Arrays.asList(new String[] {"an", "ca", "es", "fr", "gl", "oc", "pt", "rm", "wa"});
         return romanceLanguages.contains(languageLocale.getLanguage());
+    }
+
+    public boolean isCentralRomanceLanguage() {
+        List<String> romanceLanguages = Arrays.asList(new String[] {"co", "it", "sc"});
+        return romanceLanguages.contains(languageLocale.getLanguage());
+    }
+
+    public boolean isEasternRomanceLanguage() {
+        List<String> romanceLanguages = Arrays.asList(new String[] {"mo", "ro"});
+        return romanceLanguages.contains(languageLocale.getLanguage());
+    }
+
+    public boolean isRomanceLanguage() {
+        return isWesternRomanceLanguage() || isCentralRomanceLanguage() || isEasternRomanceLanguage();
     }
 
     public boolean isCelticLanguage() {
