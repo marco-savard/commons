@@ -8,6 +8,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import static com.marcosavard.commons.astro.AstroMath.range;
+
+import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.trigonometry.Angle;
 import com.marcosavard.commons.math.trigonometry.Angle.Unit;

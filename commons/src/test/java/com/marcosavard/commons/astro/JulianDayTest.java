@@ -1,5 +1,6 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.debug.StopWatch;
 import org.junit.Assert;
 import org.junit.Test;

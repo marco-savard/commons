@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.time;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;

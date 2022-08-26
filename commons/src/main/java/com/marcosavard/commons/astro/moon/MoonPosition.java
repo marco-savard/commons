@@ -9,7 +9,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-import com.marcosavard.commons.astro.JulianDay;
+import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.SunPosition;
 import com.marcosavard.commons.math.trigonometry.Angle;
 import com.marcosavard.commons.math.trigonometry.Angle.Unit;

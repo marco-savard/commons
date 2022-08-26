@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.time;
 
 import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
 import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
@@ -8,6 +8,10 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 //import org.junit.Assert;
+import com.marcosavard.commons.astro.Astronomy;
+import com.marcosavard.commons.astro.SkyPosition;
+import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.geog.GeoLocation;
 
 

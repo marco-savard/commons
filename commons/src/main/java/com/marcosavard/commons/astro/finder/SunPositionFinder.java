@@ -6,16 +6,15 @@ import static com.marcosavard.commons.astro.AstroMath.asind;
 import static com.marcosavard.commons.astro.AstroMath.atan2d;
 import static com.marcosavard.commons.astro.AstroMath.cosd;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.AstroMath;
-import com.marcosavard.commons.astro.JulianDay;
+import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.SkyPosition;
 import com.marcosavard.commons.astro.SpaceLocation;
-import com.marcosavard.commons.astro.TimeConverter;
+import com.marcosavard.commons.astro.time.TimeConverter;
 
 public class SunPositionFinder {
 	

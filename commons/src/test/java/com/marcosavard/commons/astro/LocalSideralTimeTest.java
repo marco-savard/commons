@@ -1,5 +1,6 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.geog.GeoLocation;
 import org.junit.Assert;
 import org.junit.Test;

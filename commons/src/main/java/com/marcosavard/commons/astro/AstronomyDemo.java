@@ -7,6 +7,8 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import com.marcosavard.commons.astro.time.JulianDay;
+import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class AstronomyDemo {
@@ -80,7 +82,7 @@ private static void findSunPositionAtAngers2() {
 	  double lat = angers.toCoordinates()[0]; 
 	  double lon = angers.toCoordinates()[1]; 
 	  
-	  JulianDay jd =  JulianDay.of(moment);  
+	  JulianDay jd =  JulianDay.of(moment);
 	  double n = jd.getValue() -2451545.0; 
 	  double mlon = range(280.460 + 0.9856474 * n, 360); 
 	  double gmst0 = (mlon/15) + 12;  

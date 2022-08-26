@@ -6,11 +6,10 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import com.marcosavard.commons.astro.LocalSideralTime;
+import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.astro.SkyPosition;
 import com.marcosavard.commons.astro.SpaceLocation;
-import com.marcosavard.commons.astro.TimeConverter;
-import com.marcosavard.commons.math.Maths;
+import com.marcosavard.commons.astro.time.TimeConverter;
 
 import static com.marcosavard.commons.astro.AstroMath.sind;
 import static com.marcosavard.commons.astro.AstroMath.cosd;

@@ -1,13 +1,12 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.time;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.JulianFields;
 //import org.junit.Assert;
-import com.marcosavard.commons.debug.StopWatch;
+
 
 public class JulianDayDemo {
 
