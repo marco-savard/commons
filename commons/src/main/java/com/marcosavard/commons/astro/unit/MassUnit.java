@@ -3,7 +3,7 @@ package com.marcosavard.commons.astro.unit;
 public enum MassUnit implements UnitConstant {
     G("g", 0.001),
     KG("kg", 1),
-    EARTH("earth", EARTH_MASS);
+    EARTH("earth", EARTH_MASS_VALUE);
 
     private final String name;
     private final double kilograms;
@@ -15,9 +15,5 @@ public enum MassUnit implements UnitConstant {
 
     public double toKilograms() {
         return kilograms;
-    }
-
-    static interface MassConstant {
-
     }
 }

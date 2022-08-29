@@ -5,19 +5,47 @@ import com.marcosavard.commons.astro.unit.MassUnit;
 
 import java.time.temporal.ChronoUnit;
 
-public class Orbit {
-	private static final double G = 6.673e-11; // in  N•m2/kg2
+import static com.marcosavard.commons.astro.unit.UnitConstant.G;
+import static com.marcosavard.commons.astro.unit.UnitConstant.EARTH_RADIUS_VALUE;
+import static com.marcosavard.commons.astro.unit.UnitConstant.EARTH_MASS_VALUE;
 
-	private double mass;
-	private double radius;
-	private double distance;
+
+public class Orbit {
+	private double centerBodyMass;
+	private double centerBodyRadius;
+	private double meanDistance;
 	private double period;
 
-	protected Orbit(double mass, double radius, double distance, double period) {
-		this.mass = mass;
-		this.radius = radius;
-		this.distance = distance;
+	public static Orbit of(double distance, LengthUnit lengthUnit, double period, ChronoUnit chronoUnit) {
+		distance = distance * lengthUnit.toMeters();
+		period = period * chronoUnit.getDuration().getSeconds();
+		double distance3 = distance * distance * distance;
+		double period2 = period * period;
+		double mass = (4 * Math.PI * Math.PI * distance3) / (period2 * G);
+		return new Orbit(mass, 0, distance, period);
+	}
+
+	protected Orbit(double mass, double radius, double meanDistance, double period) {
+		this.centerBodyMass = mass;
+		this.centerBodyRadius = radius;
+		this.meanDistance = meanDistance;
 		this.period = period;
+	}
+
+	public double getOrbitPeriod(ChronoUnit unit) {
+		return period / unit.getDuration().getSeconds();
+	}
+
+	public double getMeanDistanceFromCenter(LengthUnit unit) {
+		return meanDistance / unit.toMeters();
+	}
+
+	public Object getOrbitAltitude(LengthUnit unit) {
+		return (meanDistance - centerBodyRadius) / unit.toMeters();
+	}
+
+	public double getCenterBodyMass(MassUnit massUnit) {
+		return centerBodyMass / massUnit.toKilograms();
 	}
 
 	public static OrbitBuilder aroundEarth() {
@@ -29,23 +57,8 @@ public class Orbit {
 		return new OrbitBuilder(mass, 0);
 	}
 
-	public double getOrbitPeriod(ChronoUnit unit) {
-		return period / unit.getDuration().getSeconds();
-	}
-
-	public double getOrbitRadius(LengthUnit unit) {
-		return distance / unit.toMeters();
-	}
-
-	public Object getOrbitAltitude(LengthUnit unit) {
-		return (distance - radius) / unit.toMeters();
-	}
-
 
 	public static class OrbitBuilder {
-		private static final double EARTH_MASS = 5.98e24;
-		private static final double EARTH_RADIUS = 6.373e6;
-
 		private double mass;
 
 		private double radius;
@@ -62,7 +75,7 @@ public class Orbit {
 			return this;
 		}
 
-		private static final OrbitBuilder EARTH_ORBIT_BUILDER = new OrbitBuilder(EARTH_MASS, EARTH_RADIUS);
+		private static final OrbitBuilder EARTH_ORBIT_BUILDER = new OrbitBuilder(EARTH_MASS_VALUE, EARTH_RADIUS_VALUE);
 
 		public Orbit atAltitude(long value, LengthUnit unit) {
 			double altitude = value * unit.toMeters();

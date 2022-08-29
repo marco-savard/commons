@@ -3,7 +3,7 @@ package com.marcosavard.commons.astro.unit;
 public enum LengthUnit implements UnitConstant {
     M("m", 1),
     KM("km", 1000),
-    EARTH("earthRadius", EARTH_RADIUS);
+    EARTH_RADIUS("earthRadius", EARTH_RADIUS_VALUE);
 
     private final String name;
     private final double meters;
