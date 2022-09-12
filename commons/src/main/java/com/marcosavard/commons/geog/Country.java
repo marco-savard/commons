@@ -1,16 +1,24 @@
 package com.marcosavard.commons.geog;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Country {
   private static Map<String, Country> loadedCountries;
   private String code;
   private Locale countryLocale;
+  private Currency currency;
+  
   private List<Locale> languageLocales;
+
+  public static List<Country> getCountries(String[] isoCountries) {
+    List<Country> countries = new ArrayList<>();
+
+    for (String isoCountry : isoCountries) {
+      countries.add(Country.of(isoCountry));
+    }
+
+    return countries;
+  }
 
   public static List<Country> getCountries() {
     Map<String, Country> countryMap = getLoadedCountries();
@@ -33,12 +41,24 @@ public class Country {
       for (String code : countryCodes) {
         Locale countryLocale = new Locale("", code);
         List<Locale> languages = findLanguageLocales(allLocales, code);
-        Country country = new Country(code, countryLocale, languages);
+        Currency currency = findCurrency(countryLocale);
+        Country country = new Country(code, countryLocale, languages, currency);
         loadedCountries.put(code, country);
       }
     }
 
     return loadedCountries;
+  }
+
+  private static Currency findCurrency(Locale countryLocale) {
+    Currency currency;
+    try {
+      currency = Currency.getInstance(countryLocale);
+    } catch (IllegalArgumentException ex) {
+      currency = null;
+    }
+
+    return currency;
   }
 
   private static List<Locale> findLanguageLocales(Locale[] locales, String code) {
@@ -54,15 +74,20 @@ public class Country {
     return foundLocales;
   }
 
-  private Country(String code, Locale countryLocale, List<Locale> languageLocales) {
+  private Country(String code, Locale countryLocale, List<Locale> languageLocales, Currency currency) {
     this.code = code;
     this.countryLocale = countryLocale;
     this.languageLocales = languageLocales;
+    this.currency = currency;
   }
 
   @Override
   public String toString() {
     return this.code;
+  }
+
+  public Currency getCurrency() {
+    return currency;
   }
 
   public String getDisplayName() {
@@ -72,6 +97,17 @@ public class Country {
   public String getDisplayName(Locale displayLocale) {
     String displayName = countryLocale.getDisplayCountry(displayLocale);
     return displayName;
+  }
+
+  public String[] getDisplayNames(List<Locale> locales) {
+    List<String> displayNames = new ArrayList<>();
+
+    for (Locale locale : locales) {
+      displayNames.add(countryLocale.getDisplayName(locale));
+    }
+
+    String[] array = displayNames.toArray(new String[0]);
+    return array;
   }
 
   public List<Locale> getLanguageLocales() {
