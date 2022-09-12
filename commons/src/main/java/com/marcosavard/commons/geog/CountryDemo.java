@@ -1,6 +1,6 @@
 package com.marcosavard.commons.geog;
 
-import com.marcosavard.commons.lang.Text;
+import com.marcosavard.commons.text.DisplayText;
 
 import java.text.MessageFormat;
 import java.util.Currency;
@@ -44,7 +44,7 @@ public class CountryDemo {
 
   private static void displayAlternateNames(Country country) {
     String[] nativeNames = country.getDisplayNames(country.getLanguageLocales());
-    System.out.println("  Autres noms : " + Text.toString(nativeNames));
+    System.out.println("  Autres noms : " + DisplayText.of(nativeNames));
   }
 
 

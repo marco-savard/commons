@@ -1,7 +1,11 @@
 package com.marcosavard.commons.ling;
 
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.text.DisplayText;
 
+import java.text.MessageFormat;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -9,12 +13,42 @@ import java.util.Locale;
 public class LanguageDemo {
 
     public static void main(String[] args) {
-        //listLanguagesUsingLocales();
+        printWeekdaysInDifferentLanguages();
+        //listLanguagesUsingJavaLocales();
         //listLanguagesUsingLanguage();
-        listLatinScriptLanguages();
+        listLanguagesByScript();
+
+       // listLatinScriptLanguages();
     }
 
-    private static void listLanguagesUsingLocales() {
+    private static void printWeekdaysInDifferentLanguages() {
+        printUsingDisplayLocale(Locale.ENGLISH);
+        printUsingDisplayLocale(Locale.FRENCH);
+        printUsingDisplayLocale(Language.SPANISH.toLocale());
+    }
+
+    private static void listLanguagesByScript() {
+        Character.UnicodeScript[] scripts = Character.UnicodeScript.values();
+
+        for (Character.UnicodeScript script : scripts) {
+            Language[] languages = Language.ofScript(script);
+            String languageText = (languages.length == 0) ? "[]" : DisplayText.of(languages);
+
+            System.out.println(script);
+            System.out.println("  " + languageText);
+            System.out.println();
+        }
+    }
+
+    private static void printUsingDisplayLocale(Locale displayLocale) {
+        String lang = displayLocale.getDisplayLanguage(displayLocale);
+
+        DayOfWeek[] days = DayOfWeek.values();
+        System.out.println(MessageFormat.format("{0} : {1}", lang, DisplayText.of(days, TextStyle.FULL, displayLocale)));
+    }
+
+
+    private static void listLanguagesUsingJavaLocales() {
         String[] languages = Locale.getISOLanguages();
 
         for (String language : languages) {
@@ -36,7 +70,7 @@ public class LanguageDemo {
         Language[] languages = Language.getISOLanguages();
 
         for (Language language : languages) {
-            Locale locale = language.getLocale();
+            Locale locale = language.toLocale();
 
             String[] row = new String[] {
                     locale.getLanguage(),
@@ -60,7 +94,7 @@ public class LanguageDemo {
                 .toList();
 
         for (Language language : foundLanguages) {
-            Locale locale = language.getLocale();
+            Locale locale = language.toLocale();
 
             String[] row = new String[] {
                     locale.getLanguage(),

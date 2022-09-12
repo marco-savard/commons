@@ -5,9 +5,20 @@ import java.util.*;
 import static com.marcosavard.commons.lang.CharUtil.isDiacritical;
 
 public class Language {
-    private static Map<String, Language> languageByMap;
+    private static final String[]  LANGUAGES_WITH_DIACRITICS = new String[] {"nb", "vo"};
+    public static final Language DANISH = Language.of("da");
+    public static final Language DUTCH = Language.of("nl");
+    public static final Language ENGLISH = Language.of(Locale.ENGLISH.getLanguage());
+    public static final Language FRENCH = Language.of(Locale.FRENCH.getLanguage());
+    public static final Language GERMAN = Language.of(Locale.GERMAN.getLanguage());
+    public static final Language ITALIAN = Language.of(Locale.ITALIAN.getLanguage());
 
-    private static String[]  LANGUAGES_WITH_DIACRITICS = new String[] {"nb", "vo"};
+    public static final Language PORTUGUESE = Language.of("pt");
+    public static final Language ROMANIAN = Language.of("ro");
+    public static final Language SPANISH = Language.of("es");
+    public static final Language SWEDISH = Language.of("sv");
+    private static Map<String, Language> languageByCode;
+    private static Map<Character.UnicodeScript, List<Language>> languagesByScript;
 
     //irregular language to country map
     private static String[][]  LANGUAGE_TO_COUNTRY_MAP = new String[][]{
@@ -42,36 +53,56 @@ public class Language {
     }
 
     public static Language[] getISOLanguages() {
-        if (languageByMap == null) {
-            languageByMap = buildMap();
-        }
-
-        return languageByMap.values().toArray(new Language[0]);
+        initMaps();
+        return languageByCode.values().toArray(new Language[0]);
     }
 
-    private static Map<String, Language> buildMap() {
-        Map<String, Language> languageByMap = new LinkedHashMap<>();
-        String[] languages = Locale.getISOLanguages();
+    private static void initMaps() {
+        if (languageByCode == null) {
+            languageByCode = new LinkedHashMap<>();
+            languagesByScript = new LinkedHashMap<>();
 
-        for (String languageCode : languages) {
-            languageByMap.put(languageCode, of(languageCode));
+            String[] languageCodes = Locale.getISOLanguages();
+
+            for (String languageCode : languageCodes) {
+                Locale locale = Locale.forLanguageTag(languageCode);
+                Language language = new Language(locale);
+                languageByCode.put(languageCode, language);
+
+                Character.UnicodeScript script = language.script;
+                if (! languagesByScript.containsKey(script)) {
+                    languagesByScript.put(script, new ArrayList<>());
+                }
+
+                List<Language> languages = languagesByScript.get(script);
+                languages.add(language);
+            }
         }
-
-        return languageByMap;
     }
 
     private static Language of(String languageCode) {
-        Locale locale = Locale.forLanguageTag(languageCode);
-        Language language = new Language(locale);
-        return language;
+        initMaps();
+        return languageByCode.get(languageCode);
     }
 
-    public Locale getLocale() {
+    public static Language[] ofScript(Character.UnicodeScript script) {
+        initMaps();
+        List<Language> languageList = languagesByScript.get(script);
+        Language[] languages = (languageList == null) ? new Language[] {} : languageList.toArray(new Language[0]);
+        return languages;
+    }
+
+    public Locale toLocale() {
         return languageLocale;
     }
 
     public Character.UnicodeScript getUnicodeScript() {
         return script;
+    }
+
+    @Override
+    public String toString() {
+        return languageLocale.getLanguage();
     }
 
     private List<Character> findDiacritics(Locale locale) {
@@ -390,6 +421,7 @@ public class Language {
         missingLocales.add(new Locale.Builder().setLanguage("za").setRegion("CN").build());
         return missingLocales;
     }
+
 
 
 }
