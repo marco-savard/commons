@@ -1,12 +1,14 @@
 package com.marcosavard.commons.lang;
 
+import com.marcosavard.commons.debug.Console;
+
 public class CharUtilDemo {
 
     public static void main(String[] args) {
         char c = 'à';
 
-        System.out.println("'à' is ascii : " + CharUtil.isAscii(c));
-        System.out.println("'à' is diacritical : " + CharUtil.isDiacritical(c));
-        System.out.println("'à' is voyel : " + CharUtil.isVowel(c));
+        Console.println("{0} is ascii : {1}", c, CharUtil.isAscii(c));
+        Console.println("{0} is diacritical : {1}", c, CharUtil.isDiacritical(c));
+        Console.println("{0} is vowel : {1}", c, CharUtil.isVowel(c));
     }
 }

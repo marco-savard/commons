@@ -14,10 +14,9 @@ public class LanguageDemo {
 
     public static void main(String[] args) {
         printWeekdaysInDifferentLanguages();
+        listLanguagesByScript();
         //listLanguagesUsingJavaLocales();
         //listLanguagesUsingLanguage();
-        listLanguagesByScript();
-
        // listLatinScriptLanguages();
     }
 
