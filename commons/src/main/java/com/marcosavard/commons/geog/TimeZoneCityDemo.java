@@ -10,19 +10,23 @@ import com.marcosavard.commons.geog.TimeZoneCity.Continent;
 public class TimeZoneCityDemo {
 
   public static void main(String[] args) {
-    printTimeZone();
+    Locale fr = Locale.FRENCH;
+    printTimeZones(fr);
 
     // listAll();
 
 
   }
 
-  private static void printTimeZone() {
-    Locale fr = Locale.FRENCH;
+  private static void printTimeZones(Locale displayLocale) {
     String[] ids = TimeZone.getAvailableIDs();
+    boolean daylight = false;
 
-    for (String id : ids) {
-      Console.println(id);
+    for (String timezoneId : ids) {
+      TimeZone timezone = TimeZone.getTimeZone(timezoneId);
+      String shortName = timezone.getDisplayName(daylight, TimeZone.SHORT, displayLocale);
+      String longName = timezone.getDisplayName(daylight, TimeZone.LONG, displayLocale);
+      Console.println("id={0} short={1} long={2}", timezoneId, shortName, longName);
     }
 
 
