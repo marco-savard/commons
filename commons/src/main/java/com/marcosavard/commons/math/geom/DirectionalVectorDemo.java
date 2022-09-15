@@ -1,8 +1,8 @@
-package com.marcosavard.commons.geom;
+package com.marcosavard.commons.math.geom;
 
 import java.text.MessageFormat;
 
-import com.marcosavard.commons.geom.DirectionalVector.AngleUnit;
+import com.marcosavard.commons.math.geom.DirectionalVector.AngleUnit;
 
 public class DirectionalVectorDemo {
 

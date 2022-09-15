@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.ling.Language;
+import com.marcosavard.commons.text.encoding.AccentPostponer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -148,28 +149,32 @@ public class ContinentTest {
 
     private void testAfricaName(String expected, Locale language) {
         String display = Continent.AFRICA.getDisplayName(language);
-        String result = expected.endsWith(display) ? display : display + " (" + expected + ")";
+        String encoded = AccentPostponer.getEncoder().encode(display);
+        String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
         System.out.println(language.getDisplayLanguage() + " : " + result);
         Assert.assertEquals(expected, display);
     }
 
     private void testAmericaName(String expected, Locale language) {
         String display = Continent.AMERICA.getDisplayName(language);
-        String result = expected.endsWith(display) ? display : display + " (" + expected + ")";
+        String encoded = AccentPostponer.getEncoder().encode(display);
+        String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
         System.out.println(language.getDisplayLanguage() + " : " + result);
         Assert.assertEquals(expected, display);
     }
 
     private void testAsiaName(String expected, Locale language) {
         String display = Continent.ASIA.getDisplayName(language);
-        String result = expected.endsWith(display) ? display : display + " (" + expected + ")";
+        String encoded = AccentPostponer.getEncoder().encode(display);
+        String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
         System.out.println(language.getDisplayLanguage() + " : " + result);
         Assert.assertEquals(expected, display);
     }
 
     private void testEuropeName(String expected, Locale language) {
         String display = Continent.EUROPE.getDisplayName(language);
-        String result = expected.endsWith(display) ? display : display + " (" + expected + ")";
+        String encoded = AccentPostponer.getEncoder().encode(display);
+        String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
         System.out.println(language.getDisplayLanguage() + " : " + result);
         Assert.assertEquals(expected, display);
     }

@@ -1,4 +1,4 @@
-package com.marcosavard.commons.geom;
+package com.marcosavard.commons.math.geom;
 
 public abstract class Shape implements HasArea, HasBounds {
 	

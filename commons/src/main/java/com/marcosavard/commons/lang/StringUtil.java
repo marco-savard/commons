@@ -171,6 +171,19 @@ public class StringUtil {
 		return oneNull ? bothNull : stripped.equals(stripAccents(other).toLowerCase(locale));
     }
 
+    public static int indexOf(String original, String... strings) {
+        int smallerIdx = Integer.MAX_VALUE;
+
+        for (String string : strings) {
+            int idx = original.indexOf(string);
+            smallerIdx = (idx == -1) ? smallerIdx : Math.min(smallerIdx, idx);
+        }
+
+        smallerIdx = (smallerIdx == Integer.MAX_VALUE) ? -1 : smallerIdx;
+        return smallerIdx;
+    }
+
+
     public static int indexOfAny(CharSequence original, char... chars) {
         int smallestIdx = Integer.MAX_VALUE;
 

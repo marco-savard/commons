@@ -1,4 +1,4 @@
-package com.marcosavard.commons.geom;
+package com.marcosavard.commons.math.geom;
 
 /**
  * An implementation that describes a rectangle, like java.awt.Rectangle, but 1) purely

@@ -1,4 +1,4 @@
-package com.marcosavard.commons.geom;
+package com.marcosavard.commons.math.geom;
 
 /**
  * Used to qualify shapes that have outer bounds. Bounds is the smallest rectangle

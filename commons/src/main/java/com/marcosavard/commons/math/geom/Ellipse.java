@@ -1,4 +1,4 @@
-package com.marcosavard.commons.geom;
+package com.marcosavard.commons.math.geom;
 
 // immutable ellipse, purely mathematical and independent from awt
 public class Ellipse extends Shape {
