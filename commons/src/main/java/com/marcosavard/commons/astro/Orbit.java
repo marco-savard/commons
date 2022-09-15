@@ -5,9 +5,9 @@ import com.marcosavard.commons.astro.unit.MassUnit;
 
 import java.time.temporal.ChronoUnit;
 
-import static com.marcosavard.commons.astro.unit.UnitConstant.G;
-import static com.marcosavard.commons.astro.unit.UnitConstant.EARTH_RADIUS_VALUE;
-import static com.marcosavard.commons.astro.unit.UnitConstant.EARTH_MASS_VALUE;
+import static com.marcosavard.commons.astro.unit.Constant.G;
+import static com.marcosavard.commons.astro.unit.Constant.EARTH_RADIUS_LENGTH;
+import static com.marcosavard.commons.astro.unit.Constant.EARTH_MASS;
 
 
 public class Orbit {
@@ -75,7 +75,7 @@ public class Orbit {
 			return this;
 		}
 
-		private static final OrbitBuilder EARTH_ORBIT_BUILDER = new OrbitBuilder(EARTH_MASS_VALUE, EARTH_RADIUS_VALUE);
+		private static final OrbitBuilder EARTH_ORBIT_BUILDER = new OrbitBuilder(EARTH_MASS.getValue(), EARTH_RADIUS_LENGTH.getValue());
 
 		public Orbit atAltitude(long value, LengthUnit unit) {
 			double altitude = value * unit.toMeters();

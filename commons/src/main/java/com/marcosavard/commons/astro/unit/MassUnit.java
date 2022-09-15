@@ -1,9 +1,9 @@
 package com.marcosavard.commons.astro.unit;
 
-public enum MassUnit implements UnitConstant {
+public enum MassUnit implements Constant {
     G("g", 0.001),
     KG("kg", 1),
-    EARTH("earth", EARTH_MASS_VALUE);
+    EARTH("earth", EARTH_MASS.getValue());
 
     private final String name;
     private final double kilograms;
