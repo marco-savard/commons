@@ -35,6 +35,10 @@ public class IntegerList extends ArrayList<Integer> {
     super(list);
   }
 
+  public List<Integer> toList() {
+    return this;
+  }
+
   public IntegerList addTo(int term) {
     List<Integer> target = new ArrayList<>();
 
