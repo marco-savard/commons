@@ -6,17 +6,44 @@ import static com.marcosavard.commons.lang.CharUtil.isDiacritical;
 
 public class Language {
     private static final String[]  LANGUAGES_WITH_DIACRITICS = new String[] {"nb", "vo"};
+
+    public static final Language AFRIKANER = Language.of("af");
+
+    public static final Language ALBANIAN = Language.of("sq");
+
+    public static final Language AZERBAIJANI = Language.of("az");
+    public static final Language CROATIAN = Language.of("hr");
+
+    public static final Language CZECK = Language.of("cs");
     public static final Language DANISH = Language.of("da");
     public static final Language DUTCH = Language.of("nl");
     public static final Language ENGLISH = Language.of(Locale.ENGLISH.getLanguage());
+    public static final Language ESPERANTO = Language.of("eo");
     public static final Language FRENCH = Language.of(Locale.FRENCH.getLanguage());
     public static final Language GERMAN = Language.of(Locale.GERMAN.getLanguage());
+    public static final Language FINNISH = Language.of("fi");
+    public static final Language HUNGARIAN = Language.of("hu");
     public static final Language ITALIAN = Language.of(Locale.ITALIAN.getLanguage());
+
+    public static final Language ICELANDIC = Language.of("is");
+
+    public static final Language LATIN = Language.of("la");
+
+    public static final Language NORVEGIAN = Language.of("no");
+
+    public static final Language POLISH = Language.of("pl");
 
     public static final Language PORTUGUESE = Language.of("pt");
     public static final Language ROMANIAN = Language.of("ro");
+
+    public static final Language SLOVAK = Language.of("sk");
+
+    public static final Language SLOVENIAN = Language.of("sl");
     public static final Language SPANISH = Language.of("es");
     public static final Language SWEDISH = Language.of("sv");
+
+    public static final Language TURKISH = Language.of("tr");
+
     private static Map<String, Language> languageByCode;
     private static Map<Character.UnicodeScript, List<Language>> languagesByScript;
 
