@@ -14,7 +14,7 @@ public class Length {
         this.unit = unit;
     }
 
-    public double getValue() {
-        return value;
+    public double toMeters() {
+        return value * unit.toMeters();
     }
 }

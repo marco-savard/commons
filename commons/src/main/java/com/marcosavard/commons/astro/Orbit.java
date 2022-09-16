@@ -1,16 +1,18 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.astro.unit.Length;
 import com.marcosavard.commons.astro.unit.LengthUnit;
+import com.marcosavard.commons.astro.unit.Mass;
 import com.marcosavard.commons.astro.unit.MassUnit;
 
 import java.time.temporal.ChronoUnit;
 
 import static com.marcosavard.commons.astro.unit.Constant.G;
-import static com.marcosavard.commons.astro.unit.Constant.EARTH_RADIUS_LENGTH;
-import static com.marcosavard.commons.astro.unit.Constant.EARTH_MASS;
 
 
 public class Orbit {
+	private static OrbitBuilder orbitAroundEarth;
+
 	private double centerBodyMass;
 	private double centerBodyRadius;
 	private double meanDistance;
@@ -49,7 +51,13 @@ public class Orbit {
 	}
 
 	public static OrbitBuilder aroundEarth() {
-		return OrbitBuilder.EARTH_ORBIT_BUILDER;
+		if (orbitAroundEarth == null) {
+			double mass = Mass.of(1, MassUnit.EARTH).toKg();
+			double bodyRadius = Length.of(1, LengthUnit.EARTH_RADIUS).toMeters();
+			orbitAroundEarth = new OrbitBuilder(mass, bodyRadius);
+		}
+
+		return orbitAroundEarth;
 	}
 
 	public static OrbitBuilder aroundMass(int value, MassUnit unit) {
@@ -61,35 +69,33 @@ public class Orbit {
 	public static class OrbitBuilder {
 		private double mass;
 
-		private double radius;
+		private double bodyRadius;
 		private double distance;
 		private double period;
 
-		private OrbitBuilder(double mass, double radius) {
+		private OrbitBuilder(double mass, double bodyRadius) {
 			this.mass = mass;
-			this.radius = radius;
+			this.bodyRadius = bodyRadius;
 		}
 
 		public OrbitBuilder withRadius(double value, LengthUnit unit) {
-			this.radius = value * unit.toMeters();
+			this.bodyRadius = value * unit.toMeters();
 			return this;
 		}
 
-		private static final OrbitBuilder EARTH_ORBIT_BUILDER = new OrbitBuilder(EARTH_MASS.getValue(), EARTH_RADIUS_LENGTH.getValue());
-
 		public Orbit atAltitude(long value, LengthUnit unit) {
 			double altitude = value * unit.toMeters();
-			double distance = radius + altitude;
+			double distance = bodyRadius + altitude;
 			double period2 = 4 * Math.PI * Math.PI * (distance * distance * distance) / (mass * G);
 			double period = Math.sqrt(period2);
-			return new Orbit(mass, radius, distance, period);
+			return new Orbit(mass, bodyRadius, distance, period);
 		}
 
 		public Orbit withOrbitPeriod(double value, ChronoUnit unit) {
 			double period = value * unit.getDuration().getSeconds();
 			double distance3 = (period * period * G * mass) / (4 * Math.PI * Math.PI);
 			double distance = Math.cbrt(distance3);
-			return new Orbit(mass, radius, distance, period);
+			return new Orbit(mass, bodyRadius, distance, period);
 		}
 
 

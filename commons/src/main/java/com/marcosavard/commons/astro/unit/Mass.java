@@ -14,7 +14,7 @@ public class Mass {
         this.unit = unit;
     }
 
-    public double getValue() {
-        return value;
+    public double toKg() {
+        return value * unit.toKilograms();
     }
 }
