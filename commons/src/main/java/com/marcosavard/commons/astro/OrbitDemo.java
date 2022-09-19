@@ -13,7 +13,7 @@ public class OrbitDemo {
 		double orbitPeriod = orbit.getOrbitPeriod(ChronoUnit.MINUTES);
 		System.out.println(MessageFormat.format("Orbital Period : {0} min", orbitPeriod));
 
-		orbit = Orbit.aroundEarth().withOrbitPeriod(orbitPeriod, ChronoUnit.MINUTES);
+		orbit = Orbit.aroundEarth().ofOrbitPeriod(orbitPeriod, ChronoUnit.MINUTES);
 		System.out.println(MessageFormat.format("Orbit Distance from center : {0} km", orbit.getMeanDistanceFromCenter(LengthUnit.KM)));
 		System.out.println(MessageFormat.format("Orbit Altitude : {0} km", orbit.getOrbitAltitude(LengthUnit.KM)));
 
@@ -21,7 +21,7 @@ public class OrbitDemo {
 		double orbitPeriod3 = orbit.getOrbitPeriod(ChronoUnit.MINUTES);
 		System.out.println(MessageFormat.format("Orbital Period : {0} min", orbitPeriod3));
 
-		orbit = Orbit.aroundEarth().withOrbitPeriod(27.2, ChronoUnit.DAYS);
+		orbit = Orbit.aroundEarth().ofOrbitPeriod(27.2, ChronoUnit.DAYS);
 		System.out.println(MessageFormat.format("Moon''s distance from Earth : {0} km", orbit.getMeanDistanceFromCenter(LengthUnit.KM)));
 
 		orbit = Orbit.of(1.87e8, LengthUnit.M, 23, ChronoUnit.HOURS);

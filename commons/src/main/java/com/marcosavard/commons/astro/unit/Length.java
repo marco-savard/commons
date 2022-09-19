@@ -4,7 +4,6 @@ public class Length {
     private double value;
     private LengthUnit unit;
 
-
     public static Length of(double value, LengthUnit unit) {
         return new Length(value, unit);
     }

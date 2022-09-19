@@ -3,6 +3,10 @@ package com.marcosavard.commons.astro.unit;
 public enum LengthUnit implements Constant {
     M("m", 1),
     KM("km", 1000),
+
+    MM("mm", 1_000_000),
+
+    GM("gm", 1_000_000_000),
     EARTH_RADIUS("earthRadius", 6.373e6),
 
     SUN_RADIUS_VALUE("sunRadius", 696342e8),
