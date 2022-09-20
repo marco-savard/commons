@@ -7,13 +7,12 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.marcosavard.commons.astro.Constellation;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.res.CsvReader;
 import com.marcosavard.commons.res.CsvReaderImpl;
 
@@ -25,7 +24,7 @@ public class StarRepositoryDemo {
 		printZodiac();
 		findBrightestStar();
 		findMostNorthernStar();
-		findStarNearestFromVernalPoint();
+		//findStarNearestFromVernalPoint();
 		printUrsaMajor();
 	}
 
@@ -69,13 +68,14 @@ public class StarRepositoryDemo {
 		Star northestStar = allStars.stream().sorted(comparator).findFirst().orElse(null); 
 		System.out.println("Most Northern star : " + northestStar); 
 	}
-	
+
+	/*
 	private static void findStarNearestFromVernalPoint() {
-		SpaceLocation location = SpaceLocation.VERNAL_POINT; 
+		SpaceCoordinate location = SpaceCoordinate.VERNAL_POINT;
 		Star nearestStar = StarRepository.findStarNearestFromLocation(location.getRightAscensionHour(), location.getDeclination()); 
 		System.out.println("Nearest star from vernal point : " + nearestStar); 
 	}
-	
+	*/
 	private static class MagnitureComparator implements Comparator<Star> {
 
 		@Override

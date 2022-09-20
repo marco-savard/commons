@@ -3,7 +3,7 @@ package com.marcosavard.commons.astro.res;
 import java.text.MessageFormat;
 
 import com.marcosavard.commons.astro.Constellation;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 
 public class Star { 
   private String rank;
@@ -18,7 +18,7 @@ public class Star {
   public String toString() {
 	  Constellation constellation = Constellation.of(constell); 
 	  String starname = constellation.getDisplayName(rank);
-	  SpaceLocation spaceLocation = SpaceLocation.of(rightAscension.hours, declination.degrees);
+	  SpaceCoordinate spaceLocation = SpaceCoordinate.sphereOf(rightAscension.toDegrees(), declination.degrees);
 	  String str = MessageFormat.format("{0} ({1} {2})", name, starname, spaceLocation); 
 	  return str;
   }
@@ -74,11 +74,15 @@ public class Star {
 		  RightAscension ra = new RightAscension(deg, min, sec); 
 		  return ra; 
 	}
-	
+
 	private RightAscension(int hour, int min, double sec) {
 		hours = hour + (min / 60.0) + (sec / 3600.0); 
 	}
-	
+
+	public double toDegrees() {
+		return hours * 15;
+	}
+
 	@Override
 	public String toString() {
 		String str = String.format("%.2f", hours);

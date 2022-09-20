@@ -7,6 +7,8 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class SkyPositionDemo {
@@ -19,7 +21,7 @@ public class SkyPositionDemo {
   // http://www.stargazing.net/kepler/altaz.html
   private static void displayLondonUK() {
     // position of the star M13..
-    SpaceLocation coordinate = StarAlmanach.M13;
+    SpaceCoordinate coordinate = StarAlmanach.M13;
 
     // ..as seen from this location
     GeoLocation birminghamUK = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);
@@ -28,6 +30,7 @@ public class SkyPositionDemo {
     LocalDateTime localTime = LocalDateTime.of(1998, 8, 10, 23, 10, 0); // 2310 UT, 10th August 1998
     ZonedDateTime moment = ZonedDateTime.of(localTime, ZoneOffset.UTC);
 
+    /*
     // get sky position
     SkyPosition skyPosition =
         Astronomy.findSkyPositionOf(coordinate, moment, birminghamUK.toCoordinates());
@@ -40,6 +43,8 @@ public class SkyPositionDemo {
         Astronomy.findSkyPositionOfOld(coordinate, moment, birminghamUK.toCoordinates());
     System.out.println("  ..position2 of M13: " + skyPosition2);
     System.out.println();
+
+     */
   }
 
   private static void displayQuebecCity() {
@@ -52,6 +57,7 @@ public class SkyPositionDemo {
     LocalDateTime localTime = LocalDateTime.of(2019, Month.JANUARY, 1, 18, 0, 0); // Jan1st, 6PM
     ZonedDateTime moment = localTime.atZone(ZoneId.of("America/New_York"));
 
+    /*
     // get sky position
     SkyPosition skyPosition =
         Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity.toCoordinates());
@@ -72,5 +78,7 @@ public class SkyPositionDemo {
     System.out.println("  ..position of Crux Alpha: " + skyPosition);
 
     System.out.println();
+
+     */
   }
 }

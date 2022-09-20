@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.space;
 
 import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
 import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
@@ -12,7 +12,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import com.marcosavard.commons.astro.SpaceLocation.Unit;
+
+import com.marcosavard.commons.astro.Astronomy;
+import com.marcosavard.commons.astro.SkyPosition;
+import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
 
@@ -29,16 +32,16 @@ public class SpaceLocationDemo {
   }
 
   private static void demoFindPolaris() {
-    SpaceLocation northPole = SpaceLocation.of(0, 90);
+    SpaceCoordinate northPole = SpaceCoordinate.sphereOf(0, 90);
 
-    List<SpaceLocation> almanach = new ArrayList<>();
+    List<SpaceCoordinate> almanach = new ArrayList<>();
     almanach.add(StarAlmanach.ANTARES);
     almanach.add(StarAlmanach.BETELGEUSE);
     almanach.add(StarAlmanach.CENTAURI_ALPHA);
     almanach.add(StarAlmanach.CRUX_ALPHA);
     almanach.add(StarAlmanach.POLARIS);
 
-    for (SpaceLocation location : almanach) {
+    for (SpaceCoordinate location : almanach) {
       double distanceRad = location.distanceFrom(northPole);
       double distance = Math.toDegrees(distanceRad);
       Console.println("  " + distance);
@@ -52,15 +55,16 @@ public class SpaceLocationDemo {
     LocalDate date = LocalDate.of(1983, 2, 1);
     LocalTime time = LocalTime.of(22, 0);
     ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
-    SpaceLocation sl =
+    SpaceCoordinate sl =
         Astronomy.findSpaceLocationOf(SkyPosition.ZENITH, moment, madrid.toCoordinates());
     String msg = MessageFormat.format("({0}) is above ({1}) at {2}", sl, madrid, moment);
     System.out.println(msg);
 
-    sl = SpaceLocation.findZenithPositionAbove(madrid.toCoordinates(), moment);
+    /*
+    sl = SpaceCoordinate.findZenithPositionAbove(madrid.toCoordinates(), moment);
     msg = MessageFormat.format("({0}) is above ({1}) at {2}", sl, madrid, moment);
     System.out.println(msg);
-
+*/
 
     // SpaceLocation ec = SpaceLocation.of(6.2, 23.4);
     // LocalDate date = LocalDate.of(1982, 10, 3);
@@ -89,9 +93,7 @@ public class SpaceLocationDemo {
 
   private static void demoBirminghamUK() {
     // position of the star M13..
-    SpaceLocation starM13 = StarAlmanach.M13;
-    SpaceLocation position =
-        SpaceLocation.of(starM13.getRightAscensionHour(), starM13.getDeclination());
+    SpaceCoordinate starM13 = StarAlmanach.M13;
 
     // ..as seen from this location
     GeoLocation birminghamUK = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);
@@ -99,7 +101,7 @@ public class SpaceLocationDemo {
     // ..at this moment
     LocalDateTime localTime = LocalDateTime.of(1998, 8, 10, 23, 10, 0); // 2310 UT, 10th August 1998
     ZonedDateTime moment = ZonedDateTime.of(localTime, ZoneOffset.UTC);
-
+/*
     // get sky position
     SkyPosition skyPosition2 =
         Astronomy.findSkyPositionOf(starM13, moment, birminghamUK.toCoordinates());
@@ -108,11 +110,14 @@ public class SpaceLocationDemo {
     System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
     System.out.println("  ..position of M13: " + skyPosition);
     System.out.println();
-
-    double[] coordinates = position.getZenithAt(moment);
+*/
+    /*
+    double[] coordinates = starM13.getZenithAt(moment);
     GeoLocation location = GeoLocation.of(coordinates[0], coordinates[1]); 
-    String msg = MessageFormat.format("({0}) is above ({1}) at {2}", position, location, moment);
+    String msg = MessageFormat.format("({0}) is above ({1}) at {2}", starM13, location, moment);
     System.out.println(msg);
+
+     */
   }
 
   private static void demoQuebecCity() {
@@ -124,7 +129,7 @@ public class SpaceLocationDemo {
     // at this moment
     LocalDateTime localTime = LocalDateTime.of(2019, Month.JANUARY, 1, 18, 0, 0); // Jan1st, 6PM
     ZonedDateTime moment = localTime.atZone(ZoneId.of("America/New_York"));
-
+/*
     // get sky position
     SkyPosition skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity);
     System.out.println("  ..position of Polaris: " + skyPosition);
@@ -141,19 +146,24 @@ public class SpaceLocationDemo {
     skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, qcCity);
     System.out.println("  ..position of Crux Alpha: " + skyPosition);
     System.out.println();
+
+ */
   }
 
   private static void demoEquinoxPrecession() {
-    SpaceLocation alcyone1950 = SpaceLocation.of(3, 44, 30, Unit.HOUR, 24, 0, 0, Unit.DEGREE);
+    /*
+    SpaceCoordinate alcyone1950 = SpaceCoordinate.of(3, 44, 30, Unit.HOUR, 24, 0, 0, Unit.DEGREE);
     LocalDate year1950 = LocalDate.of(1950, 1, 1);
     System.out.println("alcyone1950 : " + alcyone1950.toString());
 
     LocalDate year1981 = LocalDate.of(1981, 7, 2);
-    SpaceLocation alcyone1981 = SpaceLocation.findSpaceLocation(alcyone1950, year1950, year1981);
+    SpaceCoordinate alcyone1981 = SpaceCoordinate.findSpaceLocation(alcyone1950, year1950, year1981);
     System.out.println("alcyone1981 : " + alcyone1981.toString());
 
     LocalDate year2000 = LocalDate.of(2000, 1, 1);
-    SpaceLocation alcyone2000 = SpaceLocation.findSpaceLocation(alcyone1950, year1950, year2000);
+    SpaceCoordinate alcyone2000 = SpaceCoordinate.findSpaceLocation(alcyone1950, year1950, year2000);
     System.out.println("alcyone2020 : " + alcyone2000.toString());
+
+     */
   }
 }

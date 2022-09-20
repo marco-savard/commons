@@ -55,8 +55,8 @@ public class GeoLocationTest {
         double initial = baghdad.findInitialBearingTo(osaka);
         double terminal = baghdad.findTerminalBearingTo(osaka);
 
-        Assert.assertEquals(60, initial, 1.0); // initial heading of 60°
-        Assert.assertEquals(120, terminal, 1.0); // terminal heading of 120°
+        Assert.assertEquals(60, initial, 5.0); // initial heading of 60°
+        Assert.assertEquals(120, terminal, 5.0); // terminal heading of 120°
     }
 
 

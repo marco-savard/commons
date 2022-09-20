@@ -1,10 +1,16 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.unit.*;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import static com.marcosavard.commons.astro.AstroMath.*;
 import static com.marcosavard.commons.astro.unit.Constant.G;
+import static java.lang.Math.PI;
+import static java.lang.Math.sqrt;
 
 //https://www.physicsclassroom.com/class/circles/Lesson-4/Mathematics-of-Satellite-Motion
 public class Orbit {
@@ -15,7 +21,13 @@ public class Orbit {
 	private double period;
 
 	private double centerBodyRadius = 0.0; //center body has no radius
-	private double eccentricity = 0.0; //perfect circle
+	private double eccentricity = 0.0, eccentricityVariation = 0.0; //perfect circle
+
+	private double meanAnomaly = 0.0, meanAnomalyVariation = 0.0; // in degrees
+
+	private double longitudeOfPerihelion = 0.0, longitudeOfPerihelionVariation = 0.0; //in degrees
+
+	private double obliquityOfEcliptic = 0.0, obliquityOfEclipticVariation = 0.0; // in degrees
 
 	public static Orbit of(double distance, LengthUnit lengthUnit, double period, ChronoUnit chronoUnit) {
 		return new Orbit(distance, lengthUnit, period, chronoUnit);
@@ -26,13 +38,13 @@ public class Orbit {
 		this.centerBodyMass = mass * massUnit.toKilograms();
 		double r3 = meanDistance * meanDistance * meanDistance;
 		double t2 = (4 * Constant.PI2 * r3) / (Constant.G * centerBodyMass);
-		this.period = Math.sqrt(t2);
+		this.period = sqrt(t2);
 	}
 
 	public Orbit(double mass, MassUnit massUnit, double value, ChronoUnit chronoUnit) {
 		this.period = value * chronoUnit.getDuration().getSeconds();
 		this.centerBodyMass = mass * massUnit.toKilograms();
-		double distance3 = (period * period * G * mass) / (4 * Math.PI * Math.PI);
+		double distance3 = (period * period * G * mass) / (4 * Constant.PI2);
 		this.meanDistance = Math.cbrt(distance3);
 	}
 
@@ -41,27 +53,7 @@ public class Orbit {
 		this.period = period * chronoUnit.getDuration().getSeconds();
 		double distance3 = distance * distance * distance;
 		double period2 = period * period;
-		this.centerBodyMass = (4 * Math.PI * Math.PI * distance3) / (period2 * G);
-	}
-
-	public double getOrbitPeriod(ChronoUnit unit) {
-		return period / unit.getDuration().getSeconds();
-	}
-
-	public double getMeanDistanceFromCenter(LengthUnit unit) {
-		return meanDistance / unit.toMeters();
-	}
-
-	public double getOrbitAltitude(LengthUnit unit) {
-		return (meanDistance - centerBodyRadius) / unit.toMeters();
-	}
-
-	public double getCenterBodyMass(MassUnit massUnit) {
-		return centerBodyMass / massUnit.toKilograms();
-	}
-
-	private void setBodyRadius(double bodyRadius) {
-		this.centerBodyRadius = bodyRadius;
+		this.centerBodyMass = (4 * Constant.PI2 * distance3) / (period2 * G);
 	}
 
 	public static OrbitBuilder aroundEarth() {
@@ -89,14 +81,33 @@ public class Orbit {
 		return new OrbitBuilder(mass, 0);
 	}
 
-	public double getOrbitalSpeed(LengthUnit lengthUnit, ChronoUnit chronoUnit) {
-		double speedMperSec = Math.sqrt((Constant.G * centerBodyMass) / meanDistance);
-		return speedMperSec * (chronoUnit.getDuration().getSeconds() / lengthUnit.toMeters());
+	public double getCenterBodyMass(MassUnit massUnit) {
+		return centerBodyMass / massUnit.toKilograms();
 	}
 
+	public double getEccentricity() {
+		return eccentricity;
+	}
+
+	public double getMeanDistanceFromCenter(LengthUnit unit) {
+		return meanDistance / unit.toMeters();
+	}
 	public double getOrbitalAcceleration() {
 		double accMperSec2 = (Constant.G * centerBodyMass) / (meanDistance * meanDistance);
 		return accMperSec2;
+	}
+
+	public double getOrbitAltitude(LengthUnit unit) {
+		return (meanDistance - centerBodyRadius) / unit.toMeters();
+	}
+
+	public double getOrbitPeriod(ChronoUnit unit) {
+		return period / unit.getDuration().getSeconds();
+	}
+
+	public double getOrbitalSpeed(LengthUnit lengthUnit, ChronoUnit chronoUnit) {
+		double speedMperSec = sqrt((Constant.G * centerBodyMass) / meanDistance);
+		return speedMperSec * (chronoUnit.getDuration().getSeconds() / lengthUnit.toMeters());
 	}
 
 	public double getDistanceAtPeriaxis(LengthUnit lengthUnit) {
@@ -109,19 +120,119 @@ public class Orbit {
 		return distanceAtApoaxis / lengthUnit.toMeters();
 	}
 
+	private void setBodyRadius(double bodyRadius) {
+		this.centerBodyRadius = bodyRadius;
+	}
+
 	public Orbit withEccentricity(double eccentricity) {
+		return withEccentricity(eccentricity, 0.0);
+	}
+
+	public Orbit withEccentricity(double eccentricity, double eccentricityVariation) {
 		this.eccentricity = eccentricity;
+		this.eccentricityVariation = eccentricityVariation;
 		return this;
 	}
 
-	public static class SunOrbit extends Orbit {
+	public Orbit withLongitudeOfPerihelion(double longitudeOfPerihelion) {
+		return withLongitudeOfPerihelion(longitudeOfPerihelion, 0.0);
+	}
 
-		public static SunOrbit ofMeanDistance(double distance, LengthUnit lengthUnit) {
-			return new SunOrbit(distance, lengthUnit);
+	public Orbit withLongitudeOfPerihelion(double longitudeOfPerihelion, double longitudeOfPerihelionVariation) {
+		this.longitudeOfPerihelion = longitudeOfPerihelion;
+		this.longitudeOfPerihelionVariation = longitudeOfPerihelionVariation;
+		return this;
+	}
+
+	public Orbit withObliquityOfEcliptic(double obliquityOfEcliptic) {
+		return withObliquityOfEcliptic(obliquityOfEcliptic, 0.0);
+	}
+
+	public Orbit withObliquityOfEcliptic(double obliquityOfEcliptic, double obliquityOfEclipticVariation) {
+		this.obliquityOfEcliptic = obliquityOfEcliptic;
+		this.obliquityOfEclipticVariation = obliquityOfEclipticVariation;
+		return this;
+	}
+
+	public Orbit withMeanAnomaly(double meanAnomaly) {
+		return withMeanAnomaly(meanAnomaly, 0.0);
+	}
+
+	public Orbit withMeanAnomaly(double meanAnomaly, double meanAnomalyVariation) {
+		this.meanAnomaly = meanAnomaly;
+		this.meanAnomalyVariation = meanAnomalyVariation;
+		return this;
+	}
+
+	public SpaceCoordinate findEclipticCoordinateOn(LocalDate date) {
+		JulianDay jd = JulianDay.of(date);
+		double d =  jd.getValue() - JulianDay.JD2000;
+		double e = eccentricity + eccentricityVariation * d;
+		double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation  * d, 360);
+		double ma = range(meanAnomaly + meanAnomalyVariation * d, 360);
+		double ml = range(w + ma, 360);
+		double ea = ma + (180/PI) * e * sind(ma) * (1 + e * cosd(ma));
+		double x = cosd(ea) - e;
+		double y = sind(ea) * sqrt(1 - e*e);
+		double z = 0.0;
+		SpaceCoordinate location = SpaceCoordinate.rectangleOf(x, y, z);
+		return location;
+	}
+
+	public SpaceCoordinate findEquatorialCoordinateOn(LocalDate date) {
+		JulianDay jd = JulianDay.of(date);
+		double d =  jd.getValue() - JulianDay.JD2000;
+		double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation  * d, 360);
+		double oblecl = range(obliquityOfEcliptic + obliquityOfEclipticVariation * d, 360);
+
+		SpaceCoordinate ecliptic = findEclipticCoordinateOn(date);
+		double distance = ecliptic.getDistance();
+		double trueAnomaly = ecliptic.getRightAscensionDegree();
+		double lon = range(trueAnomaly + w, 360);
+		double x = distance * cosd(lon);
+		double y = distance * sind(lon);
+		double z = 0.0;
+		double xequat = x;
+		double yequat = y * cosd(oblecl) - z * sind(oblecl);
+		double zequat = y * sind(oblecl) + z * cosd(oblecl);
+		SpaceCoordinate equatorial = SpaceCoordinate.rectangleOf(xequat, yequat, zequat);
+
+		return equatorial;
+	}
+
+
+	public double findObliquityOfEcliptic(LocalDate date) {
+		JulianDay jd = JulianDay.of(date);
+		double d =  jd.getValue() - JulianDay.JD2000;
+		double oblecl = range(obliquityOfEcliptic + obliquityOfEclipticVariation * d, 360);
+		return oblecl;
+	}
+
+	public double findLongitudeOn(double trueAnomaly, LocalDate date) {
+		JulianDay jd = JulianDay.of(date);
+		double d =  jd.getValue() - JulianDay.JD2000;
+		double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation  * d, 360);
+		double lon = range(trueAnomaly + w, 360);
+		return lon;
+	}
+
+
+	public static class SolarOrbit extends Orbit {
+
+		public static SolarOrbit ofMeanDistance(double distance, LengthUnit lengthUnit) {
+			return new SolarOrbit(distance, lengthUnit);
 		}
 
-		private SunOrbit(double distance, LengthUnit lengthUnit) {
+		public static SolarOrbit ofOrbitalPeriod(double duration, ChronoUnit chronoUnit) {
+			return new SolarOrbit(duration, chronoUnit);
+		}
+
+		private SolarOrbit(double distance, LengthUnit lengthUnit) {
 			super(1.0, MassUnit.SUN_MASS_VALUE, distance, lengthUnit);
+		}
+
+		private SolarOrbit(double duration, ChronoUnit chronoUnit) {
+			super(1.0, MassUnit.SUN_MASS_VALUE, duration, chronoUnit);
 		}
 
 		public double getDistanceAtPerihelion(LengthUnit lengthUnit) {

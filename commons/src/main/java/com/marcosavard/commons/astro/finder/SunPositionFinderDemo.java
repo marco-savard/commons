@@ -7,24 +7,25 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class SunPositionFinderDemo {
 
 	public static void main(String[] args) {
-		findSunPositionInScandinavia();
-		findSunPositionOnSpringEquinox();
-		findSunPositionAtAngers(); 
+		//findSunPositionInScandinavia();
+		//findSunPositionOnSpringEquinox();
+		//findSunPositionAtAngers();
 		//findSunPositionInQuebec(); 
 	}
 
+	/*
 	private static void findSunPositionInScandinavia() {
 		LocalDate date = LocalDate.of(1990, 4, 19);
 		LocalTime time = LocalTime.MIDNIGHT; 
 		ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
-		SpaceLocation sunLocation = SunPositionFinder.findLocation(moment);
+		SpaceCoordinate sunLocation = SunPositionFinder.findLocation(moment);
 		
 		GeoLocation centralScandinavia = GeoLocation.of(60, 15);
 		SkyPosition position = SkyPositionFinder.findPosition(sunLocation, moment, centralScandinavia.toCoordinates()); 
@@ -37,23 +38,26 @@ public class SunPositionFinderDemo {
 		Console.println("  ..Sun can be seen at {0}", position);
 		Console.println(); 
 	}
+*/
 
+	/*
 	private static void findSunPositionInQuebec() {
 		LocalDate date = LocalDate.of(2021, 5, 28);
 		LocalTime time = LocalTime.NOON; 
 		ZonedDateTime moment = ZonedDateTime.of(date, time,  ZoneId.of("America/Montreal")); 
-		SpaceLocation sunLocation = SunPositionFinder.findLocation(moment);
+		SpaceCoordinate sunLocation = SunPositionFinder.findLocation(moment);
 		Console.println(sunLocation);
-	}
+	}*/
 
+	/*
 	private static void findSunPositionOnSpringEquinox() {
 		LocalDate date = LocalDate.of(2021, 3, 20); //20th mars
 		LocalTime time = LocalTime.NOON; 
 		ZonedDateTime springEquinox = ZonedDateTime.of(date, time, ZoneOffset.UTC); 
-		SpaceLocation sunLocation = SunPositionFinder.findLocation(springEquinox);
+		SpaceCoordinate sunLocation = SunPositionFinder.findLocation(springEquinox);
 		Console.println("On spring equinox, Sun is located at : " + sunLocation);  
 		
-		double dist = sunLocation.distanceFrom(SpaceLocation.VERNAL_POINT); 
+		double dist = sunLocation.distanceFrom(SpaceCoordinate.VERNAL_POINT);
 		Console.println("  Distance from vernal point (deg) : " + dist);   
 		
 	    SkyPosition position = SkyPositionFinder.findPosition(sunLocation, springEquinox, GeoLocation.NULL_ISLAND.toCoordinates()); 
@@ -62,12 +66,13 @@ public class SunPositionFinderDemo {
 	    dist = position.distanceFrom(SkyPosition.ZENITH); 
 	    Console.println("  Distance from Zenith(degrees) : " + dist);   
 	    Console.println();
-	}
+	}*/
 
 	//According: 
 	//https://www.suncalc.org/#/47.4707,-0.5532,12/1981.02.05/10:15/1/3
 	//ra=21h 15m 47s, dec=-15.89
 	//h=14.86, az=134.99
+	/*
 	private static void findSunPositionAtAngers() {
 		GeoLocation angers = GeoLocation.of(47.5, -0.6);
 		LocalDate date = LocalDate.of(1981, 2, 5);
@@ -75,14 +80,14 @@ public class SunPositionFinderDemo {
 		ZoneId paris = ZoneId.of("Europe/Paris");
 		ZonedDateTime moment = ZonedDateTime.of(date, time, paris); 
 				
-		SpaceLocation sunLocation = SunPositionFinder.findLocation(moment);
+		SpaceCoordinate sunLocation = SunPositionFinder.findLocation(moment);
 		Console.println("On {0}, Sun is located at {1}", moment, sunLocation); 
 		
 		SkyPosition sunPosition = SunPositionFinder.findPosition(moment, angers.toCoordinates());
 		Console.println("  In Angers, Sun can be seen at " + sunPosition); 		
 		Console.println(); 		
 	}
-	  
+	  */
 	  private static double range(double value, double range) {
 			double ranged = value - Math.floor(value/range)*range;
 			return ranged;

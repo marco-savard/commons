@@ -8,7 +8,7 @@ import java.util.Map;
 import com.marcosavard.commons.astro.AstroMath;
 import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.time.TimeConverter;
 import com.marcosavard.commons.debug.Console;
 
@@ -37,7 +37,7 @@ public class PlanetPositionFinder {
 		this.planet = planet;
 	}
 
-	public SpaceLocation findHelioCentricLocation(ZonedDateTime moment) {
+	public SpaceCoordinate findHelioCentricLocation(ZonedDateTime moment) {
 		//compute primary values
 		double jd = JulianDay.of(moment).getValue() - JulianDay.JD2000; 
 		double a = planet.getMeanDistance(jd);
@@ -68,29 +68,33 @@ public class PlanetPositionFinder {
 	    double zeclip = r * (sind(v+w)) * sind(i); 
 	    
 	    //heliocentric location (ra=lon, dec=lat)
-	    SpaceLocation helioCentricLocation = SpaceLocation.rectangleOf(xeclip, yeclip, zeclip); 
+	    SpaceCoordinate helioCentricLocation = SpaceCoordinate.rectangleOf(xeclip, yeclip, zeclip);
 		return helioCentricLocation;
 	}
 
-	public SpaceLocation findGeoCentricLocation(ZonedDateTime moment) {
-		SpaceLocation helioCentricLocation = findHelioCentricLocation(moment); 
-		SpaceLocation sunLocation = SunPositionFinder.findLocation(moment); 
-		sunLocation = SpaceLocation.rectangleOf(sunLocation.getX(), sunLocation.getY(), 0); 
-		SpaceLocation equatorial = helioCentricLocation.addTo(sunLocation);
-		SpaceLocation geoCentric = equatorial.rotateX(AstroMath.ECLIPTIC); 
+	/*
+	public SpaceCoordinate findGeoCentricLocation(ZonedDateTime moment) {
+		SpaceCoordinate helioCentricLocation = findHelioCentricLocation(moment);
+		SpaceCoordinate sunLocation = SunPositionFinder.findLocation(moment);
+		sunLocation = SpaceCoordinate.rectangleOf(sunLocation.getX(), sunLocation.getY(), 0);
+		SpaceCoordinate equatorial = helioCentricLocation.addTo(sunLocation);
+		SpaceCoordinate geoCentric = equatorial.rotateX(AstroMath.ECLIPTIC);
 		
 		return geoCentric;
-	}
-	
+	}*/
+
+	/*
 	public SkyPosition findPosition(ZonedDateTime moment, double[] coordinates) {
 		//compute momentUt 		
 		ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
 	
 		//compute location
-		SpaceLocation location = findGeoCentricLocation(moment); 
+		SpaceCoordinate location = findGeoCentricLocation(moment);
 		
 		//compute position
 		SkyPosition position = SkyPositionFinder.findPosition(location, momentUt, coordinates); 
 		return position;
 	}
+
+	 */
 }

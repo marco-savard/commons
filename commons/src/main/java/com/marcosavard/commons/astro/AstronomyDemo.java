@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.geog.GeoLocation;
@@ -18,7 +19,7 @@ public class AstronomyDemo {
 
   }
 
-
+/*
 private static void findSunPositionAtAngers2() {
 	  LocalDate date = LocalDate.of(1981, 2, 5);
       LocalTime time = LocalTime.of(10, 15); 
@@ -47,7 +48,7 @@ private static void findSunPositionAtAngers2() {
 			ra = 12 + 24 * ((n-186) / 358.0); 
 		}
 		
-	  SpaceLocation sunLocation =SpaceLocation.of(ra, dec); 
+	  SpaceCoordinate sunLocation = SpaceCoordinate.of(ra, dec);
 	  System.out.println("sunLocation(1) = " + sunLocation);  	
 	  
 	  double lngHour = lon / 15;
@@ -64,17 +65,19 @@ private static void findSunPositionAtAngers2() {
 	  double sinDec = 0.39782 * sind(sunLon);
 	  dec = asind(sinDec); 	
 	  
-	  sunLocation =SpaceLocation.of(ra/15, dec); 
+	  sunLocation = SpaceCoordinate.of(ra/15, dec);
 	  System.out.println("sunLocation(2) = " + sunLocation);  	
   }
-  
+  */
+
+	/*
   private static void findSunPositionAtAngersOld() {
 	  LocalDate date = LocalDate.of(1981, 2, 5);
       LocalTime time = LocalTime.of(10, 15); 
 	  ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneId.of("Europe/Paris")); 
 		
 	  GeoLocation angers = GeoLocation.of(47.5, -0.6);
-	  SpaceLocation sunLocation = findSunLocation(moment, angers.toCoordinates()); 	
+	  SpaceCoordinate sunLocation = findSunLocation(moment, angers.toCoordinates());
 	
 	  SkyPosition position = findSkyPositionOfOld(sunLocation, moment, angers.toCoordinates()); 
 	  System.out.println("position = " + position);  
@@ -109,10 +112,10 @@ private static void findSunPositionAtAngers2() {
       //az=134, hor=15 deg, according :
       //https://www.suncalc.org/#/47.4707,-0.5532,6/1981.02.05/10:30/1/3
 	  System.out.println(position);  
-}
+}*/
 
-  
-  private static SpaceLocation findSunLocation(ZonedDateTime moment, double[] coordinates) {
+  /*
+  private static SpaceCoordinate findSunLocation(ZonedDateTime moment, double[] coordinates) {
 	
 	System.out.println("  moment : " + moment);  
 	  
@@ -162,13 +165,13 @@ private static void findSunPositionAtAngers2() {
 	double lon = coordinates[1];
 	
 
-	SpaceLocation location = SpaceLocation.of(ra/15, decl); 
+	SpaceCoordinate location = SpaceCoordinate.of(ra/15, decl);
 	return location;
   }
+*/
 
-
-  
-private static SpaceLocation findSunLocationOld(ZonedDateTime moment, double[] coordinates) {
+  /*
+private static SpaceCoordinate findSunLocationOld(ZonedDateTime moment, double[] coordinates) {
 	//day of year
 	int dayOfYear = moment.toLocalDate().getDayOfYear(); 
 	double lat = coordinates[0];
@@ -199,13 +202,13 @@ private static SpaceLocation findSunLocationOld(ZonedDateTime moment, double[] c
 	double cosLat = cosd(lat);
 	double declination = asind(sinDec1);
 	
-	SpaceLocation location = SpaceLocation.of(rightAscension/15, declination); 
+	SpaceCoordinate location = SpaceCoordinate.of(rightAscension/15, declination);
 	return location;
-}
+}*/
 
 
-
-private static SkyPosition findSkyPositionOfOld(SpaceLocation spaceLocation, ZonedDateTime moment, double[] coordinates) {
+/*
+private static SkyPosition findSkyPositionOfOld(SpaceCoordinate spaceLocation, ZonedDateTime moment, double[] coordinates) {
 	//extract input values
 	double ra = spaceLocation.getRightAscensionHour();
 	double decl = spaceLocation.getDeclination(); 
@@ -248,7 +251,7 @@ private static SkyPosition findSkyPositionOfOld(SpaceLocation spaceLocation, Zon
 	SkyPosition position = SkyPosition.of(h, az); 
 	return position;
 }
-
+*/
   
   private static double computeTsl(int dayOfYear, double hour, double lon) {
 	double k = 6.617; //6.638322; //for 1981 

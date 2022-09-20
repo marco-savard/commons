@@ -7,7 +7,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.geog.GeoLocation;
 
@@ -22,7 +22,7 @@ public class SpaceLocationFinderDemo {
 
 	private static void findTimeAtMeridian() {
 	    GeoLocation besancon = GeoLocation.of(47, 6);
-		SpaceLocation polaris = StarAlmanach.POLARIS;
+		SpaceCoordinate polaris = StarAlmanach.POLARIS;
 		LocalDate date = LocalDate.of(1982, 1, 20);
 		ZonedDateTime moment = SpaceLocationFinder.findTimeAtMeridian(polaris, besancon.toCoordinates(), date);  
 		System.out.println(moment);
@@ -42,8 +42,8 @@ public class SpaceLocationFinderDemo {
 	    SkyPosition position = SkyPosition.of(horizon, azimuth); 
 	    
 	    //should give ra=1.77720, dec=11.0084 
-	    SpaceLocation location = SpaceLocationFinder.find(position, scandinavia.toCoordinates(), moment);
-	    System.out.println(location);
+	  //  SpaceCoordinate location = SpaceLocationFinder.find(position, scandinavia.toCoordinates(), moment);
+	//    System.out.println(location);
 	    
 	
 	    
@@ -65,8 +65,8 @@ public class SpaceLocationFinderDemo {
 	    SkyPosition position = SkyPosition.of(horizon, azimuth); 
 	    
 	    //should give 10.667, 10 
-	    SpaceLocation location = SpaceLocationFinder.find(position, ajaccio.toCoordinates(), moment);
-	    System.out.println(location);
+	   // SpaceCoordinate location = SpaceLocationFinder.find(position, ajaccio.toCoordinates(), moment);
+	   // System.out.println(location);
 
 		
 	}
@@ -79,9 +79,10 @@ public class SpaceLocationFinderDemo {
 	    LocalDate date = LocalDate.of(1983, 2, 1);
 	    LocalTime time = LocalTime.of(22, 0);
 	    ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
-	    
+
+		/*
 	    // should give asc=6.57 hr decl=41 degrees
-	    SpaceLocation location = SpaceLocationFinder.find(SkyPosition.ZENITH, madrid.toCoordinates(), moment);
+	    SpaceCoordinate location = SpaceLocationFinder.find(SkyPosition.ZENITH, madrid.toCoordinates(), moment);
 	    System.out.println(location);
 	    
 	    //check result 
@@ -91,6 +92,8 @@ public class SpaceLocationFinderDemo {
 	    //compare error 
 	    double dist = position2.distanceFrom(SkyPosition.ZENITH); 
 	    System.out.println("angular distance = " + dist);
+
+		 */
 	}
 
 }

@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.time.TimeConverter;
 
 import static com.marcosavard.commons.astro.AstroMath.range;
@@ -18,8 +18,10 @@ import static com.marcosavard.commons.astro.AstroMath.atan2d;
 
 public class SkyPositionFinder {
 
-	//find h, az from ra, dec at location on moment 	
-	public static SkyPosition findPosition(SpaceLocation location, ZonedDateTime moment, double[] coordinates) {
+	//find h, az from ra, dec at location on moment
+
+	/*
+	public static SkyPosition findPosition(SpaceCoordinate location, ZonedDateTime moment, double[] coordinates) {
 		//extract input values
 		double ra = location.getRightAscensionHour();
 		double dec = location.getDeclination(); 
@@ -47,7 +49,7 @@ public class SkyPositionFinder {
 		
 		return position;
 	}
-	
+	*/
 	//find h, az (from https://stjarnhimlen.se/comp/tutorial.html#6)		
 	private static SkyPosition findPosition(double ha, double dec, double lat) {
 

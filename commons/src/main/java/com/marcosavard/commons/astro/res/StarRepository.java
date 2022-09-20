@@ -2,7 +2,7 @@ package com.marcosavard.commons.astro.res;
 
 import java.util.List;
 
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 
 public class StarRepository {
 	private static List<Star> allStars = null; 
@@ -16,12 +16,13 @@ public class StarRepository {
 		
 		return allStars; 
 	}
-	
-	public static Star findStarNearestFromLocation(SpaceLocation location) {
+
+	/*
+	public static Star findStarNearestFromLocation(SpaceCoordinate location) {
 		double ra = location.getRightAscensionHour();
-		double dec = location.getDeclination();
+		double dec = location.getDeclinationDegree();
 		return findStarNearestFromLocation(ra, dec);
-	}
+	}*/
 	
 	public static Star findStarNearestFromLocation(double ra, double dec) {
 		List<Star> stars = getStars();

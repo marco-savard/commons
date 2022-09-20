@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 //import org.junit.Assert;
 import com.marcosavard.commons.astro.Astronomy;
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.geog.GeoLocation;
 
@@ -63,11 +63,14 @@ public class LocalSideralTimeDemo {
     LocalSideralTime lst = LocalSideralTime.of(moment, longitude);
     System.out.println("at this local sideral time : " + lst);
 
+    /*
     // .. the position of the star M13..
-    SpaceLocation spaceCoordinate = StarAlmanach.M13;
+    SpaceCoordinate spaceCoordinate = StarAlmanach.M13;
     SkyPosition skyPosition2 = Astronomy.findSkyPositionOf(spaceCoordinate, moment, city);
 
     // .. can be seen at
     System.out.println("can be seen at: " + skyPosition2);
+
+     */
   }
 }

@@ -13,12 +13,12 @@ import java.time.ZonedDateTime;
 import com.marcosavard.commons.astro.AstroMath;
 import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.time.TimeConverter;
 
 public class SunPositionFinder {
-	
-	public static SpaceLocation findLocation(ZonedDateTime moment) {
+	/*
+	public static SpaceCoordinate findLocation(ZonedDateTime moment) {
 	  //compute ecliptic coordinate (https://en.wikipedia.org/wiki/Position_of_the_Sun)
 	  JulianDay jd =  JulianDay.of(moment);  
 	  double n = jd.getValue() -2451545.0; 
@@ -32,13 +32,13 @@ public class SunPositionFinder {
 	  double ra = range(atan2d(y, x), 0, 360); 
 	  double dec = asind(sind(ecl) * sind(eclLon));
 
-	  SpaceLocation location = SpaceLocation.of(ra/15, dec);
+	  SpaceCoordinate location = SpaceCoordinate.of(ra/15, dec);
 	  return location;
-	}
+	}*/
 
-	
+	/*
 	//less accurate
-	private static SpaceLocation findLocationOld(ZonedDateTime moment) {
+	private static SpaceCoordinate findLocationOld(ZonedDateTime moment) {
 		//day of year
 		LocalDate date = moment.toLocalDate();
 		int dayOfYear = date.getDayOfYear(); 
@@ -60,17 +60,18 @@ public class SunPositionFinder {
 			ra = 12 + 24 * ((n-186) / 358.0); 
 		}
 		
-		SpaceLocation location = SpaceLocation.of(ra, decl); 
+		SpaceCoordinate location = SpaceCoordinate.of(ra, decl);
 		return location;
 	}
-	
+	*/
 
+/*
 	public static SkyPosition findPosition(ZonedDateTime moment, double[] coordinates) {
 		//compute momentUt 		
 		ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
 	
 		//compute location
-		SpaceLocation location = findLocation(moment); 
+		SpaceCoordinate location = findLocation(moment);
 		
 		//compute position
 		SkyPosition position = SkyPositionFinder.findPosition(location, momentUt, coordinates); 
@@ -107,13 +108,12 @@ public class SunPositionFinder {
 		System.out.println("az : " + az); 
 		SkyPosition position = SkyPosition.of(h, az); 
 		System.out.println("position : " + position); 
-*/		
 
 		
 		return position;
 	}
 	
-
+*/
 
 
 

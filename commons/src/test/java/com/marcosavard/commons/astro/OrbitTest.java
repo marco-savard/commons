@@ -96,7 +96,7 @@ public class OrbitTest {
         System.out.println("  Maximal distance of Mars in millions of km: " + orbit.getDistanceAtApoaxis(LengthUnit.ASTRONOMICAL_UNIT));
         System.out.println();
 
-        Orbit.SunOrbit sunOrbit = Orbit.SunOrbit.ofMeanDistance(1.524, LengthUnit.ASTRONOMICAL_UNIT);
+        Orbit.SolarOrbit sunOrbit = Orbit.SolarOrbit.ofMeanDistance(1.524, LengthUnit.ASTRONOMICAL_UNIT);
         sunOrbit.withEccentricity(0.0934);
 
         double orbitPeriod2 = sunOrbit.getOrbitPeriod(ChronoUnit.DAYS);

@@ -6,7 +6,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.SpaceLocation;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class PlanetPositionFinderDemo {
@@ -16,15 +16,16 @@ public class PlanetPositionFinderDemo {
 		LocalTime time = LocalTime.MIDNIGHT; 
 		ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
 		PlanetPositionFinder positionFinder = PlanetPositionFinder.of(Planet.MERCURY); 
-		SpaceLocation mercuryLocation = positionFinder.findHelioCentricLocation(moment);
+		SpaceCoordinate mercuryLocation = positionFinder.findHelioCentricLocation(moment);
 		System.out.println(mercuryLocation); 
-		
+
+		/*
 		mercuryLocation = positionFinder.findGeoCentricLocation(moment);
 		System.out.println(mercuryLocation); 
 		
 		GeoLocation centralScandinavia = GeoLocation.of(60, 15);
 		SkyPosition position = positionFinder.findPosition(moment, centralScandinavia.toCoordinates());
-		System.out.println(position); 
+		System.out.println(position); */
 	}
 
 }
