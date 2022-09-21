@@ -48,13 +48,12 @@ public class Astronomy {
     return findSkyPositionOf(spaceLocation, moment, place.toCoordinates());
   }
 */
-  // compute position in the sky of star, as seen from a given coordinate, at lst
 
-  /*
+  // compute position in the sky of star, as seen from a given coordinate, at lst
   public static SkyPosition findSkyPositionOf(SpaceCoordinate spaceLocation, ZonedDateTime moment,
                                               double[] coordinates) {
-    double ra = spaceLocation.getRightAscensionDegrees();
-    double decl = spaceLocation.getDeclination();
+    double ra = spaceLocation.getRightAscensionDegree();
+    double decl = spaceLocation.getDeclinationDegree();
     double lat = coordinates[0];
     double lon = coordinates[1];
     LocalSideralTime lst = LocalSideralTime.of(moment, lon);
@@ -78,7 +77,7 @@ public class Astronomy {
     SkyPosition position = SkyPosition.of(alt, az);
     return position;
   }
-*/
+
 
   /*
   // less accurate

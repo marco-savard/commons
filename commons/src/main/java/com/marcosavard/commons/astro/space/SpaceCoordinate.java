@@ -1,9 +1,8 @@
 package com.marcosavard.commons.astro.space;
 
+import com.marcosavard.commons.math.arithmetic.Base;
+
 import java.text.MessageFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 //import com.marcosavard.commons.geog.GeoLocation;
@@ -15,14 +14,13 @@ import static com.marcosavard.commons.astro.AstroMath.atan2d;
 import static com.marcosavard.commons.astro.AstroMath.range;
 import static java.lang.Math.sqrt;
 
-import com.marcosavard.commons.math.trigonometry.Angle;
-import com.marcosavard.commons.math.arithmetic.Base;
-
 // // see https://stjarnhimlen.se/comp/ppcomp.html
 public class SpaceCoordinate {
     public static final SpaceCoordinate VERNAL_POINT = SpaceCoordinate.sphereOf(0, 0);
     private double x, y, z; //rectangular
     private double ra, dec, distance; //spheric
+
+    private SpaceCoordinateFormatter defaultFormatter = new SpaceCoordinateFormatter();
 
     public static SpaceCoordinate rectangleOf(double x, double y, double z) {
         double distance = sqrt( x*x + y*y + z*z );
@@ -96,6 +94,25 @@ public class SpaceCoordinate {
         return dist;
     }
 
+    public double[] findZenithAt(ZonedDateTime moment) {
+        double n = moment.getDayOfYear();
+        int h = moment.getHour();
+        int m = moment.getMinute();
+        int s = moment.getSecond();
+        double decimalHour = h + (m / 60.0) + (s / 3600.0);
+        double a = 0.98563 * n;
+        double b = 15.0405 * decimalHour;
+        double latitude = dec;
+        double longitude = ra - a - b - 98.971;
+        double[] coordinates = new double[] {latitude, longitude};
+        return coordinates;
+    }
+
+    @Override
+    public String toString() {
+        return defaultFormatter.format(this);
+    }
+
 
 
   /*
@@ -104,9 +121,7 @@ public class SpaceCoordinate {
   public static final SpaceCoordinate SOUTH_POLE = SpaceCoordinate.of(0, -90);
 
   
-  private static final char DEGREE_SIGN = '\u00B0';
-  private static final char MINUTE_SIGN = '\u2032'; 
-  private static final char SECOND_SIGN = '\u2033';
+
 
   public SpaceCoordinate rotate(double lon) {
     double rx = distance * cosd(lon);
@@ -150,18 +165,7 @@ public class SpaceCoordinate {
   
 
 
-  public double getRightAscensionDegrees() {
-    return rightAscension * 15;
-  }
 
-  public double getRightAscensionHour() {
-    return rightAscension;
-  }
-
-  public double getDeclination() {
-    return declination;
-  }
-  
 
 
   //rotate around x-axis
@@ -225,41 +229,8 @@ public class SpaceCoordinate {
     this.z = distanceFromCenter * sind(declination);
   }
 
-  public double[] getZenithAt(ZonedDateTime moment) {
-    double rightAscensionDegrees = rightAscension * 15.0;
-    double n = moment.getDayOfYear();
-    int h = moment.getHour();
-    int m = moment.getMinute();
-    int s = moment.getSecond();
-    double decimalHour = h + (m / 60.0) + (s / 3600.0);
-    double a = 0.98563 * n;
-    double b = 15.0405 * decimalHour;
-    double latitude = declination;
-    double longitude = rightAscensionDegrees - a - b - 98.971;
-    double[] coordinates = new double[] {latitude, longitude};
-    return coordinates;
-  }
 
-  @Override
-  public String toString() {
-    Base hms = Base.of(24, 60, 60);
-    String ra = Double.toString(Math.round(rightAscension * 15.0)) + DEGREE_SIGN;
-    long[] rae = hms.encode((long) (rightAscension * 3600));
-    String h = String.format("%02d", rae[0]);
-    String m = String.format("%02d", rae[1]);
-    String s = String.format("%02d", rae[2]);
-    String raStr = h + "h" + m + "m" + s + "s";
 
-    Base dms = Base.of(90, 60, 60);
-    long[] de = dms.encode((long) (declination * 3600));
-    String d = String.format("%02d", de[0]);
-    m = String.format("%02d", de[1]);
-    s = String.format("%02d", de[2]);
-    String declStr = d + DEGREE_SIGN + m + MINUTE_SIGN + s + SECOND_SIGN;
-
-    String str = MessageFormat.format("ra={0} ({1}), dec={2}", raStr, ra, declStr);
-    return str;
-  }
 
   public ZonedDateTime getMomentZenithAt(LocalDate date, double longitude) {
     double ra = rightAscension * 15.0;

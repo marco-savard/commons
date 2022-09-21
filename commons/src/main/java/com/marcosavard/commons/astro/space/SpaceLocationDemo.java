@@ -26,8 +26,8 @@ public class SpaceLocationDemo {
     demoConversion();
     demoFindPolaris();
 
-    // demoBirminghamUK();
-    // demoQuebecCity();
+    demoBirminghamUK();
+    demoQuebecCity();
 
   }
 
@@ -101,23 +101,17 @@ public class SpaceLocationDemo {
     // ..at this moment
     LocalDateTime localTime = LocalDateTime.of(1998, 8, 10, 23, 10, 0); // 2310 UT, 10th August 1998
     ZonedDateTime moment = ZonedDateTime.of(localTime, ZoneOffset.UTC);
-/*
-    // get sky position
-    SkyPosition skyPosition2 =
-        Astronomy.findSkyPositionOf(starM13, moment, birminghamUK.toCoordinates());
 
-    SkyPosition skyPosition = Astronomy.findSkyPositionOf(starM13, moment, birminghamUK);
+    // get sky position
+    SkyPosition skyPosition = Astronomy.findSkyPositionOf(starM13, moment, birminghamUK.toCoordinates());
     System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
     System.out.println("  ..position of M13: " + skyPosition);
     System.out.println();
-*/
-    /*
-    double[] coordinates = starM13.getZenithAt(moment);
-    GeoLocation location = GeoLocation.of(coordinates[0], coordinates[1]); 
-    String msg = MessageFormat.format("({0}) is above ({1}) at {2}", starM13, location, moment);
-    System.out.println(msg);
 
-     */
+    double[] coordinates = starM13.findZenithAt(moment);
+    GeoLocation location = GeoLocation.of(coordinates[0], coordinates[1]);
+    String msg = MessageFormat.format("  ..{0} is above ({1}) at {2}", starM13, location, moment);
+    System.out.println(msg);
   }
 
   private static void demoQuebecCity() {
@@ -129,10 +123,15 @@ public class SpaceLocationDemo {
     // at this moment
     LocalDateTime localTime = LocalDateTime.of(2019, Month.JANUARY, 1, 18, 0, 0); // Jan1st, 6PM
     ZonedDateTime moment = localTime.atZone(ZoneId.of("America/New_York"));
-/*
+
     // get sky position
-    SkyPosition skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity);
+    SkyPosition skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity.toCoordinates());
     System.out.println("  ..position of Polaris: " + skyPosition);
+
+/*
+
+
+
 
     skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.URSA_MAJOR_EPSILON, moment, qcCity);
     System.out.println("  ..position of Ursa Major Epsilon: " + skyPosition);
