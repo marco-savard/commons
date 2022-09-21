@@ -1,9 +1,14 @@
 package com.marcosavard.commons.io;
 
+import com.marcosavard.commons.lang.NullSafe;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.swing.JFileChooser;
 
 /**
@@ -172,5 +177,25 @@ public class FileSystem {
     }
 
     return packageFolder;
+  }
+
+  public static File getSourceFile(File sourceFolder, Class claz) {
+    File file = sourceFolder;
+    String packageName = claz.getPackageName();
+    String[] paths = packageName.split("\\.");
+
+    for (int i = 0; i < paths.length; i++) {
+      file = new File(file, paths[i]);
+    }
+
+    file = new File(file, claz.getSimpleName() + ".java");
+    return file;
+  }
+
+
+  public static List<File> getSourceFiles(File sourceFolder, Package pack) {
+    List<File> sourceFiles = new ArrayList<>();
+    //TODO https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+    return sourceFiles;
   }
 }
