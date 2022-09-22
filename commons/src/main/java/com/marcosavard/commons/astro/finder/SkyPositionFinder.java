@@ -1,20 +1,16 @@
 package com.marcosavard.commons.astro.finder;
 
-import java.text.MessageFormat;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.astro.time.TimeConverter;
 
+import java.text.MessageFormat;
+
+import static com.marcosavard.commons.astro.AstroMath.asind;
+import static com.marcosavard.commons.astro.AstroMath.atan2d;
+import static com.marcosavard.commons.astro.AstroMath.atand;
+import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.range;
 import static com.marcosavard.commons.astro.AstroMath.sind;
-import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.tand;
-import static com.marcosavard.commons.astro.AstroMath.asind;
-import static com.marcosavard.commons.astro.AstroMath.atand;
-import static com.marcosavard.commons.astro.AstroMath.atan2d;
 
 public class SkyPositionFinder {
 

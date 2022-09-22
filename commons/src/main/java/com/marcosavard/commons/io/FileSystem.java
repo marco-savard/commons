@@ -1,6 +1,7 @@
 package com.marcosavard.commons.io;
 
 import com.marcosavard.commons.lang.NullSafe;
+import com.marcosavard.commons.lang.reflect.Reflection;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -195,7 +196,14 @@ public class FileSystem {
 
   public static List<File> getSourceFiles(File sourceFolder, Package pack) {
     List<File> sourceFiles = new ArrayList<>();
-    //TODO https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+    Class[] classes = Reflection.getClasses(pack);
+
+    for (Class claz : classes) {
+      File file = getSourceFile(sourceFolder, claz);
+      sourceFiles.add(file);
+    }
+
+
     return sourceFiles;
   }
 }

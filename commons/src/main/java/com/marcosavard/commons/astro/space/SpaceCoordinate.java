@@ -1,17 +1,13 @@
 package com.marcosavard.commons.astro.space;
 
-import com.marcosavard.commons.math.arithmetic.Base;
-
 import java.text.MessageFormat;
 import java.time.ZonedDateTime;
 
-//import com.marcosavard.commons.geog.GeoLocation;
 import static com.marcosavard.commons.astro.AstroMath.sind; 
 import static com.marcosavard.commons.astro.AstroMath.cosd; 
 import static com.marcosavard.commons.astro.AstroMath.asind; 
 import static com.marcosavard.commons.astro.AstroMath.acosd; 
-import static com.marcosavard.commons.astro.AstroMath.atan2d; 
-import static com.marcosavard.commons.astro.AstroMath.range;
+import static com.marcosavard.commons.astro.AstroMath.atan2d;
 import static java.lang.Math.sqrt;
 
 // // see https://stjarnhimlen.se/comp/ppcomp.html

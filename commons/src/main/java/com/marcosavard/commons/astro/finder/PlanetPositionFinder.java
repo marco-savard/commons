@@ -1,21 +1,18 @@
 package com.marcosavard.commons.astro.finder;
 
-import java.time.ZoneOffset;
+import com.marcosavard.commons.astro.AstroMath;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.astro.time.JulianDay;
+import com.marcosavard.commons.debug.Console;
+
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.marcosavard.commons.astro.AstroMath;
-import com.marcosavard.commons.astro.time.JulianDay;
-import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.astro.time.TimeConverter;
-import com.marcosavard.commons.debug.Console;
-
-import static com.marcosavard.commons.astro.AstroMath.sind;
-import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.atan2d;
+import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.range;
+import static com.marcosavard.commons.astro.AstroMath.sind;
 
 //see http://cosinekitty.com/solar_system.html
 public class PlanetPositionFinder {
@@ -50,7 +47,7 @@ public class PlanetPositionFinder {
 		Console.println("n={0}, i={1}, w={2} a={3} e={4} ma={5}", n, i, w, a, e, ma);
 		
 		//compute secondary
-		double meanLongitude = AstroMath.range(w+ma, 0, 360); 
+		double meanLongitude = range(w+ma, 0, 360);
 		double eccentricAnomaly = AstroMath.computeEccentricAnomaly(e, ma, 0.005); 
 		
 		//compute rectangular positions

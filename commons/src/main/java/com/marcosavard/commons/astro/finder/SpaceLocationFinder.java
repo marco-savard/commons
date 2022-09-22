@@ -1,21 +1,14 @@
 package com.marcosavard.commons.astro.finder;
 
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import com.marcosavard.commons.astro.time.LocalSideralTime;
-import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.astro.time.TimeConverter;
-
-import static com.marcosavard.commons.astro.AstroMath.sind;
-import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.range;
-import static com.marcosavard.commons.astro.AstroMath.asind;
-import static com.marcosavard.commons.astro.AstroMath.acosd;
 
 public class SpaceLocationFinder {
 

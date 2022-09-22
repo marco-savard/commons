@@ -1,9 +1,13 @@
 package com.marcosavard.commons.lang.reflect;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 public class Reflection {
@@ -171,5 +175,54 @@ public class Reflection {
   }
 
 
+  //TODO https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+  public static Class[] getClasses(Package pack) {
+    ArrayList<Class> classes = new ArrayList<Class>();
 
+    try {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      String path = pack.getName().replace('.', '/');
+      Enumeration<URL> resources = classLoader.getResources(path);
+      List<File> dirs = new ArrayList<>();
+
+      while (resources.hasMoreElements()) {
+        URL resource = resources.nextElement();
+        dirs.add(new File(resource.getFile()));
+      }
+
+      for (File directory : dirs) {
+        classes.addAll(findClasses(directory, pack.getName()));
+      }
+
+    } catch (IOException | ClassNotFoundException e) {
+      //return empty array
+    }
+
+    return classes.toArray(new Class[classes.size()]);
+  }
+
+  /**
+   * Recursive method used to find all classes in a given directory and subdirs.
+   *
+   * @param directory   The base directory
+   * @param packageName The package name for classes found inside the base directory
+   * @return The classes
+   * @throws ClassNotFoundException
+   */
+  private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
+    List<Class> classes = new ArrayList<Class>();
+    if (!directory.exists()) {
+      return classes;
+    }
+    File[] files = directory.listFiles();
+    for (File file : files) {
+      if (file.isDirectory()) {
+        assert !file.getName().contains(".");
+        classes.addAll(findClasses(file, packageName + "." + file.getName()));
+      } else if (file.getName().endsWith(".class")) {
+        classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+      }
+    }
+    return classes;
+  }
 }
