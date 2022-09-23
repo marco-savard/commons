@@ -7,9 +7,9 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+
+import com.marcosavard.commons.astro.AstroMath;
 import com.marcosavard.commons.astro.time.JulianDay;
-import com.marcosavard.commons.math.trigonometry.Angle;
-import com.marcosavard.commons.math.trigonometry.Angle.Unit;
 
 public class Season {
   private static final double JULIAN_ERA = 1_721_141; // JulianDate.of(0, 3, 24);
@@ -29,16 +29,15 @@ public class Season {
     double ji = jj;
     double dsi[] = new double[2];
 
-
     for (int i = 0; i < 2; i++) {
       double dj = (ji - 2_415_020) / 36525.0;
       double lm = 279.69668 + (36000.76892 * dj);
       double m = 358.47583 + (35999.04975 * dj);
-      Angle lma = Angle.of(lm, Unit.DEG);
-      Angle ma = Angle.of(m, Unit.DEG);
+      double lma = AstroMath.range(lm, 360);
+      double ma = AstroMath.range(m, 360);
       double c = 0.01396 * (year - 1950);
-      double sin = Math.sin(ma.rads());
-      double ls = lma.degrees() + EXCENTRICITY * sin - c;
+      double sin = AstroMath.sind(ma);
+      double ls = lma + EXCENTRICITY * sin - c;
       double cd = 58 * Math.sin(Math.toRadians(90 * k - ls));
       dsi[i] = jj + cd;
       ji = dsi[i];
@@ -49,8 +48,6 @@ public class Season {
     double startTimePart = ds - startDayPart;
 
     JulianDay start = JulianDay.of(ds);
-
-    // JulianDay start = JulianDay.of(startTimePart);
     LocalDate localDate = start.toLocalDate();
     LocalTime localTime = TimeConversion.toLocalTime(startTimePart);
     ZonedDateTime startTime = ZonedDateTime.of(localDate, localTime, UTC);

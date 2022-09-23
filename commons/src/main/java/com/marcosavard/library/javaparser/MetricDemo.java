@@ -25,30 +25,24 @@ public class MetricDemo {
         selection = selection.stream().filter(f -> ! f.getPath().contains("meta")).toList();
         Map<File, CompilationUnit> parsedFiles = parseFiles(selection);
         Metric metric = new GenericityMetric();
-        List<String[]> lines = new ArrayList<>();
+        List<String[]> rows = new ArrayList<>();
 
         for (File file : parsedFiles.keySet()) {
             double[] stats = metric.compute(file, parsedFiles.get(file));
-            String[] line = new String[] {file.getName(), stats[0]+" %", Double.toString(stats[1]), Double.toString(stats[2]), Double.toString(stats[3])};
-            lines.add(line);
-
-            String msg = MessageFormat.format("  {0} is {1} % generic ({2} of {3}).", file.getName(), stats[0], stats[1], stats[2], stats[3]);
-          //  System.out.println(msg);
+            String[] row = new String[] {file.getName(), stats[0]+" %", Integer.toString((int)stats[1]), Integer.toString((int)stats[2]), Integer.toString((int)stats[3])};
+            rows.add(row);
         }
 
         double[] total = metric.getTotal();
-        String[] line = new String[] {"Total", total[0]+" %", Double.toString(total[1]), Double.toString(total[2]), Double.toString(total[3])};
-        lines.add(line);
+        String percent = (int)(total[0] * 100)/100.0 + " %";
+        String[] row = new String[] {"Total", percent, Integer.toString((int)total[1]), Integer.toString((int)total[2]), Integer.toString((int)total[3])};
+        rows.add(row);
 
-        List<String> rows = formatLines(lines);
+        List<String> lines = formatLines(rows);
 
-        for (String row : rows) {
-            System.out.println(row);
+        for (String line : lines) {
+            System.out.println(line);
         }
-
-        String msg = MessageFormat.format("Total : {0} % generic ({1} of {2}).", total[0], total[1], total[2]);
-      //  System.out.println(msg);
-        System.out.println(lines);
     }
 
     private static List<String> formatLines(List<String[]> lines) {
@@ -59,7 +53,7 @@ public class MetricDemo {
         for (String[] line : lines) {
             for (int i=0; i<line.length; i++) {
                 int width = widths.get(i);
-                widths.set(i, Math.max(width, 1 + line[i].length()));
+                widths.set(i, Math.max(width, 2 + line[i].length()));
             }
         }
 

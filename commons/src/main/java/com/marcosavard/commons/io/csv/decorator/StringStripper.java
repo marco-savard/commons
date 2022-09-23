@@ -1,15 +1,12 @@
 package com.marcosavard.commons.io.csv.decorator;
 
-import com.marcosavard.commons.io.csv.CsvFormatter;
-
 import java.lang.reflect.Field;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-
-public class StringStripper extends CsvFormatter.Decorator<String> {
+public class StringStripper extends Decorator<String> {
     public static final int STRIP_LEADING = 1;
     public static final int STRIP_TRAILING = 2;
     public static final int STRIP_ACCENT = 4;

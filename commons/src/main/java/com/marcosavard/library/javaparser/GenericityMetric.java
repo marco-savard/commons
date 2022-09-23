@@ -17,7 +17,7 @@ public class GenericityMetric extends Metric {
         for (int i = 0; i < count; i++) {
             ImportDeclaration importDeclaration = list.get(i);
             String s = importDeclaration.getNameAsString();
-            boolean generic = s.startsWith("java.");
+            boolean generic = s.startsWith("java.") || s.startsWith("javax.");
             genericCount += generic ? 1 : 0;
         }
 

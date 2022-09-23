@@ -3,9 +3,8 @@ package com.marcosavard.commons.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-
-import com.marcosavard.commons.lang.NullSafe;
 
 public class ListUtil {
   /**
@@ -28,13 +27,14 @@ public class ListUtil {
   /**
    * Converts a list of arbitrary elements into a list of strings
    * 
-   * @param list of arbitrary elements
+   * @param collection of arbitrary elements
    * @return list of strings
    */
-  public static List<String> toStringList(Collection<Object> list) {
+  public static List<String> toStringList(Collection<Object> collection) {
     List<String> strings = new ArrayList<>();
+    Collection<Object> safeCollection = (collection != null) ? collection : (Collection<Object>) Collections.EMPTY_LIST;
 
-    for (Object element : NullSafe.of(list)) {
+    for (Object element : safeCollection) {
       strings.add(element.toString());
     }
 

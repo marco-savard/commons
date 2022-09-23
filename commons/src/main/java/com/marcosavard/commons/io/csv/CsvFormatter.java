@@ -1,10 +1,17 @@
 package com.marcosavard.commons.io.csv;
 
+import com.marcosavard.commons.io.csv.decorator.Decorator;
 import com.marcosavard.commons.io.csv.decorator.StringFormatter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class CsvFormatter<T> {
 
@@ -220,6 +227,7 @@ public abstract class CsvFormatter<T> {
         }
     }
 
+    /*
     public static abstract class Decorator<T> {
         private List<String> columns;
 
@@ -239,7 +247,7 @@ public abstract class CsvFormatter<T> {
 
         public abstract Object decorateValue(T value);
     }
-
+*/
     public static class SortKey {
         private String column;
         private Sorting sorting;

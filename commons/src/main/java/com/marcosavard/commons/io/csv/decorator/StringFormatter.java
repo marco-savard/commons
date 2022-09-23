@@ -1,8 +1,6 @@
 package com.marcosavard.commons.io.csv.decorator;
 
-import com.marcosavard.commons.io.csv.CsvFormatter;
-
-public class StringFormatter extends CsvFormatter.Decorator<String>  {
+public class StringFormatter extends Decorator<String>  {
     private final String format;
 
     public StringFormatter(String format, String... columns) {

@@ -1,6 +1,5 @@
 package com.marcosavard.commons.io;
 
-import com.marcosavard.commons.lang.NullSafe;
 import com.marcosavard.commons.lang.reflect.Reflection;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.swing.JFileChooser;
 

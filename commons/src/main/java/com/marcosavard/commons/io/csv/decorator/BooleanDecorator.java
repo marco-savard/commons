@@ -1,8 +1,6 @@
 package com.marcosavard.commons.io.csv.decorator;
 
-import com.marcosavard.commons.io.csv.CsvFormatter;
-
-public class BooleanDecorator extends CsvFormatter.Decorator<Boolean> {
+public class BooleanDecorator extends Decorator<Boolean> {
     private final String trueValue, falseValue;
 
     public BooleanDecorator(String trueValue, String falseValue, String... columns) {

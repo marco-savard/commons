@@ -1,10 +1,8 @@
 package com.marcosavard.commons.io.csv.decorator;
 
-import com.marcosavard.commons.io.csv.CsvFormatter;
-
 import java.text.MessageFormat;
 
-public class MessageFormatter extends CsvFormatter.Decorator<Object>  {
+public class MessageFormatter extends Decorator<Object>  {
     private final String pattern;
 
     public MessageFormatter(String pattern, String... columns) {

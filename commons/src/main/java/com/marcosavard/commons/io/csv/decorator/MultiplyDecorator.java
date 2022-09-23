@@ -1,8 +1,6 @@
 package com.marcosavard.commons.io.csv.decorator;
 
-import com.marcosavard.commons.io.csv.CsvFormatter;
-
-public class MultiplyDecorator extends CsvFormatter.Decorator<Number> {
+public class MultiplyDecorator extends Decorator<Number> {
     private final double factor;
 
     public MultiplyDecorator(String factor, String... columns) {
