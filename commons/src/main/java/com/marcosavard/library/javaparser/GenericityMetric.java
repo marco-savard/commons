@@ -12,7 +12,7 @@ import java.util.List;
 public class GenericityMetric extends Metric {
     double[] total = new double[4];
 
-    public double[] compute(File file, CompilationUnit compilationUnit) {
+    public List<Stat> compute(File file, CompilationUnit compilationUnit) {
         NodeList<ImportDeclaration> imports = compilationUnit.getImports();
         List<String> importedClasses = new UniqueList<>();
         int genericCount = 0;
@@ -32,8 +32,12 @@ public class GenericityMetric extends Metric {
         total[1] += genericCount;
         total[2] += (count - genericCount);
         total[3] += count;
-        double[] metrics = new double[] {percent, genericCount, (count - genericCount), count};
-        return metrics;
+
+        String[] results = new String[] {percent +" %", Integer.toString(genericCount), Integer.toString(count - genericCount), Integer.toString(count)};
+        Stat stat = new Stat(file.getName(), results);
+        List<Stat> stats = new ArrayList<>();
+        stats.add(stat);
+        return stats;
     }
 
     private void compute(List<String> importedClasses, ImportDeclaration importDeclaration) {
@@ -48,8 +52,10 @@ public class GenericityMetric extends Metric {
         }
     }
 
-    public double[] getTotal() {
-        total[0] = (total[3] == 0) ? 100 : (total[1] * 100) / total[3];
-        return total;
+    public Stat getTotal() {
+        double percent = (total[3] == 0) ? 100 : (total[1] * 100) / total[3];
+        String[] results = new String[] {percent +" %", Integer.toString((int)total[1]), Integer.toString((int)total[1]), Integer.toString((int)total[2])};
+        Stat stat = new Stat("Total", results);
+        return stat;
     }
 }
