@@ -3,6 +3,7 @@ package com.marcosavard.commons.text.locale;
 import com.marcosavard.commons.debug.Console;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,16 +21,12 @@ public class LocaleUtilDemo {
         };
         displayLocales(caucasians);
         displayLocales(LocaleUtil.FAR_EAST_SCRIPTS);
-    }
 
-    private static void displayLocales(Character.UnicodeScript script) {
-        List<Locale> locales = LocaleUtil.getLocalesForScript(script);
-        Console.println("Languages using {0} script : {1}", toString(script), locales);
-    }
+        Locale[] allLocales = Locale.getAvailableLocales();
+        Console.println("{0} available locales : {1}", allLocales.length, Arrays.toString(allLocales));
 
-    private static void displayLocales(Character.UnicodeScript[] scripts) {
-        List<Locale> locales = LocaleUtil.getLocalesForScripts(scripts);
-        Console.println("Languages using {0} script : {1}", toString(scripts), locales);
+        Locale[] extraLocales = LocaleUtil.getAdditionalLocales();
+        Console.println("{0} additional locales : {1}", extraLocales.length, Arrays.toString(extraLocales));
     }
 
     private static void displayFacts(Locale locale) {
@@ -43,6 +40,16 @@ public class LocaleUtilDemo {
 
         List<Locale> locales = LocaleUtil.getSubLocales(locale);
         Console.println("{0} language is spoken in : {1}", locale.getDisplayLanguage(), locales);
+    }
+
+    private static void displayLocales(Character.UnicodeScript script) {
+        List<Locale> locales = LocaleUtil.getLocalesForScript(script);
+        Console.println("Languages using {0} script : {1}", toString(script), locales);
+    }
+
+    private static void displayLocales(Character.UnicodeScript[] scripts) {
+        List<Locale> locales = LocaleUtil.getLocalesForScripts(scripts);
+        Console.println("Languages using {0} script : {1}", toString(scripts), locales);
     }
 
     private static String toString(Character.UnicodeScript script) {
