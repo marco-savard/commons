@@ -17,7 +17,22 @@ public class IndexSafe {
 		return new IndexSafeCharSequence(unsafe);
 	}
 
-	private static class IndexSafeList<T> extends ArrayList {
+	public static <T> T get(List<T> list, int idx) {
+		T item = (idx < list.size()) ? list.get(idx) : null;
+		return item;
+	}
+
+	public static <T> T get(T[] array, int idx) {
+		T item = (idx < array.length) ? array[idx] : null;
+		return item;
+	}
+
+	public static int get(int[] array, int idx) {
+		int item = (idx < array.length) ? array[idx] : 0;
+		return item;
+	}
+
+    private static class IndexSafeList<T> extends ArrayList {
 		private final List<T> safeList;
 
 		public IndexSafeList(List<T> unsafe) {

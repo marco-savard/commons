@@ -1,6 +1,7 @@
 package com.marcosavard.commons.lang;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A class that provides useful methods that handle strings. It includes methods to predicate
@@ -103,6 +104,18 @@ public class CharString implements CharSequence, StringInterface, CharStringInte
         return value.equalsIgnoreCase(that);
     }
 
+    public boolean in(String... strings) {
+        List<String> stringList = Arrays.asList(strings);
+        boolean contained = stringList.contains(value);
+        return contained;
+    }
+
+    public static String join(String prefix, List<String> list, String delimiter, String suffix) {
+        String delimited = String.join(delimiter, list);
+        String joined = list.isEmpty() ? delimited : prefix + delimited + suffix;
+        return joined;
+    }
+
     @Override
     public int indexOf(String str) {
         return value.indexOf(str);
@@ -121,6 +134,12 @@ public class CharString implements CharSequence, StringInterface, CharStringInte
     @Override
     public int lastIndexOf(String str, int fromIndex) {
         return value.lastIndexOf(str, fromIndex);
+    }
+
+    public boolean like(String wildcard) {
+        String regex = toRegex(wildcard);
+        boolean matched = value.matches(regex);
+        return matched;
     }
 
     @Override
@@ -171,6 +190,12 @@ public class CharString implements CharSequence, StringInterface, CharStringInte
     @Override
     public String toLowerCase() {
         return value.toLowerCase();
+    }
+
+    private static String toRegex(String wildcard) {
+        String regex = wildcard.replaceAll("\\*", "(.*)");
+        regex = regex.replaceAll("\\?", "(.)");
+        return regex;
     }
 
     @Override
