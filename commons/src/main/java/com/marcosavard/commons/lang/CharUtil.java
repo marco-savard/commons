@@ -25,8 +25,9 @@ public class CharUtil {
 	
 	public static char stripAccent(char c) {
 		String normalized = Normalizer.normalize(Character.toString(c), Normalizer.Form.NFD); 
-		String stripped = normalized.replaceAll("[^\\p{ASCII}]", "");
-		return stripped.charAt(0); 
+		String replaced = normalized.replaceAll("[^\\p{ASCII}]", "");
+		char stripped = (replaced.length() == 0) ? '\0' : replaced.charAt(0);
+		return stripped;
 	}
 
 

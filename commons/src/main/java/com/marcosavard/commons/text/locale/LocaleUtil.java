@@ -12,6 +12,18 @@ public class LocaleUtil {
             Character.UnicodeScript.ARMENIAN, Character.UnicodeScript.GEORGIAN
     };
 
+    public static final Character.UnicodeScript[] INDIAN_SCRIPTS = new Character.UnicodeScript[] {
+            Character.UnicodeScript.BENGALI,
+            Character.UnicodeScript.DEVANAGARI,
+            Character.UnicodeScript.GUJARATI,
+            Character.UnicodeScript.GURMUKHI,
+            Character.UnicodeScript.KANNADA,
+            Character.UnicodeScript.MALAYALAM,
+            Character.UnicodeScript.SINHALA,
+            Character.UnicodeScript.TAMIL,
+            Character.UnicodeScript.TELUGU
+    };
+
     public static final Character.UnicodeScript[] FAR_EAST_SCRIPTS = new Character.UnicodeScript[] {
             Character.UnicodeScript.HAN,
             Character.UnicodeScript.HANGUL,
@@ -23,11 +35,28 @@ public class LocaleUtil {
             Character.UnicodeScript.YI
     };
 
+    public static List<Locale> getLocalesForScript(List<Locale> allLocales, Character.UnicodeScript script) {
+        List<Locale> locales = allLocales
+                .stream()
+                .filter(l -> script.equals(getUnicodeScript(l)))
+                .collect(Collectors.toList());
+        return locales;
+    }
+
+
     public static List<Locale> getLocalesForScript(Character.UnicodeScript script) {
         List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
         List<Locale> locales = allLocales
                 .stream()
                 .filter(l -> script.equals(getUnicodeScript(l)))
+                .collect(Collectors.toList());
+        return locales;
+    }
+
+    public static List<Locale> getLocalesForScripts(List<Locale> allLocales, Character.UnicodeScript[] scripts) {
+        List<Locale> locales = allLocales
+                .stream()
+                .filter(l -> Arrays.asList(scripts).contains(getUnicodeScript(l)))
                 .collect(Collectors.toList());
         return locales;
     }
@@ -111,6 +140,19 @@ public class LocaleUtil {
         return countryCode;
     }
 
+    public static Locale[] getISOLanguageLocales() {
+        String[] isoLanguages = Locale.getISOLanguages();
+        List<Locale> locales = new ArrayList<>();
+
+        for (String language : isoLanguages) {
+            Locale locale = Locale.forLanguageTag(language);
+            locales.add(locale);
+        }
+
+        Locale[] array = locales.toArray(new Locale[0]);
+        return array;
+    }
+
     public static Locale[] getAdditionalLocales() {
         Locale[] additionalLocales = new Locale[] {
          new Locale.Builder().setLanguage("aa").setRegion("DJ").build(),
@@ -184,5 +226,21 @@ public class LocaleUtil {
     }
 
 
+    public static List<Locale> getWorldLanguages(List<Locale> locales) {
+        //List<String> worlds = Arrays.asList(new String[] {"001"});
+        List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
+        List<Locale> worldLocales = new ArrayList<>();
 
+        for (Locale locale : locales) {
+            String language = locale.getLanguage();
+            List<Locale> countries = allLocales.stream().filter(l -> language.equals(l.getLanguage()) ).collect(Collectors.toList());
+            Locale foundLocale = countries.stream().filter(l -> l.getCountry() != null).findFirst().orElse(null);
+
+            if (foundLocale == null) {
+                worldLocales.add(locale);
+            }
+        }
+
+        return worldLocales;
+    }
 }

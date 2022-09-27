@@ -1,5 +1,6 @@
 package com.marcosavard.commons.text.analysis;
 
+import com.marcosavard.commons.lang.CharUtil;
 import com.marcosavard.commons.util.collection.TreeValueMap;
 
 import java.util.ArrayList;
@@ -29,11 +30,12 @@ public class TextAnalysis {
       this.letterCount += word.length(); 
       
       for (int i = 0; i < word.length(); i++) {
-        char ch = word.charAt(i);
+        char ch = Character.toLowerCase(word.charAt(i));
         boolean diacritic = isDiacritical(ch);
+        char ascii = CharUtil.stripAccent(ch);
 
-        int letterFrequency = frequencyByLetter.containsKey(ch) ? frequencyByLetter.get(ch) : 0;
-        frequencyByLetter.put(ch, 1 + letterFrequency);
+        int letterFrequency = frequencyByLetter.containsKey(ascii) ? frequencyByLetter.get(ascii) : 0;
+        frequencyByLetter.put(ascii, 1 + letterFrequency);
 
         if (diacritic) {
           int frequency = 1;
@@ -64,7 +66,7 @@ public class TextAnalysis {
     String frequentLetters = "";
 
     for (char ch : frequencyByLetter.keySet()) {
-      frequentLetters += ch;
+      frequentLetters = ch + frequentLetters;
     }
 
     return frequentLetters;

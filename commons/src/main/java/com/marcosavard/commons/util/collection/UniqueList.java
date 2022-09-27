@@ -3,7 +3,10 @@ package com.marcosavard.commons.util.collection;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class UniqueList<T> extends ArrayList<T> { 
+public class UniqueList<T> extends ArrayList<T> {
+
+
+
 	@Override 
 	public boolean add(T element) { 
 		boolean added = false; 

@@ -1,6 +1,7 @@
 package com.marcosavard.commons.text.locale;
 
 import com.marcosavard.commons.lang.CharString;
+import com.marcosavard.commons.util.collection.UniqueList;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -60,8 +61,27 @@ public class Glossary {
 			}
 		}
 	}
-	
+
 	private void addLanguageNames(Locale displayLocale) {
+		List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
+		List<String> countries = Arrays.asList(Locale.getISOCountries());
+		Currency euro = Currency.getInstance("EUR");
+
+		List<Locale> euroLocales = allLocales.stream()
+				.filter(l -> countries.contains(l.getCountry()))
+				.filter(l -> euro.equals(Currency.getInstance(l)))
+				.collect(Collectors.toList());
+
+		//euroLocales = new UniqueList<Locale>(euroLocales);
+
+		for (Locale locale : euroLocales) {
+			String languageName = locale.getDisplayLanguage(displayLocale);
+			addToGlossary(languageName, Category.NATIONAL_LANGUAGE);
+		}
+
+	}
+	
+	private void addLanguageNamesOld(Locale displayLocale) {
 		//add national languages 
 		List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
 		String[] countries = Locale.getISOCountries();
