@@ -16,10 +16,7 @@ public class LocaleUtilDemo {
         displayLocales(Character.UnicodeScript.CYRILLIC);
         displayLocales(Character.UnicodeScript.GREEK);
 
-        Character.UnicodeScript[] caucasians = new Character.UnicodeScript[] {
-                Character.UnicodeScript.ARMENIAN, Character.UnicodeScript.GEORGIAN
-        };
-        displayLocales(caucasians);
+        displayLocales(LocaleUtil.CAUCASIAN_SCRIPTS);
         displayLocales(LocaleUtil.FAR_EAST_SCRIPTS);
 
         Locale[] allLocales = Locale.getAvailableLocales();

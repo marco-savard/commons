@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 public class LocaleUtil {
 
+    public static final Character.UnicodeScript[] CAUCASIAN_SCRIPTS = new Character.UnicodeScript[] {
+            Character.UnicodeScript.ARMENIAN, Character.UnicodeScript.GEORGIAN
+    };
+
     public static final Character.UnicodeScript[] FAR_EAST_SCRIPTS = new Character.UnicodeScript[] {
             Character.UnicodeScript.HAN,
             Character.UnicodeScript.HANGUL,
