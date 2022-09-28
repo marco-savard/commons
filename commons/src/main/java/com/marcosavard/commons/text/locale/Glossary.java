@@ -30,25 +30,32 @@ public class Glossary {
 		this.language = locale;
 		addWeekDays(locale);
 		addMonthNames(locale);
-		addLanguageNames(locale); 
-		//addCountryNames(locale); 
-		//addCurrencyNames(locale);
-		//addTimeZones(locale);
-
+		addEuropeanLanguageNames(locale);
+		addEuropeanCountryNames(locale);
+		addCurrencyNames(locale);
+		addTimeZones(locale);
 	}
-
-
-
 
 	public List<String> getWords() {
 		return new ArrayList<>(glossary.keySet()); 
+	}
+
+	public List<String> getWords(Category[] categories) {
+		List<String> words = new ArrayList<>();
+
+		for (Category category : categories) {
+			words.addAll(getWords(category));
+		}
+
+		return words;
 	}
 	
 	public List<String> getWords(Category category) {
 		List<String> words = glossary.keySet().stream().filter(s -> glossary.get(s).equals(category)).collect(Collectors.toList()); 
 		return words;
 	}
-	
+
+	/*
 	private void addCountryNames(Locale displayLocale) {
 		String[] countries = Locale.getISOCountries();
 		List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
@@ -60,9 +67,9 @@ public class Glossary {
 				addToGlossary(countryName, Category.COUNTRY); 
 			}
 		}
-	}
+	}*/
 
-	private void addLanguageNames(Locale displayLocale) {
+	private void addEuropeanCountryNames(Locale displayLocale) {
 		List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
 		List<String> countries = Arrays.asList(Locale.getISOCountries());
 		Currency euro = Currency.getInstance("EUR");
@@ -72,32 +79,45 @@ public class Glossary {
 				.filter(l -> euro.equals(Currency.getInstance(l)))
 				.collect(Collectors.toList());
 
-		//euroLocales = new UniqueList<Locale>(euroLocales);
+		List<String> europeanCountries = new UniqueList<>();
+
+		for (Locale locale : euroLocales) {
+			String languageName = locale.getDisplayCountry(displayLocale);
+			europeanCountries.add(languageName);
+		}
+
+		for (String country : europeanCountries) {
+			addToGlossary(country, Category.EUROPEAN_COUNTRY);
+		}
+	}
+
+	private void addEuropeanLanguageNames(Locale displayLocale) {
+		List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
+		List<String> countries = Arrays.asList(Locale.getISOCountries());
+		Currency euro = Currency.getInstance("EUR");
+
+		List<Locale> euroLocales = allLocales.stream()
+				.filter(l -> countries.contains(l.getCountry()))
+				.filter(l -> euro.equals(Currency.getInstance(l)))
+				.collect(Collectors.toList());
+
+		List<String> europeanLanguages = new UniqueList<>();
 
 		for (Locale locale : euroLocales) {
 			String languageName = locale.getDisplayLanguage(displayLocale);
-			addToGlossary(languageName, Category.NATIONAL_LANGUAGE);
+			europeanLanguages.add(languageName);
 		}
 
+		for (String language : europeanLanguages) {
+			addToGlossary(language, Category.EUROPEAN_LANGUAGE);
+		}
 	}
 	
-	private void addLanguageNamesOld(Locale displayLocale) {
+	private void addRegionalLanguageNames(Locale displayLocale) {
 		//add national languages 
 		List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
 		String[] countries = Locale.getISOCountries();
 		List<String> nationalLanguages = new ArrayList<>();
-		
-		for (String country : countries) { 
-			List<Locale> locales = allLocales.stream().filter(l -> country.equals(l.getCountry())).collect(Collectors.toList());
-			
-			for (Locale locale : locales) {
-				String languageName = locale.getDisplayLanguage(displayLocale);
-				nationalLanguages.add(languageName);
-				String script = locale.getDisplayScript(displayLocale); 
-				addToGlossary(languageName, Category.NATIONAL_LANGUAGE); 
-				addToGlossary(script, Category.SCRIPT);
-			}
-		}
 		
 		//add other languages
 		String[] languages = Locale.getISOLanguages(); 
@@ -212,9 +232,9 @@ public class Glossary {
 
 	public enum Category {
 		COMMON,
-		COUNTRY,
+		EUROPEAN_COUNTRY,
 		CURRENCY,
-		NATIONAL_LANGUAGE,
+		EUROPEAN_LANGUAGE,
 		REGIONAL_LANGUAGE,
 		MONTH,
 		SCRIPT,

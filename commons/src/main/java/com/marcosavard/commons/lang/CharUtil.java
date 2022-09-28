@@ -31,7 +31,21 @@ public class CharUtil {
 	}
 
 
-	
-	
+	public static String getDiacriticalMark(char ch) {
+		String diacriticalMark = "";
 
+		if ("ç".indexOf(ch) >= 0) {
+			diacriticalMark = "cedil";
+		} else if ("áéíóúý".indexOf(ch) >= 0) {
+			diacriticalMark = "acute";
+		} else if ("âêîôû".indexOf(ch) >= 0) {
+			diacriticalMark = "circum";
+		} else if ("àèìòù".indexOf(ch) >= 0) {
+			diacriticalMark = "grave";
+		} else if ("äëöïüÿ".indexOf(ch) >= 0) {
+			diacriticalMark = "uml";
+		}
+
+		return diacriticalMark;
+	}
 }

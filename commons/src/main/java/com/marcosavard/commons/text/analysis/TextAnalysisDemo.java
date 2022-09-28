@@ -14,7 +14,12 @@ public class TextAnalysisDemo {
 
     public static void main(String[] args) {
         Locale fr = Locale.FRENCH;
-        List<String> words = Glossary.of(fr).getWords(Glossary.Category.NATIONAL_LANGUAGE);
+        Glossary.Category[] categories = new Glossary.Category[] {
+                Glossary.Category.EUROPEAN_COUNTRY,
+                Glossary.Category.EUROPEAN_LANGUAGE,
+                Glossary.Category.MONTH
+        };
+        List<String> words = Glossary.of(fr).getWords(categories);
         TextAnalysis analysis = TextAnalysis.of(fr, words);
 
         Console.println("Text analysis of {0} words", fr.getDisplayLanguage());
@@ -30,7 +35,8 @@ public class TextAnalysisDemo {
         for (Character ch : chars) {
             int code = ch;
             char ascii = CharUtil.stripAccent(ch);
-            String s = MessageFormat.format("{0} ({1} {2})", ch, ascii, code);
+            String diacriticalMark = CharUtil.getDiacriticalMark(ch);
+            String s = MessageFormat.format("{0} ({1}{2} {3})", ch, ascii, diacriticalMark, code);
             strings.add(s);
         }
 
