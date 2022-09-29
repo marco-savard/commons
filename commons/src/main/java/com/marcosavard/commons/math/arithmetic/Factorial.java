@@ -1,5 +1,7 @@
 package com.marcosavard.commons.math.arithmetic;
 
+import com.marcosavard.commons.math.Range;
+
 import java.math.BigInteger;
 import java.text.MessageFormat;
 
@@ -22,14 +24,14 @@ public class Factorial {
   }
 
   public BigInteger getValue() {
-    BigInteger value = IntegerList.of(n).multiply();
+    BigInteger value = Range.of(n).addTo(1).product();
     return value;
   }
 
   // avoid cancellation-error
   public BigInteger minus(Factorial that) {
     int delta = this.n - that.n;
-    BigInteger factorial = IntegerList.of(delta - 1).addTo(this.n - delta).multiply();
+    BigInteger factorial = Range.of(delta - 1).addTo(this.n - delta + 1).product();
     return factorial;
   }
 

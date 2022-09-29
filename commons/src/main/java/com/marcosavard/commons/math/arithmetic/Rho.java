@@ -1,6 +1,7 @@
 package com.marcosavard.commons.math.arithmetic;
 
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.math.Range;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -11,8 +12,8 @@ public class Rho {
 	int[] dimensions;
 
 	
-	public static Rho of(IntegerList iota, int... dim) {
-		return new Rho(iota.toList(), dim);
+	public static Rho of(Range range, int... dim) {
+		return new Rho(range, dim);
 	}
 	
 	public static Rho of(List<Integer> list, int... dim) {

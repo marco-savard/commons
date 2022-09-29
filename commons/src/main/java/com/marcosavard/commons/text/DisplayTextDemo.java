@@ -42,5 +42,7 @@ public class DisplayTextDemo {
         System.out.println(months + " -> " + DisplayText.of(months, TextStyle.SHORT));
 
 
+
+
     }
 }
