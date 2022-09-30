@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Range extends ArrayList<Integer> {
-  public static final BinaryOperator<Integer> ADDITION = (x1, x2) -> x1 + x2;
-  public static final BinaryOperator<Integer> MULTIPLICATION = (x1, x2) -> x1 * x2;
+  public static final BinaryOperator<Integer> ADDITION = (x, y) -> x + y;
+  public static final BinaryOperator<Integer> MULTIPLICATION = (x, y) -> x * y;
 
   private Range(int min, int max) {
     addAll(IntStream.rangeClosed(min, max - 1).boxed().toList());
@@ -46,13 +47,11 @@ public class Range extends ArrayList<Integer> {
   }
 
   public Range addTo(int term) {
-    List<Integer> target = new ArrayList<>();
+    return this.forAll(x -> x + term);
+  }
 
-    for (int element : this) {
-      target.add(element + term);
-    }
-
-    return new Range(target);
+  public Range multiplyBy(int factor) {
+    return this.forAll(x -> x * factor);
   }
 
   public List<String> format(String pattern) {
@@ -63,16 +62,6 @@ public class Range extends ArrayList<Integer> {
     }
 
     return formatted;
-  }
-
-  public Range multiplyBy(int factor) {
-    List<Integer> target = new ArrayList<>();
-
-    for (int element : this) {
-      target.add(element * factor);
-    }
-
-    return new Range(target);
   }
 
   public Range multiplyBy(Range that) {
@@ -94,7 +83,8 @@ public class Range extends ArrayList<Integer> {
   }
 
   public int sum() {
-    return forAll(0, ADDITION);
+    Range range = forAll(0, ADDITION);
+    return range.get(range.size()-1);
   }
 
   public BigInteger product() {
@@ -107,7 +97,28 @@ public class Range extends ArrayList<Integer> {
     return product;
   }
 
-  public Integer forAll(int first, BinaryOperator<Integer> oper) {
+  public Range forAll(UnaryOperator<Integer> oper) {
+    List<Integer> target = new ArrayList<>();
+
+    for (int item : this) {
+      target.add(oper.apply(item));
+    }
+
+    return new Range(target);
+  }
+
+  public Range forAll(int first, BinaryOperator<Integer> oper) {
+    List<Integer> target = new ArrayList<>();
+
+    for (int i = 0; i < size(); i++) {
+      int result = (i == 0) ? oper.apply(first, get(i)) : oper.apply(target.get(i - 1), get(i));
+      target.add(result);
+    }
+
+    return new Range(target);
+  }
+
+  public Integer forAllOld(int first, BinaryOperator<Integer> oper) {
     int result = this.stream().reduce(first, oper);
     return result;
   }

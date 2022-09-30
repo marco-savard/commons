@@ -35,20 +35,29 @@ public class RangeDemo {
     Range range = Range.of(20);
     Console.println("Range [0..19] : " + range);
 
-    range = range.multiplyBy(2).addTo(19);
+    range = Range.of(20).multiplyBy(2).addTo(21);
     Console.println("Odd numbers in range [20..60] : " + range);
 
     Range countdown = Range.of(10).reverse();
     Console.println("Countdown : " + countdown);
 
-    int sum = Range.of(10).sum();
-    Console.println("Sum of numbers 0..9 : " + sum);
+    Range squares = Range.of(10).addTo(1).forAll((x) -> x * x);
+    Console.println("Squares = " + squares);
 
-    int factorial = Range.of(1, 6).product().intValue();
+    Range powersOf2 = Range.of(10).forAll((x) -> 1 << x);
+    Console.println("Powers of two = " + powersOf2);
+
+    Range cumulation = Range.of(100).addTo(1).forAll(0, (x, y) -> x + y);
+    int sum = cumulation.get(cumulation.size() - 1);
+    Console.println("Cumulation of numbers 1..100 : " + cumulation);
+    Console.println("Sum of numbers 1..100 : " + sum);
+
+    Range factorials = Range.of(6).addTo(1).forAll(1, (x, y) -> x * y);
+    Console.println("Factorials [1..6] = " + factorials);
+
+    int factorial = Range.of(6).addTo(1).product().intValue();
     Console.println("6! = " + factorial);
 
-    factorial = Range.of(1, 6).forAll(1, (x1, x2) -> x1 * x2);
-    Console.println("6! = " + factorial);
     Console.println();
   }
 
@@ -68,6 +77,7 @@ public class RangeDemo {
     boolean valid = (sum % 11) == 0;
 
     Console.println("Barcode : " + barcode);
+    Console.println("Countdown : " + countdown);
     Console.println("Barcode product : " + products);
     Console.println("Barcode sum : " + sum);
     Console.println("Barcode " + barcode + " is valid : " + valid);
