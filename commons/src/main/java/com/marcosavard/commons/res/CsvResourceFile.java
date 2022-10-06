@@ -10,12 +10,16 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public abstract class CsvResourceFile<T> {
+	private static final Class[] PRIMITIVES = new Class[] {boolean.class, byte.class, char.class, short.class, int.class, long.class, float.class, double.class};
+	private static final Class[] WRAPPERS = new Class[] {Boolean.class, Byte.class, Character.class, Short.class, Integer.class, Long.class, Float.class, Double.class};
+
 	private String resourceName;
 	private Charset charset; 
 	private Class<T> type; 
@@ -164,7 +168,8 @@ public abstract class CsvResourceFile<T> {
 	}
 	
 	private void setValue(Object instance, Field declaredField, String string) throws IllegalArgumentException, IllegalAccessException {
-		Class<?> type = declaredField.getType(); 
+		Class<?> type = declaredField.getType();
+		type = isPrimitive(type) ? getWrapper(type) : type;
 		String[] methodNames = new String[] {"decode", "valueOf"}; 
 		Class[] parameterTypes = new Class[] {Object.class, String.class}; 
 		boolean done = false;
@@ -189,6 +194,15 @@ public abstract class CsvResourceFile<T> {
 				break;
 			}
 		}
+	}
+
+	private boolean isPrimitive(Class<?> type) {
+		return Arrays.asList(PRIMITIVES).contains(type);
+	}
+
+	private Class<?> getWrapper(Class<?> type) {
+		int idx = Arrays.asList(PRIMITIVES).indexOf(type);
+		return WRAPPERS[idx];
 	}
 
 	public void close() { 
