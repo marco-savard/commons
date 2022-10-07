@@ -1,5 +1,9 @@
 package com.marcosavard.library.opencsv.dgeq.res;
 
+import com.marcosavard.commons.res.CsvResourceFile;
+
+import java.nio.charset.StandardCharsets;
+
 public class ElecteurInscrit {
   private String nom_circonscription;
   private int code_circonscription;
@@ -12,5 +16,12 @@ public class ElecteurInscrit {
 
   public int getNbElecteursApres() {
     return nb_electeurs_ap_rev_spe;
+  }
+
+  public static class ElecteurInscritFile extends CsvResourceFile<ElecteurInscrit> {
+
+    protected ElecteurInscritFile() {
+      super("electeur_inscrit.csv", StandardCharsets.ISO_8859_1, ElecteurInscrit.class);
+    }
   }
 }
