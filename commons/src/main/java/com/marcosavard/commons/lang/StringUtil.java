@@ -20,6 +20,8 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
+  public enum Alignment {LEFT, RIGHT};
+
   private static final Character[] BOOLEANS = new Character[] {'0', '1', 't', 'f', 'y', 'n'};
 
   // Utility class is not instantiable
@@ -320,6 +322,14 @@ public class StringUtil {
     }
 
     return largestIdx;
+  }
+
+  public static String pad(CharSequence original, int totalLength, Alignment alignment) {
+    if (alignment == Alignment.RIGHT) {
+      return padRight(original, totalLength);
+    } else {
+      return padLeft(original, totalLength);
+    }
   }
 
   /**
