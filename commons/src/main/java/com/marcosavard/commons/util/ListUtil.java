@@ -7,32 +7,45 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListUtil {
+
+  public static <T> void ensureSize(List<T> list, int size) {
+    // Prevent excessive copying while we're adding
+    if (list instanceof ArrayList<T>) {
+      ((ArrayList) list).ensureCapacity(size);
+    }
+
+    while (list.size() < size) {
+      list.add(null);
+    }
+  }
+
   /**
    * Converts a list of arbitrary elements into [element1, element2.. ]
-   * 
+   *
    * @param list of arbitrary elements
    * @return string formatted as [element1, element2.. ]
    */
-  public static String toString(Collection<Object> list) {
+  public static <T> String toString(Collection<T> list) {
     return toString(list, "[", ", ", "]");
   }
 
-  public static String toString(Collection<Object> list, String prefix, String separator,
-      String suffix) {
-    List<String> strings = toStringList(list);
+  public static <T> String toString(
+      Collection<T> list, String prefix, String separator, String suffix) {
+    List<String> strings = toStrings(list);
     String joined = prefix + String.join(separator, strings) + suffix;
     return joined;
   }
 
   /**
    * Converts a list of arbitrary elements into a list of strings
-   * 
+   *
    * @param collection of arbitrary elements
    * @return list of strings
    */
-  public static List<String> toStringList(Collection<Object> collection) {
+  public static <T> List<String> toStrings(Collection<T> collection) {
     List<String> strings = new ArrayList<>();
-    Collection<Object> safeCollection = (collection != null) ? collection : (Collection<Object>) Collections.EMPTY_LIST;
+    Collection<T> safeCollection =
+        (collection != null) ? collection : (Collection<T>) Collections.EMPTY_LIST;
 
     for (Object element : safeCollection) {
       strings.add(element.toString());
@@ -53,7 +66,4 @@ public class ListUtil {
 
     return list;
   }
-
-
-
 }
