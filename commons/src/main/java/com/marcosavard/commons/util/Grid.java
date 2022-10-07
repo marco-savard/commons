@@ -29,7 +29,42 @@ public class Grid<T> {
   }
 
   public List<String> toLines() {
-    List<List<String>> rows = toStrings();
+    return nestedListToLines(cells, StringUtil.Alignment.LEFT);
+  }
+
+  public List<String> toLines(StringUtil.Alignment alignment) {
+    return nestedListToLines(cells, alignment);
+  }
+
+  public static <T> List<String> arrayListToLines(List<String[]> list) {
+    return arrayListToLines(list, StringUtil.Alignment.LEFT);
+  }
+
+  public static <T> List<String> arrayListToLines(
+      List<String[]> list, StringUtil.Alignment alignment) {
+    List<Integer> widths = findArrayLists(list);
+    List<String> lines = new ArrayList<>();
+
+    for (String[] array : list) {
+      String line = "";
+
+      for (int i = 0; i < array.length; i++) {
+        line += StringUtil.padLeft(array[i], widths.get(i) + 1);
+      }
+
+      lines.add(line);
+    }
+
+    return lines;
+  }
+
+  public static <T> List<String> nestedListToLines(List<List<T>> cells) {
+    return nestedListToLines(cells, StringUtil.Alignment.LEFT);
+  }
+
+  public static <T> List<String> nestedListToLines(
+      List<List<T>> cells, StringUtil.Alignment alignment) {
+    List<List<String>> rows = toStringList(cells);
     List<Integer> widths = findListWidths(rows);
     List<String> lines = new ArrayList<>();
 
@@ -38,7 +73,7 @@ public class Grid<T> {
 
       for (int i = 0; i < row.size(); i++) {
         String cell = row.get(i);
-        line += StringUtil.padRight(cell, widths.get(i)) + " ";
+        line += StringUtil.pad(cell, widths.get(i) + 1, alignment);
       }
 
       lines.add(line);
@@ -77,7 +112,7 @@ public class Grid<T> {
     return widths;
   }
 
-  private List<List<String>> toStrings() {
+  private static <T> List<List<String>> toStringList(List<List<T>> cells) {
     List<List<String>> rows = new ArrayList<>();
 
     for (List<T> row : cells) {
@@ -87,7 +122,7 @@ public class Grid<T> {
     return rows;
   }
 
-  private List<String> toStrings(List<T> items) {
+  private static <T> List<String> toStrings(List<T> items) {
     List<String> row = new ArrayList<>();
 
     for (T item : items) {

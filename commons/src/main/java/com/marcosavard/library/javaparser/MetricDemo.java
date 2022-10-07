@@ -5,7 +5,6 @@ import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.marcosavard.commons.App;
 import com.marcosavard.commons.io.FileSystem;
-import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.util.ArrayUtil;
 import com.marcosavard.commons.util.Grid;
 
@@ -53,31 +52,13 @@ public class MetricDemo {
     Metric.Stat total = metric.getTotal();
     String[] row = ArrayUtil.concat(new String[] {total.name}, total.results);
     rows.add(row);
-
-    // List<String> lines = Grid.toLines(rows);
-    List<String> lines = formatLines(rows);
+    List<String> lines = Grid.arrayListToLines(rows);
 
     for (String line : lines) {
       System.out.println(line);
     }
 
     System.out.println();
-  }
-
-  private static List<String> formatLines(List<String[]> lines) {
-    List<Integer> widths = Grid.findArrayLists(lines);
-    List<String> formatted = new ArrayList<>();
-
-    for (String[] line : lines) {
-      List<String> padded = new ArrayList<>();
-      for (int i = 0; i < line.length; i++) {
-        padded.add(StringUtil.padLeft(line[i], widths.get(i) + 1));
-      }
-      String joined = String.join("", padded);
-      formatted.add(joined);
-    }
-
-    return formatted;
   }
 
   private static List<File> getSourceFiles() {
