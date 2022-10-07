@@ -1,5 +1,8 @@
 package com.marcosavard.commons.time;
 
+import com.marcosavard.commons.math.Range;
+import com.marcosavard.commons.util.Grid;
+
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -9,9 +12,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import com.marcosavard.commons.math.Range;
-import com.marcosavard.commons.util.Array;
 
 public class TextCalendar {
   private static final int LINE_LENGTH = 7 * 4;
@@ -41,8 +41,6 @@ public class TextCalendar {
     days.addAll(Range.of(lengthOfMonth).addTo(1).format("%2d"));
     Collections.replaceAll(days, "0", "  ");
   }
-
-
 
   private String indentCenter(String line, int lineLength) {
     int prefixLen = (LINE_LENGTH / 2) - line.length() / 2;
@@ -79,9 +77,9 @@ public class TextCalendar {
     weeks.add(weekDayRow);
 
     // build days
-    List<List<String>> weekList = Array.of(7, days).toList();
+    List<List<String>> rows = Grid.of(7, days).getCells();
 
-    for (List<String> week : weekList) {
+    for (List<String> week : rows) {
       String weekRow = String.join("  ", week);
       weeks.add(weekRow);
     }
@@ -109,5 +107,4 @@ public class TextCalendar {
   public void replace(String original, String replacement) {
     Collections.replaceAll(days, original, replacement);
   }
-
 }
