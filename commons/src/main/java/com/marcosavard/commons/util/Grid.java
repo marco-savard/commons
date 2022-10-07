@@ -1,6 +1,7 @@
 package com.marcosavard.commons.util;
 
 import com.marcosavard.commons.lang.StringUtil;
+import com.marcosavard.commons.util.collection.SafeArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Grid<T> {
 
   public List<String> toLines() {
     List<List<String>> rows = toStrings();
-    List<Integer> widths = toWidths(rows);
+    List<Integer> widths = findListWidths(rows);
     List<String> lines = new ArrayList<>();
 
     for (List<String> row : rows) {
@@ -46,15 +47,29 @@ public class Grid<T> {
     return lines;
   }
 
-  private List<Integer> toWidths(List<List<String>> rows) {
-    List<Integer> widths = new ArrayList<>();
+  public static List<Integer> findListWidths(List<List<String>> rows) {
+    List<Integer> widths = new SafeArrayList<>(10);
 
     for (List<String> row : rows) {
       for (int i = 0; i < row.size(); i++) {
         String cell = row.get(i);
         int width = i < widths.size() ? widths.get(i) : 0;
         width = (cell.length() > width) ? cell.length() : width;
-        ListUtil.ensureSize(widths, i + 1);
+        widths.set(i, width);
+      }
+    }
+
+    return widths;
+  }
+
+  public static List<Integer> findArrayLists(List<String[]> lines) {
+    List<Integer> widths = new SafeArrayList<>(10);
+
+    for (String[] line : lines) {
+      for (int i = 0; i < line.length; i++) {
+        String cell = line[i];
+        int width = i < widths.size() ? widths.get(i) : 0;
+        width = (cell.length() > width) ? cell.length() : width;
         widths.set(i, width);
       }
     }
