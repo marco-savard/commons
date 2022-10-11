@@ -2,15 +2,248 @@ package com.marcosavard.commons.lang.reflect;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 public class Reflection {
+
+  public static <T> T instantiate(Class<T> claz) {
+    T instance = instantiateByDefaultConstructor(claz);
+
+    if ((instance == null) && Number.class.isAssignableFrom(claz)) {
+      instance = instantiateByStringParameter(claz, "0");
+    }
+
+    if ((instance == null) && Boolean.class.isAssignableFrom(claz)) {
+      instance = instantiateByStringParameter(claz, "0");
+    }
+
+    if ((instance == null) && URI.class.isAssignableFrom(claz)) {
+      instance = instantiateByStringParameter(claz, "0.0.0.0");
+    }
+
+    if (instance == null) {
+      instance = instantiateByIntegerParameters(claz);
+    }
+
+    if (instance == null) {
+      instance = instantiateByMinValue(claz);
+    }
+
+    if (instance == null) {
+      instance = instantiateByFactoryMethod(claz);
+    }
+
+    return instance;
+  }
+
+  private static <T> T instantiateByDefaultConstructor(Class<T> claz) {
+    Constructor constructor = findDefaultConstructor(claz);
+    T instance = null;
+
+    if (constructor != null) {
+      Object[] argumentless = new Object[] {};
+      try {
+        instance = (T) constructor.newInstance(argumentless);
+      } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+        instance = null;
+      }
+    }
+
+    return instance;
+  }
+
+  private static <T> T instantiateByStringParameter(Class<T> claz, String argument) {
+    Constructor constructor = findStringConstructor(claz);
+    T instance = null;
+
+    if (constructor != null) {
+      try {
+        Object[] arguments = new Object[] {argument};
+        instance = (T) constructor.newInstance(arguments);
+      } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+        instance = null;
+      }
+    }
+
+    return instance;
+  }
+
+  private static <T> T instantiateByIntegerParameters(Class<T> claz) {
+    Constructor constructor = findIntegerConstructor(claz);
+    T instance = null;
+
+    if (constructor != null) {
+      try {
+        Object[] arguments = new Object[] {0};
+        instance = (T) constructor.newInstance(arguments);
+      } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+        instance = null;
+      }
+    }
+    return instance;
+  }
+
+  private static <T> T instantiateByFactoryMethod(Class<T> claz) {
+    Method[] methods = getFactoryMethods(claz);
+    T instance = null;
+
+    for (Method method : methods) {
+      instance = instantiateByFactoryMethod(claz, method);
+
+      if (instance != null) {
+        break;
+      }
+    }
+    return instance;
+  }
+
+  private static <T> Method[] getFactoryMethods(Class<T> claz) {
+    List<Method> methods = Arrays.asList(claz.getDeclaredMethods());
+    List<Method> factoryMethods =
+        methods.stream()
+            .filter(m -> Modifier.isStatic(m.getModifiers()))
+            .sorted(comparing(Method::getParameterCount))
+            .toList();
+    Method[] array = factoryMethods.toArray(new Method[0]);
+    return array;
+  }
+
+  private static <T> T instantiateByFactoryMethod(Class<T> claz, Method method) {
+    T instance = null;
+    Class type = method.getReturnType();
+    Object args = getMethodArguments(method);
+
+    if (claz.isAssignableFrom(type)) {
+      try {
+        instance = (args == null) ? (T) method.invoke(null) : (T) method.invoke(null, args);
+      } catch (IllegalAccessException | InvocationTargetException e) {
+        instance = null;
+      }
+    } else if (type.isArray() && claz.isAssignableFrom(type.getComponentType())) {
+      try {
+        T[] instances =
+            (args == null) ? (T[]) method.invoke(null) : (T[]) method.invoke(null, args);
+        instance = instances[0];
+      } catch (IllegalAccessException | InvocationTargetException e) {
+        instance = null;
+      }
+    }
+
+    return instance;
+  }
+
+  private static Object getMethodArguments(Method method) {
+    Object[] arguments = new Object[method.getParameterCount()];
+
+    for (int i = 0; i < method.getParameterCount(); i++) {
+      Class type = method.getParameterTypes()[i];
+      arguments[i] = instantiate(type);
+    }
+
+    Object result =
+        (arguments.length > 1) ? arguments : (arguments.length == 1) ? arguments[0] : null;
+    return result;
+  }
+
+  private static <T> T instantiateByMinValue(Class<T> claz) {
+    String[] values = new String[] {"MIN_VALUE", "MIN"};
+    T instance = null;
+
+    for (String value : values) {
+      instance = instantiateByMinValue(claz, value);
+
+      if (instance != null) {
+        break;
+      }
+    }
+
+    return instance;
+  }
+
+  private static <T> T instantiateByMinValue(Class<T> claz, String value) {
+    T instance;
+
+    try {
+      Field field = claz.getDeclaredField(value);
+      instance = (T) field.get(null);
+    } catch (NoSuchFieldException e) {
+      instance = null;
+    } catch (IllegalAccessException e) {
+      instance = null;
+    }
+
+    return instance;
+  }
+
+  private static <T> Constructor findConstructor(Class<T> claz) {
+    Constructor constructor = findDefaultConstructor(claz);
+
+    if (constructor == null) {
+
+      constructor = findSimplestConstructor(claz);
+    }
+
+    return constructor;
+  }
+
+  private static <T> Constructor findDefaultConstructor(Class<T> claz) {
+    Class parameterless[] = new Class[] {};
+    Constructor constructor;
+
+    try {
+      constructor = claz.getConstructor(parameterless);
+    } catch (NoSuchMethodException e) {
+      constructor = null;
+    }
+    return constructor;
+  }
+
+  private static <T> Constructor findStringConstructor(Class<T> claz) {
+    Class stringParameter[] = new Class[] {String.class};
+    Constructor constructor;
+
+    try {
+      constructor = claz.getConstructor(stringParameter);
+    } catch (NoSuchMethodException e) {
+      constructor = null;
+    }
+    return constructor;
+  }
+
+  private static <T> Constructor findIntegerConstructor(Class<T> claz) {
+    Class integerParameter[] = new Class[] {int.class};
+    Constructor constructor;
+
+    try {
+      constructor = claz.getConstructor(integerParameter);
+    } catch (NoSuchMethodException e) {
+      constructor = null;
+    }
+    return constructor;
+  }
+
+  private static <T> Constructor findSimplestConstructor(Class<T> claz) {
+    Constructor constructor = null;
+    Constructor[] constructors = claz.getConstructors();
+
+    if (constructors.length == 1) {
+      constructor = constructors[0];
+    }
+
+    return constructor;
+  }
 
   public static Object get(Object instance, String fieldName) throws NoSuchFieldException {
     Field field = getDeclaredField(instance.getClass(), fieldName);
@@ -78,13 +311,11 @@ public class Reflection {
     return value;
   }
 
-
-
   //
   // private
   //
-  private static List<Method> findNamedMethods(Class<? extends Object> clazz, String methodName,
-      Object... args) {
+  private static List<Method> findNamedMethods(
+      Class<? extends Object> clazz, String methodName, Object... args) {
     List<Method> namedMethods = new ArrayList<>();
     Method[] allMethods = clazz.getDeclaredMethods();
 
@@ -174,8 +405,8 @@ public class Reflection {
     return field;
   }
 
-
-  //TODO https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+  // TODO
+  // https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
   public static Class[] getClasses(Package pack) {
     ArrayList<Class> classes = new ArrayList<Class>();
 
@@ -195,7 +426,7 @@ public class Reflection {
       }
 
     } catch (IOException | ClassNotFoundException e) {
-      //return empty array
+      // return empty array
     }
 
     return classes.toArray(new Class[classes.size()]);
@@ -204,12 +435,13 @@ public class Reflection {
   /**
    * Recursive method used to find all classes in a given directory and subdirs.
    *
-   * @param directory   The base directory
+   * @param directory The base directory
    * @param packageName The package name for classes found inside the base directory
    * @return The classes
    * @throws ClassNotFoundException
    */
-  private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
+  private static List<Class> findClasses(File directory, String packageName)
+      throws ClassNotFoundException {
     List<Class> classes = new ArrayList<Class>();
     if (!directory.exists()) {
       return classes;
@@ -220,7 +452,9 @@ public class Reflection {
         assert !file.getName().contains(".");
         classes.addAll(findClasses(file, packageName + "." + file.getName()));
       } else if (file.getName().endsWith(".class")) {
-        classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+        classes.add(
+            Class.forName(
+                packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
       }
     }
     return classes;

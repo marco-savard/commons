@@ -2,25 +2,24 @@ package com.marcosavard.commons.io;
 
 import com.marcosavard.commons.lang.reflect.Reflection;
 
+import javax.swing.*;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFileChooser;
 
 /**
  * A facade class that returns commonly used folders. See FileSystemDemo.
- * 
- * @author Marco
  *
+ * @author Marco
  */
 public class FileSystem {
 
   /**
    * Return the user folder, generally C:\Users\MyName on Windows
-   * 
+   *
    * @return the user folder
    */
   public static File getUserFolder() {
@@ -30,7 +29,7 @@ public class FileSystem {
 
   /**
    * Return the folder for user's documents, generally C:\Users\MyName\Documents on Windows
-   * 
+   *
    * @return the user folder
    */
   public static File getUserDocumentFolder() {
@@ -41,7 +40,7 @@ public class FileSystem {
 
   /**
    * Return the folder for user's desktop, generally C:\Users\MyName\Desktop on Windows
-   * 
+   *
    * @return the user folder
    */
   public static File getUserDesktopFolder() {
@@ -52,7 +51,7 @@ public class FileSystem {
 
   /**
    * Return the folder for user's download folder, generally C:\Users\MyName\Downloads on Windows
-   * 
+   *
    * @return the user folder
    */
   public static File getUserDownloadFolder() {
@@ -63,7 +62,7 @@ public class FileSystem {
 
   /**
    * Return the folder for user's music folder.
-   * 
+   *
    * @return the user folder
    */
   public static File getUserMusicFolder() {
@@ -83,7 +82,7 @@ public class FileSystem {
 
   /**
    * Return the folder for user's pictures folder.
-   * 
+   *
    * @return the user folder
    */
   public static File getUserPictureFolder() {
@@ -103,7 +102,7 @@ public class FileSystem {
 
   /**
    * Return a folder to store temporary files.
-   * 
+   *
    * @return the temporary folder
    */
   public static File getTemporaryFolder() {
@@ -113,7 +112,7 @@ public class FileSystem {
 
   /**
    * Return the folder where Java is installed.
-   * 
+   *
    * @return the Java home folder
    */
   public static File getJreFolder() {
@@ -123,7 +122,7 @@ public class FileSystem {
 
   /**
    * Return the current working folder.
-   * 
+   *
    * @return the current working folder folder
    */
   public static File getCurrentWorkingFolder() {
@@ -133,14 +132,14 @@ public class FileSystem {
 
   /**
    * Return the location of this class.
-   * 
+   *
    * @param claz (default value FileSystem.class)
    * @return the location of this class.
    */
   public static File getClassFolder() {
-	    return getClassFolder(FileSystem.class);
+    return getClassFolder(FileSystem.class);
   }
-  
+
   public static File getClassFolder(Class claz) {
     String className = claz.getSimpleName() + ".class";
     URL url = FileSystem.class.getResource(className);
@@ -149,7 +148,10 @@ public class FileSystem {
     return folder;
   }
 
-
+  public static File getRootFolder() {
+    File[] roots = File.listRoots();
+    return roots[0];
+  }
 
   public static File getRootFolder(Class entity) {
     File rootFolder;
@@ -191,7 +193,6 @@ public class FileSystem {
     return file;
   }
 
-
   public static List<File> getSourceFiles(File sourceFolder, Package pack) {
     List<File> sourceFiles = new ArrayList<>();
     Class[] classes = Reflection.getClasses(pack);
@@ -200,7 +201,6 @@ public class FileSystem {
       File file = getSourceFile(sourceFolder, claz);
       sourceFiles.add(file);
     }
-
 
     return sourceFiles;
   }
