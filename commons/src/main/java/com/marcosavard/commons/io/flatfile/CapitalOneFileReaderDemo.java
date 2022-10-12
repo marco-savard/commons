@@ -1,11 +1,12 @@
 package com.marcosavard.commons.io.flatfile;
 
+import com.marcosavard.commons.io.line.RecordLine;
+import com.marcosavard.commons.lang.reflect.Reflection;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.marcosavard.commons.io.line.RecordLine;
-import com.marcosavard.commons.lang.reflect.Introspection;
 
 public class CapitalOneFileReaderDemo {
 
@@ -94,7 +95,7 @@ public class CapitalOneFileReaderDemo {
 
     @Override
     public String toString() {
-      String msg = Introspection.toString(this);
+      String msg = Reflection.toString(this);
       return msg;
     }
 
@@ -118,7 +119,7 @@ public class CapitalOneFileReaderDemo {
 
     @Override
     public String toString() {
-      String msg = Introspection.toString(this);
+      String msg = Reflection.toString(this);
       return msg;
     }
   }

@@ -1,5 +1,6 @@
 package com.marcosavard.commons.lang.reflect;
 
+import com.marcosavard.commons.lang.NullSafe;
 import com.marcosavard.commons.lang.StringUtil;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -61,19 +63,158 @@ public class Reflection {
     return instance;
   }
 
+  public static boolean is(Object instance, String fieldName) {
+    String method = "is" + StringUtil.capitalize(fieldName);
+    return (Boolean) invoke(instance, method);
+  }
+
+  public static Object get(Object instance, String fieldName) {
+    String method = "get" + StringUtil.capitalize(fieldName);
+    return invoke(instance, method);
+  }
+
+  public static void set(Object instance, String fieldName, Object... values) {
+    String method = "set" + StringUtil.capitalize(fieldName);
+    invoke(instance, method, values);
+  }
+
+  public static boolean isAbstract(Member member) {
+    return Modifier.isAbstract(member.getModifiers());
+  }
+
+  public static boolean isPublic(Member member) {
+    return Modifier.isPublic(member.getModifiers());
+  }
+
+  public static boolean isStatic(Member member) {
+    return Modifier.isStatic(member.getModifiers());
+  }
+
+  public static boolean isTransient(Member member) {
+    return Modifier.isTransient(member.getModifiers());
+  }
+
+  public static Object invoke(Object instance, String methodName, Object... args) {
+    List<Method> namedMethods = findNamedMethods(instance.getClass(), methodName, args);
+    Object value = null;
+
+    if (namedMethods.size() >= 1) {
+      Method namedMethod = namedMethods.get(0);
+      try {
+        value = namedMethod.invoke(instance, args);
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        value = null;
+      }
+    }
+
+    return value;
+  }
+
+  public static Object invoke(Object instance, Method method) {
+    Object value;
+
+    try {
+      value = method.invoke(instance, null);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      value = null;
+    }
+
+    return value;
+  }
+
+  public static Object invokeStatic(Class claz, String methodName, Object arg) {
+    Object[] args = new Object[] {arg};
+    return invokeStatic(claz, methodName, args);
+  }
+
+  public static Object invokeStatic(Class claz, String methodName, Object[] args) {
+    List<Method> namedMethods = findNamedMethods(claz, methodName, args);
+    Object value = null;
+
+    if (namedMethods.size() >= 1) {
+      Method namedMethod = namedMethods.get(0);
+      value = invokeStatic(namedMethod, args);
+    }
+
+    return value;
+  }
+
+  // TODO
+  // https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+  public static Class[] getClasses(Package pack) {
+    List<Class> classes = new ArrayList<>();
+
+    try {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      String path = pack.getName().replace('.', '/');
+      Enumeration<URL> resources = classLoader.getResources(path);
+      List<File> dirs = new ArrayList<>();
+
+      while (resources.hasMoreElements()) {
+        URL resource = resources.nextElement();
+        dirs.add(new File(resource.getFile()));
+      }
+
+      for (File directory : dirs) {
+        classes.addAll(findClasses(directory, pack.getName()));
+      }
+
+    } catch (IOException | ClassNotFoundException e) {
+      // return empty array
+    }
+
+    return classes.toArray(new Class[classes.size()]);
+  }
+
+  public static String toString(Object instance) {
+    List<Class> types = Arrays.asList(new Class[] {String.class, boolean.class, int.class});
+    List<Method> allMethods = Arrays.asList(instance.getClass().getMethods());
+    List<String> values = new ArrayList<>();
+
+    List<Method> getters =
+        allMethods.stream()
+            .filter(m -> m.getParameterCount() == 0)
+            .filter(m -> m.getName().startsWith("get") || m.getName().startsWith("is"))
+            .filter(m -> types.contains(m.getReturnType()))
+            .sorted(comparing(Method::getName))
+            .toList();
+
+    for (Method m : getters) {
+      String name = m.getName();
+      name = name.startsWith("get") ? name.substring(3) : name;
+      name = name.startsWith("is") ? name.substring(2) : name;
+      name = StringUtil.uncapitalize(name);
+      Object value = invoke(instance, m);
+
+      if (value instanceof Boolean) {
+        if ((Boolean) value == true) {
+          values.add(name);
+        }
+      } else {
+        values.add(name + "=" + value.toString());
+      }
+    }
+
+    String joined = String.join(",", values);
+    return "[" + joined + "]";
+  }
+
+  //
+  // private methods
+  //
+
   private static <T> T instantiateArray(Class<T> claz) {
-    T instance = (T) Array.newInstance(claz.getComponentType(), 0);
-    return instance;
+    return (T) Array.newInstance(claz.getComponentType(), 0);
   }
 
   private static <T> T instantiateByDefaultConstructor(Class<T> claz) {
-    Constructor constructor = findDefaultConstructor(claz);
+    Constructor<T> constructor = findDefaultConstructor(claz);
     T instance = null;
 
     if (constructor != null) {
       Object[] argumentless = new Object[] {};
       try {
-        instance = (T) constructor.newInstance(argumentless);
+        instance = constructor.newInstance(argumentless);
       } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
         instance = null;
       }
@@ -83,13 +224,13 @@ public class Reflection {
   }
 
   private static <T> T instantiateByStringParameter(Class<T> claz, String argument) {
-    Constructor constructor = findStringConstructor(claz);
+    Constructor<T> constructor = findStringConstructor(claz);
     T instance = null;
 
     if (constructor != null) {
       try {
         Object[] arguments = new Object[] {argument};
-        instance = (T) constructor.newInstance(arguments);
+        instance = constructor.newInstance(arguments);
       } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
         instance = null;
       }
@@ -99,13 +240,13 @@ public class Reflection {
   }
 
   private static <T> T instantiateByIntegerParameters(Class<T> claz) {
-    Constructor constructor = findIntegerConstructor(claz);
+    Constructor<T> constructor = findIntegerConstructor(claz);
     T instance = null;
 
     if (constructor != null) {
       try {
         Object[] arguments = new Object[] {0};
-        instance = (T) constructor.newInstance(arguments);
+        instance = constructor.newInstance(arguments);
       } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
         instance = null;
       }
@@ -131,7 +272,7 @@ public class Reflection {
     List<Method> methods = Arrays.asList(claz.getDeclaredMethods());
     List<Method> factoryMethods =
         methods.stream()
-            .filter(m -> Modifier.isStatic(m.getModifiers()))
+            .filter(m -> isStatic(m))
             .sorted(comparing(Method::getParameterCount))
             .toList();
     Method[] array = factoryMethods.toArray(new Method[0]);
@@ -144,20 +285,10 @@ public class Reflection {
     Object[] args = getMethodArguments(method);
 
     if (claz.isAssignableFrom(type)) {
-      // try {
-      instance = (T) invokeStatic(claz, method, args);
-      // instance = (args == null) ? (T) method.invoke(null) : (T) method.invoke(null, args);
-      // } catch (IllegalAccessException | InvocationTargetException e) {
-      //   instance = null;
-      //   }
+      instance = (T) invokeStatic(method, args);
     } else if (type.isArray() && claz.isAssignableFrom(type.getComponentType())) {
-      try {
-        T[] instances =
-            (args == null) ? (T[]) method.invoke(null) : (T[]) method.invoke(null, args);
-        instance = instances[0];
-      } catch (IllegalAccessException | InvocationTargetException e) {
-        instance = null;
-      }
+      T[] instances = (T[]) invokeStatic(method, args);
+      instance = instances[0];
     }
 
     return instance;
@@ -206,20 +337,19 @@ public class Reflection {
     return instance;
   }
 
-  private static <T> Constructor findConstructor(Class<T> claz) {
-    Constructor constructor = findDefaultConstructor(claz);
+  private static <T> Constructor<T> findConstructor(Class<T> claz) {
+    Constructor<T> constructor = findDefaultConstructor(claz);
 
     if (constructor == null) {
-
       constructor = findSimplestConstructor(claz);
     }
 
     return constructor;
   }
 
-  private static <T> Constructor findDefaultConstructor(Class<T> claz) {
-    Class parameterless[] = new Class[] {};
-    Constructor constructor;
+  private static <T> Constructor<T> findDefaultConstructor(Class<T> claz) {
+    Class[] parameterless = new Class[] {};
+    Constructor<T> constructor;
 
     try {
       constructor = claz.getConstructor(parameterless);
@@ -229,9 +359,9 @@ public class Reflection {
     return constructor;
   }
 
-  private static <T> Constructor findStringConstructor(Class<T> claz) {
-    Class stringParameter[] = new Class[] {String.class};
-    Constructor constructor;
+  private static <T> Constructor<T> findStringConstructor(Class<T> claz) {
+    Class[] stringParameter = new Class[] {String.class};
+    Constructor<T> constructor;
 
     try {
       constructor = claz.getConstructor(stringParameter);
@@ -241,9 +371,9 @@ public class Reflection {
     return constructor;
   }
 
-  private static <T> Constructor findIntegerConstructor(Class<T> claz) {
-    Class integerParameter[] = new Class[] {int.class};
-    Constructor constructor;
+  private static <T> Constructor<T> findIntegerConstructor(Class<T> claz) {
+    Class[] integerParameter = new Class[] {int.class};
+    Constructor<T> constructor;
 
     try {
       constructor = claz.getConstructor(integerParameter);
@@ -253,8 +383,8 @@ public class Reflection {
     return constructor;
   }
 
-  private static <T> Constructor findSimplestConstructor(Class<T> claz) {
-    Constructor constructor = null;
+  private static <T> Constructor<T> findSimplestConstructor(Class<T> claz) {
+    Constructor<T> constructor = null;
     Constructor[] constructors = claz.getConstructors();
 
     if (constructors.length == 1) {
@@ -264,57 +394,7 @@ public class Reflection {
     return constructor;
   }
 
-  public static boolean is(Object instance, String fieldName) {
-    String method = "is" + StringUtil.capitalize(fieldName);
-    boolean value = (Boolean) invoke(instance, method);
-    return value;
-  }
-
-  public static Object get(Object instance, String fieldName) {
-    String method = "get" + StringUtil.capitalize(fieldName);
-    Object value = invoke(instance, method);
-    return value;
-  }
-
-  public static void set(Object instance, String fieldName, Object... values) {
-    String method = "set" + StringUtil.capitalize(fieldName);
-    invoke(instance, method, values);
-  }
-
-  public static Object invoke(Object instance, String methodName, Object... args) {
-    List<Method> namedMethods = findNamedMethods(instance.getClass(), methodName, args);
-    Object value = null;
-
-    if (namedMethods.size() >= 1) {
-      Method namedMethod = namedMethods.get(0);
-      try {
-        value = namedMethod.invoke(instance, args);
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    return value;
-  }
-
-  public static Object invokeStatic(Class claz, String methodName, Object arg) {
-    Object[] args = new Object[] {arg};
-    return invokeStatic(claz, methodName, args);
-  }
-
-  public static Object invokeStatic(Class claz, String methodName, Object[] args) {
-    List<Method> namedMethods = findNamedMethods(claz, methodName, args);
-    Object value = null;
-
-    if (namedMethods.size() >= 1) {
-      Method namedMethod = namedMethods.get(0);
-      value = invokeStatic(claz, namedMethod, args);
-    }
-
-    return value;
-  }
-
-  private static Object invokeStatic(Class claz, Method method, Object[] args) {
+  private static Object invokeStatic(Method method, Object[] args) {
     Object value = null;
 
     try {
@@ -326,9 +406,6 @@ public class Reflection {
     return value;
   }
 
-  //
-  // private
-  //
   private static List<Method> findNamedMethods(
       Class<? extends Object> clazz, String methodName, Object[] args) {
     List<Method> namedMethods = new ArrayList<>();
@@ -367,7 +444,7 @@ public class Reflection {
     if (compliant) {
       for (int i = 0; i < args.length; i++) {
         if (args[i] != null) {
-          compliant = compliant && isCompliant(args[i], parameterTypes[i]);
+          compliant = compliant && isAssignable(args[i], parameterTypes[i]);
         }
       }
     }
@@ -375,14 +452,13 @@ public class Reflection {
     return compliant;
   }
 
-  private static boolean isCompliant(Object value, Class type) {
+  private static boolean isAssignable(Object value, Class type) {
     type = type.isPrimitive() ? getWrapperType(type) : type;
-    boolean compliant = type.isAssignableFrom(value.getClass());
-    return compliant;
+    return type.isAssignableFrom(value.getClass());
   }
 
   private static Class getWrapperType(Class type) {
-    Class wrapperType = null;
+    Class wrapperType;
 
     if (boolean.class.equals(type)) {
       wrapperType = Boolean.class;
@@ -400,51 +476,11 @@ public class Reflection {
       wrapperType = Long.class;
     } else if (short.class.equals(type)) {
       wrapperType = Short.class;
+    } else {
+      wrapperType = type;
     }
 
     return wrapperType;
-  }
-
-  // find field in superclasses, recursively
-  private static Field getDeclaredField(Class clazz, String fieldName) throws NoSuchFieldException {
-    Field field = null;
-
-    try {
-      field = clazz.getField(fieldName);
-    } catch (NoSuchFieldException e) {
-      Class superClass = clazz.getSuperclass();
-      boolean isRoot = Object.class.equals(superClass);
-      field = isRoot ? null : getDeclaredField(superClass, fieldName);
-    }
-
-    return field;
-  }
-
-  // TODO
-  // https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
-  public static Class[] getClasses(Package pack) {
-    ArrayList<Class> classes = new ArrayList<Class>();
-
-    try {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      String path = pack.getName().replace('.', '/');
-      Enumeration<URL> resources = classLoader.getResources(path);
-      List<File> dirs = new ArrayList<>();
-
-      while (resources.hasMoreElements()) {
-        URL resource = resources.nextElement();
-        dirs.add(new File(resource.getFile()));
-      }
-
-      for (File directory : dirs) {
-        classes.addAll(findClasses(directory, pack.getName()));
-      }
-
-    } catch (IOException | ClassNotFoundException e) {
-      // return empty array
-    }
-
-    return classes.toArray(new Class[classes.size()]);
   }
 
   /**
@@ -457,12 +493,13 @@ public class Reflection {
    */
   private static List<Class> findClasses(File directory, String packageName)
       throws ClassNotFoundException {
-    List<Class> classes = new ArrayList<Class>();
+    List<Class> classes = new ArrayList<>();
     if (!directory.exists()) {
       return classes;
     }
     File[] files = directory.listFiles();
-    for (File file : files) {
+
+    for (File file : (File[]) NullSafe.of(files)) {
       if (file.isDirectory()) {
         assert !file.getName().contains(".");
         classes.addAll(findClasses(file, packageName + "." + file.getName()));

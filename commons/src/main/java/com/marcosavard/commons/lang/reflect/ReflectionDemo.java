@@ -60,6 +60,7 @@ public class ReflectionDemo {
     Console.println("background = {0}", background);
     Console.println("location = {0}, {1}", x, y);
     Console.println("btn = {0}", btn);
+    Console.println("btn = {0}", Reflection.toString(btn));
     Console.println();
   }
 

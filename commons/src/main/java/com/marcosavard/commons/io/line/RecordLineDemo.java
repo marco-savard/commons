@@ -1,8 +1,9 @@
 package com.marcosavard.commons.io.line;
 
+import com.marcosavard.commons.lang.reflect.Reflection;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import com.marcosavard.commons.lang.reflect.Introspection;
 
 public class RecordLineDemo {
   private static final String PAYROLL_LINE =
@@ -36,7 +37,7 @@ public class RecordLineDemo {
 
     @Override
     public String toString() {
-      String msg = Introspection.toString(this);
+      String msg = Reflection.toString(this);
       return msg;
     }
   }
@@ -55,7 +56,7 @@ public class RecordLineDemo {
 
     @Override
     public String toString() {
-      String msg = Introspection.toString(this);
+      String msg = Reflection.toString(this);
       return msg;
     }
   }

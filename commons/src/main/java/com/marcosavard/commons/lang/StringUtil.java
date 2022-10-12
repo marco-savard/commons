@@ -20,7 +20,10 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
-  public enum Alignment {LEFT, RIGHT};
+  public enum Alignment {
+    LEFT,
+    RIGHT
+  };
 
   private static final Character[] BOOLEANS = new Character[] {'0', '1', 't', 'f', 'y', 'n'};
 
@@ -481,6 +484,14 @@ public class StringUtil {
     original = NullSafe.of(original);
     boolean tooLong = original.length() > maxLenght;
     return tooLong ? original.subSequence(0, maxLenght).toString() : original.toString();
+  }
+
+  public static String uncapitalize(CharSequence str) {
+    str = NullSafe.of(str);
+    int len = str.length();
+    String firstLetter = (len == 0) ? "" : Character.toString(Character.toLowerCase(str.charAt(0)));
+    String remaining = (len <= 1) ? "" : str.subSequence(1, str.length() - 1).toString();
+    return firstLetter + remaining;
   }
 
   public static CharSequence unquote(CharSequence original) {
