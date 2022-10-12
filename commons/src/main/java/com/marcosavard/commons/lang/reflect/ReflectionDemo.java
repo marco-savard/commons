@@ -3,69 +3,69 @@ package com.marcosavard.commons.lang.reflect;
 import com.marcosavard.commons.debug.Console;
 
 import java.awt.*;
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.Locale;
 
 public class ReflectionDemo {
   public static final NamedColor WHITE = new NamedColor("White", 255, 255, 255);
 
-  public static void main(String[] args) throws URISyntaxException {
-    //    instantiate(String[].class);
+  public static void main(String[] args) {
+    demoInstantiateByReflection();
+    demoInstantiateAndInvokeByReflection();
+    demoStaticInvoke();
+  }
 
-    // java.awt
-    instantiate(Color.class);
-
-    // java.io and java.nio
-    instantiate(File.class);
-    //  instantiate(Path.class);
-
+  private static void demoInstantiateByReflection() {
     // java.lang
-    instantiate(Boolean.class);
-    instantiate(Byte.class);
-    instantiate(Character.class);
     instantiate(Integer.class);
-    instantiate(Long.class);
-    instantiate(Float.class);
     instantiate(Double.class);
-    instantiate(Short.class);
     instantiate(String.class);
-
-    // java.math
     instantiate(BigDecimal.class);
     instantiate(BigInteger.class);
-    instantiate(Random.class);
-
-    // java.net
-    instantiate(URI.class);
-
-    // java.time
-    instantiate(Date.class);
     instantiate(LocalDate.class);
-    instantiate(LocalDateTime.class);
     instantiate(LocalTime.class);
-    instantiate(ZonedDateTime.class);
-    instantiate(ZoneOffset.class);
 
     // java.util
     instantiate(ArrayList.class);
     instantiate(HashMap.class);
-    instantiate(LinkedList.class);
+    instantiate(Locale.class);
+    Console.println();
+  }
 
-    // new URL("a");
+  private static void demoInstantiateAndInvokeByReflection() {
+    // instantiate by reflection
+    Button btn = Reflection.instantiate(Button.class); // Button btn = new Button();
 
+    // invoke by reflection
+    Reflection.invoke(btn, "setLabel", "OK"); // btn.setLabel("OK");
+    String label = (String) Reflection.invoke(btn, "getLabel");
+
+    // set, get by reflection
+    Reflection.set(btn, "enabled", false);
+    Reflection.set(btn, "background", WHITE);
+    Reflection.set(btn, "location", new Object[] {15, 20});
+    boolean enabled = Reflection.is(btn, "enabled");
+    Color background = (Color) Reflection.get(btn, "background");
+    int x = (Integer) Reflection.get(btn, "x");
+    int y = (Integer) Reflection.get(btn, "y");
+
+    // print results
+    Console.println("label = {0}", label);
+    Console.println("enabled = {0}", enabled);
+    Console.println("background = {0}", background);
+    Console.println("location = {0}, {1}", x, y);
+    Console.println("btn = {0}", btn);
+    Console.println();
+  }
+
+  private static void demoStaticInvoke() {
+    long rounded = (Long) Reflection.invokeStatic(Math.class, "round", Math.PI);
+    Console.println("round(3.1416) = {0}", rounded);
   }
 
   private static void instantiate(Class claz) {
@@ -74,29 +74,6 @@ public class ReflectionDemo {
     String value =
         (instance instanceof CharSequence) ? "\"" + instance + "\"" : instance.toString();
     Console.println(pattern, claz, value);
-  }
-
-  private static void invoke() {
-    try {
-      Button btn = new Button("Ok");
-      btn.setLocation(15, 20);
-
-      Reflection.set(btn, "y", 25);
-      Reflection.invoke(btn, "setBackground", WHITE);
-      Reflection.invoke(btn, "setEnabled", false);
-
-      System.out.println("label = " + Reflection.get(btn, "label"));
-      System.out.println("x = " + Reflection.get(btn, "x"));
-      System.out.println("y = " + Reflection.get(btn, "y"));
-      System.out.println("background = " + Reflection.get(btn, "background"));
-      System.out.println("enabled = " + Reflection.get(btn, "enabled"));
-      System.out.println("name = " + Reflection.invoke(btn, "getName"));
-
-      System.out.println("round(3.1416) = " + Reflection.invokeStatic(Math.class, "round", 3.1416));
-
-    } catch (NoSuchFieldException e) {
-      e.printStackTrace();
-    }
   }
 
   private static class NamedColor extends Color {

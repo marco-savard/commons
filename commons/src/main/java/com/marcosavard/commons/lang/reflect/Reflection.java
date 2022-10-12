@@ -1,7 +1,10 @@
 package com.marcosavard.commons.lang.reflect;
 
+import com.marcosavard.commons.lang.StringUtil;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -18,8 +21,18 @@ import static java.util.Comparator.comparing;
 
 public class Reflection {
 
+  private Reflection() {}
+
   public static <T> T instantiate(Class<T> claz) {
-    T instance = instantiateByDefaultConstructor(claz);
+    T instance = null;
+
+    if (claz.isArray()) {
+      instance = instantiateArray(claz);
+    }
+
+    if (instance == null) {
+      instance = instantiateByDefaultConstructor(claz);
+    }
 
     if ((instance == null) && Number.class.isAssignableFrom(claz)) {
       instance = instantiateByStringParameter(claz, "0");
@@ -45,6 +58,11 @@ public class Reflection {
       instance = instantiateByFactoryMethod(claz);
     }
 
+    return instance;
+  }
+
+  private static <T> T instantiateArray(Class<T> claz) {
+    T instance = (T) Array.newInstance(claz.getComponentType(), 0);
     return instance;
   }
 
@@ -123,14 +141,15 @@ public class Reflection {
   private static <T> T instantiateByFactoryMethod(Class<T> claz, Method method) {
     T instance = null;
     Class type = method.getReturnType();
-    Object args = getMethodArguments(method);
+    Object[] args = getMethodArguments(method);
 
     if (claz.isAssignableFrom(type)) {
-      try {
-        instance = (args == null) ? (T) method.invoke(null) : (T) method.invoke(null, args);
-      } catch (IllegalAccessException | InvocationTargetException e) {
-        instance = null;
-      }
+      // try {
+      instance = (T) invokeStatic(claz, method, args);
+      // instance = (args == null) ? (T) method.invoke(null) : (T) method.invoke(null, args);
+      // } catch (IllegalAccessException | InvocationTargetException e) {
+      //   instance = null;
+      //   }
     } else if (type.isArray() && claz.isAssignableFrom(type.getComponentType())) {
       try {
         T[] instances =
@@ -144,7 +163,7 @@ public class Reflection {
     return instance;
   }
 
-  private static Object getMethodArguments(Method method) {
+  private static Object[] getMethodArguments(Method method) {
     Object[] arguments = new Object[method.getParameterCount()];
 
     for (int i = 0; i < method.getParameterCount(); i++) {
@@ -154,7 +173,7 @@ public class Reflection {
 
     Object result =
         (arguments.length > 1) ? arguments : (arguments.length == 1) ? arguments[0] : null;
-    return result;
+    return arguments;
   }
 
   private static <T> T instantiateByMinValue(Class<T> claz) {
@@ -245,38 +264,21 @@ public class Reflection {
     return constructor;
   }
 
-  public static Object get(Object instance, String fieldName) throws NoSuchFieldException {
-    Field field = getDeclaredField(instance.getClass(), fieldName);
-    Object value;
-
-    try {
-      if (field == null) {
-        throw new NoSuchFieldException(fieldName);
-      }
-
-      field.setAccessible(true);
-      value = field.get(instance);
-    } catch (IllegalAccessException e) {
-      value = null;
-    }
-
+  public static boolean is(Object instance, String fieldName) {
+    String method = "is" + StringUtil.capitalize(fieldName);
+    boolean value = (Boolean) invoke(instance, method);
     return value;
   }
 
-  public static void set(Object instance, String fieldName, Object value)
-      throws NoSuchFieldException {
-    Field field = getDeclaredField(instance.getClass(), fieldName);
+  public static Object get(Object instance, String fieldName) {
+    String method = "get" + StringUtil.capitalize(fieldName);
+    Object value = invoke(instance, method);
+    return value;
+  }
 
-    try {
-      if (field == null) {
-        throw new NoSuchFieldException(fieldName);
-      }
-
-      field.setAccessible(true);
-      field.set(instance, value);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+  public static void set(Object instance, String fieldName, Object... values) {
+    String method = "set" + StringUtil.capitalize(fieldName);
+    invoke(instance, method, values);
   }
 
   public static Object invoke(Object instance, String methodName, Object... args) {
@@ -295,17 +297,30 @@ public class Reflection {
     return value;
   }
 
-  public static Object invokeStatic(Class claz, String methodName, Object... args) {
+  public static Object invokeStatic(Class claz, String methodName, Object arg) {
+    Object[] args = new Object[] {arg};
+    return invokeStatic(claz, methodName, args);
+  }
+
+  public static Object invokeStatic(Class claz, String methodName, Object[] args) {
     List<Method> namedMethods = findNamedMethods(claz, methodName, args);
     Object value = null;
 
     if (namedMethods.size() >= 1) {
       Method namedMethod = namedMethods.get(0);
-      try {
-        value = namedMethod.invoke(null, args);
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new RuntimeException(e);
-      }
+      value = invokeStatic(claz, namedMethod, args);
+    }
+
+    return value;
+  }
+
+  private static Object invokeStatic(Class claz, Method method, Object[] args) {
+    Object value = null;
+
+    try {
+      value = method.invoke(null, args);
+    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      value = null;
     }
 
     return value;
@@ -315,7 +330,7 @@ public class Reflection {
   // private
   //
   private static List<Method> findNamedMethods(
-      Class<? extends Object> clazz, String methodName, Object... args) {
+      Class<? extends Object> clazz, String methodName, Object[] args) {
     List<Method> namedMethods = new ArrayList<>();
     Method[] allMethods = clazz.getDeclaredMethods();
 
@@ -395,7 +410,7 @@ public class Reflection {
     Field field = null;
 
     try {
-      field = clazz.getDeclaredField(fieldName);
+      field = clazz.getField(fieldName);
     } catch (NoSuchFieldException e) {
       Class superClass = clazz.getSuperclass();
       boolean isRoot = Object.class.equals(superClass);
