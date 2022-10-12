@@ -56,11 +56,12 @@ public class StringUtil {
     return capitalize(original, Locale.getDefault());
   }
 
-  public static String capitalize(CharSequence original, Locale locale) {
-    original = NullSafe.of(original);
-    boolean empty = (original.length() == 0);
-    String firstLetter = toUpperCase(original.subSequence(0, 1), locale);
-    return empty ? original.toString() : firstLetter + subSequence(original, 1);
+  public static String capitalize(CharSequence str, Locale locale) {
+    str = NullSafe.of(str);
+    int len = str.length();
+    String firstLetter = (len == 0) ? "" : toUpperCase(str.subSequence(0, 1), locale);
+    String remaining = (len <= 1) ? "" : subSequence(str, 1).toString();
+    return firstLetter + remaining;
   }
 
   public static String capitalizeWords(CharSequence original) {
@@ -490,7 +491,7 @@ public class StringUtil {
     str = NullSafe.of(str);
     int len = str.length();
     String firstLetter = (len == 0) ? "" : Character.toString(Character.toLowerCase(str.charAt(0)));
-    String remaining = (len <= 1) ? "" : str.subSequence(1, str.length() - 1).toString();
+    String remaining = (len <= 1) ? "" : str.subSequence(1, str.length()).toString();
     return firstLetter + remaining;
   }
 

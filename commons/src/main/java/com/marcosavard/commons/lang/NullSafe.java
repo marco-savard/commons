@@ -55,7 +55,7 @@ public class NullSafe {
   }
 
   public static CharSequence of(CharSequence value) {
-    return (value != null) ? value : String.valueOf((String) null);
+    return (value == null) ? "" : value;
   }
 
   public static Number of(Number value) {
