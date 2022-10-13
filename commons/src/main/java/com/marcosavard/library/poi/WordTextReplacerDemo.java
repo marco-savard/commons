@@ -26,6 +26,10 @@ public class WordTextReplacerDemo {
     String filename = "Mise à jour du questionnaire";
     File dest = new File(wordFolder, MessageFormat.format("{0}.v2.docx", filename));
 
+    if (! dest.getParentFile().exists()) {
+      dest.getParentFile().mkdirs();
+    }
+
     if (dest.exists()) {
       Files.delete(dest.toPath());
     }
