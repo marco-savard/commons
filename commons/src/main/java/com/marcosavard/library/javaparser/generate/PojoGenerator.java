@@ -4,11 +4,9 @@ import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,19 +72,30 @@ public class PojoGenerator {
     }
 
     private void generateClass(FormatWriter w, Class<?> claz) {
+        String modifiers = getModifiers(claz);
         w.println("package {0};", claz.getPackageName());
         w.println();
-
-        w.println("public class {0} '{'", claz.getSimpleName());
+        w.println("{0} class {1} '{'", modifiers, claz.getSimpleName());
         w.indent();
-        generateFields(w, claz);
+        generateConstants(w, claz);
+        generateVariables(w, claz);
         generateMethods(w, claz);
         w.unindent();
         w.println("}");
     }
 
-    private void generateFields(FormatWriter w, Class<?> claz) {
-        Field[] fields = claz.getDeclaredFields();
+    private void generateConstants(FormatWriter w, Class<?> claz) {
+        List<Field> fields = Arrays.asList(claz.getDeclaredFields()).stream().filter(f -> isConstant(f)).toList();
+
+        for (Field field : fields) {
+            generateField(w, field);
+        }
+
+        w.println();
+    }
+
+    private void generateVariables(FormatWriter w, Class<?> claz) {
+        List<Field> fields = Arrays.asList(claz.getDeclaredFields()).stream().filter(f -> ! isConstant(f)).toList();
         
         for (Field field : fields) {
             generateField(w, field);
@@ -97,7 +106,7 @@ public class PojoGenerator {
 
     private void generateField(FormatWriter w, Field field) {
         String modifiers = getModifiers(field);
-        String type = field.getType().getSimpleName();
+        String type = getType(field);
         String defaultValue = getDefaultValue(field);
 
         if (defaultValue == null) {
@@ -105,6 +114,11 @@ public class PojoGenerator {
         } else {
             w.println("{0} {1} {2} = {3};", modifiers, type, field.getName(), defaultValue);
         }
+    }
+
+    private String getType(Field field) {
+        Class type = field.getType();
+        return type.getSimpleName();
     }
 
     private void generateMethods(FormatWriter w, Class<?> claz) {
@@ -142,6 +156,29 @@ public class PojoGenerator {
         w.println("  this.{0} = value;", field.getName());
         w.println("}");
         w.println();
+    }
+
+    private boolean isConstant(Field field) {
+        boolean isStatic = Modifier.isStatic(field.getModifiers());
+        boolean isFinal = Modifier.isFinal(field.getModifiers());
+        return isStatic && isFinal;
+    }
+
+
+    private String getModifiers(Class claz) {
+        List<String> modifiers = new ArrayList<>();
+        boolean isPublic = Modifier.isPublic(claz.getModifiers());
+        boolean isAbstract = Modifier.isAbstract(claz.getModifiers());
+
+        if (isPublic) {
+            modifiers.add("public");
+        }
+
+        if (isAbstract) {
+            modifiers.add("abstract");
+        }
+
+        return String.join(" ", modifiers);
     }
 
     private String getModifiers(Field field) {

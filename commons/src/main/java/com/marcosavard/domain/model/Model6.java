@@ -10,7 +10,7 @@ public class Model6 {
     CA, US
   };
 
-  public class Person {
+  public static class Person {
     public static final String CONST = "99";
     public String firstName;
     public String lastName;
