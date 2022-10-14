@@ -9,7 +9,7 @@ public class Model4 {
     CA, US
   };
 
-  public class Person {
+  public static class Person {
     public static final String CONST = "99";
     public String firstName;
     public String lastName;
@@ -18,7 +18,7 @@ public class Model4 {
   }
 
   @RequiredArgsConstructor
-  public @Immutable class Address {
+  public static @Immutable class Address {
     public String civicNumber;
     public String streetName;
     public String noAppartment;

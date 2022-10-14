@@ -15,8 +15,12 @@ public class Model8 {
     CA, US
   };
 
+  public enum PhoneQualifier {
+    HOME, CELL, WORK, FAX
+  };
+
   @Description("A person that has a name and a birth date")
-  public class Person {
+  public static class Person {
     public static final String CONST = "99";
     public String firstName;
     public String lastName;
@@ -28,7 +32,7 @@ public class Model8 {
 
   @Description("An international address")
   @RequiredArgsConstructor
-  public abstract @Immutable class Address {
+  public static abstract @Immutable class Address {
     public String civicNumber;
     public String streetName;
     public String noAppartment;
@@ -37,14 +41,14 @@ public class Model8 {
 
   @Description("A Canadian address")
   @RequiredArgsConstructor
-  public @Immutable class CanadianAddress extends Address {
+  public static @Immutable class CanadianAddress extends Address {
     public String provinceCode;
     public String postalCode;
   }
 
   @Description("A US address")
   @RequiredArgsConstructor
-  public @Immutable class USAddress extends Address {
+  public static @Immutable class USAddress extends Address {
     public String stateCode;
     @Description("two-letter ZIP code")
     public String zipCode;
@@ -52,7 +56,7 @@ public class Model8 {
 
   @Description("A Company")
   @RequiredArgsConstructor
-  public class Company {
+  public static class Company {
     public @Required String name;
     public @Required Address headquarter;
     public List<Phone> phoneNumbers;
@@ -60,21 +64,18 @@ public class Model8 {
     public @Containment List<Branch> divisions;
   }
 
-  public class Branch {
+  public static class Branch {
     public Address location;
     public String name;
   }
 
   @RequiredArgsConstructor
   @AllArgsConstructor
-  public @Immutable class Phone {
+  public static @Immutable class Phone {
     public @Required String number;
     public @Readonly String extension;
     public PhoneQualifier qualifier;
     public int countryCode;
   }
 
-  public enum PhoneQualifier {
-    HOME, CELL, WORK, FAX
-  };
 }

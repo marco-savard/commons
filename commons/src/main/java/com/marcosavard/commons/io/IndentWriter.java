@@ -10,7 +10,7 @@ import java.io.Writer;
  *
  */
 public class IndentWriter extends PrintWriter {
-  private static final int DEFAULT_INDENTATION = 2;
+  protected static final int DEFAULT_INDENTATION = 2;
 
   private int level = 0;
   private int indentation;
@@ -19,7 +19,7 @@ public class IndentWriter extends PrintWriter {
   /**
    * Create an IndentWriter.
    * 
-   * @param pw the parent writer
+   * @param w the parent writer
    * @param indentation number of spaces of indentation (default value of 2 spaces)
    */
   public IndentWriter(Writer w, int indentation) {

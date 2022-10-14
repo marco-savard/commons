@@ -19,7 +19,7 @@ public class Model6 {
   }
 
   @RequiredArgsConstructor
-  public abstract @Immutable class Address {
+  public static abstract @Immutable class Address {
     public String civicNumber;
     public String streetName;
     public String noAppartment;
@@ -27,19 +27,19 @@ public class Model6 {
   }
 
   @RequiredArgsConstructor
-  public @Immutable class CanadianAddress extends Address {
+  public static @Immutable class CanadianAddress extends Address {
     public String provinceCode;
     public String postalCode;
   }
 
   @RequiredArgsConstructor
-  public @Immutable class USAddress extends Address {
+  public static @Immutable class USAddress extends Address {
     public String stateCode;
     public String zipCode;
   }
 
   @RequiredArgsConstructor
-  public class Company {
+  public static class Company {
     public @Required String name;
     public @Required Address headquarter;
   }

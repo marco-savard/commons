@@ -10,7 +10,7 @@ public class Model3 {
     CA, US
   };
 
-  public class Person {
+  public static class Person {
     public static final String CONST = "99";
     public String firstName;
     public String lastName;
@@ -20,7 +20,7 @@ public class Model3 {
 
   @RequiredArgsConstructor
   @AllArgsConstructor
-  public class Address {
+  public static class Address {
     public @Required String civicNumber;
     public @Required String streetName;
     public String noAppartment;
