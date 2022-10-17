@@ -19,7 +19,7 @@ public class Model8 {
     HOME, CELL, WORK, FAX
   };
 
-  @Description("A person that has a name and a birth date")
+  @Description("A person that has a name and a birthdate")
   public static class Person {
     public static final String CONST = "99";
     public String firstName;
@@ -50,6 +50,7 @@ public class Model8 {
   @RequiredArgsConstructor
   public static @Immutable class USAddress extends Address {
     public String stateCode;
+
     @Description("two-letter ZIP code")
     public String zipCode;
   }
@@ -72,10 +73,10 @@ public class Model8 {
   @RequiredArgsConstructor
   @AllArgsConstructor
   public static @Immutable class Phone {
+    public @Readonly int countryCode;
     public @Required String number;
     public @Readonly String extension;
     public PhoneQualifier qualifier;
-    public int countryCode;
   }
 
 }
