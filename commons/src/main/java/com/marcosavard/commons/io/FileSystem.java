@@ -130,16 +130,17 @@ public class FileSystem {
     return homeFolder;
   }
 
+
+  public static File getClassFolder() {
+    return getClassFolder(FileSystem.class);
+  }
+
   /**
    * Return the location of this class.
    *
    * @param claz (default value FileSystem.class)
    * @return the location of this class.
    */
-  public static File getClassFolder() {
-    return getClassFolder(FileSystem.class);
-  }
-
   public static File getClassFolder(Class claz) {
     String className = claz.getSimpleName() + ".class";
     URL url = FileSystem.class.getResource(className);

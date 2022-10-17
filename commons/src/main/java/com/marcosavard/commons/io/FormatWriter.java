@@ -13,6 +13,10 @@ public class FormatWriter extends IndentWriter {
         this(w, DEFAULT_INDENTATION);
     }
 
+    public void print(String pattern, Object... items) {
+        super.print(MessageFormat.format(pattern, items));
+    }
+
     public void println(String pattern, Object... items) {
         super.println(MessageFormat.format(pattern, items));
     }

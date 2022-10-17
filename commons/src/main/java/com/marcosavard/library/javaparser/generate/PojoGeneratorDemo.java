@@ -15,10 +15,12 @@ public class PojoGeneratorDemo {
         try {
             File folder = FileSystem.getUserDocumentFolder();
             PojoGenerator generator = new PojoGenerator(folder);
-            Console.println("File {0} generated", generator.generate(Model8.Country.class));
-            Console.println("File {0} generated", generator.generate(Model8.PhoneQualifier.class));
-            Console.println("File {0} generated", generator.generate(Model8.Person.class));
-            Console.println("File {0} generated", generator.generate(Model8.Address.class));
+            Class[] classes = Model8.class.getClasses();
+
+            for (Class claz : classes) {
+                Console.println("File {0} generated", generator.generate(claz));
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
