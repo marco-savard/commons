@@ -21,7 +21,7 @@ public class Model4 {
   public static @Immutable class Address {
     public String civicNumber;
     public String streetName;
-    public String noAppartment;
+    public String noApartment;
     public String provinceCode;
     public String postalCode;
     public Country country;

@@ -21,7 +21,7 @@ public class Model5 {
   public static abstract @Immutable class Address {
     public String civicNumber;
     public String streetName;
-    public String noAppartment;
+    public String noApartment;
     public Country country;
   }
 

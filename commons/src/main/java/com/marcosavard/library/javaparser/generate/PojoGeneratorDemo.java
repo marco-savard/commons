@@ -12,8 +12,10 @@ import java.io.IOException;
 public class PojoGeneratorDemo {
 
     public static void main(String[] args) {
+        File folder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
+
         try {
-            File folder = FileSystem.getUserDocumentFolder();
+            //File folder = FileSystem.getUserDocumentFolder();
             PojoGenerator generator = new PojoGenerator(folder);
             Class[] classes = Model8.class.getClasses();
 

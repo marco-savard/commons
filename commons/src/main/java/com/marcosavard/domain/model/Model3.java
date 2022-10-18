@@ -23,7 +23,7 @@ public class Model3 {
   public static class Address {
     public @Required String civicNumber;
     public @Required String streetName;
-    public String noAppartment;
+    public String noApartment;
     public @Required String provinceCode;
     public @Required String postalCode;
     public @Required Country country;
