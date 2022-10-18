@@ -20,7 +20,8 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
-  public enum Alignment {
+
+    public enum Alignment {
     LEFT,
     RIGHT
   };
@@ -437,6 +438,26 @@ public class StringUtil {
   public static CharSequence subSequence(CharSequence original, int beginIdx) {
     original = NullSafe.of(original);
     return original.subSequence(beginIdx, original.length());
+  }
+
+  public static String camelToUnderscore(String camel) {
+    String underscore = String.valueOf(Character.toLowerCase(camel.charAt(0)));
+
+    for (int i = 1; i < camel.length(); i++) {
+      char ch = camel.charAt(i);
+      boolean lowercase = Character.isLowerCase(ch);
+      underscore += lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
+    }
+
+    return underscore.toUpperCase();
+  }
+
+  public static String underscoreToCamel(String underscore) {
+    String camel = underscore.toLowerCase();
+    camel = camel.replace('_', ' ');
+    camel = capitalizeWords(camel);
+    camel = camel.replace(' ', '_');
+    return uncapitalize(camel);
   }
 
   /**

@@ -100,6 +100,7 @@ public class PojoGenerator {
         w.indent();
         generateConstants(w, claz);
         generateVariables(w, claz);
+        generateMetaFields(w, claz);
         generateConstructor(w, claz);
         generateMethods(w, claz);
         w.unindent();
@@ -112,6 +113,8 @@ public class PojoGenerator {
         Comparator<Class> comparator = new ImportComparator();
         List<Class> importees = new SortedList<>(comparator);
         importees.add(Objects.class);
+        importees.add(Field.class);
+        importees.add(NoSuchFieldException.class);
 
         for (Field field : fields) {
             Class type = field.getType();
@@ -191,6 +194,34 @@ public class PojoGenerator {
         }
     }
 
+    private void generateMetaFields(FormatWriter w, Class<?> claz) {
+        List<Field> fields = getVariables(claz);
+        String className = claz.getSimpleName();
+
+        for (Field field : fields) {
+            String metaField = StringUtil.camelToUnderscore(field.getName());
+            w.println("public static final Field {0};", metaField);
+        }
+
+        if (! fields.isEmpty()) {
+            w.println();
+            w.println("static {");
+            w.println("  try {");
+
+            for (Field field : fields) {
+                String name = field.getName();
+                String metaField = StringUtil.camelToUnderscore(name);
+                w.println("    {0} = {1}.class.getDeclaredField(\"{2}\");", metaField, className, name);
+            }
+
+            w.println("  } catch (NoSuchFieldException e) {");
+            w.println("    throw new RuntimeException(e);");
+            w.println("  }");
+            w.println("}");
+            w.println();
+        }
+    }
+
     private void generateConstructor(FormatWriter w, Class<?> claz) {
         List<Field> readOnlyFields = getReadOnlyFields(claz);
         List<Field> superClassReadOnlyFields = getSuperClassReadOnlyFields(claz);
@@ -263,6 +294,7 @@ public class PojoGenerator {
 
     private void generateMethods(FormatWriter w, Class<?> claz) {
         generateAccessors(w, claz);
+        generateMetaAccessors(w, claz);
         generateIdentityMethods(w, claz);
         generateToString(w, claz);
     }
@@ -363,6 +395,44 @@ public class PojoGenerator {
         w.indent();
         w.println("this.{0}.remove({1});", field.getName(), parameter);
         w.unindent();
+        w.println("}");
+        w.println();
+    }
+
+    private void generateMetaAccessors(FormatWriter w, Class<?> claz) {
+        List<Field> fields = getVariables(claz);
+
+        w.println("public static Field[] getFields() {");
+        w.print("  return new Field[] {");
+        for (Field field : fields) {
+            w.print(StringUtil.camelToUnderscore(field.getName()) + ", ");
+        }
+        w.print("};");
+        w.println();
+        w.println("}");
+        w.println();
+        generateMetaGetter(w);
+        generateMetaSetter(w);
+    }
+
+    private void generateMetaGetter(FormatWriter w) {
+        w.println("/**");
+        w.println(" * @param field");
+        w.println(" * @return the value for this field");
+        w.println(" */");
+        w.println("public Object get(Field field) throws IllegalAccessException {");
+        w.println("  return field.get(this);");
+        w.println("}");
+        w.println();
+    }
+
+    private void generateMetaSetter(FormatWriter w) {
+        w.println("/**");
+        w.println(" * @param field");
+        w.println(" * @param value to be assigned");
+        w.println(" */");
+        w.println("public void set(Field field, Object value) throws IllegalAccessException {");
+        w.println("  field.set(this, value);");
         w.println("}");
         w.println();
     }
