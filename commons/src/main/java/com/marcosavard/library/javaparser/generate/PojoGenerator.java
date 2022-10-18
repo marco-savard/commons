@@ -13,7 +13,6 @@ import java.text.MessageFormat;
 import java.util.*;
 
 public class PojoGenerator {
-    //private static final Comparator<Field> FIELD_COMPARATOR = new FieldComparator();
 
     private final File destinationFolder;
 
@@ -178,45 +177,36 @@ public class PojoGenerator {
     }
 
     private void generateConstructor(FormatWriter w, Class<?> claz) {
-        List<Field> fields = getAllReadOnlyFields(claz);
+        List<Field> readOnlyFields = getReadOnlyFields(claz);
+        List<Field> superClassReadOnlyFields = getSuperClassReadOnlyFields(claz);
+        List<Field> allReadOnlyFields = new ArrayList<>(superClassReadOnlyFields);
+        allReadOnlyFields.addAll(readOnlyFields);
 
-        if (! fields.isEmpty()) {
+        if (! allReadOnlyFields.isEmpty()) {
             String visibility = isAbstract(claz) ? "protected" : "public";
             String name = claz.getSimpleName();
-            List<String> parameters = getParameters(fields);
+            List<String> parameters = getFieldDeclarations(allReadOnlyFields);
 
             w.print("{0} {1}(", visibility, name);
             w.print(String.join(", ", parameters));
             w.println(") {");
             w.indent();
-            generateConstructorBody(w, claz);
+            generateConstructorBody(w, superClassReadOnlyFields, readOnlyFields);
             w.unindent();
             w.println("}");
             w.println();
         }
     }
 
-    private void generateConstructorBody(FormatWriter w,Class<?> claz) {
-        List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
-        List<Field> fields = getReadOnlyFields(claz);
-        List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
-        superclassFields.removeAll(fields);
-        List<String> fieldNames = getFieldNames(superclassFields);
-        w.println("super(" + String.join(", ", fieldNames) + ");");
+    private void generateConstructorBody(FormatWriter w, List<Field> superClassReadOnlyFields, List<Field> readOnlyFields) {
+        if (! superClassReadOnlyFields.isEmpty()) {
+            List<String> fieldNames = getFieldNames(superClassReadOnlyFields);
+            w.println("super(" + String.join(", ", fieldNames) + ");");
+        }
 
-        for (Field field : fields) {
+        for (Field field : readOnlyFields) {
             w.println("this.{0} = {0};", field.getName());
         }
-    }
-
-    private List<String> getFieldNames(List<Field> fields) {
-        List<String> fieldNames = new ArrayList<>();
-
-        for (Field field : fields) {
-            fieldNames.add(field.getName());
-        }
-
-        return fieldNames;
     }
 
     private void generateMethods(FormatWriter w, Class<?> claz) {
@@ -346,15 +336,20 @@ public class PojoGenerator {
     }
 
     private void generateHashCodeBody(FormatWriter w, Class<?> claz) {
-        List<String> fieldList = getGetterList(claz);
-        String fields = String.join(", ", fieldList);
+        List<String> hashList = getGetterList(claz);
+
+        if (hasSuperClass(claz)) {
+            hashList.add("super.hashCode()");
+        }
+
+        String fields = String.join(", ", hashList);
         w.println(MessageFormat.format("int hashCode = Objects.hash({0});", fields));
         w.println("return hashCode;");
     }
 
     private void generateIsEqualTo(FormatWriter w, Class<?> claz) {
         String name = claz.getSimpleName();
-        w.println("private boolean isEqualTo({0} that) '{'", name);
+        w.println("protected boolean isEqualTo({0} that) '{'", name);
         w.indent();
         generateIsEqualToBody(w, claz);
         w.unindent();
@@ -364,7 +359,7 @@ public class PojoGenerator {
 
     private void generateIsEqualToBody(FormatWriter w, Class<?> claz) {
         List<Field> fields = getVariables(claz);
-        w.println("boolean equal = false;");
+        w.println("boolean equal = true;");
 
         for (Field field : fields) {
             String getter = getGetterName(field);
@@ -375,19 +370,42 @@ public class PojoGenerator {
             }
         }
 
+        if (hasSuperClass(claz)) {
+            w.println("equal = equal && super.isEqualTo(that);");
+        }
+
         w.println("return equal;");
     }
 
-    private List<String> getParameters(List<Field> fields) {
-        List<String> parameters = new ArrayList<>();
+    private List<String> getFieldNames(List<Field> fields) {
+        List<String> fieldNames = new ArrayList<>();
+
+        for (Field field : fields) {
+            fieldNames.add(field.getName());
+        }
+
+        return fieldNames;
+    }
+
+    private List<Field> getSuperClassReadOnlyFields(Class claz) {
+        List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
+        List<Field> fields = getReadOnlyFields(claz);
+        List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
+        superclassFields.removeAll(fields);
+        return superclassFields;
+    }
+
+    private List<String> getFieldDeclarations(List<Field> fields) {
+        List<String> declarations = new ArrayList<>();
 
         for (Field field : fields) {
             String typeName = field.getType().getSimpleName();
             String fieldname = field.getName();
-            parameters.add(typeName + " " + fieldname);
+            declarations.add(typeName + " " + fieldname);
         }
 
-        return parameters;    }
+        return declarations;
+    }
 
     private String getDescription(Field field) {
         String name = field.getName();
@@ -398,14 +416,18 @@ public class PojoGenerator {
     private List<Field> getConstants(Class<?> claz) {
         return Arrays.asList(claz.getDeclaredFields()).stream()
                 .filter(f -> isConstant(f))
-                //.sorted(FIELD_COMPARATOR)
+                .toList();
+    }
+
+    private List<Field> getAllVariables(Class<?> claz) {
+        return Arrays.asList(claz.getFields()).stream()
+                .filter(f -> ! isConstant(f))
                 .toList();
     }
 
     private List<Field> getVariables(Class<?> claz) {
         return Arrays.asList(claz.getDeclaredFields()).stream()
                 .filter(f -> ! isConstant(f))
-              //  .sorted(FIELD_COMPARATOR)
                 .toList();
     }
 
@@ -413,7 +435,6 @@ public class PojoGenerator {
         boolean immutable = isImmutable(claz);
         return Arrays.asList(claz.getFields()).stream()
                 .filter(f -> immutable || isReadOnly(f))
-             //   .sorted(FIELD_COMPARATOR)
                 .toList();
     }
 
@@ -421,7 +442,6 @@ public class PojoGenerator {
         boolean immutable = isImmutable(claz);
         return Arrays.asList(claz.getDeclaredFields()).stream()
                 .filter(f -> immutable || isReadOnly(f))
-          //      .sorted(FIELD_COMPARATOR)
                 .toList();
     }
 
@@ -586,6 +606,11 @@ public class PojoGenerator {
         }
 
         return initialValue;
+    }
+
+    private boolean hasSuperClass(Class<?> claz) {
+        Class superclass = claz.getSuperclass();
+        return (superclass != null) && (! java.lang.Object.class.equals(claz));
     }
 
     private boolean isAbstract(Class<?> claz) {
