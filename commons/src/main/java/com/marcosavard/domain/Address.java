@@ -1,5 +1,7 @@
 package com.marcosavard.domain;
 
+import java.lang.NoSuchFieldException;
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -8,155 +10,125 @@ import java.util.Objects;
 public abstract class Address {
   private final String civicNumber;
   private final String streetName;
-  private final String noAppartment;
+  private final String noApartment;
   private final Country country;
-
-  /**
-   * @param civicNumber
-   * @param streetName
-   * @param noAppartment
-   * @param country
-   */
-  protected Address(String civicNumber, String streetName, String noAppartment, Country country) {
-    this.civicNumber = civicNumber;
-    this.streetName = streetName;
-    this.noAppartment = noAppartment;
-    this.country = country;
-
-    if (civicNumber == null) {
-      throw new NullPointerException("Parameter 'civicNumber' is required");
-    }
-
-    if (streetName == null) {
-      throw new NullPointerException("Parameter 'streetName' is required");
-    }
-
-    if (noAppartment == null) {
-      throw new NullPointerException("Parameter 'noAppartment' is required");
-    }
-
-    if (country == null) {
-      throw new NullPointerException("Parameter 'country' is required");
+  
+  public static final Field CIVIC_NUMBER;
+  public static final Field STREET_NAME;
+  public static final Field NO_APARTMENT;
+  public static final Field COUNTRY;
+  
+  static {
+    try {
+      CIVIC_NUMBER = Address.class.getDeclaredField("civicNumber");
+      STREET_NAME = Address.class.getDeclaredField("streetName");
+      NO_APARTMENT = Address.class.getDeclaredField("noApartment");
+      COUNTRY = Address.class.getDeclaredField("country");
+    } catch (NoSuchFieldException e) {
+      throw new RuntimeException(e);
     }
   }
-
+  
   /**
-   * @return civicNumber
+   * @param country Country
+   * @param streetName String
+   * @param noApartment String
+   * @param civicNumber String
+   */
+  protected Address(String civicNumber, String streetName, String noApartment, Country country) {
+    this.country = country;
+    this.streetName = streetName;
+    this.noApartment = noApartment;
+    this.civicNumber = civicNumber;
+    
+  }
+  
+  /**
+   * @return civicNumber String
    */
   public String getCivicNumber() {
     return civicNumber;
   }
-
+  
   /**
-   * @return streetName
+   * @return streetName String
    */
   public String getStreetName() {
     return streetName;
   }
-
+  
   /**
-   * @return noAppartment
+   * @return noApartment String
    */
-  public String getNoAppartment() {
-    return noAppartment;
+  public String getNoApartment() {
+    return noApartment;
   }
-
+  
   /**
-   * @return country
+   * @return country Country
    */
   public Country getCountry() {
     return country;
   }
-
+  
+  
+  public static Field[] getFields() {
+    return new Field[] {CIVIC_NUMBER, STREET_NAME, NO_APARTMENT, COUNTRY, };
+  }
+  
+  /**
+   * @param field
+   * @return the value for this field
+   */
+  public Object get(Field field) throws IllegalAccessException {
+    return field.get(this);
+  }
+  
+  /**
+   * @param field
+   * @param value to be assigned
+   */
+  public void set(Field field, Object value) throws IllegalAccessException {
+    field.set(this, value);
+  }
+  
   @Override
   public boolean equals(Object other) {
     boolean equal = false;
-
+    
     if (other instanceof Address) {
       Address that = (Address)other;
-      equal = (hashCode() == that.hashCode()) ? isEqualTo(that) : false;
+      equal = (hashCode() == that.hashCode()) && isEqualTo(that);
     }
-
+    
     return equal;
+    
   }
-
+  
   @Override
   public int hashCode() {
-    int hashCode = Objects.hash(getCivicNumber(), getStreetName(), getNoAppartment(), getCountry());
-    return hashCode;
+    return Objects.hash(getCivicNumber(), getStreetName(), getNoApartment(), getCountry());
   }
-
+  
+  protected boolean isEqualTo(Address that) {
+    boolean equal = true;
+    equal = equal && getCivicNumber() == null ? that.getCivicNumber() == null : getCivicNumber().equals(that.getCivicNumber());
+    equal = equal && getStreetName() == null ? that.getStreetName() == null : getStreetName().equals(that.getStreetName());
+    equal = equal && getNoApartment() == null ? that.getNoApartment() == null : getNoApartment().equals(that.getNoApartment());
+    equal = equal && getCountry() == null ? that.getCountry() == null : getCountry().equals(that.getCountry());
+    return equal;
+  }
+  
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("civicNumber : " + getCivicNumberString() + ", ");
-    sb.append("streetName : " + getStreetNameString() + ", ");
-    sb.append("noAppartment : " + getNoAppartmentString() + ", ");
-    sb.append("country : " + getCountryString() + "");
+    sb.append("civicNumber = " + civicNumber + ", ");
+    sb.append("streetName = " + streetName + ", ");
+    sb.append("noApartment = " + noApartment + ", ");
+    sb.append("country = " + country + ", ");
     sb.append("}");
     return sb.toString();
   }
-
-  private boolean isEqualTo(Address thatAddress) {
-    boolean equal = true;
-    equal = equal && (getCivicNumber() == null ? thatAddress.getCivicNumber() == null : getCivicNumber().equals(thatAddress.getCivicNumber()));
-    equal = equal && (getStreetName() == null ? thatAddress.getStreetName() == null : getStreetName().equals(thatAddress.getStreetName()));
-    equal = equal && (getNoAppartment() == null ? thatAddress.getNoAppartment() == null : getNoAppartment().equals(thatAddress.getNoAppartment()));
-    equal = equal && (getCountry() == null ? thatAddress.getCountry() == null : getCountry().equals(thatAddress.getCountry()));
-    return equal;
-  }
-
-  private String getCivicNumberString() {
-    Object value = getCivicNumber();
-    String s;
-
-    if (value instanceof String) {
-      s = "\"" + value + "\"";
-    } else {
-      s = (value == null) ? null : value.toString();
-    }
-
-    return s;
-  }
-
-  private String getStreetNameString() {
-    Object value = getStreetName();
-    String s;
-
-    if (value instanceof String) {
-      s = "\"" + value + "\"";
-    } else {
-      s = (value == null) ? null : value.toString();
-    }
-
-    return s;
-  }
-
-  private String getNoAppartmentString() {
-    Object value = getNoAppartment();
-    String s;
-
-    if (value instanceof String) {
-      s = "\"" + value + "\"";
-    } else {
-      s = (value == null) ? null : value.toString();
-    }
-
-    return s;
-  }
-
-  private String getCountryString() {
-    Object value = getCountry();
-    String s;
-
-    if (value instanceof String) {
-      s = "\"" + value + "\"";
-    } else {
-      s = (value == null) ? null : value.toString();
-    }
-
-    return s;
-  }
-
+  
 }

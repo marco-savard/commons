@@ -1,5 +1,7 @@
 package com.marcosavard.domain;
 
+import java.lang.NoSuchFieldException;
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -8,118 +10,103 @@ import java.util.Objects;
 public class USAddress extends Address {
   private final String stateCode;
   private final String zipCode;
-
-  /**
-   * @param civicNumber
-   * @param streetName
-   * @param noAppartment
-   * @param country
-   * @param stateCode
-   * @param zipCode
-   */
-  public USAddress(String civicNumber, String streetName, String noAppartment, Country country, String stateCode, String zipCode) {
-    super(civicNumber, streetName, noAppartment, country);
-    this.stateCode = stateCode;
-    this.zipCode = zipCode;
-
-    if (civicNumber == null) {
-      throw new NullPointerException("Parameter 'civicNumber' is required");
-    }
-
-    if (streetName == null) {
-      throw new NullPointerException("Parameter 'streetName' is required");
-    }
-
-    if (noAppartment == null) {
-      throw new NullPointerException("Parameter 'noAppartment' is required");
-    }
-
-    if (country == null) {
-      throw new NullPointerException("Parameter 'country' is required");
-    }
-
-    if (stateCode == null) {
-      throw new NullPointerException("Parameter 'stateCode' is required");
-    }
-
-    if (zipCode == null) {
-      throw new NullPointerException("Parameter 'zipCode' is required");
+  
+  public static final Field STATE_CODE;
+  public static final Field ZIP_CODE;
+  
+  static {
+    try {
+      STATE_CODE = USAddress.class.getDeclaredField("stateCode");
+      ZIP_CODE = USAddress.class.getDeclaredField("zipCode");
+    } catch (NoSuchFieldException e) {
+      throw new RuntimeException(e);
     }
   }
-
+  
   /**
-   * @return stateCode
+   * @param country Country
+   * @param zipCode two-letter ZIP code
+   * @param streetName String
+   * @param noApartment String
+   * @param stateCode String
+   * @param civicNumber String
+   */
+  public USAddress(String civicNumber, String streetName, String noApartment, Country country, String stateCode, String zipCode) {
+    super(civicNumber, streetName, noApartment, country);
+    this.zipCode = zipCode;
+    this.stateCode = stateCode;
+    
+  }
+  
+  /**
+   * @return stateCode String
    */
   public String getStateCode() {
     return stateCode;
   }
-
+  
   /**
-   * @return two-letter ZIP code
+   * @return zipCode two-letter ZIP code
    */
   public String getZipCode() {
     return zipCode;
   }
-
+  
+  
+  public static Field[] getFields() {
+    return new Field[] {STATE_CODE, ZIP_CODE, };
+  }
+  
+  /**
+   * @param field
+   * @return the value for this field
+   */
+  public Object get(Field field) throws IllegalAccessException {
+    return field.get(this);
+  }
+  
+  /**
+   * @param field
+   * @param value to be assigned
+   */
+  public void set(Field field, Object value) throws IllegalAccessException {
+    field.set(this, value);
+  }
+  
   @Override
   public boolean equals(Object other) {
     boolean equal = false;
-
+    
     if (other instanceof USAddress) {
       USAddress that = (USAddress)other;
-      equal = (hashCode() == that.hashCode()) ? isEqualTo(that) : false;
+      equal = (hashCode() == that.hashCode()) && isEqualTo(that);
     }
-
+    
     return equal;
+    
   }
-
+  
   @Override
   public int hashCode() {
-    int hashCode = Objects.hash(getStateCode(), getZipCode());
-    return hashCode;
+    return Objects.hash(getStateCode(), getZipCode(), super.hashCode());
   }
-
+  
+  protected boolean isEqualTo(USAddress that) {
+    boolean equal = true;
+    equal = equal && getStateCode() == null ? that.getStateCode() == null : getStateCode().equals(that.getStateCode());
+    equal = equal && getZipCode() == null ? that.getZipCode() == null : getZipCode().equals(that.getZipCode());
+    equal = equal && super.isEqualTo(that);
+    return equal;
+  }
+  
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("stateCode : " + getStateCodeString() + ", ");
-    sb.append("zipCode : " + getZipCodeString() + "");
+    sb.append("stateCode = " + stateCode + ", ");
+    sb.append("zipCode = " + zipCode + ", ");
     sb.append("}");
     return sb.toString();
   }
-
-  private boolean isEqualTo(USAddress thatUSAddress) {
-    boolean equal = true;
-    equal = equal && (getStateCode() == null ? thatUSAddress.getStateCode() == null : getStateCode().equals(thatUSAddress.getStateCode()));
-    equal = equal && (getZipCode() == null ? thatUSAddress.getZipCode() == null : getZipCode().equals(thatUSAddress.getZipCode()));
-    return equal;
-  }
-
-  private String getStateCodeString() {
-    Object value = getStateCode();
-    String s;
-
-    if (value instanceof String) {
-      s = "\"" + value + "\"";
-    } else {
-      s = (value == null) ? null : value.toString();
-    }
-
-    return s;
-  }
-
-  private String getZipCodeString() {
-    Object value = getZipCode();
-    String s;
-
-    if (value instanceof String) {
-      s = "\"" + value + "\"";
-    } else {
-      s = (value == null) ? null : value.toString();
-    }
-
-    return s;
-  }
-
+  
 }
