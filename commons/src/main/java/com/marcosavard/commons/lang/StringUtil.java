@@ -456,7 +456,7 @@ public class StringUtil {
     String camel = underscore.toLowerCase();
     camel = camel.replace('_', ' ');
     camel = capitalizeWords(camel);
-    camel = camel.replace(' ', '_');
+    camel = camel.replace(" ", "");
     return uncapitalize(camel);
   }
 

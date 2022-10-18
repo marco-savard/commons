@@ -8,6 +8,16 @@ public class StringUtilTest {
   private static final char eacute = '\u00e9';
 
   @Test
+  public void testCamelToUnderscore() {
+    Assert.assertEquals("PHONE_QUALIFIER", StringUtil.camelToUnderscore("phoneQualifier"));
+  }
+
+  @Test
+  public void testUnderscoreToCamel() {
+    Assert.assertEquals("phoneQualifier", StringUtil.underscoreToCamel("PHONE_QUALIFIER"));
+  }
+
+  @Test
   public void testCapitalize() {
     Assert.assertEquals("", StringUtil.capitalize((String) null));
     Assert.assertEquals("", StringUtil.capitalize(""));
