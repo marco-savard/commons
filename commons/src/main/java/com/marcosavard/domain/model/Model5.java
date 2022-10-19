@@ -2,7 +2,6 @@ package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
 import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.RequiredArgsConstructor;
 
 public class Model5 {
   public enum Country {
@@ -17,7 +16,6 @@ public class Model5 {
     public Address home;
   }
 
-  @RequiredArgsConstructor
   public static abstract @Immutable class Address {
     public String civicNumber;
     public String streetName;
@@ -25,13 +23,11 @@ public class Model5 {
     public Country country;
   }
 
-  @RequiredArgsConstructor
   public static @Immutable class CanadianAddress extends Address {
     public String provinceCode;
     public String postalCode;
   }
 
-  @RequiredArgsConstructor
   public static @Immutable class USAddress extends Address {
     public String stateCode;
     public String zipCode;

@@ -1,8 +1,7 @@
 package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
-import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.RequiredArgsConstructor;
+import com.marcosavard.commons.meta.annotations.Readonly;
 
 public class Model4 {
   public enum Country {
@@ -17,10 +16,9 @@ public class Model4 {
     public Address home;
   }
 
-  @RequiredArgsConstructor
-  public static @Immutable class Address {
-    public String civicNumber;
-    public String streetName;
+  public static class Address {
+    public @Readonly String civicNumber;
+    public @Readonly String streetName;
     public String noApartment;
     public String provinceCode;
     public String postalCode;

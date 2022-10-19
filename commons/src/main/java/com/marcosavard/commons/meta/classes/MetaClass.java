@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import com.marcosavard.commons.meta.annotations.Required;
+import com.marcosavard.commons.meta.annotations.NotNull;
 
 public class MetaClass extends MetaDataType {
   private MetaClass superClass;
@@ -191,8 +191,8 @@ public class MetaClass extends MetaDataType {
   }
 
   private boolean isRequired(Field field) {
-    Annotation annotation = field.getAnnotation(Required.class);
-    boolean required = (annotation instanceof Required);
+    Annotation annotation = field.getAnnotation(NotNull.class);
+    boolean required = (annotation instanceof NotNull);
     return required;
   }
 

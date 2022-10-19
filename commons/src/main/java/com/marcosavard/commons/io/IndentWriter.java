@@ -80,4 +80,9 @@ public class IndentWriter extends PrintWriter {
     level--;
   }
 
+  public void printlnIndented(String line) {
+    indent();
+    println(line);
+    unindent();
+  }
 }

@@ -25,7 +25,7 @@ import com.marcosavard.commons.meta.annotations.Description;
 import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.NoArgsConstructor;
 import com.marcosavard.commons.meta.annotations.Readonly;
-import com.marcosavard.commons.meta.annotations.Required;
+import com.marcosavard.commons.meta.annotations.NotNull;
 import com.marcosavard.commons.meta.annotations.RequiredArgsConstructor;
 import com.marcosavard.commons.meta.classes.MetaBuiltinType;
 import com.marcosavard.commons.meta.classes.MetaClass;
@@ -200,7 +200,7 @@ public class MetaModelReader {
         boolean isFinal = Modifier.isFinal(f.getModifiers());
         MetaVisibility visibility = getVisibility(f);
         boolean readonly = (f.getAnnotation(Readonly.class) instanceof Readonly);
-        boolean required = (f.getAnnotation(Required.class) instanceof Required);
+        boolean required = (f.getAnnotation(NotNull.class) instanceof NotNull);
         Description description = (Description) f.getAnnotation(Description.class);
         readonly = readonly || mc.isImmutable();
         Class c = f.getType();
@@ -307,7 +307,7 @@ public class MetaModelReader {
         MetaParameter param = constr.createParameter(f.getName(), fieldType);
 
         boolean readonly = (f.getAnnotation(Readonly.class) instanceof Readonly);
-        boolean required = (f.getAnnotation(Required.class) instanceof Required);
+        boolean required = (f.getAnnotation(NotNull.class) instanceof NotNull);
         readonly = readonly || mc.isImmutable();
         param.setReadOnly(readonly);
         param.setRequired(required);
@@ -369,8 +369,8 @@ public class MetaModelReader {
   }
 
   private boolean isRequired(Field field) {
-    Annotation annotation = field.getAnnotation(Required.class);
-    boolean required = (annotation instanceof Required);
+    Annotation annotation = field.getAnnotation(NotNull.class);
+    boolean required = (annotation instanceof NotNull);
     return required;
   }
 

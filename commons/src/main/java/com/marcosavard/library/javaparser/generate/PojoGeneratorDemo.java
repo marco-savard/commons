@@ -15,21 +15,23 @@ public class PojoGeneratorDemo {
 
     public static void main(String[] args) {
         File folder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        //File folder = FileSystem.getUserDocumentFolder();
+        generate(folder, Model8.class.getClasses());
+    }
 
-        try {
-            PojoGenerator generator = new PojoGenerator(folder);
-            generator.withIndentation(4)
-                    .withMetadataGeneration()
-                    .withAccessors(GROUPED_BY_GETTERS_SETTERS);
-            Class[] classes = Model8.class.getClasses();
+    private static void generate(File folder, Class<?> claz) {
+        generate(folder, new Class[] {claz});
+    }
 
-            for (Class claz : classes) {
-                Console.println("File {0} generated", generator.generate(claz));
+    private static void generate(File folder, Class<?>[] classes) {
+        PojoGenerator generator = new PojoGenerator(folder);
+        generator.withMetadataGeneration();
+
+        for (Class claz : classes) {
+            try {
+            Console.println("File {0} generated", generator.generate(claz));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }

@@ -21,4 +21,11 @@ public class FormatWriter extends IndentWriter {
         super.println(MessageFormat.format(pattern, items));
     }
 
+    public void printlnIndented(String line) {
+        super.printlnIndented(line);
+    }
+
+    public void printlnIndented(String pattern, Object... items) {
+        super.printlnIndented(MessageFormat.format(pattern, items));
+    }
 }

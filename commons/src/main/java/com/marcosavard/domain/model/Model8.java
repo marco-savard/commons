@@ -2,11 +2,10 @@ package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import com.marcosavard.commons.meta.annotations.Containment;
-import com.marcosavard.commons.meta.annotations.Description;
-import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.Readonly;
-import com.marcosavard.commons.meta.annotations.Required;
+import java.lang.reflect.Field;
+
+import com.marcosavard.commons.meta.annotations.*;
+import com.marcosavard.domain.Branch;
 
 public class Model8 {
   public enum Country {
@@ -17,15 +16,21 @@ public class Model8 {
     HOME, CELL, WORK, FAX
   };
 
-  @Description("represents a person that has a name and a birthdate")
+  @Description("represents a person who has a name and a birthdate")
   public static class Person {
     public static final String CONST = "99";
-    public String firstName;
-    public String lastName;
-    public LocalDate birthDate;
-    public Address home;
-    public Company employer;
+    public @NotNull String firstName;
+    public String middleName;
+    public @NotNull String lastName;
+    public @NotNull LocalDate birthDate;
+    public Address homeAddress;
     public List<Phone> phoneNumbers;
+  }
+
+  @Description("represents a person who can be hired by a company")
+  public static class Worker extends Person {
+    public Company employer;
+    public Address officeAddress;
   }
 
   @Description("represents an international address")
@@ -52,22 +57,27 @@ public class Model8 {
 
   @Description("represents a company")
   public static class Company {
-    public @Required String name;
-    public @Required Address headquarter;
+    public @NotNull String name;
+    public @NotNull Address headquarter;
+    public List<Worker> employees;
     public List<Phone> phoneNumbers;
-    public List<Person> employees;
-    public @Containment List<Branch> divisions;
+    public List<Branch> divisions;
   }
 
   public static class Branch {
+    public Company ownerCompany;
     public Address location;
     public String name;
+
+    public Branch() throws NoSuchFieldException {
+    }
   }
 
-  public static @Immutable class Phone {
+  public static class Phone {
     public @Readonly int countryCode;
-    public @Required String number;
+    public @Readonly @NotNull String number;
     public @Readonly String extension;
     public PhoneQualifier qualifier;
+    public boolean active;
   }
 }

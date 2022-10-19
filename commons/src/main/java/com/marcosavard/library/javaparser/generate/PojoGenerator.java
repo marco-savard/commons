@@ -5,7 +5,7 @@ import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.meta.annotations.Description;
 import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.Readonly;
-import com.marcosavard.commons.meta.annotations.Required;
+import com.marcosavard.commons.meta.annotations.NotNull;
 import com.marcosavard.commons.util.collection.SortedList;
 import com.marcosavard.commons.util.collection.UniqueList;
 
@@ -108,7 +108,7 @@ public class PojoGenerator {
 
     private void generateClass(FormatWriter w, Class<?> claz) {
         String modifiers = getModifiers(claz);
-        Class superClass = claz.getSuperclass();
+        Class<?> superClass = claz.getSuperclass();
 
         generateImports(w, claz);
         generateClassComment(w, claz);
@@ -132,14 +132,16 @@ public class PojoGenerator {
     private void generateImports(FormatWriter w, Class<?> claz) {
         Package pack = claz.getPackage();
         Field[] fields = claz.getDeclaredFields();
-        Comparator<Class> comparator = new ImportComparator();
-        List<Class> importees = new SortedList<>(comparator);
+        Comparator<Class<?>> comparator = new ImportComparator();
+        List<Class<?>> importees = new SortedList<>(comparator);
         importees.add(Objects.class);
-        importees.add(Field.class);
-        importees.add(NoSuchFieldException.class);
+
+        if (metadataGeneration) {
+            importees.add(Field.class);
+        }
 
         for (Field field : fields) {
-            Class type = field.getType();
+            Class<?> type = field.getType();
             boolean collection = isCollection(type);
 
             if (isAddable(pack, type)) {
@@ -147,7 +149,7 @@ public class PojoGenerator {
             }
 
             if (collection) {
-                Class itemType = getItemType(field);
+                Class<?> itemType = getItemType(field);
                 if (! itemType.getPackage().equals(pack)) {
                     importees.add(itemType);
                 }
@@ -159,7 +161,7 @@ public class PojoGenerator {
         }
 
         if (importees.size() > 0) {
-            for (Class importee : importees) {
+            for (Class<?> importee : importees) {
                 String fullName = importee.getName().replace('$', '.');
                 w.println("import {0};", fullName);
             }
@@ -204,9 +206,9 @@ public class PojoGenerator {
 
     private void generateField(FormatWriter w, Field field) {
         String modifiers = getModifiers(field);
-        Class type = field.getType();
+        Class<?> type = field.getType();
         boolean collection = isCollection(type);
-        Class itemType = collection ? getItemType(field) : null;
+        Class<?> itemType = collection ? getItemType(field) : null;
         String typeName = getTypeName(type, itemType);
         String initValue = getInitialValue(field);
 
@@ -235,12 +237,12 @@ public class PojoGenerator {
 
                 for (Field field : fields) {
                     String name = field.getName();
-                    String metaField = StringUtil.camelToUnderscore(name) + "_FIELD";;
-                    w.println("  {0} = {1}.class.getDeclaredField(\"{2}\");", metaField, className, name);
+                    String metaField = StringUtil.camelToUnderscore(name) + "_FIELD";
+                    w.printlnIndented("{0} = {1}.class.getDeclaredField(\"{2}\");", metaField, className, name);
                 }
 
                 w.println("} catch (NoSuchFieldException e) {");
-                w.println("  throw new RuntimeException(e);");
+                w.printlnIndented("throw new RuntimeException(e);");
                 w.println("}");
                 w.unindent();
                 w.println("}");
@@ -252,12 +254,12 @@ public class PojoGenerator {
     private void generateConstructor(FormatWriter w, Class<?> claz) {
         List<Field> readOnlyFields = getReadOnlyFields(claz);
         List<Field> superClassReadOnlyFields = getSuperClassReadOnlyFields(claz);
-        List<Field> requiredFields = getRequiredFields(claz);
+        List<Field> notNullFields = getNotNullFields(claz);
 
         List<Field> constructorFields = new ArrayList<>();
         constructorFields.addAll(superClassReadOnlyFields);
         constructorFields.addAll(readOnlyFields);
-        constructorFields.addAll(requiredFields);
+        //constructorFields.addAll(notNullFields);
 
         Map<String, Field> fieldsByName = new HashMap<>();
         for (Field field : constructorFields) {
@@ -288,13 +290,18 @@ public class PojoGenerator {
     }
 
     private void generateConstructorBody(FormatWriter w, List<Field> superClassReadOnlyFields, Map<String, Field> fieldsByName) {
-        List<Field> settableFields = new ArrayList<>();
-        settableFields.addAll(fieldsByName.values());
+        List<Field> settableFields = new ArrayList<>(fieldsByName.values());
         settableFields.removeAll(superClassReadOnlyFields);
 
         if (! superClassReadOnlyFields.isEmpty()) {
             List<String> fieldNames = getFieldNames(superClassReadOnlyFields);
             w.println("super(" + String.join(", ", fieldNames) + ");");
+        }
+
+        for (Field f : settableFields) {
+            if (isNotNull(f) && ! isPrimitive(f.getType())) {
+                verifyNullArgument(w, f);
+            }
         }
 
         for (Field f : settableFields) {
@@ -304,17 +311,11 @@ public class PojoGenerator {
         if (! settableFields.isEmpty()) {
             w.println();
         }
-
-        for (Field f : settableFields) {
-            if (isRequired(f) && ! isPrimitive(f.getType())) {
-                verifyNullArgument(w, f);
-            }
-        }
     }
 
     private void verifyNullArgument(FormatWriter w, Field f) {
         w.println("if ({0} == null) '{'", f.getName());
-        w.println("  throw new IllegalArgumentException (\"Parameter ''{0}'' is required\");", f.getName());
+        w.printlnIndented("throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");", f.getName());
         w.println("}");
         w.println();
     }
@@ -367,9 +368,9 @@ public class PojoGenerator {
     }
 
     private void generateGetter(FormatWriter w, Field field) {
-        Class type = field.getType();
+        Class<?> type = field.getType();
         boolean collection = isCollection(type);
-        Class itemType = collection ? getItemType(field) : null;
+        Class<?> itemType = collection ? getItemType(field) : null;
         String typeName = getTypeName(type, itemType);
         String getter = getGetterName(field);
 
@@ -377,7 +378,7 @@ public class PojoGenerator {
         w.println(" * @return " + getDescription(field));
         w.println(" */");
         w.println("public {0} {1}() '{'", typeName, getter);
-        w.println("  return {0};", field.getName());
+        w.printlnIndented("return {0};", field.getName());
         w.println("}");
         w.println();
     }
@@ -385,7 +386,7 @@ public class PojoGenerator {
     private void generateSetter(FormatWriter w, Field field) {
         boolean constant = isConstant(field);
         boolean settable = ! constant;
-        Class type = field.getType();
+        Class<?> type = field.getType();
         boolean collection = isCollection(type);
         
         if (settable) {
@@ -408,7 +409,7 @@ public class PojoGenerator {
         w.println("public void {0}({1} {2}) '{'", methodName, typeName, name);
         w.indent();
 
-        if (isRequired(field) && ! isPrimitive(field.getType())) {
+        if (isNotNull(field) && ! isPrimitive(field.getType())) {
             verifyNullArgument(w, field);
         }
 
@@ -444,9 +445,7 @@ public class PojoGenerator {
         String parameter = StringUtil.uncapitalize(itemType);
 
         w.println("{0} void removeFrom{1}({2} {3}) '{'", visibility, name, itemType, parameter);
-        w.indent();
-        w.println("this.{0}.remove({1});", field.getName(), parameter);
-        w.unindent();
+        w.printlnIndented("this.{0}.remove({1});", field.getName(), parameter);
         w.println("}");
         w.println();
     }
@@ -457,13 +456,15 @@ public class PojoGenerator {
             List<String> metaFields = new ArrayList<>();
 
             w.println("public static Field[] getFields() {");
-            w.print("  return new Field[] {");
+            w.indent();
+            w.print("return new Field[] {");
             for (Field field : fields) {
                 metaFields.add(StringUtil.camelToUnderscore(field.getName()) + "_FIELD");
             }
             w.print(String.join(", ", metaFields));
             w.print("};");
             w.println();
+            w.unindent();
             w.println("}");
             w.println();
             generateMetaGetter(w);
@@ -477,7 +478,7 @@ public class PojoGenerator {
         w.println(" * @return the value for this field");
         w.println(" */");
         w.println("public Object get(Field field) throws IllegalAccessException {");
-        w.println("  return field.get(this);");
+        w.printlnIndented("return field.get(this);");
         w.println("}");
         w.println();
     }
@@ -488,7 +489,7 @@ public class PojoGenerator {
         w.println(" * @param value to be assigned");
         w.println(" */");
         w.println("public void set(Field field, Object value) throws IllegalAccessException {");
-        w.println("  field.set(this, value);");
+        w.printlnIndented("field.set(this, value);");
         w.println("}");
         w.println();
     }
@@ -515,8 +516,8 @@ public class PojoGenerator {
         w.println();
 
         w.println("if (other instanceof {0}) '{'", name);
-        w.println("  {0} that = ({0})other;", name);
-        w.println("  equal = (hashCode() == that.hashCode()) && isEqualTo(that);");
+        w.printlnIndented("{0} that = ({0})other;", name);
+        w.printlnIndented("equal = (hashCode() == that.hashCode()) && isEqualTo(that);");
         w.println("}");
         w.println();
 
@@ -580,15 +581,15 @@ public class PojoGenerator {
 
         w.println("@Override");
         w.println("public String toString() {");
-        w.println("  StringBuilder sb = new StringBuilder();");
-        w.println("  sb.append(\"{\");");
+        w.printlnIndented("StringBuilder sb = new StringBuilder();");
+        w.printlnIndented("sb.append(\"{\");");
 
         for (Field field : fields) {
-            w.println("  sb.append(\"{0} = \" + {0} + \", \");", field.getName());
+            w.printlnIndented("sb.append(\"{0} = \").append({0}).append(\", \");", field.getName());
         }
 
-        w.println("  sb.append(\"}\");");
-        w.println("  return sb.toString();");
+        w.printlnIndented("sb.append(\"}\");");
+        w.printlnIndented("return sb.toString();");
         w.println("}");
         w.println();
     }
@@ -604,7 +605,7 @@ public class PojoGenerator {
         return fieldNames;
     }
 
-    private List<Field> getSuperClassReadOnlyFields(Class claz) {
+    private List<Field> getSuperClassReadOnlyFields(Class<?> claz) {
         List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
         List<Field> fields = getReadOnlyFields(claz);
         List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
@@ -624,55 +625,49 @@ public class PojoGenerator {
         return declarations;
     }
 
-    private String getDescription(Class claz) {
+    private String getDescription(Class<?> claz) {
         String name = claz.getSimpleName();
-        Description description = (Description) claz.getAnnotation(Description.class);
+        Description description = claz.getAnnotation(Description.class);
         String desc =  (description == null) ? "" : description.value();
         return name + " " + desc;
     }
 
     private String getDescription(Field field) {
         String name = field.getName();
-        Description description = (Description) field.getAnnotation(Description.class);
+        Description description = field.getAnnotation(Description.class);
         String desc =  (description == null) ? field.getType().getSimpleName() : description.value();
         return name + " " + desc;
     }
 
     private List<Field> getConstants(Class<?> claz) {
-        return Arrays.asList(claz.getDeclaredFields()).stream()
+        return Arrays.stream(claz.getDeclaredFields())
                 .filter(f -> isConstant(f))
                 .toList();
     }
 
-    private List<Field> getAllVariables(Class<?> claz) {
-        return Arrays.asList(claz.getFields()).stream()
-                .filter(f -> ! isConstant(f))
-                .toList();
-    }
-
     private List<Field> getVariables(Class<?> claz) {
-        return Arrays.asList(claz.getDeclaredFields()).stream()
+        return Arrays.stream(claz.getDeclaredFields())
                 .filter(f -> ! isConstant(f))
                 .toList();
     }
 
     private List<Field> getAllReadOnlyFields(Class<?> claz) {
         boolean immutable = isImmutable(claz);
-        return Arrays.asList(claz.getFields()).stream()
+        return Arrays.stream(claz.getFields())
                 .filter(f -> immutable || isReadOnly(f))
                 .toList();
     }
 
     private List<Field> getReadOnlyFields(Class<?> claz) {
         boolean immutable = isImmutable(claz);
-        return Arrays.asList(claz.getDeclaredFields()).stream()
+        return Arrays.stream(claz.getDeclaredFields())
                 .filter(f -> immutable || isReadOnly(f))
                 .toList();
     }
 
-    private List<Field> getRequiredFields(Class<?> claz) {
-        return Arrays.asList(claz.getDeclaredFields()).stream()
-                .filter(f -> isRequired(f))
+    private List<Field> getNotNullFields(Class<?> claz) {
+        return Arrays.stream(claz.getDeclaredFields())
+                .filter(f -> isNotNull(f))
                 .toList();
     }
 
@@ -682,10 +677,9 @@ public class PojoGenerator {
 
         if (type instanceof ParameterizedType) {
             ParameterizedType pt = (ParameterizedType) type;
-            Type rawType = pt.getRawType();
             Type[] types = pt.getActualTypeArguments();
             if (types[0] instanceof Class) {
-                itemType = (Class) types[0];
+                itemType = (Class<?>) types[0];
             }
 
         }
@@ -694,14 +688,14 @@ public class PojoGenerator {
     }
 
     private String getTypeName(Field field) {
-        Class type = field.getType();
+        Class<?> type = field.getType();
         boolean collection = isCollection(type);
-        Class itemType = collection ? getItemType(field) : null;
+        Class<?> itemType = collection ? getItemType(field) : null;
         String typeName = type.getSimpleName();
         return (itemType == null) ? typeName : typeName + "<" + itemType.getSimpleName() + ">";
     }
 
-    private String getTypeName(Class type, Class itemType) {
+    private String getTypeName(Class<?> type, Class<?> itemType) {
         String typeName = type.getSimpleName();
         return (itemType == null) ? typeName : typeName + "<" + itemType.getSimpleName() + ">";
     }
@@ -719,7 +713,7 @@ public class PojoGenerator {
     }
 
     private String getGetterName(Field field) {
-        Class type = field.getType();
+        Class<?> type = field.getType();
         String verb = type.equals(boolean.class) ? "is" : "get";
         return verb + StringUtil.capitalize(field.getName());
     }
@@ -734,7 +728,7 @@ public class PojoGenerator {
         return visibility;
     }
 
-    private String getModifiers(Class claz) {
+    private String getModifiers(Class<?> claz) {
         List<String> modifiers = new ArrayList<>();
         boolean isPublic = Modifier.isPublic(claz.getModifiers());
         boolean isAbstract = Modifier.isAbstract(claz.getModifiers());
@@ -752,7 +746,7 @@ public class PojoGenerator {
 
     private String getModifiers(Field field) {
         List<String> modifiers = new ArrayList<>();
-        Class claz = field.getDeclaringClass();
+        Class<?> claz = field.getDeclaringClass();
         boolean immutable = isImmutable(claz);
         boolean isPublic = Modifier.isPublic(field.getModifiers());
         boolean isProtected = Modifier.isProtected(field.getModifiers());
@@ -792,7 +786,7 @@ public class PojoGenerator {
 
     private String getInitialValue(Field field) {
         String initialValue = null;
-        Class type = field.getType();
+        Class<?> type = field.getType();
         boolean collection = isCollection(type);
 
         if (collection) {
@@ -811,7 +805,7 @@ public class PojoGenerator {
 
         try {
             Class<?> claz = field.getDeclaringClass();
-            Constructor constr = claz.getConstructor(new Class[] {});
+            Constructor<?> constr = claz.getConstructor(new Class[] {});
             Object instance = constr.newInstance(new Object[] {});
             Object value = field.get(instance);
 
@@ -827,7 +821,7 @@ public class PojoGenerator {
     }
 
     private boolean hasSuperClass(Class<?> claz) {
-        Class superclass = claz.getSuperclass();
+        Class<?> superclass = claz.getSuperclass();
         return (superclass != null) && (! Object.class.equals(superclass));
     }
 
@@ -846,8 +840,7 @@ public class PojoGenerator {
     }
 
     private boolean isPrimitive(Class<?> type) {
-        boolean primitive = false;
-        primitive = primitive || boolean.class.equals(type);
+        boolean primitive = boolean.class.equals(type);
         primitive = primitive || byte.class.equals(type);
         primitive = primitive || char.class.equals(type);
         primitive = primitive || short.class.equals(type);
@@ -858,13 +851,13 @@ public class PojoGenerator {
         return primitive;
     }
 
-    private boolean isAddable(Package pack, Class type) {
+    private boolean isAddable(Package pack, Class<?> type) {
         String packageName = type.getPackageName();
         boolean addable = ! "java.lang".equals(packageName);
         return addable && ! type.getPackage().equals(pack);
     }
 
-    private boolean isCollection(Class type) {
+    private boolean isCollection(Class<?> type) {
         return Collection.class.isAssignableFrom(type);
     }
 
@@ -876,11 +869,11 @@ public class PojoGenerator {
         return field.getAnnotation(Readonly.class) != null;
     }
 
-    private boolean isRequired(Field field) {
-        return field.getAnnotation(Required.class) != null;
+    private boolean isNotNull(Field field) {
+        return field.getAnnotation(NotNull.class) != null;
     }
 
-    private static class ImportComparator implements Comparator<Class> {
+    private static class ImportComparator implements Comparator<Class<?>> {
         @Override
         public int compare(Class c1, Class c2) {
             String n1 = c1.getName();
@@ -888,16 +881,4 @@ public class PojoGenerator {
             return n1.compareTo(n2);
         }
     }
-
-    /*
-    private static class FieldComparator implements Comparator<Field> {
-        @Override
-        public int compare(Field f1, Field f2) {
-            String n1 = f1.getName();
-            String n2 = f2.getName();
-            return n1.compareTo(n2);
-        }
-    }*/
-
-
 }

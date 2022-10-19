@@ -2,11 +2,10 @@ package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import com.marcosavard.commons.meta.annotations.AllArgsConstructor;
+
 import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.Readonly;
-import com.marcosavard.commons.meta.annotations.Required;
-import com.marcosavard.commons.meta.annotations.RequiredArgsConstructor;
+import com.marcosavard.commons.meta.annotations.NotNull;
 
 public class Model7 {
   public enum Country {
@@ -45,14 +44,14 @@ public class Model7 {
   }
 
   public static class Company {
-    public @Required String name;
-    public @Required Address headquarter;
+    public @NotNull String name;
+    public @NotNull Address headquarter;
     public List<Phone> phoneNumbers;
     public List<Person> employees;
   }
 
   public static @Immutable class Phone {
-    public @Required String number;
+    public @NotNull String number;
     public @Readonly String extension;
     public PhoneQualifier qualifier;
     public int countryCode;
