@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * Company represents a company
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class Company {
   private final String name;
@@ -110,10 +110,10 @@ public class Company {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("name = ").append(name).append(", ");
-    sb.append("headquarter = ").append(headquarter).append(", ");
-    sb.append("phoneNumbers = ").append(phoneNumbers).append(", ");
-    sb.append("divisions = ").append(divisions).append(", ");
+    sb.append("name = ").append(getName()).append(", ");
+    sb.append("headquarter = ").append(getHeadquarter()).append(", ");
+    sb.append("phoneNumbers = ").append(getPhoneNumbers()).append(", ");
+    sb.append("divisions = ").append(getDivisions()).append(", ");
     sb.append("}");
     return sb.toString();
   }

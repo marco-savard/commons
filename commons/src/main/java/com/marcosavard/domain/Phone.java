@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * Phone 
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class Phone {
   private final int countryCode;
@@ -115,11 +115,11 @@ public class Phone {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("countryCode = ").append(countryCode).append(", ");
-    sb.append("number = ").append(number).append(", ");
-    sb.append("extension = ").append(extension).append(", ");
-    sb.append("qualifier = ").append(qualifier).append(", ");
-    sb.append("active = ").append(active).append(", ");
+    sb.append("countryCode = ").append(getCountryCode()).append(", ");
+    sb.append("number = ").append(getNumber()).append(", ");
+    sb.append("extension = ").append(getExtension()).append(", ");
+    sb.append("qualifier = ").append(getQualifier()).append(", ");
+    sb.append("active = ").append(isActive()).append(", ");
     sb.append("}");
     return sb.toString();
   }

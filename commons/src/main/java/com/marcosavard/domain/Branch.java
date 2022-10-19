@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * Branch 
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class Branch {
   private final String name;
@@ -112,10 +112,10 @@ public class Branch {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("name = ").append(name).append(", ");
-    sb.append("location = ").append(location).append(", ");
-    sb.append("subdivisions = ").append(subdivisions).append(", ");
-    sb.append("teams = ").append(teams).append(", ");
+    sb.append("name = ").append(getName()).append(", ");
+    sb.append("location = ").append(getLocation()).append(", ");
+    sb.append("subdivisions = ").append(getSubdivisions()).append(", ");
+    sb.append("teams = ").append(getTeams()).append(", ");
     sb.append("}");
     return sb.toString();
   }

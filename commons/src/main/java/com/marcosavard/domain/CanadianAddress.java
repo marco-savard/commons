@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * CanadianAddress represents a Canadian address
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class CanadianAddress extends Address {
   private final String provinceCode;
@@ -78,8 +78,12 @@ public class CanadianAddress extends Address {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("provinceCode = ").append(provinceCode).append(", ");
-    sb.append("postalCode = ").append(postalCode).append(", ");
+    sb.append("provinceCode = ").append(getProvinceCode()).append(", ");
+    sb.append("postalCode = ").append(getPostalCode()).append(", ");
+    sb.append("civicNumber = ").append(getCivicNumber()).append(", ");
+    sb.append("streetName = ").append(getStreetName()).append(", ");
+    sb.append("noApartment = ").append(getNoApartment()).append(", ");
+    sb.append("country = ").append(getCountry()).append(", ");
     sb.append("}");
     return sb.toString();
   }

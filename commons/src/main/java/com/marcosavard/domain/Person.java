@@ -7,7 +7,7 @@ import java.util.Objects;
 
 /**
  * Person represents a person who has a name and a birthdate
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class Person {
   public static final String CONST = "99";
@@ -150,12 +150,12 @@ public class Person {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("firstName = ").append(firstName).append(", ");
-    sb.append("middleName = ").append(middleName).append(", ");
-    sb.append("lastName = ").append(lastName).append(", ");
-    sb.append("birthDate = ").append(birthDate).append(", ");
-    sb.append("homeAddress = ").append(homeAddress).append(", ");
-    sb.append("phoneNumbers = ").append(phoneNumbers).append(", ");
+    sb.append("firstName = ").append(getFirstName()).append(", ");
+    sb.append("middleName = ").append(getMiddleName()).append(", ");
+    sb.append("lastName = ").append(getLastName()).append(", ");
+    sb.append("birthDate = ").append(getBirthDate()).append(", ");
+    sb.append("homeAddress = ").append(getHomeAddress()).append(", ");
+    sb.append("phoneNumbers = ").append(getPhoneNumbers()).append(", ");
     sb.append("}");
     return sb.toString();
   }

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * Worker represents a person who can be hired by a company
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class Worker extends Person {
   private final long workerId;
@@ -86,9 +86,15 @@ public class Worker extends Person {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("workerId = ").append(workerId).append(", ");
-    sb.append("employer = ").append(employer).append(", ");
-    sb.append("officeAddress = ").append(officeAddress).append(", ");
+    sb.append("workerId = ").append(getWorkerId()).append(", ");
+    sb.append("employer = ").append(getEmployer()).append(", ");
+    sb.append("officeAddress = ").append(getOfficeAddress()).append(", ");
+    sb.append("firstName = ").append(getFirstName()).append(", ");
+    sb.append("middleName = ").append(getMiddleName()).append(", ");
+    sb.append("lastName = ").append(getLastName()).append(", ");
+    sb.append("birthDate = ").append(getBirthDate()).append(", ");
+    sb.append("homeAddress = ").append(getHomeAddress()).append(", ");
+    sb.append("phoneNumbers = ").append(getPhoneNumbers()).append(", ");
     sb.append("}");
     return sb.toString();
   }

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * USAddress represents a U.S. address
- * Generated on 2022/10/19 15:04
+ * Generated on 2022/10/19 15:17
  */
 public class USAddress extends Address {
   private final String stateCode;
@@ -78,8 +78,12 @@ public class USAddress extends Address {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("stateCode = ").append(stateCode).append(", ");
-    sb.append("zipCode = ").append(zipCode).append(", ");
+    sb.append("stateCode = ").append(getStateCode()).append(", ");
+    sb.append("zipCode = ").append(getZipCode()).append(", ");
+    sb.append("civicNumber = ").append(getCivicNumber()).append(", ");
+    sb.append("streetName = ").append(getStreetName()).append(", ");
+    sb.append("noApartment = ").append(getNoApartment()).append(", ");
+    sb.append("country = ").append(getCountry()).append(", ");
     sb.append("}");
     return sb.toString();
   }
