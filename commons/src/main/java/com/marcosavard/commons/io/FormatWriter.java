@@ -6,7 +6,7 @@ import java.text.MessageFormat;
 public class FormatWriter extends IndentWriter {
 
     public FormatWriter(Writer w, int indentation) {
-        super(w);
+        super(w, indentation);
     }
 
     public FormatWriter(Writer w) {

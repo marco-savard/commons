@@ -12,14 +12,37 @@ import com.marcosavard.commons.util.collection.UniqueList;
 import java.io.*;
 import java.lang.reflect.*;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class PojoGenerator {
 
+    public enum AccessorOrder {
+        GROUPED_BY_PROPERTIES, GROUPED_BY_GETTERS_SETTERS
+    }
+
     private final File destinationFolder;
+    private int indentation = 2;
+    private boolean metadataGeneration = false;
+    private AccessorOrder accessorOrder = AccessorOrder.GROUPED_BY_PROPERTIES;
 
     public PojoGenerator(File destinationFolder) {
         this.destinationFolder = destinationFolder;
+    }
+
+    public PojoGenerator withIndentation(int indentation) {
+        this.indentation = indentation;
+        return this;
+    }
+
+    public void withAccessors(AccessorOrder accessorOrder) {
+        this.accessorOrder = accessorOrder;
+    }
+
+    public PojoGenerator withMetadataGeneration() {
+        metadataGeneration = true;
+        return this;
     }
 
     public File generate(Class<?> claz) throws IOException {
@@ -33,7 +56,7 @@ public class PojoGenerator {
         String filename = claz.getSimpleName() + ".java";
         File generated = new File(subfolder, filename);
         Writer w = new FileWriter(generated);
-        FormatWriter fw = new FormatWriter(w);
+        FormatWriter fw = new FormatWriter(w, indentation);
 
         //generate code
         generateType(fw, packageName, claz);
@@ -88,7 +111,6 @@ public class PojoGenerator {
         Class superClass = claz.getSuperclass();
 
         generateImports(w, claz);
-
         generateClassComment(w, claz);
         w.print("{0} class {1}", modifiers, claz.getSimpleName());
 
@@ -146,13 +168,14 @@ public class PojoGenerator {
     }
 
     private void generateClassComment(FormatWriter w, Class<?> claz) {
-        Description description = (Description) claz.getAnnotation(Description.class);
+        String description = getDescription(claz);
+        LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
-        if (description != null) {
-            w.println("/**");
-            w.println(" * " + description.value());
-            w.println(" */");
-        }
+        w.println("/**");
+        w.println(" * " + description);
+        w.println(" * Generated on {0}", time.format(formatter));
+        w.println(" */");
     }
 
     private void generateConstants(FormatWriter w, Class<?> claz) {
@@ -195,30 +218,34 @@ public class PojoGenerator {
     }
 
     private void generateMetaFields(FormatWriter w, Class<?> claz) {
-        List<Field> fields = getVariables(claz);
-        String className = claz.getSimpleName();
-
-        for (Field field : fields) {
-            String metaField = StringUtil.camelToUnderscore(field.getName());
-            w.println("public static final Field {0};", metaField);
-        }
-
-        if (! fields.isEmpty()) {
-            w.println();
-            w.println("static {");
-            w.println("  try {");
+        if (metadataGeneration) {
+            List<Field> fields = getVariables(claz);
+            String className = claz.getSimpleName();
 
             for (Field field : fields) {
-                String name = field.getName();
-                String metaField = StringUtil.camelToUnderscore(name);
-                w.println("    {0} = {1}.class.getDeclaredField(\"{2}\");", metaField, className, name);
+                String metaField = StringUtil.camelToUnderscore(field.getName()) + "_FIELD";
+                w.println("public static final Field {0};", metaField);
             }
 
-            w.println("  } catch (NoSuchFieldException e) {");
-            w.println("    throw new RuntimeException(e);");
-            w.println("  }");
-            w.println("}");
-            w.println();
+            if (! fields.isEmpty()) {
+                w.println();
+                w.println("static {");
+                w.indent();
+                w.println("try {");
+
+                for (Field field : fields) {
+                    String name = field.getName();
+                    String metaField = StringUtil.camelToUnderscore(name) + "_FIELD";;
+                    w.println("  {0} = {1}.class.getDeclaredField(\"{2}\");", metaField, className, name);
+                }
+
+                w.println("} catch (NoSuchFieldException e) {");
+                w.println("  throw new RuntimeException(e);");
+                w.println("}");
+                w.unindent();
+                w.println("}");
+                w.println();
+            }
         }
     }
 
@@ -300,12 +327,37 @@ public class PojoGenerator {
     }
 
     private void generateAccessors(FormatWriter w, Class<?> claz) {
+        if (this.accessorOrder == AccessorOrder.GROUPED_BY_PROPERTIES) {
+            generateAccessorsGroupedByProperties(w, claz);
+        } else {
+            generateAccessorsGroupedByGettersSetters(w, claz);
+        }
+    }
+
+    private void generateAccessorsGroupedByProperties(FormatWriter w, Class<?> claz) {
         List<Field> fields = getVariables(claz);
         boolean immutable = isImmutable(claz);
 
         for (Field field : fields) {
             generateGetter(w, field);
 
+            if (! immutable && (! isReadOnly(field))) {
+                generateSetter(w, field);
+            }
+        }
+
+        w.println();
+    }
+
+    private void generateAccessorsGroupedByGettersSetters(FormatWriter w, Class<?> claz) {
+        List<Field> fields = getVariables(claz);
+        boolean immutable = isImmutable(claz);
+
+        for (Field field : fields) {
+            generateGetter(w, field);
+        }
+
+        for (Field field : fields) {
             if (! immutable && (! isReadOnly(field))) {
                 generateSetter(w, field);
             }
@@ -400,19 +452,23 @@ public class PojoGenerator {
     }
 
     private void generateMetaAccessors(FormatWriter w, Class<?> claz) {
-        List<Field> fields = getVariables(claz);
+        if (metadataGeneration) {
+            List<Field> fields = getVariables(claz);
+            List<String> metaFields = new ArrayList<>();
 
-        w.println("public static Field[] getFields() {");
-        w.print("  return new Field[] {");
-        for (Field field : fields) {
-            w.print(StringUtil.camelToUnderscore(field.getName()) + ", ");
+            w.println("public static Field[] getFields() {");
+            w.print("  return new Field[] {");
+            for (Field field : fields) {
+                metaFields.add(StringUtil.camelToUnderscore(field.getName()) + "_FIELD");
+            }
+            w.print(String.join(", ", metaFields));
+            w.print("};");
+            w.println();
+            w.println("}");
+            w.println();
+            generateMetaGetter(w);
+            generateMetaSetter(w);
         }
-        w.print("};");
-        w.println();
-        w.println("}");
-        w.println();
-        generateMetaGetter(w);
-        generateMetaSetter(w);
     }
 
     private void generateMetaGetter(FormatWriter w) {
@@ -566,6 +622,13 @@ public class PojoGenerator {
         }
 
         return declarations;
+    }
+
+    private String getDescription(Class claz) {
+        String name = claz.getSimpleName();
+        Description description = (Description) claz.getAnnotation(Description.class);
+        String desc =  (description == null) ? "" : description.value();
+        return name + " " + desc;
     }
 
     private String getDescription(Field field) {

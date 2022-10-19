@@ -27,7 +27,6 @@ public class Model7 {
     public List<Phone> phoneNumbers;
   }
 
-  @RequiredArgsConstructor
   public static abstract @Immutable class Address {
     public String civicNumber;
     public String streetName;
@@ -35,19 +34,16 @@ public class Model7 {
     public Country country;
   }
 
-  @RequiredArgsConstructor
   public static @Immutable class CanadianAddress extends Address {
     public String provinceCode;
     public String postalCode;
   }
 
-  @RequiredArgsConstructor
   public static @Immutable class USAddress extends Address {
     public String stateCode;
     public String zipCode;
   }
 
-  @RequiredArgsConstructor
   public static class Company {
     public @Required String name;
     public @Required Address headquarter;
@@ -55,8 +51,6 @@ public class Model7 {
     public List<Person> employees;
   }
 
-  @RequiredArgsConstructor
-  @AllArgsConstructor
   public static @Immutable class Phone {
     public @Required String number;
     public @Readonly String extension;

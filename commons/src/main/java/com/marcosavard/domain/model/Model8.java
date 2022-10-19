@@ -2,13 +2,11 @@ package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import com.marcosavard.commons.meta.annotations.AllArgsConstructor;
 import com.marcosavard.commons.meta.annotations.Containment;
 import com.marcosavard.commons.meta.annotations.Description;
 import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.Readonly;
 import com.marcosavard.commons.meta.annotations.Required;
-import com.marcosavard.commons.meta.annotations.RequiredArgsConstructor;
 
 public class Model8 {
   public enum Country {
@@ -19,7 +17,7 @@ public class Model8 {
     HOME, CELL, WORK, FAX
   };
 
-  @Description("A person that has a name and a birthdate")
+  @Description("represents a person that has a name and a birthdate")
   public static class Person {
     public static final String CONST = "99";
     public String firstName;
@@ -30,8 +28,7 @@ public class Model8 {
     public List<Phone> phoneNumbers;
   }
 
-  @Description("An international address")
-  @RequiredArgsConstructor
+  @Description("represents an international address")
   public static abstract @Immutable class Address {
     public String civicNumber;
     public String streetName;
@@ -39,15 +36,13 @@ public class Model8 {
     public Country country;
   }
 
-  @Description("A Canadian address")
-  @RequiredArgsConstructor
+  @Description("represents a Canadian address")
   public static @Immutable class CanadianAddress extends Address {
     public String provinceCode;
     public String postalCode;
   }
 
-  @Description("A US address")
-  @RequiredArgsConstructor
+  @Description("represents a U.S. address")
   public static @Immutable class USAddress extends Address {
     public String stateCode;
 
@@ -55,8 +50,7 @@ public class Model8 {
     public String zipCode;
   }
 
-  @Description("A Company")
-  @RequiredArgsConstructor
+  @Description("represents a company")
   public static class Company {
     public @Required String name;
     public @Required Address headquarter;
@@ -70,13 +64,10 @@ public class Model8 {
     public String name;
   }
 
-  @RequiredArgsConstructor
-  @AllArgsConstructor
   public static @Immutable class Phone {
     public @Readonly int countryCode;
     public @Required String number;
     public @Readonly String extension;
     public PhoneQualifier qualifier;
   }
-
 }
