@@ -623,7 +623,7 @@ public class PojoGenerator {
   }
 
   private void generateToString(FormatWriter w, Class<?> claz) {
-    List<Field> fields = getVariables(claz);
+    List<Field> fields = getAllVariables(claz);
 
     w.println("@Override");
     w.println("public String toString() {");
@@ -631,7 +631,9 @@ public class PojoGenerator {
     w.printlnIndented("sb.append(\"{\");");
 
     for (Field field : fields) {
-      w.printlnIndented("sb.append(\"{0} = \").append({0}).append(\", \");", field.getName());
+      String name = field.getName();
+      String getter = getGetterName(field);
+      w.printlnIndented("sb.append(\"{0} = \").append({1}()).append(\", \");", name, getter);
     }
 
     w.printlnIndented("sb.append(\"}\");");
@@ -686,6 +688,10 @@ public class PojoGenerator {
 
   private List<Field> getConstants(Class<?> claz) {
     return Arrays.stream(claz.getDeclaredFields()).filter(f -> isConstant(f)).toList();
+  }
+
+  private List<Field> getAllVariables(Class<?> claz) {
+    return Arrays.stream(claz.getFields()).filter(f -> !isConstant(f)).toList();
   }
 
   private List<Field> getVariables(Class<?> claz) {
