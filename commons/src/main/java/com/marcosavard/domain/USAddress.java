@@ -1,27 +1,14 @@
 package com.marcosavard.domain;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
  * USAddress represents a U.S. address
- * Generated on 2022/10/19 11:17
+ * Generated on 2022/10/19 15:04
  */
 public class USAddress extends Address {
   private final String stateCode;
   private final String zipCode;
-  
-  public static final Field STATE_CODE_FIELD;
-  public static final Field ZIP_CODE_FIELD;
-  
-  static {
-    try {
-      STATE_CODE_FIELD = USAddress.class.getDeclaredField("stateCode");
-      ZIP_CODE_FIELD = USAddress.class.getDeclaredField("zipCode");
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-  }
   
   /**
    * @param country Country
@@ -33,6 +20,14 @@ public class USAddress extends Address {
    */
   public USAddress(String civicNumber, String streetName, String noApartment, Country country, String stateCode, String zipCode) {
     super(civicNumber, streetName, noApartment, country);
+    if (zipCode == null) {
+      throw new IllegalArgumentException ("Parameter 'zipCode' cannot be null");
+    }
+    
+    if (stateCode == null) {
+      throw new IllegalArgumentException ("Parameter 'stateCode' cannot be null");
+    }
+    
     this.zipCode = zipCode;
     this.stateCode = stateCode;
     
@@ -52,26 +47,6 @@ public class USAddress extends Address {
     return zipCode;
   }
   
-  
-  public static Field[] getFields() {
-    return new Field[] {STATE_CODE_FIELD, ZIP_CODE_FIELD};
-  }
-  
-  /**
-   * @param field
-   * @return the value for this field
-   */
-  public Object get(Field field) throws IllegalAccessException {
-    return field.get(this);
-  }
-  
-  /**
-   * @param field
-   * @param value to be assigned
-   */
-  public void set(Field field, Object value) throws IllegalAccessException {
-    field.set(this, value);
-  }
   
   @Override
   public boolean equals(Object other) {

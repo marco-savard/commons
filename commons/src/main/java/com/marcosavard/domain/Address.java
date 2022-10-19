@@ -1,33 +1,16 @@
 package com.marcosavard.domain;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
  * Address represents an international address
- * Generated on 2022/10/19 11:17
+ * Generated on 2022/10/19 15:04
  */
 public abstract class Address {
   private final String civicNumber;
   private final String streetName;
   private final String noApartment;
   private final Country country;
-  
-  public static final Field CIVIC_NUMBER_FIELD;
-  public static final Field STREET_NAME_FIELD;
-  public static final Field NO_APARTMENT_FIELD;
-  public static final Field COUNTRY_FIELD;
-  
-  static {
-    try {
-      CIVIC_NUMBER_FIELD = Address.class.getDeclaredField("civicNumber");
-      STREET_NAME_FIELD = Address.class.getDeclaredField("streetName");
-      NO_APARTMENT_FIELD = Address.class.getDeclaredField("noApartment");
-      COUNTRY_FIELD = Address.class.getDeclaredField("country");
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-  }
   
   /**
    * @param country Country
@@ -36,6 +19,22 @@ public abstract class Address {
    * @param civicNumber String
    */
   protected Address(String civicNumber, String streetName, String noApartment, Country country) {
+    if (country == null) {
+      throw new IllegalArgumentException ("Parameter 'country' cannot be null");
+    }
+    
+    if (streetName == null) {
+      throw new IllegalArgumentException ("Parameter 'streetName' cannot be null");
+    }
+    
+    if (noApartment == null) {
+      throw new IllegalArgumentException ("Parameter 'noApartment' cannot be null");
+    }
+    
+    if (civicNumber == null) {
+      throw new IllegalArgumentException ("Parameter 'civicNumber' cannot be null");
+    }
+    
     this.country = country;
     this.streetName = streetName;
     this.noApartment = noApartment;
@@ -71,26 +70,6 @@ public abstract class Address {
     return country;
   }
   
-  
-  public static Field[] getFields() {
-    return new Field[] {CIVIC_NUMBER_FIELD, STREET_NAME_FIELD, NO_APARTMENT_FIELD, COUNTRY_FIELD};
-  }
-  
-  /**
-   * @param field
-   * @return the value for this field
-   */
-  public Object get(Field field) throws IllegalAccessException {
-    return field.get(this);
-  }
-  
-  /**
-   * @param field
-   * @param value to be assigned
-   */
-  public void set(Field field, Object value) throws IllegalAccessException {
-    field.set(this, value);
-  }
   
   @Override
   public boolean equals(Object other) {

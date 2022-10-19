@@ -1,19 +1,25 @@
 package com.marcosavard.domain.model;
 
+import com.marcosavard.commons.meta.annotations.Components;
+import com.marcosavard.commons.meta.annotations.Description;
+import com.marcosavard.commons.meta.annotations.Immutable;
+import com.marcosavard.commons.meta.annotations.NotNull;
+import com.marcosavard.commons.meta.annotations.Readonly;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.lang.reflect.Field;
-
-import com.marcosavard.commons.meta.annotations.*;
-import com.marcosavard.domain.Branch;
 
 public class Model8 {
   public enum Country {
-    CA, US
+    CA,
+    US
   };
 
   public enum PhoneQualifier {
-    HOME, CELL, WORK, FAX
+    HOME,
+    CELL,
+    WORK,
+    FAX
   };
 
   @Description("represents a person who has a name and a birthdate")
@@ -29,12 +35,13 @@ public class Model8 {
 
   @Description("represents a person who can be hired by a company")
   public static class Worker extends Person {
+    public @Readonly long workerId;
     public Company employer;
     public Address officeAddress;
   }
 
   @Description("represents an international address")
-  public static abstract @Immutable class Address {
+  public abstract static @Immutable class Address {
     public String civicNumber;
     public String streetName;
     public String noApartment;
@@ -57,20 +64,22 @@ public class Model8 {
 
   @Description("represents a company")
   public static class Company {
-    public @NotNull String name;
-    public @NotNull Address headquarter;
-    public List<Worker> employees;
+    public @Readonly String name;
+    public @Readonly Address headquarter;
     public List<Phone> phoneNumbers;
-    public List<Branch> divisions;
+    public @Components List<Branch> divisions;
   }
 
   public static class Branch {
-    public Company ownerCompany;
-    public Address location;
-    public String name;
+    public @Readonly String name;
+    public @Readonly Address location;
+    public @Components List<Branch> subdivisions;
+    public @Components List<Team> teams;
+  }
 
-    public Branch() throws NoSuchFieldException {
-    }
+  public static class Team {
+    public @Readonly String name;
+    public List<Worker> employees;
   }
 
   public static class Phone {

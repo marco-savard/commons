@@ -1,57 +1,35 @@
 package com.marcosavard.domain;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Branch 
- * Generated on 2022/10/19 11:17
+ * Generated on 2022/10/19 15:04
  */
 public class Branch {
-  private Company ownerCompany;
-  private Address location;
-  private String name;
-  
-  public static final Field OWNER_COMPANY_FIELD;
-  public static final Field LOCATION_FIELD;
-  public static final Field NAME_FIELD;
-  
-  static {
-    try {
-      OWNER_COMPANY_FIELD = Branch.class.getDeclaredField("ownerCompany");
-      LOCATION_FIELD = Branch.class.getDeclaredField("location");
-      NAME_FIELD = Branch.class.getDeclaredField("name");
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-  }
+  private final String name;
+  private final Address location;
+  private List<Branch> subdivisions = new ArrayList<>();
+  private List<Team> teams = new ArrayList<>();
   
   /**
-   * @return ownerCompany Company
-   */
-  public Company getOwnerCompany() {
-    return ownerCompany;
-  }
-  
-  /**
-   * @param ownerCompany Company
-   */
-  public void setOwnerCompany(Company ownerCompany) {
-    this.ownerCompany = ownerCompany;
-  }
-  
-  /**
-   * @return location Address
-   */
-  public Address getLocation() {
-    return location;
-  }
-  
-  /**
+   * @param name String
    * @param location Address
    */
-  public void setLocation(Address location) {
+  public Branch(String name, Address location) {
+    if (name == null) {
+      throw new IllegalArgumentException ("Parameter 'name' cannot be null");
+    }
+    
+    if (location == null) {
+      throw new IllegalArgumentException ("Parameter 'location' cannot be null");
+    }
+    
+    this.name = name;
     this.location = location;
+    
   }
   
   /**
@@ -62,32 +40,46 @@ public class Branch {
   }
   
   /**
-   * @param name String
+   * @return location Address
    */
-  public void setName(String name) {
-    this.name = name;
-  }
-  
-  
-  public static Field[] getFields() {
-    return new Field[] {OWNER_COMPANY_FIELD, LOCATION_FIELD, NAME_FIELD};
+  public Address getLocation() {
+    return location;
   }
   
   /**
-   * @param field
-   * @return the value for this field
+   * @return subdivisions List
    */
-  public Object get(Field field) throws IllegalAccessException {
-    return field.get(this);
+  public List<Branch> getSubdivisions() {
+    return subdivisions;
+  }
+  
+  public Branch createBranch(String name, Address location) {
+    Branch branch = new Branch(name, location);
+    this.subdivisions.add(branch);
+    return branch;
+  }
+  
+  public void removeFromSubdivisions(Branch branch) {
+    this.subdivisions.remove(branch);
   }
   
   /**
-   * @param field
-   * @param value to be assigned
+   * @return teams List
    */
-  public void set(Field field, Object value) throws IllegalAccessException {
-    field.set(this, value);
+  public List<Team> getTeams() {
+    return teams;
   }
+  
+  public Team createTeam(String name) {
+    Team team = new Team(name);
+    this.teams.add(team);
+    return team;
+  }
+  
+  public void removeFromTeams(Team team) {
+    this.teams.remove(team);
+  }
+  
   
   @Override
   public boolean equals(Object other) {
@@ -104,14 +96,15 @@ public class Branch {
   
   @Override
   public int hashCode() {
-    return Objects.hash(getOwnerCompany(), getLocation(), getName());
+    return Objects.hash(getName(), getLocation(), getSubdivisions(), getTeams());
   }
   
   protected boolean isEqualTo(Branch that) {
     boolean equal = true;
-    equal = equal && getOwnerCompany() == null ? that.getOwnerCompany() == null : getOwnerCompany().equals(that.getOwnerCompany());
-    equal = equal && getLocation() == null ? that.getLocation() == null : getLocation().equals(that.getLocation());
     equal = equal && getName() == null ? that.getName() == null : getName().equals(that.getName());
+    equal = equal && getLocation() == null ? that.getLocation() == null : getLocation().equals(that.getLocation());
+    equal = equal && getSubdivisions() == null ? that.getSubdivisions() == null : getSubdivisions().equals(that.getSubdivisions());
+    equal = equal && getTeams() == null ? that.getTeams() == null : getTeams().equals(that.getTeams());
     return equal;
   }
   
@@ -119,9 +112,10 @@ public class Branch {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
-    sb.append("ownerCompany = ").append(ownerCompany).append(", ");
-    sb.append("location = ").append(location).append(", ");
     sb.append("name = ").append(name).append(", ");
+    sb.append("location = ").append(location).append(", ");
+    sb.append("subdivisions = ").append(subdivisions).append(", ");
+    sb.append("teams = ").append(teams).append(", ");
     sb.append("}");
     return sb.toString();
   }

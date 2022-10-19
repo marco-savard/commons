@@ -1,6 +1,5 @@
 package com.marcosavard.domain;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.Objects;
 
 /**
  * Person represents a person who has a name and a birthdate
- * Generated on 2022/10/19 11:17
+ * Generated on 2022/10/19 15:04
  */
 public class Person {
   public static final String CONST = "99";
@@ -19,26 +18,6 @@ public class Person {
   private LocalDate birthDate;
   private Address homeAddress;
   private List<Phone> phoneNumbers = new ArrayList<>();
-  
-  public static final Field FIRST_NAME_FIELD;
-  public static final Field MIDDLE_NAME_FIELD;
-  public static final Field LAST_NAME_FIELD;
-  public static final Field BIRTH_DATE_FIELD;
-  public static final Field HOME_ADDRESS_FIELD;
-  public static final Field PHONE_NUMBERS_FIELD;
-  
-  static {
-    try {
-      FIRST_NAME_FIELD = Person.class.getDeclaredField("firstName");
-      MIDDLE_NAME_FIELD = Person.class.getDeclaredField("middleName");
-      LAST_NAME_FIELD = Person.class.getDeclaredField("lastName");
-      BIRTH_DATE_FIELD = Person.class.getDeclaredField("birthDate");
-      HOME_ADDRESS_FIELD = Person.class.getDeclaredField("homeAddress");
-      PHONE_NUMBERS_FIELD = Person.class.getDeclaredField("phoneNumbers");
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-  }
   
   /**
    * @return firstName String
@@ -137,26 +116,6 @@ public class Person {
     this.phoneNumbers.remove(phone);
   }
   
-  
-  public static Field[] getFields() {
-    return new Field[] {FIRST_NAME_FIELD, MIDDLE_NAME_FIELD, LAST_NAME_FIELD, BIRTH_DATE_FIELD, HOME_ADDRESS_FIELD, PHONE_NUMBERS_FIELD};
-  }
-  
-  /**
-   * @param field
-   * @return the value for this field
-   */
-  public Object get(Field field) throws IllegalAccessException {
-    return field.get(this);
-  }
-  
-  /**
-   * @param field
-   * @param value to be assigned
-   */
-  public void set(Field field, Object value) throws IllegalAccessException {
-    field.set(this, value);
-  }
   
   @Override
   public boolean equals(Object other) {

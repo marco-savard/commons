@@ -1,11 +1,10 @@
 package com.marcosavard.domain;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
  * Phone 
- * Generated on 2022/10/19 11:17
+ * Generated on 2022/10/19 15:04
  */
 public class Phone {
   private final int countryCode;
@@ -13,24 +12,6 @@ public class Phone {
   private final String extension;
   private PhoneQualifier qualifier;
   private boolean active;
-  
-  public static final Field COUNTRY_CODE_FIELD;
-  public static final Field NUMBER_FIELD;
-  public static final Field EXTENSION_FIELD;
-  public static final Field QUALIFIER_FIELD;
-  public static final Field ACTIVE_FIELD;
-  
-  static {
-    try {
-      COUNTRY_CODE_FIELD = Phone.class.getDeclaredField("countryCode");
-      NUMBER_FIELD = Phone.class.getDeclaredField("number");
-      EXTENSION_FIELD = Phone.class.getDeclaredField("extension");
-      QUALIFIER_FIELD = Phone.class.getDeclaredField("qualifier");
-      ACTIVE_FIELD = Phone.class.getDeclaredField("active");
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-  }
   
   /**
    * @param number String
@@ -40,6 +21,10 @@ public class Phone {
   public Phone(int countryCode, String number, String extension) {
     if (number == null) {
       throw new IllegalArgumentException ("Parameter 'number' cannot be null");
+    }
+    
+    if (extension == null) {
+      throw new IllegalArgumentException ("Parameter 'extension' cannot be null");
     }
     
     this.number = number;
@@ -97,26 +82,6 @@ public class Phone {
     this.active = active;
   }
   
-  
-  public static Field[] getFields() {
-    return new Field[] {COUNTRY_CODE_FIELD, NUMBER_FIELD, EXTENSION_FIELD, QUALIFIER_FIELD, ACTIVE_FIELD};
-  }
-  
-  /**
-   * @param field
-   * @return the value for this field
-   */
-  public Object get(Field field) throws IllegalAccessException {
-    return field.get(this);
-  }
-  
-  /**
-   * @param field
-   * @param value to be assigned
-   */
-  public void set(Field field, Object value) throws IllegalAccessException {
-    field.set(this, value);
-  }
   
   @Override
   public boolean equals(Object other) {

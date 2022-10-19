@@ -1,27 +1,14 @@
 package com.marcosavard.domain;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
  * CanadianAddress represents a Canadian address
- * Generated on 2022/10/19 11:17
+ * Generated on 2022/10/19 15:04
  */
 public class CanadianAddress extends Address {
   private final String provinceCode;
   private final String postalCode;
-  
-  public static final Field PROVINCE_CODE_FIELD;
-  public static final Field POSTAL_CODE_FIELD;
-  
-  static {
-    try {
-      PROVINCE_CODE_FIELD = CanadianAddress.class.getDeclaredField("provinceCode");
-      POSTAL_CODE_FIELD = CanadianAddress.class.getDeclaredField("postalCode");
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-  }
   
   /**
    * @param country Country
@@ -33,6 +20,14 @@ public class CanadianAddress extends Address {
    */
   public CanadianAddress(String civicNumber, String streetName, String noApartment, Country country, String provinceCode, String postalCode) {
     super(civicNumber, streetName, noApartment, country);
+    if (provinceCode == null) {
+      throw new IllegalArgumentException ("Parameter 'provinceCode' cannot be null");
+    }
+    
+    if (postalCode == null) {
+      throw new IllegalArgumentException ("Parameter 'postalCode' cannot be null");
+    }
+    
     this.provinceCode = provinceCode;
     this.postalCode = postalCode;
     
@@ -52,26 +47,6 @@ public class CanadianAddress extends Address {
     return postalCode;
   }
   
-  
-  public static Field[] getFields() {
-    return new Field[] {PROVINCE_CODE_FIELD, POSTAL_CODE_FIELD};
-  }
-  
-  /**
-   * @param field
-   * @return the value for this field
-   */
-  public Object get(Field field) throws IllegalAccessException {
-    return field.get(this);
-  }
-  
-  /**
-   * @param field
-   * @param value to be assigned
-   */
-  public void set(Field field, Object value) throws IllegalAccessException {
-    field.set(this, value);
-  }
   
   @Override
   public boolean equals(Object other) {
