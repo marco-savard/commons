@@ -2,7 +2,7 @@ package com.marcosavard.library.javaparser.generate;
 
 import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.meta.annotations.Components;
+import com.marcosavard.commons.meta.annotations.Component;
 import com.marcosavard.commons.meta.annotations.Description;
 import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.NotNull;
@@ -39,13 +39,13 @@ public class PojoGenerator {
     GROUPED_BY_GETTERS_SETTERS
   }
 
-  private final File destinationFolder;
+  private final File outputFolder;
   private int indentation = 2;
   private boolean metadataGeneration = false;
   private AccessorOrder accessorOrder = AccessorOrder.GROUPED_BY_PROPERTIES;
 
-  public PojoGenerator(File destinationFolder) {
-    this.destinationFolder = destinationFolder;
+  public PojoGenerator(File outputFolder) {
+    this.outputFolder = outputFolder;
   }
 
   public PojoGenerator withIndentation(int indentation) {
@@ -66,7 +66,7 @@ public class PojoGenerator {
     // create folder
     String packageName = getPackageName(claz);
     String folderName = packageName.replace(".", "//");
-    File subfolder = new File(destinationFolder, folderName);
+    File subfolder = new File(outputFolder, folderName);
     subfolder.mkdirs();
 
     // create file
@@ -903,7 +903,7 @@ public class PojoGenerator {
   }
 
   private boolean isComponents(Field field) {
-    return field.getAnnotation(Components.class) != null;
+    return field.getAnnotation(Component.class) != null;
   }
 
   private boolean isImmutable(Class<?> claz) {

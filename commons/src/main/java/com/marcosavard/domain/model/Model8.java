@@ -1,6 +1,6 @@
 package com.marcosavard.domain.model;
 
-import com.marcosavard.commons.meta.annotations.Components;
+import com.marcosavard.commons.meta.annotations.Component;
 import com.marcosavard.commons.meta.annotations.Description;
 import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.NotNull;
@@ -67,14 +67,14 @@ public class Model8 {
     public @Readonly String name;
     public @Readonly Address headquarter;
     public List<Phone> phoneNumbers;
-    public @Components List<Branch> divisions;
+    public @Component List<Branch> divisions;
   }
 
   public static class Branch {
     public @Readonly String name;
     public @Readonly Address location;
-    public @Components List<Branch> subdivisions;
-    public @Components List<Team> teams;
+    public @Component List<Branch> subdivisions;
+    public @Component List<Team> teams;
   }
 
   public static class Team {
