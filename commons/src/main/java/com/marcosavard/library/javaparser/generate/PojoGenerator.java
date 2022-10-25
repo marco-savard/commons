@@ -14,23 +14,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class PojoGenerator {
 
@@ -40,12 +28,16 @@ public class PojoGenerator {
   }
 
   private final File outputFolder;
+
+  private final Class[] classes;
+
   private int indentation = 2;
   private boolean metadataGeneration = false;
   private AccessorOrder accessorOrder = AccessorOrder.GROUPED_BY_PROPERTIES;
 
-  public PojoGenerator(File outputFolder) {
+  public PojoGenerator(File outputFolder, Class<?>[] classes) {
     this.outputFolder = outputFolder;
+    this.classes = classes;
   }
 
   public PojoGenerator withIndentation(int indentation) {
@@ -62,7 +54,23 @@ public class PojoGenerator {
     return this;
   }
 
+  public List<File> generate() throws IOException {
+    List<File> generatedFiles = new ArrayList<>();
+    Map<Class, Reference> referenceByClass = findReferenceByClass(classes);
+
+    for (Class claz : classes) {
+      generatedFiles.add(generateClass(claz, referenceByClass));
+    }
+
+    return generatedFiles;
+  }
+
   public File generate(Class<?> claz) throws IOException {
+    Map<Class, Reference> referenceByClass = new HashMap<>();
+    return generateClass(claz, referenceByClass);
+  }
+
+  private File generateClass(Class<?> claz, Map<Class, Reference> referenceByClass) throws IOException {
     // create folder
     String packageName = getPackageName(claz);
     String folderName = packageName.replace(".", "//");
@@ -76,10 +84,28 @@ public class PojoGenerator {
     FormatWriter fw = new FormatWriter(w, indentation);
 
     // generate code
-    generateType(fw, packageName, claz);
+    generateType(fw, packageName, claz, referenceByClass);
     fw.close();
 
     return generated;
+  }
+
+  private Map<Class, Reference> findReferenceByClass(Class<?>[] classes) {
+    Map<Class, Reference> referenceByClass = new HashMap<>();
+
+    for (Class claz : classes) {
+      Field[] fields = claz.getFields();
+      for (Field field : fields) {
+        if (isComponent(field)) {
+          Class type = field.getType();
+          Class child = isCollection(type) ? getItemType(field) : type;
+          Reference ref = new Reference(child, field, "parent");
+          referenceByClass.put(child, ref);
+        }
+      }
+    }
+
+    return referenceByClass;
   }
 
   private String getPackageName(Class<?> claz) {
@@ -88,14 +114,14 @@ public class PojoGenerator {
     return modelPackage.substring(0, idx);
   }
 
-  private void generateType(FormatWriter w, String packageName, Class<?> claz) {
+  private void generateType(FormatWriter w, String packageName, Class<?> claz, Map<Class, Reference> referenceByClass) {
     w.println("package {0};", packageName);
     w.println();
 
     if (claz.isEnum()) {
       generateEnum(w, claz);
     } else {
-      generateClass(w, claz);
+      generateClass(w, claz, referenceByClass);
     }
   }
 
@@ -123,7 +149,7 @@ public class PojoGenerator {
     }
   }
 
-  private void generateClass(FormatWriter w, Class<?> claz) {
+  private void generateClass(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
     String modifiers = getModifiers(claz);
     Class<?> superClass = claz.getSuperclass();
 
@@ -138,10 +164,10 @@ public class PojoGenerator {
     w.println(" {");
     w.indent();
     generateConstants(w, claz);
-    generateVariables(w, claz);
+    generateVariables(w, claz, referenceByClass);
     generateMetaFields(w, claz);
-    generateConstructor(w, claz);
-    generateMethods(w, claz);
+    generateConstructor(w, claz, referenceByClass);
+    generateMethods(w, claz, referenceByClass);
     w.unindent();
     w.println("}");
   }
@@ -209,8 +235,13 @@ public class PojoGenerator {
     }
   }
 
-  private void generateVariables(FormatWriter w, Class<?> claz) {
+  private void generateVariables(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+    Reference reference = referenceByClass.get(claz);
     List<Field> fields = getVariables(claz);
+
+    if (reference != null) {
+      generateReference(w, reference);
+    }
 
     for (Field field : fields) {
       generateField(w, field);
@@ -219,6 +250,12 @@ public class PojoGenerator {
     if (!fields.isEmpty()) {
       w.println();
     }
+  }
+
+  private void generateReference(FormatWriter w, Reference reference) {
+    Class<?> type = reference.oppositeField.getDeclaringClass();
+    String typeName = type.getSimpleName();
+    w.println("private {0} {1};", typeName, reference.getName());
   }
 
   private void generateField(FormatWriter w, Field field) {
@@ -269,64 +306,77 @@ public class PojoGenerator {
     }
   }
 
-  private void generateConstructor(FormatWriter w, Class<?> claz) {
-    List<Field> readOnlyFields = getReadOnlyFields(claz);
-    List<Field> superClassReadOnlyFields = getSuperClassReadOnlyFields(claz);
-    List<Field> notNullFields = getNotNullFields(claz);
+  private void generateConstructor(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+    List<Member> constructorParameters = findConstructorParameters(claz, referenceByClass);
 
-    List<Field> constructorFields = new ArrayList<>();
-    constructorFields.addAll(superClassReadOnlyFields);
-    constructorFields.addAll(readOnlyFields);
-
-    Map<String, Field> fieldsByName = new HashMap<>();
-    for (Field field : constructorFields) {
-      fieldsByName.put(field.getName(), field);
-    }
-
-    if (!constructorFields.isEmpty()) {
+    if (!constructorParameters.isEmpty()) {
       String visibility = isAbstract(claz) ? "protected" : "public";
       String className = claz.getSimpleName();
-      List<String> parameters = getFieldDeclarations(constructorFields);
+      List<Member> superClassMembers = getSuperClassMembers(claz, referenceByClass);
+
       w.println("/**");
-
-      for (String name : fieldsByName.keySet()) {
-        Field field = fieldsByName.get(name);
-        w.println(" * @param " + getDescription(field));
+      for (Member parameter : constructorParameters) {
+        w.println(" * @param " + getDescription(parameter));
       }
-
       w.println(" */");
+
       w.print("{0} {1}(", visibility, className);
-      w.print(String.join(", ", parameters));
+      w.print(String.join(", ", getMemberDeclarations(constructorParameters)));
       w.println(") {");
       w.indent();
-      generateConstructorBody(w, superClassReadOnlyFields, fieldsByName);
+      generateConstructorBody(w, superClassMembers, constructorParameters);
       w.unindent();
       w.println("}");
       w.println();
     }
   }
 
-  private void generateConstructorBody(
-      FormatWriter w, List<Field> superClassReadOnlyFields, Map<String, Field> fieldsByName) {
-    List<Field> settableFields = new ArrayList<>(fieldsByName.values());
-    settableFields.removeAll(superClassReadOnlyFields);
+  private List<Member> findConstructorParameters(Class<?> claz, Map<Class, Reference> referenceByClass) {
+    List<Member> constructorParameters = new ArrayList<>();
+    List<Reference> parentReferences = getParentReferences(claz, referenceByClass);
+    List<Member> superClassMembers = getSuperClassMembers(claz, referenceByClass);
+    List<Field> readOnlyFields = getReadOnlyFields(claz);
 
-    if (!superClassReadOnlyFields.isEmpty()) {
-      List<String> fieldNames = getFieldNames(superClassReadOnlyFields);
-      w.println("super(" + String.join(", ", fieldNames) + ");");
+    constructorParameters.addAll(parentReferences);
+    constructorParameters.addAll(superClassMembers);
+    constructorParameters.addAll(readOnlyFields);
+    return constructorParameters;
+  }
+
+  private List<Reference> getParentReferences(Class<?> claz, Map<Class, Reference> referenceByClass) {
+    List<Reference> parentReferences = new ArrayList<>();
+    Reference reference = referenceByClass.get(claz);
+    if (reference != null) {
+      parentReferences.add(reference);
     }
 
-    for (Field f : settableFields) {
-      if (isNotNull(f) && !isPrimitive(f.getType())) {
-        verifyNullArgument(w, f);
+    return parentReferences;
+  }
+
+  private void generateConstructorBody(FormatWriter w, List<Member> superClassMembers, List<Member> parameters) {
+
+    //generate the super
+    if (!superClassMembers.isEmpty()) {
+      List<String> referenceNames = getReferenceNames(superClassMembers);
+      w.println("super(" + String.join(", ", referenceNames) + ");");
+    }
+
+    List<Member> settableParameters = new ArrayList<>(parameters);
+    settableParameters.removeAll(superClassMembers);
+
+    for (Member m : settableParameters) {
+      if (m instanceof Field f) {
+        if (isNotNull(f) && !isPrimitive(f.getType())) {
+          verifyNullArgument(w, f);
+        }
       }
     }
 
-    for (Field f : settableFields) {
-      w.println("this.{0} = {0};", f.getName());
+    for (Member m : settableParameters) {
+      w.println("this.{0} = {0};", m.getName());
     }
 
-    if (!settableFields.isEmpty()) {
+    if (!settableParameters.isEmpty()) {
       w.println();
     }
   }
@@ -339,22 +389,22 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateMethods(FormatWriter w, Class<?> claz) {
-    generateAccessors(w, claz);
+  private void generateMethods(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+    generateAccessors(w, claz, referenceByClass);
     generateMetaAccessors(w, claz);
     generateIdentityMethods(w, claz);
     generateToString(w, claz);
   }
 
-  private void generateAccessors(FormatWriter w, Class<?> claz) {
+  private void generateAccessors(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
     if (this.accessorOrder == AccessorOrder.GROUPED_BY_PROPERTIES) {
-      generateAccessorsGroupedByProperties(w, claz);
+      generateAccessorsGroupedByProperties(w, claz, referenceByClass);
     } else {
-      generateAccessorsGroupedByGettersSetters(w, claz);
+      generateAccessorsGroupedByGettersSetters(w, claz, referenceByClass);
     }
   }
 
-  private void generateAccessorsGroupedByProperties(FormatWriter w, Class<?> claz) {
+  private void generateAccessorsGroupedByProperties(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
     List<Field> fields = getVariables(claz);
     boolean immutable = isImmutable(claz);
 
@@ -362,14 +412,14 @@ public class PojoGenerator {
       generateGetter(w, field);
 
       if (!immutable && (!isReadOnly(field))) {
-        generateSetter(w, field);
+        generateSetter(w, field, referenceByClass);
       }
     }
 
     w.println();
   }
 
-  private void generateAccessorsGroupedByGettersSetters(FormatWriter w, Class<?> claz) {
+  private void generateAccessorsGroupedByGettersSetters(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
     List<Field> fields = getVariables(claz);
     boolean immutable = isImmutable(claz);
 
@@ -379,7 +429,7 @@ public class PojoGenerator {
 
     for (Field field : fields) {
       if (!immutable && (!isReadOnly(field))) {
-        generateSetter(w, field);
+        generateSetter(w, field, referenceByClass);
       }
     }
 
@@ -402,17 +452,22 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateSetter(FormatWriter w, Field field) {
+  private void generateSetter(FormatWriter w, Field field, Map<Class, Reference> referenceByClass) {
     boolean constant = isConstant(field);
     boolean settable = !constant;
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
+    boolean component = isComponent(field);
 
     if (settable) {
       if (collection) {
-        generateCollectionSetters(w, field);
+        generateCollectionSetters(w, field, referenceByClass);
       } else {
-        generateBasicSetter(w, field);
+        if (component) {
+          generateFactories(w, field, referenceByClass);
+        } else {
+          generateBasicSetter(w, field);
+        }
       }
     }
   }
@@ -438,11 +493,11 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateCollectionSetters(FormatWriter w, Field field) {
-    boolean components = isComponents(field);
+  private void generateCollectionSetters(FormatWriter w, Field field, Map<Class, Reference> referenceByClass) {
+    boolean component = isComponent(field);
 
-    if (components) {
-      generateFactory(w, field);
+    if (component) {
+      generateFactories(w, field, referenceByClass);
     } else {
       generateAdder(w, field);
     }
@@ -450,24 +505,58 @@ public class PojoGenerator {
     generateRemover(w, field);
   }
 
-  private void generateFactory(FormatWriter w, Field field) {
-    String visibility = getVisibility(field);
-    String name = StringUtil.capitalize(field.getName());
-    Class itemType = getItemType(field);
-    String itemTypeName = itemType.getSimpleName();
-    String instance = StringUtil.uncapitalize(itemTypeName);
-    List<Field> fields = getReadOnlyFields(itemType);
-    String parameters = String.join(", ", getFieldDeclarations(fields));
-    String arguments = String.join(", ", getFieldNames(fields));
+  private void generateFactories(FormatWriter w, Field field, Map<Class, Reference> referenceByClass) {
+    Class fieldType = field.getType();
+    Class type = isCollection(fieldType) ? getItemType(field) : fieldType;
+    String fieldName = StringUtil.capitalize(field.getName());
 
-    w.println("{0} {1} create{1}({2}) '{'", visibility, itemTypeName, parameters);
+    if (isAbstract(type)) {
+      List<Class> subclasses = getSubclasses(classes, type);
+
+      for (Class subclass : subclasses) {
+        String typeName =  StringUtil.capitalize(subclass.getSimpleName());
+        String factoryName = "create" + fieldName + typeName;
+        generateFactory(w, field, subclass, factoryName, referenceByClass);
+      }
+    } else {
+      String factoryName = "create" + type.getSimpleName();
+      generateFactory(w, field, type, factoryName, referenceByClass);
+    }
+  }
+
+  private void generateFactory(FormatWriter w, Field field, Class type, String factoryName, Map<Class, Reference> referenceByClass) {
+    String visibility = getVisibility(field);
+    String typeName = type.getSimpleName();
+
+    List<Member> constructorParameters = findConstructorParameters(type, referenceByClass);
+
+    List<Field> readOnlyFields = getAllReadOnlyFields(type);
+    String parameters = String.join(", ", getFieldDeclarations(readOnlyFields));
+
+    w.println("{0} {1} {2}({3}) '{'", visibility, typeName, factoryName, parameters);
     w.indent();
-    w.println("{0} {1} = new {0}({2});", itemTypeName, instance, arguments);
-    w.println("this.{0}.add({1});", field.getName(), instance);
-    w.println("return {0};", instance);
+    generateFactoryBody(w, field, type, constructorParameters, readOnlyFields);
     w.unindent();
     w.println("}");
     w.println();
+  }
+
+  private void generateFactoryBody(FormatWriter w, Field field, Class type, List<Member> constructorParameters, List<Field> readOnlyFields) {
+    String typeName = type.getSimpleName();
+    String instance = StringUtil.uncapitalize(typeName);
+    String arguments = String.join(", ", getMemberNames(readOnlyFields));
+    String allArguments = readOnlyFields.isEmpty() ? "this" : "this, " + arguments;
+    boolean collection = isCollection(field.getType());
+
+    w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
+
+    if (collection) {
+      w.println("this.{0}.add({1});", field.getName(), instance);
+    } else {
+      w.println("this.{0} = {1};", field.getName(), instance);
+    }
+
+    w.println("return {0};", instance);
   }
 
   private void generateAdder(FormatWriter w, Field field) {
@@ -642,15 +731,63 @@ public class PojoGenerator {
     w.println();
   }
 
-  private List<String> getFieldNames(List<Field> fields) {
-    List<String> fieldNames = new ArrayList<>();
+  private List<String> getReferenceNames(List<Member> members) {
+    List<String> memberNames = new ArrayList<>();
 
-    for (Field field : fields) {
-      fieldNames.add(field.getName());
+    for (Member member : members) {
+      memberNames.add(member.getName());
     }
 
-    return fieldNames;
+    return memberNames;
   }
+
+  private List<String> getMemberNames(List<? extends Member> members) {
+    List<String> memberNames = new ArrayList<>();
+
+    for (Member member : members) {
+      memberNames.add(member.getName());
+    }
+
+    return memberNames;
+  }
+
+  private List<Class> getSubclasses(Class[] classes, Class givenClass) {
+    List<Class> subClasses = new ArrayList<>();
+
+    for (Class claz : classes) {
+      if (claz.getSuperclass().equals(givenClass)) {
+        subClasses.add(claz);
+      }
+    }
+
+    return subClasses;
+  }
+
+  private List<Member> getSuperClassMembers(Class<?> claz, Map<Class, Reference> referenceByClass) {
+    List<Member> members = new ArrayList<>();
+    Class superClass = getSuperclass(claz);
+    Reference reference = (superClass == null) ? null : referenceByClass.get(superClass);
+
+    if (reference != null) {
+      members.add(reference);
+    }
+
+    List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
+    List<Field> fields = getReadOnlyFields(claz);
+    List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
+    superclassFields.removeAll(fields);
+    members.addAll(superclassFields);
+    return members;
+  }
+
+  private Class getSuperclass(Class<?> claz) {
+    Class superclass = claz.getSuperclass();
+    return superclass.equals(Object.class) ? null : superclass;
+  }
+
+
+
+
 
   private List<Field> getSuperClassReadOnlyFields(Class<?> claz) {
     List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
@@ -658,6 +795,32 @@ public class PojoGenerator {
     List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
     superclassFields.removeAll(fields);
     return superclassFields;
+  }
+
+  private List<String> getMemberDeclarations(List<Member> members) {
+    List<String> declarations = new UniqueList<>();
+
+    for (Member member : members) {
+      String name = member.getName();
+      Class type = getType(member);
+      declarations.add(type.getSimpleName() + " " + name);
+    }
+
+    return declarations;
+  }
+
+  private Class getType(Member member) {
+    Class type = null;
+
+    if (member instanceof Field) {
+      Field field = (Field) member;
+      type = field.getType();
+    } else if (member instanceof Reference) {
+      Reference ref = (Reference) member;
+      type = ref.getOppositeField().getDeclaringClass();
+    }
+
+    return type;
   }
 
   private List<String> getFieldDeclarations(List<Field> fields) {
@@ -679,10 +842,21 @@ public class PojoGenerator {
     return name + " " + desc;
   }
 
-  private String getDescription(Field field) {
-    String name = field.getName();
-    Description description = field.getAnnotation(Description.class);
-    String desc = (description == null) ? field.getType().getSimpleName() : description.value();
+  private String getDescription(Member member) {
+    String name = member.getName();
+    Description description = null;
+    Class type = null;
+
+    if (member instanceof Field) {
+      Field field = (Field)member;
+      description = field.getAnnotation(Description.class);
+      type = field.getType();
+    } else if (member instanceof Reference) {
+      Reference reference = (Reference)member;
+      type = reference.getOppositeField().getDeclaringClass();
+    }
+
+    String desc = (description == null) ? type.getSimpleName() : description.value();
     return name + " " + desc;
   }
 
@@ -902,7 +1076,7 @@ public class PojoGenerator {
     return Collection.class.isAssignableFrom(type);
   }
 
-  private boolean isComponents(Field field) {
+  private boolean isComponent(Field field) {
     return field.getAnnotation(Component.class) != null;
   }
 
@@ -915,10 +1089,16 @@ public class PojoGenerator {
     return immutable || field.getAnnotation(Readonly.class) != null;
   }
 
-  private boolean isNotNull(Field field) {
-    boolean readonly = isReadOnly(field);
-    boolean notnull = field.getAnnotation(NotNull.class) != null;
-    return readonly || notnull;
+  private boolean isNotNull(Member member) {
+    boolean notNull = false;
+
+    if (member instanceof Field field) {
+      boolean readonly = isReadOnly(field);
+      boolean notnull = field.getAnnotation(NotNull.class) != null;
+      notNull = readonly || notnull;
+    }
+
+    return notNull;
   }
 
   private static class ImportComparator implements Comparator<Class<?>> {
@@ -929,4 +1109,40 @@ public class PojoGenerator {
       return n1.compareTo(n2);
     }
   }
-}
+
+  private static class Reference implements Member {
+    private final Class declaringClass;
+    private final Field oppositeField;
+    private final String name;
+
+    public Reference(Class declaringClass, Field oppositeField, String name) {
+      this.declaringClass = declaringClass;
+      this.oppositeField = oppositeField;
+      this.name = name;
+    }
+
+    @Override
+    public Class<?> getDeclaringClass() {
+      return declaringClass;
+    }
+
+    @Override
+    public String getName() {
+      return name;
+    }
+
+    @Override
+    public int getModifiers() {
+      return 0;
+    }
+
+    @Override
+    public boolean isSynthetic() {
+      return false;
+    }
+
+    public Field getOppositeField() {
+      return oppositeField;
+    }
+  }
+ }

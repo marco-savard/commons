@@ -6,6 +6,8 @@ import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PojoGeneratorDemo {
 
@@ -20,14 +22,16 @@ public class PojoGeneratorDemo {
   }
 
   private static void generate(File outputFolder, Class<?>[] classes) {
-    PojoGenerator generator = new PojoGenerator(outputFolder);
+    try {
+      PojoGenerator generator = new PojoGenerator(outputFolder, classes);
+      List<File> generatedFiles = generator.generate();
 
-    for (Class claz : classes) {
-      try {
-        Console.println("File {0} generated", generator.generate(claz));
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+      for (File generatedFile : generatedFiles) {
+        Console.println("File {0} generated", generatedFile);
       }
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 }
