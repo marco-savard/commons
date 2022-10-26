@@ -352,14 +352,39 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateOfMethod(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
-    List<String> names = getClassNames(signature);
+    List<String> names = getFieldNames(signature);
     String methodName = "of" + String.join("And", names);
-    String parameters = String.join(", ", getMemberDeclarations(constructorParameters));
+    List<String> parameters = new ArrayList<>();
+    parameters.addAll(getMemberDeclarations(constructorParameters));
 
-    w.println("public static void {0}({1}) '{'", methodName, parameters);
+    for (Member member : signature) {
+      Class type = getType(member);
+      List<? extends Member> requiredMembers = getAllRequiredMembers(type);
+      for (Member requiredMember : requiredMembers) {
+        String typeName = getType(requiredMember).getSimpleName();
+        String paramName = member.getName() + StringUtil.capitalize(requiredMember.getName());
+        parameters.add(typeName + " " + paramName);
+      }
+    }
+
+    String parameterStr = String.join(", ", parameters);
+
+    w.println("public static {0} {1}({2}) '{'", claz.getSimpleName(), methodName, parameterStr);
     generateOfMethodBody(w, claz, constructorParameters, signature);
     w.println("}");
     w.println();
+  }
+
+  private List<String> getFieldNames(List<? extends Member> signature) {
+    List<String> fieldNames = new ArrayList<>();
+
+    for (Member member : signature) {
+      Class type = getType(member);
+      String name = StringUtil.capitalize(member.getName());
+      fieldNames.add(type.getSimpleName() + name);
+    }
+
+    return fieldNames;
   }
 
   private void generateOfMethodBody(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
@@ -369,12 +394,22 @@ public class PojoGenerator extends DynamicPackage {
     w.println("{0} {1} = new {0}({2});", claz.getSimpleName(), instance, arguments);
 
     for (Member member : signature) {
+      List<String> memberArguments = new ArrayList<>();
+      memberArguments.add(instance);
       Class type = getType(member);
-      List<Member> typeParameters = findConstructorParameters(type);
+      List<? extends Member> requiredMembers = getAllRequiredMembers(type);
+      //List<Member> typeParameters = findConstructorParameters(type);
 
-      w.println("//new {0}()", type.getSimpleName());
+      for (Member typeParameter : requiredMembers) {
+        String paramName = member.getName() + StringUtil.capitalize(typeParameter.getName());
+        memberArguments.add(paramName);
+      }
+
+      String args = String.join(", ", memberArguments);
+      w.println("{0}.{1} = new {2}({3});", instance, member.getName(), type.getSimpleName(), args);
     }
 
+    w.println("return {0};", instance);
     w.unindent();
   }
 
@@ -925,7 +960,7 @@ public class PojoGenerator extends DynamicPackage {
     return superclassFields;
   }*/
 
-  private List<String> getMemberDeclarations(List<Member> members) {
+  private List<String> getMemberDeclarations(List<? extends Member> members) {
     List<String> declarations = new UniqueList<>();
 
     for (Member member : members) {

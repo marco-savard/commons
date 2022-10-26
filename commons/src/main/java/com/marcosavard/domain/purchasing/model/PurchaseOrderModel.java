@@ -29,7 +29,7 @@ public class PurchaseOrderModel {
         public @NotNull Customer customer;
         public @Component List<Item> items;
         public @Component @NotNull Address billTo;
-        public @Component @NotNull Address shipTo;
+        public @Component Address shipTo;
     }
 
     public static class Item {
@@ -54,7 +54,7 @@ public class PurchaseOrderModel {
     }
 
     public static class GlobalAddress extends Address {
-        public String postalCode;
+        public @Readonly String postalCode;
     }
 
     public enum OrderStatus {
