@@ -29,7 +29,7 @@ public class PurchaseOrderModel {
         public @NotNull Customer customer;
         public @Component List<Item> items;
         public @Component @NotNull Address billTo;
-        public @Component Address shipTo;
+        public @Component @NotNull Address shipTo;
     }
 
     public static class Item {
@@ -44,13 +44,17 @@ public class PurchaseOrderModel {
         public @Readonly String civicNumber;
         public String street;
         public String country;
+        public String city;
     }
 
     public static class USAddress extends Address {
-        public String city;
         @Description("two-letter state code")
         public String stateCode;
         public @Readonly String zipCode;
+    }
+
+    public static class GlobalAddress extends Address {
+        public String postalCode;
     }
 
     public enum OrderStatus {

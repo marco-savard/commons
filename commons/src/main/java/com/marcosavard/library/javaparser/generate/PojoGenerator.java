@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class PojoGenerator {
+public class PojoGenerator extends DynamicPackage {
 
   public enum AccessorOrder {
     GROUPED_BY_PROPERTIES,
@@ -29,15 +29,16 @@ public class PojoGenerator {
 
   private final File outputFolder;
 
-  private final Class[] classes;
+  private final Map<Class, Reference> referenceByClass;
 
   private int indentation = 2;
   private boolean metadataGeneration = false;
   private AccessorOrder accessorOrder = AccessorOrder.GROUPED_BY_PROPERTIES;
 
   public PojoGenerator(File outputFolder, Class<?>[] classes) {
+    super(classes);
     this.outputFolder = outputFolder;
-    this.classes = classes;
+    this.referenceByClass = findReferenceByClass(classes);
   }
 
   public PojoGenerator withIndentation(int indentation) {
@@ -56,10 +57,9 @@ public class PojoGenerator {
 
   public List<File> generate() throws IOException {
     List<File> generatedFiles = new ArrayList<>();
-    Map<Class, Reference> referenceByClass = findReferenceByClass(classes);
 
     for (Class claz : classes) {
-      generatedFiles.add(generateClass(claz, referenceByClass));
+      generatedFiles.add(generateClass(claz));
     }
 
     return generatedFiles;
@@ -67,10 +67,10 @@ public class PojoGenerator {
 
   public File generate(Class<?> claz) throws IOException {
     Map<Class, Reference> referenceByClass = new HashMap<>();
-    return generateClass(claz, referenceByClass);
+    return generateClass(claz);
   }
 
-  private File generateClass(Class<?> claz, Map<Class, Reference> referenceByClass) throws IOException {
+  private File generateClass(Class<?> claz) throws IOException {
     // create folder
     String packageName = getPackageName(claz);
     String folderName = packageName.replace(".", "//");
@@ -84,7 +84,7 @@ public class PojoGenerator {
     FormatWriter fw = new FormatWriter(w, indentation);
 
     // generate code
-    generateType(fw, packageName, claz, referenceByClass);
+    generateType(fw, packageName, claz);
     fw.close();
 
     return generated;
@@ -114,14 +114,14 @@ public class PojoGenerator {
     return modelPackage.substring(0, idx);
   }
 
-  private void generateType(FormatWriter w, String packageName, Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateType(FormatWriter w, String packageName, Class<?> claz) {
     w.println("package {0};", packageName);
     w.println();
 
     if (claz.isEnum()) {
       generateEnum(w, claz);
     } else {
-      generateClass(w, claz, referenceByClass);
+      generateClass(w, claz);
     }
   }
 
@@ -149,7 +149,7 @@ public class PojoGenerator {
     }
   }
 
-  private void generateClass(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateClass(FormatWriter w, Class<?> claz) {
     String modifiers = getModifiers(claz);
     Class<?> superClass = claz.getSuperclass();
 
@@ -164,10 +164,10 @@ public class PojoGenerator {
     w.println(" {");
     w.indent();
     generateConstants(w, claz);
-    generateVariables(w, claz, referenceByClass);
+    generateVariables(w, claz);
     generateMetaFields(w, claz);
-    generateConstructor(w, claz, referenceByClass);
-    generateMethods(w, claz, referenceByClass);
+    generateConstructor(w, claz);
+    generateMethods(w, claz);
     w.unindent();
     w.println("}");
   }
@@ -235,7 +235,7 @@ public class PojoGenerator {
     }
   }
 
-  private void generateVariables(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateVariables(FormatWriter w, Class<?> claz) {
     Reference reference = referenceByClass.get(claz);
     List<Field> fields = getVariables(claz);
 
@@ -306,13 +306,17 @@ public class PojoGenerator {
     }
   }
 
-  private void generateConstructor(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
-    List<Member> constructorParameters = findConstructorParameters(claz, referenceByClass);
+  private void generateConstructor(FormatWriter w, Class<?> claz) {
+    List<Member> constructorParameters = findConstructorParameters(claz);
+
+    if (hasRequiredComponent(claz)) {
+      generateOfMethods(w, claz, constructorParameters);
+    }
 
     if (!constructorParameters.isEmpty()) {
       String visibility = isAbstract(claz) ? "protected" : "public";
       String className = claz.getSimpleName();
-      List<Member> superClassMembers = getSuperClassMembers(claz, referenceByClass);
+      List<Member> superClassMembers = getSuperClassMembers(claz);
 
       w.println("/**");
       for (Member parameter : constructorParameters) {
@@ -331,19 +335,136 @@ public class PojoGenerator {
     }
   }
 
-  private List<Member> findConstructorParameters(Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateOfMethods(FormatWriter w, Class<?> claz, List<Member> constructorParameters) {
+    List<Field> requiredComponents = getRequiredComponents(claz);
+    List<List<? extends Member>> signatures = super.findConcreteFieldSignatures(requiredComponents);
+
+    for (List<? extends Member> signature : signatures) {
+      generateOfMethod(w, claz, constructorParameters, signature);
+    }
+
+    List<Class> types = getMemberTypes(requiredComponents);
+  //  List<List<Class>> signatures = super.findConcreteSignatures(types);
+
+   // for (List<Class> signature : signatures) {
+   //   generateOfMethod(w, claz, signature);
+   // }
+  }
+
+  private void generateOfMethod(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
+    List<String> names = getClassNames(signature);
+    String methodName = "of" + String.join("And", names);
+    String parameters = String.join(", ", getMemberDeclarations(constructorParameters));
+
+    w.println("public static void {0}({1}) '{'", methodName, parameters);
+    generateOfMethodBody(w, claz, constructorParameters, signature);
+    w.println("}");
+    w.println();
+  }
+
+  private void generateOfMethodBody(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
+    w.indent();
+    String instance = StringUtil.uncapitalize(claz.getSimpleName());
+    String arguments = String.join(", ", getMemberNames(constructorParameters));
+    w.println("{0} {1} = new {0}({2});", claz.getSimpleName(), instance, arguments);
+
+    for (Member member : signature) {
+      Class type = getType(member);
+      List<Member> typeParameters = findConstructorParameters(type);
+
+      w.println("//new {0}()", type.getSimpleName());
+    }
+
+    w.unindent();
+  }
+
+  private List<String> getClassNames(List<? extends Member> members) {
+    List<String> classNames = new ArrayList<>();
+
+    for (Member member : members) {
+      Class type = getType(member);
+      classNames.add(type.getSimpleName());
+    }
+
+    return classNames;
+  }
+
+  private List<List<Class>> findConcreteSubclasses(List<Class> types) {
+    List<List<Class>> concreteSubclasses = new ArrayList<>();
+
+    for (Class type : types) {
+      if (isAbstract(type)) {
+        List<Class> subclasses = getSubclasses(classes, type);
+      }
+    }
+
+    return concreteSubclasses;
+  }
+
+  private List<Class> getConcreteTypes(List<Class> types) {
+    List<Class> concreteTypes = new ArrayList<>();
+
+    for (Class type : types) {
+      if (isAbstract(type)) {
+        List<Class> subclasses = getSubclasses(classes, type);
+        concreteTypes.addAll(getConcreteTypes(subclasses));
+      } else {
+        concreteTypes.add(type);
+      }
+    }
+
+    return concreteTypes;
+  }
+
+  private List<Class> getMemberTypes(List<? extends Member> members) {
+    List<Class> memberTypes = new ArrayList<>();
+
+    for (Member member : members) {
+      if (member instanceof Field field) {
+        memberTypes.add(field.getType());
+      }
+    }
+
+    return memberTypes;
+  }
+
+  private boolean hasRequiredComponent(Class<?> claz) {
+    return ! getRequiredComponents(claz).isEmpty();
+  }
+
+  private List<Field> getRequiredComponents(Class<?> claz) {
+    List<? extends Member> readOnlyMembers = getAllRequiredMembers(claz);
+    List<Field> readOnlyFields = new ArrayList<>();
+
+    for (Member member : readOnlyMembers) {
+      if (member instanceof Field field) {
+        readOnlyFields.add(field);
+      }
+    }
+
+    List<Field> requiredComponents = readOnlyFields.stream()
+            .filter(f -> isComponent(f))
+            .toList();
+    return requiredComponents;
+  }
+
+  private List<Member> findConstructorParameters(Class<?> claz) {
     List<Member> constructorParameters = new ArrayList<>();
-    List<Reference> parentReferences = getParentReferences(claz, referenceByClass);
-    List<Member> superClassMembers = getSuperClassMembers(claz, referenceByClass);
-    List<Field> readOnlyFields = getReadOnlyFields(claz);
+    List<Reference> parentReferences = getParentReferences(claz);
+    List<Member> superClassMembers = getSuperClassMembers(claz);
+    List<Member> readOnlyMembers = getReadOnlyMembers(claz);
+
+    readOnlyMembers = readOnlyMembers.stream()
+            .filter(m -> (m instanceof Field) && !isComponent((Field)m))
+            .toList();
 
     constructorParameters.addAll(parentReferences);
     constructorParameters.addAll(superClassMembers);
-    constructorParameters.addAll(readOnlyFields);
+    constructorParameters.addAll(readOnlyMembers);
     return constructorParameters;
   }
 
-  private List<Reference> getParentReferences(Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private List<Reference> getParentReferences(Class<?> claz) {
     List<Reference> parentReferences = new ArrayList<>();
     Reference reference = referenceByClass.get(claz);
     if (reference != null) {
@@ -389,22 +510,22 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateMethods(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
-    generateAccessors(w, claz, referenceByClass);
+  private void generateMethods(FormatWriter w, Class<?> claz) {
+    generateAccessors(w, claz);
     generateMetaAccessors(w, claz);
     generateIdentityMethods(w, claz);
     generateToString(w, claz);
   }
 
-  private void generateAccessors(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateAccessors(FormatWriter w, Class<?> claz) {
     if (this.accessorOrder == AccessorOrder.GROUPED_BY_PROPERTIES) {
-      generateAccessorsGroupedByProperties(w, claz, referenceByClass);
+      generateAccessorsGroupedByProperties(w, claz);
     } else {
-      generateAccessorsGroupedByGettersSetters(w, claz, referenceByClass);
+      generateAccessorsGroupedByGettersSetters(w, claz);
     }
   }
 
-  private void generateAccessorsGroupedByProperties(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateAccessorsGroupedByProperties(FormatWriter w, Class<?> claz) {
     List<Field> fields = getVariables(claz);
     boolean immutable = isImmutable(claz);
 
@@ -412,14 +533,14 @@ public class PojoGenerator {
       generateGetter(w, field);
 
       if (!immutable && (!isReadOnly(field))) {
-        generateSetter(w, field, referenceByClass);
+        generateSetter(w, field);
       }
     }
 
     w.println();
   }
 
-  private void generateAccessorsGroupedByGettersSetters(FormatWriter w, Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private void generateAccessorsGroupedByGettersSetters(FormatWriter w, Class<?> claz) {
     List<Field> fields = getVariables(claz);
     boolean immutable = isImmutable(claz);
 
@@ -429,7 +550,7 @@ public class PojoGenerator {
 
     for (Field field : fields) {
       if (!immutable && (!isReadOnly(field))) {
-        generateSetter(w, field, referenceByClass);
+        generateSetter(w, field);
       }
     }
 
@@ -452,7 +573,7 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateSetter(FormatWriter w, Field field, Map<Class, Reference> referenceByClass) {
+  private void generateSetter(FormatWriter w, Field field) {
     boolean constant = isConstant(field);
     boolean settable = !constant;
     Class<?> type = field.getType();
@@ -461,10 +582,10 @@ public class PojoGenerator {
 
     if (settable) {
       if (collection) {
-        generateCollectionSetters(w, field, referenceByClass);
+        generateCollectionSetters(w, field);
       } else {
         if (component) {
-          generateFactories(w, field, referenceByClass);
+          generateFactories(w, field);
         } else {
           generateBasicSetter(w, field);
         }
@@ -493,11 +614,11 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateCollectionSetters(FormatWriter w, Field field, Map<Class, Reference> referenceByClass) {
-    boolean component = isComponent(field);
+  private void generateCollectionSetters(FormatWriter w, Field field) {
+    boolean component = isNotNull(field) || isComponent(field);
 
     if (component) {
-      generateFactories(w, field, referenceByClass);
+      generateFactories(w, field);
     } else {
       generateAdder(w, field);
     }
@@ -505,7 +626,7 @@ public class PojoGenerator {
     generateRemover(w, field);
   }
 
-  private void generateFactories(FormatWriter w, Field field, Map<Class, Reference> referenceByClass) {
+  private void generateFactories(FormatWriter w, Field field) {
     Class fieldType = field.getType();
     Class type = isCollection(fieldType) ? getItemType(field) : fieldType;
     String fieldName = StringUtil.capitalize(field.getName());
@@ -516,22 +637,23 @@ public class PojoGenerator {
       for (Class subclass : subclasses) {
         String typeName =  StringUtil.capitalize(subclass.getSimpleName());
         String factoryName = "create" + fieldName + typeName;
-        generateFactory(w, field, subclass, factoryName, referenceByClass);
+        generateFactory(w, field, subclass, factoryName);
       }
     } else {
       String factoryName = "create" + type.getSimpleName();
-      generateFactory(w, field, type, factoryName, referenceByClass);
+      generateFactory(w, field, type, factoryName);
     }
   }
 
-  private void generateFactory(FormatWriter w, Field field, Class type, String factoryName, Map<Class, Reference> referenceByClass) {
+  private void generateFactory(FormatWriter w, Field field, Class type, String factoryName) {
     String visibility = getVisibility(field);
     String typeName = type.getSimpleName();
 
-    List<Member> constructorParameters = findConstructorParameters(type, referenceByClass);
+    List<Member> constructorParameters = findConstructorParameters(type);
+    String parameters = String.join(", ", getMemberDeclarations(constructorParameters));
 
-    List<Field> readOnlyFields = getAllReadOnlyFields(type);
-    String parameters = String.join(", ", getFieldDeclarations(readOnlyFields));
+    List<? extends Member> readOnlyFields = getAllReadOnlyMembers(type);
+    //String parameters = String.join(", ", getFieldDeclarations(readOnlyFields));
 
     w.println("{0} {1} {2}({3}) '{'", visibility, typeName, factoryName, parameters);
     w.indent();
@@ -541,11 +663,20 @@ public class PojoGenerator {
     w.println();
   }
 
-  private void generateFactoryBody(FormatWriter w, Field field, Class type, List<Member> constructorParameters, List<Field> readOnlyFields) {
+  private void generateFactoryBody(FormatWriter w, Field field, Class type, List<Member> constructorParameters, List<? extends Member> readOnlyMembers) {
     String typeName = type.getSimpleName();
     String instance = StringUtil.uncapitalize(typeName);
-    String arguments = String.join(", ", getMemberNames(readOnlyFields));
-    String allArguments = readOnlyFields.isEmpty() ? "this" : "this, " + arguments;
+
+    //TEST
+    List<Field> fields = new ArrayList<>();
+    for (Member member : constructorParameters) {
+      if (member instanceof Field) {
+        fields.add((Field)member);
+      }
+    }
+
+    String arguments = String.join(", ", getMemberNames(fields));
+    String allArguments = fields.isEmpty() ? "this" : "this, " + arguments;
     boolean collection = isCollection(field.getType());
 
     w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
@@ -763,7 +894,7 @@ public class PojoGenerator {
     return subClasses;
   }
 
-  private List<Member> getSuperClassMembers(Class<?> claz, Map<Class, Reference> referenceByClass) {
+  private List<Member> getSuperClassMembers(Class<?> claz) {
     List<Member> members = new ArrayList<>();
     Class superClass = getSuperclass(claz);
     Reference reference = (superClass == null) ? null : referenceByClass.get(superClass);
@@ -772,10 +903,10 @@ public class PojoGenerator {
       members.add(reference);
     }
 
-    List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
-    List<Field> fields = getReadOnlyFields(claz);
-    List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
-    superclassFields.removeAll(fields);
+    List<? extends Member> allReadOnlyFields = getAllReadOnlyMembers(claz);
+    List<Member> readOnlyMembers = getReadOnlyMembers(claz);
+    List<Member> superclassFields = new ArrayList<>(allReadOnlyFields);
+    superclassFields.removeAll(readOnlyMembers);
     members.addAll(superclassFields);
     return members;
   }
@@ -785,17 +916,14 @@ public class PojoGenerator {
     return superclass.equals(Object.class) ? null : superclass;
   }
 
-
-
-
-
+  /*
   private List<Field> getSuperClassReadOnlyFields(Class<?> claz) {
     List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
     List<Field> fields = getReadOnlyFields(claz);
     List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
     superclassFields.removeAll(fields);
     return superclassFields;
-  }
+  }*/
 
   private List<String> getMemberDeclarations(List<Member> members) {
     List<String> declarations = new UniqueList<>();
@@ -809,15 +937,14 @@ public class PojoGenerator {
     return declarations;
   }
 
-  private Class getType(Member member) {
+  public Class getType(Member member) {
     Class type = null;
 
-    if (member instanceof Field) {
-      Field field = (Field) member;
-      type = field.getType();
-    } else if (member instanceof Reference) {
+    if (member instanceof Reference) {
       Reference ref = (Reference) member;
       type = ref.getOppositeField().getDeclaringClass();
+    } else {
+      type = super.getType(member);
     }
 
     return type;
@@ -872,14 +999,33 @@ public class PojoGenerator {
     return Arrays.stream(claz.getDeclaredFields()).filter(f -> !isConstant(f)).toList();
   }
 
-  private List<Field> getAllReadOnlyFields(Class<?> claz) {
+  private List<? extends Member> getAllReadOnlyMembers(Class<?> claz) {
     boolean immutable = isImmutable(claz);
-    return Arrays.stream(claz.getFields()).filter(f -> immutable || isReadOnly(f)).toList();
+    List<Field> readOnlyFields = Arrays.stream(claz.getFields())
+            .filter(f -> immutable || isReadOnly(f))
+            .toList();
+
+    List<Member> readOnlyMembers = new ArrayList<>();
+    readOnlyMembers.addAll(readOnlyFields);
+    return readOnlyMembers;
   }
 
-  private List<Field> getReadOnlyFields(Class<?> claz) {
+  private List<? extends Member> getAllRequiredMembers(Class<?> claz) {
     boolean immutable = isImmutable(claz);
-    return Arrays.stream(claz.getDeclaredFields()).filter(f -> immutable || isReadOnly(f)).toList();
+    List<Field> readOnlyFields = Arrays.stream(claz.getFields())
+            .filter(f -> immutable || isNotNull(f))
+            .toList();
+
+    List<Member> readOnlyMembers = new ArrayList<>();
+    readOnlyMembers.addAll(readOnlyFields);
+    return readOnlyMembers;
+  }
+
+  private List<Member> getReadOnlyMembers(Class<?> claz) {
+    boolean immutable = isImmutable(claz);
+    List<Member> readOnlyMembers = new ArrayList<>();
+    readOnlyMembers.addAll(Arrays.stream(claz.getDeclaredFields()).filter(f -> immutable || isReadOnly(f) || isNotNull(f)).toList());
+    return readOnlyMembers;
   }
 
   private List<Field> getNotNullFields(Class<?> claz) {
@@ -1107,6 +1253,44 @@ public class PojoGenerator {
       String n1 = c1.getName();
       String n2 = c2.getName();
       return n1.compareTo(n2);
+    }
+  }
+
+  private static class DynamicMethod implements Member {
+    private final Class declaringClass;
+    private final Class type;
+    private final String name;
+    private final Class[] parameterTypes;
+
+
+    public DynamicMethod(Class declaringClass, Class type, String name, Class... parameterTypes) {
+      this.declaringClass = declaringClass;
+      this.type = type;
+      this.name = name;
+      this.parameterTypes = parameterTypes;
+
+      Method method = null;
+    //  method.
+    }
+
+    @Override
+    public Class<?> getDeclaringClass() {
+      return declaringClass;
+    }
+
+    @Override
+    public String getName() {
+      return name;
+    }
+
+    @Override
+    public int getModifiers() {
+      return 0;
+    }
+
+    @Override
+    public boolean isSynthetic() {
+      return false;
     }
   }
 
