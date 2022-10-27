@@ -307,7 +307,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateConstructor(FormatWriter w, Class<?> claz) {
-    List<Member> constructorParameters = findConstructorParameters(claz);
+    List<Member> constructorParameters = findConstructorParameters(claz, true);
 
     if (hasRequiredComponent(claz)) {
       generateOfMethods(w, claz, constructorParameters);
@@ -316,7 +316,7 @@ public class PojoGenerator extends DynamicPackage {
     if (!constructorParameters.isEmpty()) {
       String visibility = isAbstract(claz) ? "protected" : "public";
       String className = claz.getSimpleName();
-      List<Member> superClassMembers = getSuperClassMembers(claz);
+      List<Member> superClassMembers = getSuperClassMembers(claz, true);
 
       w.println("/**");
       for (Member parameter : constructorParameters) {
@@ -483,10 +483,10 @@ public class PojoGenerator extends DynamicPackage {
     return requiredComponents;
   }
 
-  private List<Member> findConstructorParameters(Class<?> claz) {
+  private List<Member> findConstructorParameters(Class<?> claz, boolean includeParent) {
     List<Member> constructorParameters = new ArrayList<>();
-    List<Reference> parentReferences = getParentReferences(claz);
-    List<Member> superClassMembers = getSuperClassMembers(claz);
+    List<Reference> parentReferences = includeParent ? getParentReferences(claz) : new ArrayList<>();
+    List<Member> superClassMembers = getSuperClassMembers(claz, includeParent);
     List<Member> readOnlyMembers = getReadOnlyMembers(claz);
 
     readOnlyMembers = readOnlyMembers.stream()
@@ -684,7 +684,7 @@ public class PojoGenerator extends DynamicPackage {
     String visibility = getVisibility(field);
     String typeName = type.getSimpleName();
 
-    List<Member> constructorParameters = findConstructorParameters(type);
+    List<Member> constructorParameters = findConstructorParameters(type, false);
     String parameters = String.join(", ", getMemberDeclarations(constructorParameters));
 
     List<? extends Member> readOnlyFields = getAllReadOnlyMembers(type);
@@ -929,10 +929,10 @@ public class PojoGenerator extends DynamicPackage {
     return subClasses;
   }
 
-  private List<Member> getSuperClassMembers(Class<?> claz) {
+  private List<Member> getSuperClassMembers(Class<?> claz, boolean includeParent) {
     List<Member> members = new ArrayList<>();
     Class superClass = getSuperclass(claz);
-    Reference reference = (superClass == null) ? null : referenceByClass.get(superClass);
+    Reference reference = includeParent && (superClass != null) ? referenceByClass.get(superClass) : null;
 
     if (reference != null) {
       members.add(reference);
