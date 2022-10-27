@@ -1,5 +1,6 @@
 package com.marcosavard.library.javaparser.generate;
 
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.meta.annotations.Component;
@@ -71,6 +72,8 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private File generateClass(Class<?> claz) throws IOException {
+    Console.println("Generating code for {0}", claz.getSimpleName());
+
     // create folder
     String packageName = getPackageName(claz);
     String folderName = packageName.replace(".", "//");
@@ -620,9 +623,7 @@ public class PojoGenerator extends DynamicPackage {
         generateAddersRemovers(w, field);
       } else {
         if (component) {
-          if (! notNull) {
             generateFactories(w, field);
-          }
         } else {
           generateBasicSetter(w, field);
         }
@@ -665,7 +666,9 @@ public class PojoGenerator extends DynamicPackage {
 
   private void generateFactories(FormatWriter w, Field field) {
     Class fieldType = field.getType();
-    Class type = isCollection(fieldType) ? getItemType(field) : fieldType;
+    boolean collection = isCollection(fieldType);
+    Class type = collection ? getItemType(field) : fieldType;
+    String verb = collection ? "create" : "set";
     String fieldName = StringUtil.capitalize(field.getName());
 
     if (isAbstract(type)) {
@@ -673,26 +676,26 @@ public class PojoGenerator extends DynamicPackage {
 
       for (Class subclass : subclasses) {
         String typeName =  StringUtil.capitalize(subclass.getSimpleName());
-        String factoryName = "create" + fieldName + typeName;
+        String factoryName = verb + fieldName + typeName;
         generateFactory(w, field, subclass, factoryName);
       }
     } else {
-      String factoryName = "create" + type.getSimpleName();
+      String factoryName = verb + type.getSimpleName();
       generateFactory(w, field, type, factoryName);
     }
   }
 
   private void generateFactory(FormatWriter w, Field field, Class type, String factoryName) {
+    Class fieldType = field.getType();
+    boolean collection = isCollection(fieldType);
     String visibility = getVisibility(field);
-    String typeName = type.getSimpleName();
+    String returnedType = collection ? type.getSimpleName() : "void";
 
     List<Member> constructorParameters = findConstructorParameters(type, false);
     String parameters = String.join(", ", getMemberDeclarations(constructorParameters));
-
     List<? extends Member> readOnlyFields = getAllReadOnlyMembers(type);
-    //String parameters = String.join(", ", getFieldDeclarations(readOnlyFields));
 
-    w.println("{0} {1} {2}({3}) '{'", visibility, typeName, factoryName, parameters);
+    w.println("{0} {1} {2}({3}) '{'", visibility, returnedType, factoryName, parameters);
     w.indent();
     generateFactoryBody(w, field, type, constructorParameters, readOnlyFields);
     w.unindent();
@@ -704,7 +707,6 @@ public class PojoGenerator extends DynamicPackage {
     String typeName = type.getSimpleName();
     String instance = StringUtil.uncapitalize(typeName);
 
-    //TEST
     List<Field> fields = new ArrayList<>();
     for (Member member : constructorParameters) {
       if (member instanceof Field) {
@@ -724,7 +726,9 @@ public class PojoGenerator extends DynamicPackage {
       w.println("this.{0} = {1};", field.getName(), instance);
     }
 
-    w.println("return {0};", instance);
+    if (collection) {
+      w.println("return {0};", instance);
+    }
   }
 
   private void generateAdder(FormatWriter w, Field field) {
