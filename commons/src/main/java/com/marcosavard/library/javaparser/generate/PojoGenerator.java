@@ -609,18 +609,20 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateSetter(FormatWriter w, Field field) {
-    boolean constant = isConstant(field);
-    boolean settable = !constant;
+    boolean settable = ! isConstant(field);
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean component = isComponent(field);
+    boolean notNull = isNotNull(field);
 
     if (settable) {
       if (collection) {
-        generateCollectionSetters(w, field);
+        generateAddersRemovers(w, field);
       } else {
         if (component) {
-          generateFactories(w, field);
+          if (! notNull) {
+            generateFactories(w, field);
+          }
         } else {
           generateBasicSetter(w, field);
         }
@@ -649,8 +651,8 @@ public class PojoGenerator extends DynamicPackage {
     w.println();
   }
 
-  private void generateCollectionSetters(FormatWriter w, Field field) {
-    boolean component = isNotNull(field) || isComponent(field);
+  private void generateAddersRemovers(FormatWriter w, Field field) {
+    boolean component = isComponent(field) && ! isNotNull(field);
 
     if (component) {
       generateFactories(w, field);
