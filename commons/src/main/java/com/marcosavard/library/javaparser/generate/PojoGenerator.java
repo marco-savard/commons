@@ -268,9 +268,9 @@ public class PojoGenerator extends DynamicPackage {
     String initValue = getInitialValue(field);
 
     if (initValue == null) {
-      w.println("{0} {1} {2};", modifiers, typeName, field.getName());
+      w.println("private {0} {1} {2};", modifiers, typeName, field.getName());
     } else {
-      w.println("{0} {1} {2} = {3};", modifiers, typeName, field.getName(), initValue);
+      w.println("private {0} {1} {2} = {3};", modifiers, typeName, field.getName(), initValue);
     }
   }
 
@@ -587,6 +587,8 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateGetter(FormatWriter w, Field field) {
+    String visibility = getVisibility(field);
+    String modifiers = getModifiers(field);
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean optional = isOptional(field);
@@ -599,7 +601,7 @@ public class PojoGenerator extends DynamicPackage {
     w.println("/**");
     w.println(" * @return " + getDescription(field));
     w.println(" */");
-    w.println("public {0} {1}() '{'", typeName, getter);
+    w.println("{0} {1} {2} {3}() '{'", visibility, modifiers, typeName, getter);
     w.printlnIndented("return {0}{1};", field.getName(), orElseNull);
     w.println("}");
     w.println();
@@ -625,6 +627,9 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateBasicSetter(FormatWriter w, Field field) {
+    String visibility = getVisibility(field);
+    String modifiers = getModifiers(field);
+    String prefix = isStatic(field) ? field.getDeclaringClass().getSimpleName() : "this";
     String name = field.getName();
     String methodName = "set" + StringUtil.capitalize(name);
     boolean optional = isOptional(field);
@@ -635,14 +640,14 @@ public class PojoGenerator extends DynamicPackage {
     w.println("/**");
     w.println(" * @param " + getDescription(field));
     w.println(" */");
-    w.println("public void {0}({1} {2}) '{'", methodName, typeName, name);
+    w.println("{0} {1} void {2}({3} {4}) '{'", visibility, modifiers, methodName, typeName, name);
     w.indent();
 
     if (! isPrimitive(type) && ! optional) {
       verifyNullArgument(w, field);
     }
 
-    w.println("this.{0} = {1};", name, value);
+    w.println("{0}.{1} = {2};", prefix, name, value);
     w.unindent();
     w.println("}");
     w.println();
@@ -711,6 +716,7 @@ public class PojoGenerator extends DynamicPackage {
       }
     }
 
+    String prefix = isStatic(field) ? field.getDeclaringClass().getSimpleName() : "this";
     String arguments = String.join(", ", getMemberNames(fields));
     String allArguments = fields.isEmpty() ? "this" : "this, " + arguments;
     boolean collection = isCollection(field.getType());
@@ -720,9 +726,9 @@ public class PojoGenerator extends DynamicPackage {
     w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
 
     if (collection) {
-      w.println("this.{0}.add({1});", field.getName(), instance);
+      w.println("{0}.{1}.add({2});", prefix, field.getName(), instance);
     } else {
-      w.println("this.{0} = {1};", field.getName(), value);
+      w.println("{0}.{1} = {2};", prefix, field.getName(), value);
     }
 
     if (collection) {
@@ -956,11 +962,6 @@ public class PojoGenerator extends DynamicPackage {
     return superClassMembers;
   }
 
-  private Class getSuperclass(Class<?> claz) {
-    Class superclass = claz.getSuperclass();
-    return superclass.equals(Object.class) ? null : superclass;
-  }
-
   /*
   private List<Field> getSuperClassReadOnlyFields(Class<?> claz) {
     List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
@@ -1071,7 +1072,9 @@ public class PojoGenerator extends DynamicPackage {
     List<Member> requiredMembers = new ArrayList<>();
     Field[] fields = claz.getFields();
     requiredMembers.addAll(Arrays.stream(fields)
-            .filter(f -> !isCollection(f.getType()) && (immutable || ! isOptional(f)))
+            .filter(f -> (immutable || ! isOptional(f)))
+            .filter(f -> ! isStatic(f))
+            .filter(f -> !isCollection(f.getType()))
             .toList());
     return requiredMembers;
   }
@@ -1125,16 +1128,6 @@ public class PojoGenerator extends DynamicPackage {
     return verb + StringUtil.capitalize(field.getName());
   }
 
-  private String getVisibility(Field field) {
-    String visibility = "private";
-
-    if (isPublic(field)) {
-      visibility = "public";
-    }
-
-    return visibility;
-  }
-
   private String getModifiers(Class<?> claz) {
     List<String> modifiers = new ArrayList<>();
     boolean isPublic = Modifier.isPublic(claz.getModifiers());
@@ -1151,87 +1144,26 @@ public class PojoGenerator extends DynamicPackage {
     return String.join(" ", modifiers);
   }
 
-  private String getModifiers(Field field) {
-    List<String> modifiers = new ArrayList<>();
-    Class<?> claz = field.getDeclaringClass();
-    boolean immutable = isImmutable(claz);
+  private String getVisibility(Field field) {
+    List<String> modifiers = new NotNullList<>();
     boolean isPublic = Modifier.isPublic(field.getModifiers());
     boolean isProtected = Modifier.isProtected(field.getModifiers());
     boolean isPrivate = Modifier.isPrivate(field.getModifiers());
-    boolean isStatic = Modifier.isStatic(field.getModifiers());
-    boolean isFinal = Modifier.isFinal(field.getModifiers()) || isReadOnly(field) || immutable;
-
-    if (!isStatic || !isFinal) {
-      isPublic = false;
-      isProtected = false;
-      isPrivate = true;
-    }
-
-    if (isPublic) {
-      modifiers.add("public");
-    }
-
-    if (isProtected) {
-      modifiers.add("protected");
-    }
-
-    if (isPrivate) {
-      modifiers.add("private");
-    }
-
-    if (isStatic) {
-      modifiers.add("static");
-    }
-
-    if (isFinal) {
-      modifiers.add("final");
-    }
-
+    modifiers.add(isPublic ? "public" : null);
+    modifiers.add(isProtected ? "protected" : null);
+    modifiers.add(isPrivate ? "private" : null);
     return String.join(" ", modifiers);
   }
 
-  private String getInitialValue(Field field) {
-    String initialValue = null;
-    Class<?> type = field.getType();
-    boolean collection = isCollection(type);
-
-    if (collection) {
-      initialValue = "new ArrayList<>()";
-    } else {
-      if (isConstant(field)) {
-        initialValue = getInitialValueOfVariable(field);
-      }
-    }
-
-    return initialValue;
-  }
-
-  private String getInitialValueOfVariable(Field field) {
-    String initialValue = null;
-
-    try {
-      Class<?> claz = field.getDeclaringClass();
-      Constructor<?> constr = claz.getConstructor(new Class[] {});
-      Object instance = constr.newInstance(new Object[] {});
-      Object value = field.get(instance);
-
-      if (value != null) {
-        initialValue = (value instanceof String) ? "\"" + value + "\"" : Objects.toString(value);
-      }
-
-    } catch (NoSuchMethodException
-        | InstantiationException
-        | IllegalAccessException
-        | InvocationTargetException e) {
-      initialValue = null;
-    }
-
-    return initialValue;
-  }
-
-  private boolean hasSuperClass(Class<?> claz) {
-    Class<?> superclass = claz.getSuperclass();
-    return (superclass != null) && (!Object.class.equals(superclass));
+  private String getModifiers(Field field) {
+    List<String> modifiers = new NotNullList<>();
+    Class<?> claz = field.getDeclaringClass();
+    boolean immutable = isImmutable(claz);
+    boolean isStatic = Modifier.isStatic(field.getModifiers());
+    boolean isFinal = Modifier.isFinal(field.getModifiers()) || isReadOnly(field) || immutable;
+    modifiers.add(isStatic ? "static" : null);
+    modifiers.add(isFinal ? "final" : null);
+    return String.join(" ", modifiers);
   }
 
   private static class ImportComparator implements Comparator<Class<?>> {
@@ -1240,6 +1172,19 @@ public class PojoGenerator extends DynamicPackage {
       String n1 = c1.getName();
       String n2 = c2.getName();
       return n1.compareTo(n2);
+    }
+  }
+
+  private static class NotNullList<E> extends ArrayList<E> {
+    @Override
+    public boolean add(E e) {
+      boolean added = false;
+
+      if (e != null) {
+        added = super.add(e);
+      }
+
+      return added;
     }
   }
  }

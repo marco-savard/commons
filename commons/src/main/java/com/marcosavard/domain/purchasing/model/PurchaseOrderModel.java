@@ -12,6 +12,7 @@ import java.util.Optional;
 public class PurchaseOrderModel {
 
     public class Supplier {
+        public static int supplierCount;
         public @Readonly String name;
         public @Component List<Customer> customers;
         public @Component List<PurchaseOrder> orders;

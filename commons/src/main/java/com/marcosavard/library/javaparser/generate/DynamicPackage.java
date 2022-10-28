@@ -5,14 +5,9 @@ import com.marcosavard.commons.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.NotNull;
 import com.marcosavard.commons.meta.annotations.Readonly;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class DynamicPackage {
 
@@ -54,6 +49,16 @@ public class DynamicPackage {
         }
 
         return concreteSignatures;
+    }
+
+    private List<List<Class>> expandSignatures(List<List<Class>> signatures) {
+        List<List<Class>> expandedSignatures = new ArrayList<>();
+
+        for (List<Class> signature : signatures) {
+
+        }
+
+        return expandedSignatures;
     }
 
     private List<List<Class>> expandConcreteSignatures(List<List<Class>> signatures) {
@@ -107,6 +112,55 @@ public class DynamicPackage {
         return addedSignatures;
     }
 
+    public List<List<Class>> expandConcreteClasses(List<Class> types) {
+        List<List<Class>> signatures = new ArrayList<>();
+        signatures.add(types);
+        List<List<Class>> concreteClasses = expandSignatures(signatures);
+        return concreteClasses;
+    }
+
+    //
+    // getters
+    //
+
+    protected String getInitialValue(Field field) {
+        String initialValue = null;
+        Class<?> type = field.getType();
+        boolean collection = isCollection(type);
+
+        if (collection) {
+            initialValue = "new ArrayList<>()";
+        } else {
+            if (isConstant(field)) {
+                initialValue = getInitialValueOfVariable(field);
+            }
+        }
+
+        return initialValue;
+    }
+
+    private String getInitialValueOfVariable(Field field) {
+        String initialValue = null;
+
+        try {
+            Class<?> claz = field.getDeclaringClass();
+            Constructor<?> constr = claz.getConstructor(new Class[] {});
+            Object instance = constr.newInstance(new Object[] {});
+            Object value = field.get(instance);
+
+            if (value != null) {
+                initialValue = (value instanceof String) ? "\"" + value + "\"" : Objects.toString(value);
+            }
+
+        } catch (NoSuchMethodException
+                 | InstantiationException
+                 | IllegalAccessException
+                 | InvocationTargetException e) {
+            initialValue = null;
+        }
+
+        return initialValue;
+    }
 
     public List<Class> getSubclasses(Class givenClass) {
         List<Class> subClasses = new ArrayList<>();
@@ -118,6 +172,23 @@ public class DynamicPackage {
         }
 
         return subClasses;
+    }
+
+    protected Class getSuperclass(Class<?> claz) {
+        Class superclass = claz.getSuperclass();
+        return superclass.equals(Object.class) ? null : superclass;
+    }
+
+    protected Class<?> getType(Member member) {
+        Class<?> type = null;
+
+        if (member instanceof Field field) {
+            type = field.getType();
+        } else if (member instanceof DynamicField field) {
+            type = field.getType();
+        }
+
+        return type;
     }
 
     public int indexOfAbstractClass(List<Class> classes) {
@@ -148,33 +219,9 @@ public class DynamicPackage {
         return idx;
     }
 
-    protected Class<?> getType(Member member) {
-        Class<?> type = null;
-
-        if (member instanceof Field field) {
-            type = field.getType();
-        } else if (member instanceof DynamicField field) {
-            type = field.getType();
-        }
-
-        return type;
-    }
-
-    public List<List<Class>> expandConcreteClasses(List<Class> types) {
-        List<List<Class>> signatures = new ArrayList<>();
-        signatures.add(types);
-        List<List<Class>> concreteClasses = expandSignatures(signatures);
-        return concreteClasses;
-    }
-
-    private List<List<Class>> expandSignatures(List<List<Class>> signatures) {
-        List<List<Class>> expandedSignatures = new ArrayList<>();
-
-        for (List<Class> signature : signatures) {
-
-        }
-
-        return expandedSignatures;
+    protected boolean hasSuperClass(Class<?> claz) {
+        Class<?> superclass = claz.getSuperclass();
+        return (superclass != null) && (!Object.class.equals(superclass));
     }
 
     protected boolean isAbstract(Class<?> claz) {
@@ -247,6 +294,10 @@ public class DynamicPackage {
     protected boolean isReadOnly(Field field) {
         boolean immutable = isImmutable(field.getDeclaringClass());
         return immutable || field.getAnnotation(Readonly.class) != null;
+    }
+
+    protected boolean isStatic(Field field) {
+        return Modifier.isStatic(field.getModifiers());
     }
 
     //
