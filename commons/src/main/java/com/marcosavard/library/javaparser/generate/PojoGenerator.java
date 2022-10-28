@@ -261,7 +261,9 @@ public class PojoGenerator extends DynamicPackage {
     String modifiers = getModifiers(field);
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
-    Class<?> itemType = collection ? getItemType(field) : null;
+    boolean optional = isOptional(field);
+
+    Class<?> itemType = (collection || optional) ? getItemType(field) : null;
     String typeName = getTypeName(type, itemType);
     String initValue = getInitialValue(field);
 
@@ -587,15 +589,18 @@ public class PojoGenerator extends DynamicPackage {
   private void generateGetter(FormatWriter w, Field field) {
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
-    Class<?> itemType = collection ? getItemType(field) : null;
-    String typeName = getTypeName(type, itemType);
+    boolean optional = isOptional(field);
+
+    Class<?> itemType = collection || optional ? getItemType(field) : null;
+    String typeName = optional ? itemType.getSimpleName() : getTypeName(type, itemType);
     String getter = getGetterName(field);
+    String orElseNull = optional ? ".orElse(null)" : "";
 
     w.println("/**");
     w.println(" * @return " + getDescription(field));
     w.println(" */");
     w.println("public {0} {1}() '{'", typeName, getter);
-    w.printlnIndented("return {0};", field.getName());
+    w.printlnIndented("return {0}{1};", field.getName(), orElseNull);
     w.println("}");
     w.println();
   }
@@ -623,8 +628,10 @@ public class PojoGenerator extends DynamicPackage {
   private void generateBasicSetter(FormatWriter w, Field field) {
     String name = field.getName();
     String methodName = "set" + StringUtil.capitalize(name);
-    Class type = getType(field);
-    String typeName = getTypeName(field);
+    boolean optional = isOptional(field);
+    Class type = optional ? getItemType(field) : getType(field);
+    String typeName = optional ? type.getSimpleName() : getTypeName(field);
+    String value = optional ? "Optional.of(" + name + ")" : name;
 
     w.println("/**");
     w.println(" * @param " + getDescription(field));
@@ -632,11 +639,11 @@ public class PojoGenerator extends DynamicPackage {
     w.println("public void {0}({1} {2}) '{'", methodName, typeName, name);
     w.indent();
 
-    if (!isPrimitive(type) && ! isOptional(field)) {
+    if (! isPrimitive(type) && ! optional) {
       verifyNullArgument(w, field);
     }
 
-    w.println("this.{0} = {0};", name);
+    w.println("this.{0} = {1};", name, value);
     w.unindent();
     w.println("}");
     w.println();

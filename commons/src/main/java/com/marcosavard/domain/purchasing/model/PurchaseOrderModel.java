@@ -7,6 +7,7 @@ import com.marcosavard.commons.meta.annotations.Readonly;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class PurchaseOrderModel {
 
@@ -28,8 +29,8 @@ public class PurchaseOrderModel {
         public @Component Address shipTo;
         public LocalDate orderDate;
         public OrderStatus status;
-        public String comment;
-        public PurchaseOrder previousOrder;
+        public Optional<String> comment;
+        public Optional<PurchaseOrder> previousOrder;
     }
 
     public static class Item {
@@ -43,7 +44,6 @@ public class PurchaseOrderModel {
     public abstract static class Address {
         public @Readonly String civicNumber;
         public String street;
-        public String country;
         public String city;
     }
 
@@ -55,6 +55,7 @@ public class PurchaseOrderModel {
 
     public static class GlobalAddress extends Address {
         public @Readonly String postalCode;
+        public String country;
     }
 
     public enum OrderStatus {

@@ -12,6 +12,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class DynamicPackage {
 
@@ -219,6 +220,11 @@ public class DynamicPackage {
     protected boolean isOptional(Member member) {
         boolean immutable = isImmutable(member.getDeclaringClass());
         boolean optional = false;
+
+        if (member instanceof Field f) {
+            optional =  Optional.class.isAssignableFrom(f.getType());
+        }
+
         return optional;
     }
 
