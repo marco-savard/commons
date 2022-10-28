@@ -20,10 +20,6 @@ public class DynamicPackageDemo {
                 PurchaseOrderModel.Customer.class,
                 PurchaseOrderModel.Address.class,
 
-              //  PurchaseOrderModel.Customer.class,
-             //   PurchaseOrderModel.Address.class,
-              //  PurchaseOrderModel.Address.class,
-
         });
         List<List<Class>> signatures = pack.findConcreteSignatures(fieldTypes);
 

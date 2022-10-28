@@ -22,14 +22,14 @@ public class PurchaseOrderModel {
     }
 
     public static class PurchaseOrder {
-        public LocalDate orderDate;
-        public OrderStatus status;
-        public String comment;
-        public PurchaseOrder previousOrder;
         public @NotNull Customer customer;
         public @Component List<Item> items;
         public @Component @NotNull Address billTo;
         public @Component Address shipTo;
+        public LocalDate orderDate;
+        public OrderStatus status;
+        public String comment;
+        public PurchaseOrder previousOrder;
     }
 
     public static class Item {

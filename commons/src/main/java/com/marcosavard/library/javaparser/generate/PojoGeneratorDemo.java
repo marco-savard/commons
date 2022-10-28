@@ -1,12 +1,11 @@
 package com.marcosavard.library.javaparser.generate;
 
 import com.marcosavard.commons.debug.Console;
-import com.marcosavard.domain.model.Model8;
+import com.marcosavard.domain.library.model.LibraryModel;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PojoGeneratorDemo {
@@ -14,6 +13,7 @@ public class PojoGeneratorDemo {
   public static void main(String[] args) {
     File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
     //File outputFolder = new File("C:/Users/User/IdeaProjects/commons/commons/src/main/java");
+    //generate(outputFolder, LibraryModel.class.getClasses());
     generate(outputFolder, PurchaseOrderModel.class.getClasses());
   }
 

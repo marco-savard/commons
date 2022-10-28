@@ -3,11 +3,7 @@ package com.marcosavard.library.javaparser.generate;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.meta.annotations.Component;
 import com.marcosavard.commons.meta.annotations.Description;
-import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.NotNull;
-import com.marcosavard.commons.meta.annotations.Readonly;
 import com.marcosavard.commons.util.collection.SortedList;
 import com.marcosavard.commons.util.collection.UniqueList;
 
@@ -256,7 +252,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateReference(FormatWriter w, Reference reference) {
-    Class<?> type = reference.oppositeField.getDeclaringClass();
+    Class<?> type = reference.getOppositeField().getDeclaringClass();
     String typeName = type.getSimpleName();
     w.println("private {0} {1};", typeName, reference.getName());
   }
@@ -345,13 +341,6 @@ public class PojoGenerator extends DynamicPackage {
     for (List<? extends Member> signature : signatures) {
       generateOfMethod(w, claz, constructorParameters, signature);
     }
-
-    List<Class> types = getMemberTypes(requiredComponents);
-  //  List<List<Class>> signatures = super.findConcreteSignatures(types);
-
-   // for (List<Class> signature : signatures) {
-   //   generateOfMethod(w, claz, signature);
-   // }
   }
 
   private void generateOfMethod(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
@@ -401,7 +390,6 @@ public class PojoGenerator extends DynamicPackage {
       memberArguments.add(instance);
       Class type = getType(member);
       List<? extends Member> requiredMembers = getAllRequiredMembers(type);
-      //List<Member> typeParameters = findConstructorParameters(type);
 
       for (Member typeParameter : requiredMembers) {
         String paramName = member.getName() + StringUtil.capitalize(typeParameter.getName());
@@ -487,18 +475,20 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private List<Member> findConstructorParameters(Class<?> claz, boolean includeParent) {
-    List<Member> constructorParameters = new ArrayList<>();
+    List<Member> constructorParameters = new UniqueList<>();
     List<Reference> parentReferences = includeParent ? getParentReferences(claz) : new ArrayList<>();
     List<Member> superClassMembers = getSuperClassMembers(claz, includeParent);
-    List<Member> readOnlyMembers = getReadOnlyMembers(claz);
+    List<Member> requiredMembers = getRequiredMembers(claz);
+    List<String> superClassMemberNames = getMemberNames(superClassMembers);
 
-    readOnlyMembers = readOnlyMembers.stream()
-            .filter(m -> (m instanceof Field) && !isComponent((Field)m))
+    requiredMembers = requiredMembers.stream()
+            .filter(m -> (m instanceof Field f) && !isComponent(f))
+            .filter(m -> ! superClassMemberNames.contains(m.getName()))
             .toList();
 
     constructorParameters.addAll(parentReferences);
     constructorParameters.addAll(superClassMembers);
-    constructorParameters.addAll(readOnlyMembers);
+    constructorParameters.addAll(requiredMembers);
     return constructorParameters;
   }
 
@@ -524,10 +514,9 @@ public class PojoGenerator extends DynamicPackage {
     settableParameters.removeAll(superClassMembers);
 
     for (Member m : settableParameters) {
-      if (m instanceof Field f) {
-        if (isNotNull(f) && !isPrimitive(f.getType())) {
-          verifyNullArgument(w, f);
-        }
+      Class type = getType(m);
+      if (! isPrimitive(type) && ! isOptional(m)) {
+        verifyNullArgument(w, m);
       }
     }
 
@@ -540,10 +529,10 @@ public class PojoGenerator extends DynamicPackage {
     }
   }
 
-  private void verifyNullArgument(FormatWriter w, Field f) {
-    w.println("if ({0} == null) '{'", f.getName());
+  private void verifyNullArgument(FormatWriter w, Member m) {
+    w.println("if ({0} == null) '{'", m.getName());
     w.printlnIndented(
-        "throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");", f.getName());
+        "throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");" ,m.getName());
     w.println("}");
     w.println();
   }
@@ -616,7 +605,7 @@ public class PojoGenerator extends DynamicPackage {
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean component = isComponent(field);
-    boolean notNull = isNotNull(field);
+    //boolean notNull = isNotNull(field);
 
     if (settable) {
       if (collection) {
@@ -634,6 +623,7 @@ public class PojoGenerator extends DynamicPackage {
   private void generateBasicSetter(FormatWriter w, Field field) {
     String name = field.getName();
     String methodName = "set" + StringUtil.capitalize(name);
+    Class type = getType(field);
     String typeName = getTypeName(field);
 
     w.println("/**");
@@ -642,7 +632,7 @@ public class PojoGenerator extends DynamicPackage {
     w.println("public void {0}({1} {2}) '{'", methodName, typeName, name);
     w.indent();
 
-    if (isNotNull(field) && !isPrimitive(field.getType())) {
+    if (!isPrimitive(type) && ! isOptional(field)) {
       verifyNullArgument(w, field);
     }
 
@@ -653,7 +643,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateAddersRemovers(FormatWriter w, Field field) {
-    boolean component = isComponent(field) && ! isNotNull(field);
+    boolean component = isComponent(field) && isOptional(field);
 
     if (component) {
       generateFactories(w, field);
@@ -936,20 +926,25 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private List<Member> getSuperClassMembers(Class<?> claz, boolean includeParent) {
-    List<Member> members = new ArrayList<>();
+    List<Member> superClassMembers = new ArrayList<>();
     Class superClass = getSuperclass(claz);
     Reference reference = includeParent && (superClass != null) ? referenceByClass.get(superClass) : null;
 
     if (reference != null) {
-      members.add(reference);
+      superClassMembers.add(reference);
     }
 
-    List<? extends Member> allReadOnlyFields = getAllReadOnlyMembers(claz);
-    List<Member> readOnlyMembers = getReadOnlyMembers(claz);
-    List<Member> superclassFields = new ArrayList<>(allReadOnlyFields);
-    superclassFields.removeAll(readOnlyMembers);
-    members.addAll(superclassFields);
-    return members;
+    List<Member> requiredMembers = (superClass != null) ? getRequiredMembers(superClass) : new ArrayList<>();
+    superClassMembers.addAll(requiredMembers);
+
+   // List<Member> superClassRequiredMembers = (superClass != null) ? getSuperClassMembers(superClass, includeParent) : new ArrayList<>();
+
+    //List<? extends Member> allReadOnlyFields = getAllReadOnlyMembers(claz);
+    //List<Member> requiredMembers = getRequiredMembers(claz);
+    //List<Member> superclassFields = new ArrayList<>(requiredMembers);
+    //superclassFields.removeAll(allReadOnlyFields);
+    //members.addAll(superclassFields);
+    return superClassMembers;
   }
 
   private Class getSuperclass(Class<?> claz) {
@@ -1053,24 +1048,27 @@ public class PojoGenerator extends DynamicPackage {
 
   private List<? extends Member> getAllRequiredMembers(Class<?> claz) {
     boolean immutable = isImmutable(claz);
-    List<Field> readOnlyFields = Arrays.stream(claz.getFields())
-            .filter(f -> immutable || isNotNull(f))
+    List<Field> requiredFields = Arrays.stream(claz.getFields())
+            .filter(f -> immutable || ! isOptional(f))
             .toList();
 
-    List<Member> readOnlyMembers = new ArrayList<>();
-    readOnlyMembers.addAll(readOnlyFields);
-    return readOnlyMembers;
+    List<Member> requiredMembers = new ArrayList<>();
+    requiredMembers.addAll(requiredFields);
+    return requiredMembers;
   }
 
-  private List<Member> getReadOnlyMembers(Class<?> claz) {
+  private List<Member> getRequiredMembers(Class<?> claz) {
     boolean immutable = isImmutable(claz);
-    List<Member> readOnlyMembers = new ArrayList<>();
-    readOnlyMembers.addAll(Arrays.stream(claz.getDeclaredFields()).filter(f -> immutable || isReadOnly(f) || isNotNull(f)).toList());
-    return readOnlyMembers;
+    List<Member> requiredMembers = new ArrayList<>();
+    Field[] fields = claz.getFields();
+    requiredMembers.addAll(Arrays.stream(fields)
+            .filter(f -> !isCollection(f.getType()) && (immutable || ! isOptional(f)))
+            .toList());
+    return requiredMembers;
   }
 
   private List<Field> getNotNullFields(Class<?> claz) {
-    return Arrays.stream(claz.getDeclaredFields()).filter(f -> isNotNull(f)).toList();
+    return Arrays.stream(claz.getDeclaredFields()).filter(f -> ! isOptional(f)).toList();
   }
 
   private Class<?> getItemType(Field f) {
@@ -1227,147 +1225,12 @@ public class PojoGenerator extends DynamicPackage {
     return (superclass != null) && (!Object.class.equals(superclass));
   }
 
-  private boolean isAbstract(Class<?> claz) {
-    return Modifier.isAbstract(claz.getModifiers());
-  }
-
-  private boolean isConstant(Field field) {
-    boolean isStatic = Modifier.isStatic(field.getModifiers());
-    boolean isFinal = Modifier.isFinal(field.getModifiers());
-    return isStatic && isFinal;
-  }
-
-  private boolean isPublic(Field field) {
-    return Modifier.isPublic(field.getModifiers());
-  }
-
-  private boolean isPrimitive(Class<?> type) {
-    boolean primitive = boolean.class.equals(type);
-    primitive = primitive || byte.class.equals(type);
-    primitive = primitive || char.class.equals(type);
-    primitive = primitive || short.class.equals(type);
-    primitive = primitive || int.class.equals(type);
-    primitive = primitive || long.class.equals(type);
-    primitive = primitive || float.class.equals(type);
-    primitive = primitive || double.class.equals(type);
-    return primitive;
-  }
-
-  private boolean isAddable(Package pack, Class<?> type) {
-    String packageName = type.getPackageName();
-    boolean addable = !"java.lang".equals(packageName);
-    return addable && !type.getPackage().equals(pack);
-  }
-
-  private boolean isCollection(Class<?> type) {
-    return Collection.class.isAssignableFrom(type);
-  }
-
-  private boolean isComponent(Field field) {
-    return field.getAnnotation(Component.class) != null;
-  }
-
-  private boolean isImmutable(Class<?> claz) {
-    return claz.getAnnotation(Immutable.class) != null;
-  }
-
-  private boolean isReadOnly(Field field) {
-    boolean immutable = isImmutable(field.getDeclaringClass());
-    return immutable || field.getAnnotation(Readonly.class) != null;
-  }
-
-  private boolean isNotNull(Member member) {
-    boolean notNull = false;
-
-    if (member instanceof Field field) {
-      boolean readonly = isReadOnly(field);
-      boolean notnull = field.getAnnotation(NotNull.class) != null;
-      notNull = readonly || notnull;
-    }
-
-    return notNull;
-  }
-
   private static class ImportComparator implements Comparator<Class<?>> {
     @Override
     public int compare(Class c1, Class c2) {
       String n1 = c1.getName();
       String n2 = c2.getName();
       return n1.compareTo(n2);
-    }
-  }
-
-  private static class DynamicMethod implements Member {
-    private final Class declaringClass;
-    private final Class type;
-    private final String name;
-    private final Class[] parameterTypes;
-
-
-    public DynamicMethod(Class declaringClass, Class type, String name, Class... parameterTypes) {
-      this.declaringClass = declaringClass;
-      this.type = type;
-      this.name = name;
-      this.parameterTypes = parameterTypes;
-
-      Method method = null;
-    //  method.
-    }
-
-    @Override
-    public Class<?> getDeclaringClass() {
-      return declaringClass;
-    }
-
-    @Override
-    public String getName() {
-      return name;
-    }
-
-    @Override
-    public int getModifiers() {
-      return 0;
-    }
-
-    @Override
-    public boolean isSynthetic() {
-      return false;
-    }
-  }
-
-  private static class Reference implements Member {
-    private final Class declaringClass;
-    private final Field oppositeField;
-    private final String name;
-
-    public Reference(Class declaringClass, Field oppositeField, String name) {
-      this.declaringClass = declaringClass;
-      this.oppositeField = oppositeField;
-      this.name = name;
-    }
-
-    @Override
-    public Class<?> getDeclaringClass() {
-      return declaringClass;
-    }
-
-    @Override
-    public String getName() {
-      return name;
-    }
-
-    @Override
-    public int getModifiers() {
-      return 0;
-    }
-
-    @Override
-    public boolean isSynthetic() {
-      return false;
-    }
-
-    public Field getOppositeField() {
-      return oppositeField;
     }
   }
  }

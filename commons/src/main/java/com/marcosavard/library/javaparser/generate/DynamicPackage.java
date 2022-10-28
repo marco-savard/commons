@@ -1,10 +1,16 @@
 package com.marcosavard.library.javaparser.generate;
 
+import com.marcosavard.commons.meta.annotations.Component;
+import com.marcosavard.commons.meta.annotations.Immutable;
+import com.marcosavard.commons.meta.annotations.NotNull;
+import com.marcosavard.commons.meta.annotations.Readonly;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DynamicPackage {
@@ -153,12 +159,6 @@ public class DynamicPackage {
         return type;
     }
 
-    private boolean isAbstract(Class<?> claz) {
-        return Modifier.isAbstract(claz.getModifiers());
-    }
-
-
-
     public List<List<Class>> expandConcreteClasses(List<Class> types) {
         List<List<Class>> signatures = new ArrayList<>();
         signatures.add(types);
@@ -174,6 +174,73 @@ public class DynamicPackage {
         }
 
         return expandedSignatures;
+    }
+
+    protected boolean isAbstract(Class<?> claz) {
+        return Modifier.isAbstract(claz.getModifiers());
+    }
+
+    protected boolean isAddable(Package pack, Class<?> type) {
+        String packageName = type.getPackageName();
+        boolean addable = !"java.lang".equals(packageName);
+        return addable && !type.getPackage().equals(pack);
+    }
+
+    protected boolean isCollection(Class<?> type) {
+        return Collection.class.isAssignableFrom(type);
+    }
+
+    protected boolean isComponent(Field field) {
+        return field.getAnnotation(Component.class) != null;
+    }
+
+    protected boolean isConstant(Field field) {
+        boolean isStatic = Modifier.isStatic(field.getModifiers());
+        boolean isFinal = Modifier.isFinal(field.getModifiers());
+        return isStatic && isFinal;
+    }
+
+    protected boolean isImmutable(Class<?> claz) {
+        return claz.getAnnotation(Immutable.class) != null;
+    }
+
+    private boolean isNotNull(Member member) {
+        boolean notNull = false;
+
+        if (member instanceof Field field) {
+            boolean readonly = isReadOnly(field);
+            boolean notnull = field.getAnnotation(NotNull.class) != null;
+            notNull = readonly || notnull;
+        }
+
+        return notNull;
+    }
+
+    protected boolean isOptional(Member member) {
+        boolean immutable = isImmutable(member.getDeclaringClass());
+        boolean optional = false;
+        return optional;
+    }
+
+    protected boolean isPrimitive(Class<?> type) {
+        boolean primitive = boolean.class.equals(type);
+        primitive = primitive || byte.class.equals(type);
+        primitive = primitive || char.class.equals(type);
+        primitive = primitive || short.class.equals(type);
+        primitive = primitive || int.class.equals(type);
+        primitive = primitive || long.class.equals(type);
+        primitive = primitive || float.class.equals(type);
+        primitive = primitive || double.class.equals(type);
+        return primitive;
+    }
+
+    protected boolean isPublic(Field field) {
+        return Modifier.isPublic(field.getModifiers());
+    }
+
+    protected boolean isReadOnly(Field field) {
+        boolean immutable = isImmutable(field.getDeclaringClass());
+        return immutable || field.getAnnotation(Readonly.class) != null;
     }
 
     //
@@ -220,6 +287,43 @@ public class DynamicPackage {
             return MessageFormat.format("{0} {1}", type.getSimpleName(), name);
         }
     }
+
+    static class Reference implements Member {
+        private final Class declaringClass;
+        private final Field oppositeField;
+        private final String name;
+
+        public Reference(Class declaringClass, Field oppositeField, String name) {
+            this.declaringClass = declaringClass;
+            this.oppositeField = oppositeField;
+            this.name = name;
+        }
+
+        @Override
+        public Class<?> getDeclaringClass() {
+            return declaringClass;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public int getModifiers() {
+            return 0;
+        }
+
+        @Override
+        public boolean isSynthetic() {
+            return false;
+        }
+
+        public Field getOppositeField() {
+            return oppositeField;
+        }
+    }
+
 
 
 
