@@ -23,10 +23,10 @@ public class PurchaseOrderModel {
     }
 
     public static class PurchaseOrder {
-        public @NotNull Customer customer;
+        public Customer customer;
         public @Component List<Item> items;
-        public @Component @NotNull Address billTo;
-        public @Component Address shipTo;
+        public @Component Address billTo;
+        public @Component Optional<Address> shipTo;
         public LocalDate orderDate;
         public OrderStatus status;
         public Optional<String> comment;

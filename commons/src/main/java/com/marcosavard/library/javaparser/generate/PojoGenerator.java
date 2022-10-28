@@ -610,7 +610,6 @@ public class PojoGenerator extends DynamicPackage {
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean component = isComponent(field);
-    //boolean notNull = isNotNull(field);
 
     if (settable) {
       if (collection) {
@@ -664,7 +663,8 @@ public class PojoGenerator extends DynamicPackage {
   private void generateFactories(FormatWriter w, Field field) {
     Class fieldType = field.getType();
     boolean collection = isCollection(fieldType);
-    Class type = collection ? getItemType(field) : fieldType;
+    boolean optional = isOptional(field);
+    Class type = collection || optional ? getItemType(field) : fieldType;
     String verb = collection ? "create" : "set";
     String fieldName = StringUtil.capitalize(field.getName());
 
@@ -714,13 +714,15 @@ public class PojoGenerator extends DynamicPackage {
     String arguments = String.join(", ", getMemberNames(fields));
     String allArguments = fields.isEmpty() ? "this" : "this, " + arguments;
     boolean collection = isCollection(field.getType());
+    boolean optional = isOptional(field);
+    String value = optional ? "Optional.of(" + instance + ")" : instance;
 
     w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
 
     if (collection) {
       w.println("this.{0}.add({1});", field.getName(), instance);
     } else {
-      w.println("this.{0} = {1};", field.getName(), instance);
+      w.println("this.{0} = {1};", field.getName(), value);
     }
 
     if (collection) {
