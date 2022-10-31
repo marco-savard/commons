@@ -1,6 +1,7 @@
 package com.marcosavard.commons.soc;
 
 import java.util.Locale;
+
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.soc.res.CivilityResources;
 

@@ -1,9 +1,10 @@
 package com.marcosavard.commons.chem;
 
+import com.marcosavard.commons.debug.Console;
+
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
-import com.marcosavard.commons.debug.Console;
 
 public class ChemicalElementDemo {
 

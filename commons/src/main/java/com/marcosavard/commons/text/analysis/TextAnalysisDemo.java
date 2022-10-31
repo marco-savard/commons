@@ -4,7 +4,6 @@ import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.lang.CharUtil;
 import com.marcosavard.commons.text.locale.Glossary;
 
-import java.io.CharConversionException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;

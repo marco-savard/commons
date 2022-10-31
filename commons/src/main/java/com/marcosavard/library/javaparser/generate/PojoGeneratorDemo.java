@@ -1,7 +1,6 @@
 package com.marcosavard.library.javaparser.generate;
 
 import com.marcosavard.commons.debug.Console;
-import com.marcosavard.domain.library.model.LibraryModel;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;

@@ -1,8 +1,10 @@
 package com.marcosavard.commons.phy;
 
+import com.marcosavard.commons.debug.Console;
+
 import java.text.MessageFormat;
 //import org.junit.Assert;
-import com.marcosavard.commons.debug.Console;
+
 
 public class AtmosphericPressureDemo {
 

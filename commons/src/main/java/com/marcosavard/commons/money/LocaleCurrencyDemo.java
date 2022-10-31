@@ -1,5 +1,7 @@
 package com.marcosavard.commons.money;
 
+import com.marcosavard.commons.debug.Console;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,7 +9,6 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import com.marcosavard.commons.debug.Console;
 
 public class LocaleCurrencyDemo {
 

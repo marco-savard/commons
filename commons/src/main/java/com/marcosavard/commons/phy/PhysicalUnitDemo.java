@@ -2,6 +2,7 @@ package com.marcosavard.commons.phy;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.phy.res.PhysicalUnitBundle;
 

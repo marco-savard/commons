@@ -3,15 +3,14 @@ package com.marcosavard.library.javaparser.generate;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class DynamicPackageDemo {
 
     public static void main(String[] args) {
         Class[] classes = PurchaseOrderModel.class.getClasses();
         DynamicPackage pack = new DynamicPackage(classes);
+        demoTopLevelOwner(pack);
+
+        /*
 
         List<Class> fieldTypes = Arrays.asList(new Class[] {
                 PurchaseOrderModel.Address.class,
@@ -27,7 +26,7 @@ public class DynamicPackageDemo {
             Console.println(signature);
         }
 
-
+*/
 
 
 
@@ -39,6 +38,14 @@ public class DynamicPackageDemo {
      //   List<List<Class>> concreteClasses = pack.expandConcreteClasses(fieldTypes);
       //  Console.println(signatures);
 
+    }
+
+    private static void demoTopLevelOwner(DynamicPackage pack) {
+        for (Class claz : pack.getClasses()) {
+            Console.println("{0} has container : {1}", claz.getSimpleName(), pack.hasContainer(claz));
+
+
+        }
     }
 
 

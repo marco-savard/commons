@@ -13,14 +13,8 @@ import java.time.ZonedDateTime;
 
 //import org.junit.Assert;
 
-import com.marcosavard.commons.astro.Astronomy;
-import com.marcosavard.commons.astro.Constellation;
-import com.marcosavard.commons.astro.SkyPosition;
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.StarAlmanach;
-import com.marcosavard.commons.astro.res.Star;
-import com.marcosavard.commons.astro.res.StarRepository;
-import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
 
 public class SkyPositionFinderDemo {

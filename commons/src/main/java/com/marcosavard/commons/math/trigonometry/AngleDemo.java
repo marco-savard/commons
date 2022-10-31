@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.math.trigonometry.Angle.Unit;
 

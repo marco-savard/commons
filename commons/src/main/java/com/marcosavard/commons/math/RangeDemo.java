@@ -20,13 +20,13 @@ public class RangeDemo {
 
   private static void forLoopUsingRange() {
     for (int i = 0; i < 5; i++) {
-      Console.print("i = " + i + ", ");
+      Console.print("i = {0}, ", i);
     }
     Console.println();
 
     // cf. for in Python
     for (int i : Range.of(5)) {
-      Console.print("i = " + i + ", ");
+      Console.print("i = {0}, ", i);
     }
     Console.println();
   }

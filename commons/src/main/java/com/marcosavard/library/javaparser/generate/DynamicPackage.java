@@ -20,6 +20,10 @@ public class DynamicPackage {
     //
     // methods
     //
+    public List<Class> getClasses() {
+        return Arrays.asList(classes);
+    }
+
     public List<List<? extends Member>> findConcreteFieldSignatures(List<Field> signature) {
         List<List<? extends Member>> signatures = new ArrayList<>();
         signatures.add(signature);
@@ -313,6 +317,11 @@ public class DynamicPackage {
     protected boolean isStatic(Field field) {
         return Modifier.isStatic(field.getModifiers());
     }
+
+    public boolean hasContainer(Class claz) {
+        return false;
+    }
+
 
     //
     // inner classes

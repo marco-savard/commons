@@ -41,17 +41,17 @@ public class ConsoleDemo {
 	}
 
 	private static void printConsole() {
-		Console.println("Print using Console");
+		Console.println("Print using Console : ");
+		Console.println("Dear {0} {1},", "John", "Smith");
 		Console.println("x = " + x);
 		Console.println(Math.PI);
 		Console.println(list);
 		Console.println(map);
+
 		Console.println(array);
 		Console.println(multiDArray);
-		
-		Console.println("Dear {0} {1}", "John", "Smith");
 		Console.println(pt);
-		Console.println();
+	    Console.println();
 	}
 	
 	//custom class w/o toString() method

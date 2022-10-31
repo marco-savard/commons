@@ -266,7 +266,11 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateField(FormatWriter w, Field field) {
-    String modifiers = String.join(" ", getModifiers(field));
+    List<String> modifierList = new ArrayList<>();
+    modifierList.add("private");
+    modifierList.addAll(getModifiers(field));
+    String modifiers = String.join(" ", modifierList);
+
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean optional = isOptional(field);
@@ -276,9 +280,9 @@ public class PojoGenerator extends DynamicPackage {
     String initValue = getInitialValue(field);
 
     if (initValue == null) {
-      w.println("private {0} {1} {2};", modifiers, typeName, field.getName());
+      w.println("{0} {1} {2};", modifiers, typeName, field.getName());
     } else {
-      w.println("private {0} {1} {2} = {3};", modifiers, typeName, field.getName(), initValue);
+      w.println("{0} {1} {2} = {3};", modifiers, typeName, field.getName(), initValue);
     }
   }
 

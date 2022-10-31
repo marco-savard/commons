@@ -1,16 +1,5 @@
 package com.marcosavard.commons.astro.finder;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-
-import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.debug.Console;
-import com.marcosavard.commons.geog.GeoLocation;
-
 public class SunPositionFinderDemo {
 
 	public static void main(String[] args) {

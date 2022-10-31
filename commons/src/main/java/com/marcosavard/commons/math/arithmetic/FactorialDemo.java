@@ -1,7 +1,8 @@
 package com.marcosavard.commons.math.arithmetic;
 
-import java.math.BigInteger;
 import com.marcosavard.commons.debug.Console;
+
+import java.math.BigInteger;
 
 public class FactorialDemo {
 
