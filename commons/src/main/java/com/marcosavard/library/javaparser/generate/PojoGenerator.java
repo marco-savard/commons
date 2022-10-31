@@ -258,7 +258,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateField(FormatWriter w, Field field) {
-    String modifiers = getModifiers(field);
+    String modifiers = String.join(" ", getModifiers(field));
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean optional = isOptional(field);
@@ -525,10 +525,6 @@ public class PojoGenerator extends DynamicPackage {
     for (Member m : settableParameters) {
       w.println("this.{0} = {0};", m.getName());
     }
-
-    if (!settableParameters.isEmpty()) {
-      w.println();
-    }
   }
 
   private void verifyNullArgument(FormatWriter w, Member m) {
@@ -587,8 +583,9 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateGetter(FormatWriter w, Field field) {
-    String visibility = getVisibility(field);
-    String modifiers = getModifiers(field);
+    List<String> modifiers = new ArrayList<>();
+    modifiers.addAll(getVisibilityModifiers(field));
+    modifiers.addAll(getModifiers(field));
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
     boolean optional = isOptional(field);
@@ -601,7 +598,7 @@ public class PojoGenerator extends DynamicPackage {
     w.println("/**");
     w.println(" * @return " + getDescription(field));
     w.println(" */");
-    w.println("{0} {1} {2} {3}() '{'", visibility, modifiers, typeName, getter);
+    w.println("{0} {1} {2}() '{'", String.join(" ", modifiers), typeName, getter);
     w.printlnIndented("return {0}{1};", field.getName(), orElseNull);
     w.println("}");
     w.println();
@@ -627,8 +624,9 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateBasicSetter(FormatWriter w, Field field) {
-    String visibility = getVisibility(field);
-    String modifiers = getModifiers(field);
+    List<String> modifiers = new ArrayList<>();
+    modifiers.addAll(getVisibilityModifiers(field));
+    modifiers.addAll(getModifiers(field));
     String prefix = isStatic(field) ? field.getDeclaringClass().getSimpleName() : "this";
     String name = field.getName();
     String methodName = "set" + StringUtil.capitalize(name);
@@ -640,7 +638,7 @@ public class PojoGenerator extends DynamicPackage {
     w.println("/**");
     w.println(" * @param " + getDescription(field));
     w.println(" */");
-    w.println("{0} {1} void {2}({3} {4}) '{'", visibility, modifiers, methodName, typeName, name);
+    w.println("{0} void {1}({2} {3}) '{'", String.join(" ", modifiers), methodName, typeName, name);
     w.indent();
 
     if (! isPrimitive(type) && ! optional) {
@@ -690,7 +688,7 @@ public class PojoGenerator extends DynamicPackage {
   private void generateFactory(FormatWriter w, Field field, Class type, String factoryName) {
     Class fieldType = field.getType();
     boolean collection = isCollection(fieldType);
-    String visibility = getVisibility(field);
+    String visibility = String.join(" ", getVisibilityModifiers(field));
     String returnedType = collection ? type.getSimpleName() : "void";
 
     List<Member> constructorParameters = findConstructorParameters(type, false);
@@ -737,7 +735,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateAdder(FormatWriter w, Field field) {
-    String visibility = getVisibility(field);
+    String visibility = String.join(" ", getVisibilityModifiers(field));
     String name = StringUtil.capitalize(field.getName());
     String itemType = getItemType(field).getSimpleName();
     String parameter = StringUtil.uncapitalize(itemType);
@@ -749,7 +747,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateRemover(FormatWriter w, Field field) {
-    String visibility = getVisibility(field);
+    String visibility = String.join(" ", getVisibilityModifiers(field));
     String name = StringUtil.capitalize(field.getName());
     String itemType = getItemType(field).getSimpleName();
     String parameter = StringUtil.uncapitalize(itemType);
@@ -832,7 +830,6 @@ public class PojoGenerator extends DynamicPackage {
     w.println();
 
     w.println("return equal;");
-    w.println();
   }
 
   private void generateHashCode(FormatWriter w, Class<?> claz) {
@@ -1144,7 +1141,7 @@ public class PojoGenerator extends DynamicPackage {
     return String.join(" ", modifiers);
   }
 
-  private String getVisibility(Field field) {
+  private List<String> getVisibilityModifiers(Field field) {
     List<String> modifiers = new NotNullList<>();
     boolean isPublic = Modifier.isPublic(field.getModifiers());
     boolean isProtected = Modifier.isProtected(field.getModifiers());
@@ -1152,10 +1149,10 @@ public class PojoGenerator extends DynamicPackage {
     modifiers.add(isPublic ? "public" : null);
     modifiers.add(isProtected ? "protected" : null);
     modifiers.add(isPrivate ? "private" : null);
-    return String.join(" ", modifiers);
+    return modifiers;
   }
 
-  private String getModifiers(Field field) {
+  private List<String> getModifiers(Field field) {
     List<String> modifiers = new NotNullList<>();
     Class<?> claz = field.getDeclaringClass();
     boolean immutable = isImmutable(claz);
@@ -1163,7 +1160,7 @@ public class PojoGenerator extends DynamicPackage {
     boolean isFinal = Modifier.isFinal(field.getModifiers()) || isReadOnly(field) || immutable;
     modifiers.add(isStatic ? "static" : null);
     modifiers.add(isFinal ? "final" : null);
-    return String.join(" ", modifiers);
+    return modifiers;
   }
 
   private static class ImportComparator implements Comparator<Class<?>> {

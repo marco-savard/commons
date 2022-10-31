@@ -2,7 +2,6 @@ package com.marcosavard.domain.purchasing.model;
 
 import com.marcosavard.commons.meta.annotations.Component;
 import com.marcosavard.commons.meta.annotations.Description;
-import com.marcosavard.commons.meta.annotations.NotNull;
 import com.marcosavard.commons.meta.annotations.Readonly;
 
 import java.time.LocalDate;
@@ -28,8 +27,8 @@ public class PurchaseOrderModel {
         public @Component List<Item> items;
         public @Component Address billTo;
         public @Component Optional<Address> shipTo;
-        public LocalDate orderDate;
-        public OrderStatus status;
+        public LocalDate orderDate = LocalDate.now();
+        public OrderStatus status = OrderStatus.PENDING;
         public Optional<String> comment;
         public Optional<PurchaseOrder> previousOrder;
     }
