@@ -43,8 +43,6 @@ public class DynamicPackageDemo {
     private static void demoTopLevelOwner(DynamicPackage pack) {
         for (Class claz : pack.getClasses()) {
             Console.println("{0} has container : {1}", claz.getSimpleName(), pack.hasContainer(claz));
-
-
         }
     }
 

@@ -24,6 +24,21 @@ public class DynamicPackage {
         return Arrays.asList(classes);
     }
 
+    public Class<?> getItemType(Field f) {
+        Class<?> itemType = Object.class;
+        Type type = f.getGenericType();
+
+        if (type instanceof ParameterizedType) {
+            ParameterizedType pt = (ParameterizedType) type;
+            Type[] types = pt.getActualTypeArguments();
+            if (types[0] instanceof Class) {
+                itemType = (Class<?>) types[0];
+            }
+        }
+
+        return itemType;
+    }
+
     public List<List<? extends Member>> findConcreteFieldSignatures(List<Field> signature) {
         List<List<? extends Member>> signatures = new ArrayList<>();
         signatures.add(signature);
@@ -318,8 +333,36 @@ public class DynamicPackage {
         return Modifier.isStatic(field.getModifiers());
     }
 
-    public boolean hasContainer(Class claz) {
-        return false;
+    public boolean hasContainer(Class givenClass) {
+        boolean hasContainer = false;
+
+        for (Class claz : classes) {
+            Field[] fields = claz.getFields();
+
+            for (Field f : fields) {
+                Class type = f.getType();
+
+                if (isComponent(f)) {
+                    if (isCollection(type)) {
+                        if (givenClass.equals(getItemType(f))) {
+                            hasContainer = true;
+                            break;
+                        }
+                    } else {
+                        if (givenClass.equals(getType(f))) {
+                            hasContainer = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (hasContainer) {
+                break;
+            }
+        }
+
+        return hasContainer;
     }
 
 

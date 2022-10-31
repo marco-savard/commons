@@ -1132,21 +1132,6 @@ public class PojoGenerator extends DynamicPackage {
     return Arrays.stream(claz.getDeclaredFields()).filter(f -> ! isOptional(f)).toList();
   }
 
-  private Class<?> getItemType(Field f) {
-    Class<?> itemType = Object.class;
-    Type type = f.getGenericType();
-
-    if (type instanceof ParameterizedType) {
-      ParameterizedType pt = (ParameterizedType) type;
-      Type[] types = pt.getActualTypeArguments();
-      if (types[0] instanceof Class) {
-        itemType = (Class<?>) types[0];
-      }
-    }
-
-    return itemType;
-  }
-
   private String getTypeName(Field field) {
     Class<?> type = field.getType();
     boolean collection = isCollection(type);
