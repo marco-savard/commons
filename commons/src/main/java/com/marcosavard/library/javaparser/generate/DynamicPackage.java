@@ -139,7 +139,7 @@ public class DynamicPackage {
         return initialValue;
     }
 
-    private String getInitialValueOfVariable(Field field) {
+    protected String getInitialValueOfVariable(Field field) {
         String initialValue = null;
 
         try {
@@ -149,7 +149,7 @@ public class DynamicPackage {
             Object value = field.get(instance);
 
             if (value != null) {
-                initialValue = (value instanceof String) ? "\"" + value + "\"" : Objects.toString(value);
+                initialValue = toString(value);
             }
 
         } catch (NoSuchMethodException
@@ -160,6 +160,20 @@ public class DynamicPackage {
         }
 
         return initialValue;
+    }
+
+    private String toString(Object value) {
+        String str;
+
+        if (value instanceof String) {
+            str = "\"" + value + "\"";
+        } else if (value instanceof Enum e) {
+            str = e.getDeclaringClass().getSimpleName() + "." + e.name();
+        } else {
+            str = Objects.toString(value);
+        }
+
+        return str;
     }
 
     public List<Class> getSubclasses(Class givenClass) {

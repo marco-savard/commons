@@ -29,7 +29,10 @@ public class PojoGenerator extends DynamicPackage {
   private final Map<Class, Reference> referenceByClass;
 
   private int indentation = 2;
-  private boolean metadataGeneration = false;
+  private boolean generateMetadata = false;
+
+  private boolean generateParameterlessConstructor = false;
+
   private AccessorOrder accessorOrder = AccessorOrder.GROUPED_BY_PROPERTIES;
 
   public PojoGenerator(File outputFolder, Class<?>[] classes) {
@@ -47,8 +50,13 @@ public class PojoGenerator extends DynamicPackage {
     this.accessorOrder = accessorOrder;
   }
 
-  public PojoGenerator withMetadataGeneration() {
-    metadataGeneration = true;
+  public PojoGenerator withMetadata() {
+    generateMetadata = true;
+    return this;
+  }
+
+  public PojoGenerator withParameterlessConstructor() {
+    generateParameterlessConstructor = true;
     return this;
   }
 
@@ -178,7 +186,7 @@ public class PojoGenerator extends DynamicPackage {
     List<Class<?>> importees = new SortedList<>(comparator);
     importees.add(Objects.class);
 
-    if (metadataGeneration) {
+    if (generateMetadata) {
       importees.add(Field.class);
     }
 
@@ -275,7 +283,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateMetaFields(FormatWriter w, Class<?> claz) {
-    if (metadataGeneration) {
+    if (generateMetadata) {
       List<Field> fields = getVariables(claz);
       String className = claz.getSimpleName();
 
@@ -315,6 +323,7 @@ public class PojoGenerator extends DynamicPackage {
     }
 
     if (!constructorParameters.isEmpty()) {
+      generateParameterlessConstructor(w, claz);
       String visibility = isAbstract(claz) ? "protected" : "public";
       String className = claz.getSimpleName();
       List<Member> superClassMembers = getSuperClassMembers(claz, true);
@@ -334,6 +343,45 @@ public class PojoGenerator extends DynamicPackage {
       w.println("}");
       w.println();
     }
+  }
+
+  private void generateParameterlessConstructor(FormatWriter w, Class<?> claz) {
+    if (generateParameterlessConstructor) {
+      String className = claz.getSimpleName();
+      w.println("{0} {1}() '{'", "public", className);
+      generateParameterlessConstructorBody(w, claz);
+      w.println("}");
+      w.println();
+    }
+  }
+
+  private void generateParameterlessConstructorBody(FormatWriter w, Class<?> claz) {
+    List<Member> requiredMembers = getRequiredMembers(claz, true);
+
+    w.indent();
+    for (Member member : requiredMembers) {
+      boolean field = (member instanceof Field);
+      String value = field ? getInitialValueOfVariable((Field)member) : getDefaultValue(member);
+      w.println("this.{0} = {1};", member.getName(), value);
+    }
+    w.unindent();
+  }
+
+  private String getDefaultValue(Member member) {
+    Class type = getType(member);
+    String value = "null";
+
+    if (double.class.equals(type)) {
+      value = "0.0";
+    } else if (int.class.equals(type)) {
+      value = "0";
+    } else if (long.class.equals(type)) {
+      value = "0L";
+    } else if ((member instanceof Field f) && Enum.class.isAssignableFrom(type)) {
+      value = getInitialValueOfVariable(f);
+    }
+
+    return value;
   }
 
   private void generateOfMethods(FormatWriter w, Class<?> claz, List<Member> constructorParameters) {
@@ -480,7 +528,7 @@ public class PojoGenerator extends DynamicPackage {
     List<Member> constructorParameters = new UniqueList<>();
     List<Reference> parentReferences = includeParent ? getParentReferences(claz) : new ArrayList<>();
     List<Member> superClassMembers = getSuperClassMembers(claz, includeParent);
-    List<Member> requiredMembers = getRequiredMembers(claz);
+    List<Member> requiredMembers = getRequiredMembers(claz, false);
     List<String> superClassMemberNames = getMemberNames(superClassMembers);
 
     requiredMembers = requiredMembers.stream()
@@ -759,7 +807,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateMetaAccessors(FormatWriter w, Class<?> claz) {
-    if (metadataGeneration) {
+    if (generateMetadata) {
       List<Field> fields = getVariables(claz);
       List<String> metaFields = new ArrayList<>();
 
@@ -946,7 +994,7 @@ public class PojoGenerator extends DynamicPackage {
       superClassMembers.add(reference);
     }
 
-    List<Member> requiredMembers = (superClass != null) ? getRequiredMembers(superClass) : new ArrayList<>();
+    List<Member> requiredMembers = (superClass != null) ? getRequiredMembers(superClass, false) : new ArrayList<>();
     superClassMembers.addAll(requiredMembers);
 
    // List<Member> superClassRequiredMembers = (superClass != null) ? getSuperClassMembers(superClass, includeParent) : new ArrayList<>();
@@ -1064,10 +1112,10 @@ public class PojoGenerator extends DynamicPackage {
     return requiredMembers;
   }
 
-  private List<Member> getRequiredMembers(Class<?> claz) {
+  private List<Member> getRequiredMembers(Class<?> claz, boolean declared) {
     boolean immutable = isImmutable(claz);
     List<Member> requiredMembers = new ArrayList<>();
-    Field[] fields = claz.getFields();
+    Field[] fields = declared ? claz.getDeclaredFields() : claz.getFields();
     requiredMembers.addAll(Arrays.stream(fields)
             .filter(f -> (immutable || ! isOptional(f)))
             .filter(f -> ! isStatic(f))

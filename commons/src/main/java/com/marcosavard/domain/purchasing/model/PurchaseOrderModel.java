@@ -10,14 +10,14 @@ import java.util.Optional;
 
 public class PurchaseOrderModel {
 
-    public class Supplier {
+    public static class Supplier {
         public static int supplierCount;
         public @Readonly String name;
         public @Component List<Customer> customers;
         public @Component List<PurchaseOrder> orders;
     }
 
-    public class Customer {
+    public static class Customer {
         public @Readonly long customerId;
         public List<PurchaseOrder> orders;
     }
@@ -27,7 +27,7 @@ public class PurchaseOrderModel {
         public @Component List<Item> items;
         public @Component Address billTo;
         public @Component Optional<Address> shipTo;
-        public LocalDate orderDate = LocalDate.now();
+        public LocalDate orderDate;
         public OrderStatus status = OrderStatus.PENDING;
         public Optional<String> comment;
         public Optional<PurchaseOrder> previousOrder;
@@ -35,7 +35,7 @@ public class PurchaseOrderModel {
 
     public static class Item {
         public @Readonly String sku;
-        public @Readonly int quantity;
+        public @Readonly int quantity = 1;
         public String productName;
         public LocalDate shipDate;
     }
