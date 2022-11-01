@@ -1,8 +1,7 @@
 package com.marcosavard.domain.library.model;
 
-import com.marcosavard.commons.meta.annotations.Component;
-import com.marcosavard.commons.meta.annotations.Description;
-import com.marcosavard.commons.meta.annotations.Readonly;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
 import java.util.List;
 import java.util.Optional;

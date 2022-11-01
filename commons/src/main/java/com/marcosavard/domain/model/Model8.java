@@ -1,10 +1,10 @@
 package com.marcosavard.domain.model;
 
-import com.marcosavard.commons.meta.annotations.Component;
-import com.marcosavard.commons.meta.annotations.Description;
-import com.marcosavard.commons.meta.annotations.Immutable;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.NotNull;
-import com.marcosavard.commons.meta.annotations.Readonly;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
 import java.time.LocalDate;
 import java.util.List;

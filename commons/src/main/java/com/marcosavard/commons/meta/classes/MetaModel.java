@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.Readonly;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
 public class MetaModel {
   private File rootFolder;

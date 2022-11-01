@@ -1,4 +1,4 @@
-package com.marcosavard.commons.meta.annotations;
+package com.marcosavard.commons.lang.reflect.meta.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

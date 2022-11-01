@@ -3,8 +3,8 @@ package com.marcosavard.domain.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.Readonly;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 import com.marcosavard.commons.meta.annotations.NotNull;
 
 public class Model7 {

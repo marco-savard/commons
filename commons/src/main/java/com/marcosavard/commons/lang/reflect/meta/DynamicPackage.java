@@ -1,9 +1,8 @@
-package com.marcosavard.library.javaparser.generate;
+package com.marcosavard.commons.lang.reflect.meta;
 
-import com.marcosavard.commons.meta.annotations.Component;
-import com.marcosavard.commons.meta.annotations.Immutable;
-import com.marcosavard.commons.meta.annotations.NotNull;
-import com.marcosavard.commons.meta.annotations.Readonly;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
 import java.lang.reflect.*;
 import java.text.MessageFormat;
@@ -290,8 +289,8 @@ public class DynamicPackage {
 
         if (member instanceof Field field) {
             boolean readonly = isReadOnly(field);
-            boolean notnull = field.getAnnotation(NotNull.class) != null;
-            notNull = readonly || notnull;
+            boolean optional = isOptional(field);
+            notNull = readonly || (! optional);
         }
 
         return notNull;
@@ -428,7 +427,7 @@ public class DynamicPackage {
         }
     }
 
-    static class Reference implements Member {
+    protected static class Reference implements Member {
         private final Class declaringClass;
         private final Field oppositeField;
         private final String name;

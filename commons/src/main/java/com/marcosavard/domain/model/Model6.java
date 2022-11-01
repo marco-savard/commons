@@ -1,7 +1,7 @@
 package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
-import com.marcosavard.commons.meta.annotations.Immutable;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
 import com.marcosavard.commons.meta.annotations.NotNull;
 
 public class Model6 {

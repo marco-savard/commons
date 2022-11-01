@@ -1,9 +1,9 @@
-package com.marcosavard.library.javaparser.generate;
+package com.marcosavard.commons.lang.reflect.meta;
 
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.meta.annotations.Description;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 import com.marcosavard.commons.util.collection.SortedList;
 import com.marcosavard.commons.util.collection.UniqueList;
 

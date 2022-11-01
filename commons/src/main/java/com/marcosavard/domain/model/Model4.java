@@ -1,7 +1,7 @@
 package com.marcosavard.domain.model;
 
 import java.time.LocalDate;
-import com.marcosavard.commons.meta.annotations.Readonly;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
 public class Model4 {
   public enum Country {
