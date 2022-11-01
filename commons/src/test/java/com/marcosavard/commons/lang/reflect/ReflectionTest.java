@@ -1,5 +1,6 @@
 package com.marcosavard.commons.lang.reflect;
 
+import com.marcosavard.commons.debug.Console;
 import org.junit.Assert;
 import org.junit.Test;
 

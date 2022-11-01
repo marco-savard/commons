@@ -198,7 +198,7 @@ public class DynamicPackage {
         List<Class> subClasses = new ArrayList<>();
 
         for (Class claz : classes) {
-            if (claz.getSuperclass().equals(givenClass)) {
+            if (!givenClass.equals(claz) && givenClass.isAssignableFrom(claz)) {
                 subClasses.add(claz);
             }
         }
