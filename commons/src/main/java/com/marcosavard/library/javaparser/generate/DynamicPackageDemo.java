@@ -3,6 +3,8 @@ package com.marcosavard.library.javaparser.generate;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
+import java.util.List;
+
 public class DynamicPackageDemo {
 
     public static void main(String[] args) {
@@ -41,8 +43,11 @@ public class DynamicPackageDemo {
     }
 
     private static void demoTopLevelOwner(DynamicPackage pack) {
-        for (Class claz : pack.getClasses()) {
-            Console.println("{0} has container : {1}", claz.getSimpleName(), pack.hasContainer(claz));
+        List<Class> classes = pack.getTopLevelContainers();
+
+
+        for (Class claz : classes) {
+            Console.println("{0} is enum : {1}", claz.getSimpleName(), pack.isEnum(claz));
         }
     }
 

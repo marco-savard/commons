@@ -337,32 +337,49 @@ public class DynamicPackage {
         boolean hasContainer = false;
 
         for (Class claz : classes) {
-            Field[] fields = claz.getFields();
-
-            for (Field f : fields) {
-                Class type = f.getType();
-
-                if (isComponent(f)) {
-                    if (isCollection(type)) {
-                        if (givenClass.equals(getItemType(f))) {
-                            hasContainer = true;
-                            break;
-                        }
-                    } else {
-                        if (givenClass.equals(getType(f))) {
-                            hasContainer = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (hasContainer) {
+            if (isContainerOf(claz, givenClass)) {
+                hasContainer = true;
                 break;
             }
         }
 
         return hasContainer;
+    }
+
+    private boolean isContainerOf(Class claz, Class givenClass) {
+        boolean containerOf = false;
+        Field[] fields = claz.getFields();
+
+        for (Field f : fields) {
+            Class type = f.getType();
+
+            if (isComponent(f)) {
+                Class fieldType = isCollection(type) ? getItemType(f) : getType(f);
+
+                if (fieldType.isAssignableFrom(givenClass)) {
+                    containerOf = true;
+                    break;
+                }
+            }
+        }
+
+        return containerOf;
+    }
+
+    public List<Class> getTopLevelContainers() {
+        List<Class> topLevelContainers = new ArrayList<>();
+
+        for (Class claz : classes) {
+            if (!isEnum(claz) && ! hasContainer(claz)) {
+                topLevelContainers.add(claz);
+            }
+        }
+
+        return topLevelContainers;
+    }
+
+    public boolean isEnum(Class claz) {
+        return Enum.class.isAssignableFrom(claz);
     }
 
 
