@@ -26,8 +26,6 @@ public class PojoGenerator extends DynamicPackage {
 
   private final File outputFolder;
 
-  private final Map<Class, Reference> referenceByClass;
-
   private int indentation = 2;
   private boolean generateMetadata = false;
 
@@ -35,10 +33,11 @@ public class PojoGenerator extends DynamicPackage {
 
   private AccessorOrder accessorOrder = AccessorOrder.GROUPED_BY_PROPERTIES;
 
+  private String containerName = "owner";
+
   public PojoGenerator(File outputFolder, Class<?>[] classes) {
     super(classes);
     this.outputFolder = outputFolder;
-    this.referenceByClass = findReferenceByClass(classes);
   }
 
   public PojoGenerator withIndentation(int indentation) {
@@ -60,7 +59,13 @@ public class PojoGenerator extends DynamicPackage {
     return this;
   }
 
+  public PojoGenerator withContainerName(String containerName) {
+    this.containerName = containerName;
+    return this;
+  }
+
   public List<File> generate() throws IOException {
+    super.buildReferenceByClass(containerName);
     List<File> generatedFiles = new ArrayList<>();
 
     for (Class claz : classes) {
@@ -95,24 +100,6 @@ public class PojoGenerator extends DynamicPackage {
     fw.close();
 
     return generated;
-  }
-
-  private Map<Class, Reference> findReferenceByClass(Class<?>[] classes) {
-    Map<Class, Reference> referenceByClass = new HashMap<>();
-
-    for (Class claz : classes) {
-      Field[] fields = claz.getFields();
-      for (Field field : fields) {
-        if (isComponent(field)) {
-          Class type = field.getType();
-          Class child = isCollection(type) ? getItemType(field) : type;
-          Reference ref = new Reference(child, field, "parent");
-          referenceByClass.put(child, ref);
-        }
-      }
-    }
-
-    return referenceByClass;
   }
 
   private String getPackageName(Class<?> claz) {
@@ -243,7 +230,7 @@ public class PojoGenerator extends DynamicPackage {
   }
 
   private void generateVariables(FormatWriter w, Class<?> claz) {
-    Reference reference = referenceByClass.get(claz);
+    Reference reference = getReferenceByClass().get(claz);
     List<Field> fields = getVariables(claz);
 
     if (reference != null) {
@@ -546,15 +533,6 @@ public class PojoGenerator extends DynamicPackage {
     return constructorParameters;
   }
 
-  private List<Reference> getParentReferences(Class<?> claz) {
-    List<Reference> parentReferences = new ArrayList<>();
-    Reference reference = referenceByClass.get(claz);
-    if (reference != null) {
-      parentReferences.add(reference);
-    }
-
-    return parentReferences;
-  }
 
   private void generateConstructorBody(FormatWriter w, List<Member> superClassMembers, List<Member> parameters) {
 
@@ -967,16 +945,6 @@ public class PojoGenerator extends DynamicPackage {
     return memberNames;
   }
 
-  private List<String> getMemberNames(List<? extends Member> members) {
-    List<String> memberNames = new ArrayList<>();
-
-    for (Member member : members) {
-      memberNames.add(member.getName());
-    }
-
-    return memberNames;
-  }
-
   private List<Class> getSubclasses(Class[] classes, Class givenClass) {
     List<Class> subClasses = new ArrayList<>();
 
@@ -989,27 +957,7 @@ public class PojoGenerator extends DynamicPackage {
     return subClasses;
   }
 
-  private List<Member> getSuperClassMembers(Class<?> claz, boolean includeParent) {
-    List<Member> superClassMembers = new ArrayList<>();
-    Class superClass = getSuperclass(claz);
-    Reference reference = includeParent && (superClass != null) ? referenceByClass.get(superClass) : null;
 
-    if (reference != null) {
-      superClassMembers.add(reference);
-    }
-
-    List<Member> requiredMembers = (superClass != null) ? getRequiredMembers(superClass, false) : new ArrayList<>();
-    superClassMembers.addAll(requiredMembers);
-
-   // List<Member> superClassRequiredMembers = (superClass != null) ? getSuperClassMembers(superClass, includeParent) : new ArrayList<>();
-
-    //List<? extends Member> allReadOnlyFields = getAllReadOnlyMembers(claz);
-    //List<Member> requiredMembers = getRequiredMembers(claz);
-    //List<Member> superclassFields = new ArrayList<>(requiredMembers);
-    //superclassFields.removeAll(allReadOnlyFields);
-    //members.addAll(superclassFields);
-    return superClassMembers;
-  }
 
   /*
   private List<Field> getSuperClassReadOnlyFields(Class<?> claz) {
@@ -1116,17 +1064,7 @@ public class PojoGenerator extends DynamicPackage {
     return requiredMembers;
   }
 
-  private List<Member> getRequiredMembers(Class<?> claz, boolean declared) {
-    boolean immutable = isImmutable(claz);
-    List<Member> requiredMembers = new ArrayList<>();
-    Field[] fields = declared ? claz.getDeclaredFields() : claz.getFields();
-    requiredMembers.addAll(Arrays.stream(fields)
-            .filter(f -> (immutable || ! isOptional(f)))
-            .filter(f -> ! isStatic(f))
-            .filter(f -> !isCollection(f.getType()))
-            .toList());
-    return requiredMembers;
-  }
+
 
   private List<Field> getNotNullFields(Class<?> claz) {
     return Arrays.stream(claz.getDeclaredFields()).filter(f -> ! isOptional(f)).toList();

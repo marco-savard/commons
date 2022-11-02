@@ -8,22 +8,22 @@ import java.util.Optional;
 
 public class LibraryModel {
 
-    public class Library {
-        public @Readonly String name;
+    public static class Library {
+        public final String name = "Unnamed";
         public Optional<String> address;
         public @Component List<Writer> writers;
         public @Component List<Book> books;
     }
 
-    public class Writer {
-        public @Readonly String name;
+    public static class Writer {
+        public final String name = "?";
         public List<Book> books;
     }
 
-    public class Book {
-        public @Readonly String name;
-        public @Readonly BookCategory category;
-        public int nbPages;
+    public static class Book {
+        public final String name = "Title";
+        public final BookCategory category = BookCategory.MYSTERY;
+        public int nbPages = 1;
         public List<Writer> authors;
     }
 

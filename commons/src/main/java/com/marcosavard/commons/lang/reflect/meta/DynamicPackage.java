@@ -11,13 +11,48 @@ import java.util.*;
 public class DynamicPackage {
 
     protected final Class[] classes;
+    private Map<Class, Reference> referenceByClass = null;
+
+    public DynamicPackage(Class claz) {
+        this(new Class[] {claz});
+    }
 
     public DynamicPackage(Class[] classes) {
         this.classes = classes;
     }
 
+    public void buildReferenceByClass(String containerName) {
+        referenceByClass = buildReferenceByClass(classes, containerName);
+    }
+
+    protected Map<Class, Reference> getReferenceByClass() {
+        if (referenceByClass == null) {
+            buildReferenceByClass("owner");
+        }
+
+        return referenceByClass;
+    }
+
+    private Map<Class, Reference> buildReferenceByClass(Class<?>[] classes, String containerName) {
+        Map<Class, Reference> referenceByClass = new HashMap<>();
+
+        for (Class claz : classes) {
+            Field[] fields = claz.getFields();
+            for (Field field : fields) {
+                if (isComponent(field)) {
+                    Class type = field.getType();
+                    Class child = isCollection(type) ? getItemType(field) : type;
+                    Reference ref = new Reference(child, field, containerName);
+                    referenceByClass.put(child, ref);
+                }
+            }
+        }
+
+        return referenceByClass;
+    }
+
     //
-    // methods
+    // get methods
     //
     public List<Class> getClasses() {
         return Arrays.asList(classes);
@@ -37,6 +72,54 @@ public class DynamicPackage {
 
         return itemType;
     }
+
+    protected List<String> getMemberNames(List<? extends Member> members) {
+        List<String> memberNames = new ArrayList<>();
+
+        for (Member member : members) {
+            memberNames.add(member.getName());
+        }
+
+        return memberNames;
+    }
+
+    protected List<Reference> getParentReferences(Class<?> claz) {
+        List<Reference> parentReferences = new ArrayList<>();
+        Reference reference = getReferenceByClass().get(claz);
+        if (reference != null) {
+            parentReferences.add(reference);
+        }
+
+        return parentReferences;
+    }
+
+    protected List<Member> getSuperClassMembers(Class<?> claz, boolean includeParent) {
+        List<Member> superClassMembers = new ArrayList<>();
+        Class superClass = getSuperclass(claz);
+        Reference reference = includeParent && (superClass != null) ? getReferenceByClass().get(superClass) : null;
+
+        if (reference != null) {
+            superClassMembers.add(reference);
+        }
+
+        List<Member> requiredMembers = (superClass != null) ? getRequiredMembers(superClass, false) : new ArrayList<>();
+        superClassMembers.addAll(requiredMembers);
+        return superClassMembers;
+    }
+
+    protected List<Member> getRequiredMembers(Class<?> claz, boolean declared) {
+        boolean immutable = isImmutable(claz);
+        List<Member> requiredMembers = new ArrayList<>();
+        Field[] fields = declared ? claz.getDeclaredFields() : claz.getFields();
+        requiredMembers.addAll(Arrays.stream(fields)
+                .filter(f -> (immutable || ! isOptional(f)))
+                .filter(f -> ! isStatic(f))
+                .filter(f -> !isCollection(f.getType()))
+                .toList());
+        return requiredMembers;
+    }
+
+
 
     public List<List<? extends Member>> findConcreteFieldSignatures(List<Field> signature) {
         List<List<? extends Member>> signatures = new ArrayList<>();
@@ -162,8 +245,7 @@ public class DynamicPackage {
 
         try {
             Class<?> claz = field.getDeclaringClass();
-            Constructor<?> constr = claz.getConstructor(new Class[] {});
-            Object instance = constr.newInstance(new Object[] {});
+            Object instance = instantiate(claz);
             Object value = field.get(instance);
 
             if (value != null) {
@@ -178,6 +260,12 @@ public class DynamicPackage {
         }
 
         return initialValue;
+    }
+
+    public Object instantiate(Class<?> claz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Constructor<?> constr = claz.getConstructor(new Class[] {});
+        Object instance = constr.newInstance(new Object[] {});
+        return instance;
     }
 
     private String toString(Object value) {
@@ -325,7 +413,13 @@ public class DynamicPackage {
 
     protected boolean isReadOnly(Field field) {
         boolean immutable = isImmutable(field.getDeclaringClass());
-        return immutable || field.getAnnotation(Readonly.class) != null;
+        boolean isFinal = isFinal(field);
+        boolean readOnly = immutable || isFinal || field.getAnnotation(Readonly.class) != null;
+        return readOnly;
+    }
+
+    protected boolean isFinal(Field field) {
+        return Modifier.isFinal(field.getModifiers());
     }
 
     protected boolean isStatic(Field field) {
@@ -462,8 +556,4 @@ public class DynamicPackage {
             return oppositeField;
         }
     }
-
-
-
-
 }

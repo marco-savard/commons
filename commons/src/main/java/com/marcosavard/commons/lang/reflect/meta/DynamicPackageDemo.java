@@ -13,7 +13,6 @@ public class DynamicPackageDemo {
         demoTopLevelOwner(pack);
 
         /*
-
         List<Class> fieldTypes = Arrays.asList(new Class[] {
                 PurchaseOrderModel.Address.class,
                 PurchaseOrderModel.Supplier.class,
@@ -30,13 +29,6 @@ public class DynamicPackageDemo {
 
 */
 
-
-
-
-
-
-
-
      //   List<List<Class>> concreteClasses = pack.expandConcreteClasses(fieldTypes);
       //  Console.println(signatures);
 
@@ -45,11 +37,8 @@ public class DynamicPackageDemo {
     private static void demoTopLevelOwner(DynamicPackage pack) {
         List<Class> classes = pack.getTopLevelContainers();
 
-
         for (Class claz : classes) {
             Console.println("{0} is enum : {1}", claz.getSimpleName(), pack.isEnum(claz));
         }
     }
-
-
 }
