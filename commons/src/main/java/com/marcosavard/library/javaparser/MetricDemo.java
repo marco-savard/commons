@@ -65,7 +65,6 @@ public class MetricDemo {
     Package pack = App.class.getPackage();
     List<File> sourceFiles = FileSystem.getSourceFiles(sourceFolder, pack);
     sourceFiles.addAll(sourceFiles);
-
     return sourceFiles;
   }
 

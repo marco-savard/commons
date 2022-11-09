@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class PojoGeneratorDemo {
+public class ReflectivePojoGeneratorDemo {
 
   public static void main(String[] args) {
     File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
@@ -25,7 +25,7 @@ public class PojoGeneratorDemo {
 
   private static void generate(File outputFolder, Class<?>[] classes) {
     try {
-      PojoGenerator generator = new PojoGenerator(outputFolder, classes);
+      ReflectivePojoGenerator generator = new ReflectivePojoGenerator(outputFolder, classes);
       generator.withParameterlessConstructor();
       List<File> generatedFiles = generator.generate();
 
