@@ -199,9 +199,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
   private void generateVariables(FormatWriter w, MetaClass mc) {
     MetaField reference = getReferenceForClass(mc);
-
-    Class claz = mc.getClaz();
-    DynamicPackage.Reference referenceOld = dynamicPackage.getReferenceByClass().get(claz);
     List<MetaField> fields = mc.getVariables();
 
     if (reference != null) {
@@ -284,14 +281,14 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     Class claz = mc.getClaz();
     List<Member> constructorParameters = findConstructorParameters(mc, true);
 
-    if (hasRequiredComponent(claz)) {
-      generateOfMethods(w, claz, constructorParameters);
+    if (hasRequiredComponent(mc)) {
+      generateOfMethods(w, mc, constructorParameters);
     }
 
     if (!constructorParameters.isEmpty()) {
-      generateParameterlessConstructor(w, claz);
+      generateParameterlessConstructor(w, mc);
       String visibility = mc.isAbstract() ? "protected" : "public";
-      String className = claz.getSimpleName();
+      String className = mc.getSimpleName();
       List<Member> superClassMembers = dynamicPackage.getSuperClassMembers(claz, true);
 
       w.println("/**");
@@ -311,17 +308,18 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
   }
 
-  private void generateParameterlessConstructor(FormatWriter w, Class<?> claz) {
+  private void generateParameterlessConstructor(FormatWriter w, MetaClass mc) {
     if (generateParameterlessConstructor) {
-      String className = claz.getSimpleName();
+      String className = mc.getSimpleName();
       w.println("{0} {1}() '{'", "public", className);
-      generateParameterlessConstructorBody(w, claz);
+      generateParameterlessConstructorBody(w, mc);
       w.println("}");
       w.println();
     }
   }
 
-  private void generateParameterlessConstructorBody(FormatWriter w, Class<?> claz) {
+  private void generateParameterlessConstructorBody(FormatWriter w, MetaClass mc) {
+    Class claz = mc.getClaz();
     List<Member> requiredMembers = dynamicPackage.getRequiredMembers(claz, true);
 
     w.indent();
@@ -350,16 +348,16 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return value;
   }
 
-  private void generateOfMethods(FormatWriter w, Class<?> claz, List<Member> constructorParameters) {
-    List<Field> requiredComponents = getRequiredComponents(claz);
+  private void generateOfMethods(FormatWriter w, MetaClass mc, List<Member> constructorParameters) {
+    List<Field> requiredComponents = getRequiredComponents(mc);
     List<List<? extends Member>> signatures = dynamicPackage.findConcreteFieldSignatures(requiredComponents);
 
     for (List<? extends Member> signature : signatures) {
-      generateOfMethod(w, claz, constructorParameters, signature);
+      generateOfMethod(w, mc, constructorParameters, signature);
     }
   }
 
-  private void generateOfMethod(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
+  private void generateOfMethod(FormatWriter w, MetaClass mc, List<Member> constructorParameters, List<? extends Member> signature) {
     List<String> names = getFieldNames(signature);
     String methodName = "of" + String.join("And", names);
     List<String> parameters = new ArrayList<>();
@@ -377,8 +375,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
     String parameterStr = String.join(", ", parameters);
 
-    w.println("public static {0} {1}({2}) '{'", claz.getSimpleName(), methodName, parameterStr);
-    generateOfMethodBody(w, claz, constructorParameters, signature);
+    w.println("public static {0} {1}({2}) '{'", mc.getSimpleName(), methodName, parameterStr);
+    generateOfMethodBody(w, mc, constructorParameters, signature);
     w.println("}");
     w.println();
   }
@@ -395,11 +393,11 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return fieldNames;
   }
 
-  private void generateOfMethodBody(FormatWriter w, Class<?> claz, List<Member> constructorParameters, List<? extends Member> signature) {
+  private void generateOfMethodBody(FormatWriter w, MetaClass mc, List<Member> constructorParameters, List<? extends Member> signature) {
     w.indent();
-    String instance = StringUtil.uncapitalize(claz.getSimpleName());
+    String instance = StringUtil.uncapitalize(mc.getSimpleName());
     String arguments = String.join(", ", dynamicPackage.getMemberNames(constructorParameters));
-    w.println("{0} {1} = new {0}({2});", claz.getSimpleName(), instance, arguments);
+    w.println("{0} {1} = new {0}({2});", mc.getSimpleName(), instance, arguments);
 
     for (Member member : signature) {
       List<String> memberArguments = new ArrayList<>();
@@ -470,11 +468,12 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return memberTypes;
   }
 
-  private boolean hasRequiredComponent(Class<?> claz) {
-    return ! getRequiredComponents(claz).isEmpty();
+  private boolean hasRequiredComponent(MetaClass mc) {
+    return ! getRequiredComponents(mc).isEmpty();
   }
 
-  private List<Field> getRequiredComponents(Class<?> claz) {
+  private List<Field> getRequiredComponents(MetaClass mc) {
+    Class claz = mc.getClaz();
     List<? extends Member> readOnlyMembers = getAllRequiredMembers(claz);
     List<Field> readOnlyFields = new ArrayList<>();
 
@@ -546,11 +545,10 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateMethods(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
     generateAccessors(w, mc);
-    generateMetaAccessors(w, claz);
-    generateIdentityMethods(w, claz);
-    generateToString(w, claz);
+    generateMetaAccessors(w, mc);
+    generateIdentityMethods(w, mc);
+    generateToString(w, mc);
   }
 
   private void generateAccessors(FormatWriter w, MetaClass mc) {
@@ -600,11 +598,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
     boolean optional = mf.isOptional();
     String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
-
-    boolean collection = mf.getType().isCollection();
-
-    MetaClass itemType = (collection || optional) ?  mf.getItemType() : null;
-
     Field field = (Field)mf.getField();
     String getter = getGetterName(mf);
     String orElseNull = optional ? ".orElse(null)" : "";
@@ -648,14 +641,10 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     boolean primitive = mf.getType().isPrimitive();
 
     String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
-
-    Field field = (Field)mf.getField();
-    //Class type = optional ? dynamicPackage.getItemType(field) : getType(field);
-   // String typeName = optional ? type.getSimpleName() : getTypeName(field);
     String value = optional ? "Optional.of(" + name + ")" : name;
 
     w.println("/**");
-    w.println(" * @param " + mf.getDescription());
+    w.println(" * @param " + mf.getName() + " " + mf.getDescription());
     w.println(" */");
     w.println("{0} void {1}({2} {3}) '{'", String.join(" ", modifiers), methodName, typeName, name);
     w.indent();
@@ -671,7 +660,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateAddersRemovers(FormatWriter w, MetaField mf) {
-    Field field = (Field)mf.getField();
     boolean component = mf.isComponent() && mf.isOptional();
 
     if (component) {
@@ -782,15 +770,15 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println();
   }
 
-  private void generateMetaAccessors(FormatWriter w, Class<?> claz) {
+  private void generateMetaAccessors(FormatWriter w, MetaClass mc) {
     if (generateMetadata) {
-      List<Field> fields = getVariables(claz);
+      List<MetaField> fields = mc.getVariables();
       List<String> metaFields = new ArrayList<>();
 
       w.println("public static Field[] getFields() {");
       w.indent();
       w.print("return new Field[] {");
-      for (Field field : fields) {
+      for (MetaField field : fields) {
         metaFields.add(StringUtil.camelToUnderscore(field.getName()) + "_FIELD");
       }
       w.print(String.join(", ", metaFields));
@@ -826,24 +814,24 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println();
   }
 
-  private void generateIdentityMethods(FormatWriter w, Class<?> claz) {
-    generateEquals(w, claz);
-    generateHashCode(w, claz);
-    generateIsEqualTo(w, claz);
+  private void generateIdentityMethods(FormatWriter w, MetaClass mc) {
+    generateEquals(w, mc);
+    generateHashCode(w, mc);
+    generateIsEqualTo(w, mc);
   }
 
-  private void generateEquals(FormatWriter w, Class<?> claz) {
+  private void generateEquals(FormatWriter w, MetaClass mc) {
     w.println("@Override");
     w.println("public boolean equals(Object other) {");
     w.indent();
-    generateEqualsBody(w, claz);
+    generateEqualsBody(w, mc);
     w.unindent();
     w.println("}");
     w.println();
   }
 
-  private void generateEqualsBody(FormatWriter w, Class<?> claz) {
-    String name = claz.getSimpleName();
+  private void generateEqualsBody(FormatWriter w, MetaClass mc) {
+    String name = mc.getSimpleName();
     w.println("boolean equal = false;");
     w.println();
 
@@ -856,18 +844,19 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println("return equal;");
   }
 
-  private void generateHashCode(FormatWriter w, Class<?> claz) {
+  private void generateHashCode(FormatWriter w, MetaClass mc) {
     w.println("@Override");
     w.println("public int hashCode() {");
     w.indent();
-    generateHashCodeBody(w, claz);
+    generateHashCodeBody(w, mc);
     w.unindent();
     w.println("}");
     w.println();
   }
 
-  private void generateHashCodeBody(FormatWriter w, Class<?> claz) {
-    List<String> hashList = getGetterList(claz);
+  private void generateHashCodeBody(FormatWriter w, MetaClass mc) {
+    Class claz = mc.getClaz();
+    List<String> hashList = getGetterList(mc);
 
     if (dynamicPackage.hasSuperClass(claz)) {
       hashList.add("super.hashCode()");
@@ -877,23 +866,24 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println(MessageFormat.format("return Objects.hash({0});", fields));
   }
 
-  private void generateIsEqualTo(FormatWriter w, Class<?> claz) {
-    String name = claz.getSimpleName();
+  private void generateIsEqualTo(FormatWriter w, MetaClass mc) {
+    String name = mc.getSimpleName();
     w.println("protected boolean isEqualTo({0} that) '{'", name);
     w.indent();
-    generateIsEqualToBody(w, claz);
+    generateIsEqualToBody(w, mc);
     w.unindent();
     w.println("}");
     w.println();
   }
 
-  private void generateIsEqualToBody(FormatWriter w, Class<?> claz) {
-    List<Field> fields = getVariables(claz);
+  private void generateIsEqualToBody(FormatWriter w, MetaClass mc) {
+    List<MetaField> fields = mc.getVariables();
     w.println("boolean equal = true;");
 
-    for (Field field : fields) {
+    for (MetaField field : fields) {
       String getter = getGetterName(field);
-      if (dynamicPackage.isPrimitive(field.getType())) {
+
+      if (field.getType().isPrimitive()) {
         w.println("equal = equal && {0}() == that.{0}();", getter);
       } else {
         w.println(
@@ -902,6 +892,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       }
     }
 
+    Class claz = mc.getClaz();
     if (dynamicPackage.hasSuperClass(claz)) {
       w.println("equal = equal && super.isEqualTo(that);");
     }
@@ -909,7 +900,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println("return equal;");
   }
 
-  private void generateToString(FormatWriter w, Class<?> claz) {
+  private void generateToString(FormatWriter w, MetaClass mc) {
+    Class claz = mc.getClaz();
     List<Field> fields = getAllVariables(claz);
 
     w.println("@Override");
@@ -1077,12 +1069,12 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return (itemType == null) ? typeName : typeName + "<" + itemType.getSimpleName() + ">";
   }
 
-  private List<String> getGetterList(Class<?> claz) {
+  private List<String> getGetterList(MetaClass mc) {
     List<String> getterList = new ArrayList<>();
-    List<Field> fields = getVariables(claz);
+    List<MetaField> variables = mc.getVariables();
 
-    for (Field field : fields) {
-      getterList.add(getGetterName(field) + "()");
+    for (MetaField variable : variables) {
+      getterList.add(getGetterName(variable) + "()");
     }
 
     return getterList;
