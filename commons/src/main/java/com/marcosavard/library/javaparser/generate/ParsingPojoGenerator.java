@@ -1,6 +1,7 @@
 package com.marcosavard.library.javaparser.generate;
 
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
+import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 
 import java.io.File;
@@ -15,6 +16,11 @@ public class ParsingPojoGenerator extends PojoGenerator {
 
     @Override
     public File generateClass(MetaClass mc) throws IOException {
+        return null;
+    }
+
+    @Override
+    protected MetaField getReferenceForClass(MetaClass mc) {
         return null;
     }
 

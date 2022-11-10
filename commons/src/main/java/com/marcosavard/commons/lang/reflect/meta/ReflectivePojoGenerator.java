@@ -533,10 +533,14 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
   }
 
+  private void verifyNullArgument(FormatWriter w, MetaField mf) {
+    verifyNullArgument(w, mf.getField());
+  }
+
   private void verifyNullArgument(FormatWriter w, Member m) {
     w.println("if ({0} == null) '{'", m.getName());
     w.printlnIndented(
-        "throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");" ,m.getName());
+        "throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");", m.getName());
     w.println("}");
     w.println();
   }
@@ -590,18 +594,19 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateGetter(FormatWriter w, MetaField mf) {
-    Field field = (Field)mf.getField();
-
     List<String> modifiers = new ArrayList<>();
-    modifiers.addAll(getVisibilityModifiers(field));
-    modifiers.addAll(getModifiers(field));
-    Class<?> type = field.getType();
-    boolean collection = dynamicPackage.isCollection(type);
-    boolean optional = dynamicPackage.isOptional(field);
+    modifiers.addAll(mf.getVisibilityModifiers());
+    modifiers.addAll(mf.getOtherModifiers());
 
-    Class<?> itemType = collection || optional ? dynamicPackage.getItemType(field) : null;
-    String typeName = optional ? itemType.getSimpleName() : getTypeName(type, itemType);
-    String getter = getGetterName(field);
+    boolean optional = mf.isOptional();
+    String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
+
+    boolean collection = mf.getType().isCollection();
+
+    MetaClass itemType = (collection || optional) ?  mf.getItemType() : null;
+
+    Field field = (Field)mf.getField();
+    String getter = getGetterName(mf);
     String orElseNull = optional ? ".orElse(null)" : "";
 
     w.println("/**");
@@ -614,46 +619,49 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateSetter(FormatWriter w, MetaField mf) {
-    Field field = (Field)mf.getField();
-
-    boolean settable = ! dynamicPackage.isConstant(field);
-    Class<?> type = field.getType();
-    boolean collection = dynamicPackage.isCollection(type);
-    boolean component = dynamicPackage.isComponent(field);
+    boolean settable = ! mf.isConstant();
+    boolean collection = mf.getType().isCollection();
 
     if (settable) {
       if (collection) {
-        generateAddersRemovers(w, field);
+        generateAddersRemovers(w, mf);
       } else {
-        if (component) {
-            generateFactories(w, field);
+        if (mf.isComponent()) {
+            generateFactories(w, mf);
         } else {
-          generateBasicSetter(w, field);
+          generateBasicSetter(w, mf);
         }
       }
     }
   }
 
-  private void generateBasicSetter(FormatWriter w, Field field) {
+  private void generateBasicSetter(FormatWriter w, MetaField mf) {
     List<String> modifiers = new ArrayList<>();
-    modifiers.addAll(getVisibilityModifiers(field));
-    modifiers.addAll(getModifiers(field));
-    String prefix = dynamicPackage.isStatic(field) ? field.getDeclaringClass().getSimpleName() : "this";
-    String name = field.getName();
+    modifiers.addAll(mf.getVisibilityModifiers());
+    modifiers.addAll(mf.getOtherModifiers());
+
+    String prefix = mf.isStatic() ? mf.getDeclaringClass().getSimpleName() : "this";
+    String name = mf.getName();
     String methodName = "set" + StringUtil.capitalize(name);
-    boolean optional = dynamicPackage.isOptional(field);
-    Class type = optional ? dynamicPackage.getItemType(field) : getType(field);
-    String typeName = optional ? type.getSimpleName() : getTypeName(field);
+
+    boolean optional = mf.isOptional();
+    boolean primitive = mf.getType().isPrimitive();
+
+    String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
+
+    Field field = (Field)mf.getField();
+    //Class type = optional ? dynamicPackage.getItemType(field) : getType(field);
+   // String typeName = optional ? type.getSimpleName() : getTypeName(field);
     String value = optional ? "Optional.of(" + name + ")" : name;
 
     w.println("/**");
-    w.println(" * @param " + getDescription(field));
+    w.println(" * @param " + mf.getDescription());
     w.println(" */");
     w.println("{0} void {1}({2} {3}) '{'", String.join(" ", modifiers), methodName, typeName, name);
     w.indent();
 
-    if (! dynamicPackage.isPrimitive(type) && ! optional) {
-      verifyNullArgument(w, field);
+    if (! primitive && ! optional) {
+      verifyNullArgument(w, mf);
     }
 
     w.println("{0}.{1} = {2};", prefix, name, value);
@@ -662,41 +670,46 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println();
   }
 
-  private void generateAddersRemovers(FormatWriter w, Field field) {
-    boolean component = dynamicPackage.isComponent(field) && dynamicPackage.isOptional(field);
+  private void generateAddersRemovers(FormatWriter w, MetaField mf) {
+    Field field = (Field)mf.getField();
+    boolean component = mf.isComponent() && mf.isOptional();
 
     if (component) {
-      generateFactories(w, field);
+      generateFactories(w, mf);
     } else {
-      generateAdder(w, field);
+      generateAdder(w, mf);
     }
 
-    generateRemover(w, field);
+    generateRemover(w, mf);
   }
 
-  private void generateFactories(FormatWriter w, Field field) {
-    Class fieldType = field.getType();
-    boolean collection = dynamicPackage.isCollection(fieldType);
-    boolean optional = dynamicPackage.isOptional(field);
-    Class type = collection || optional ? dynamicPackage.getItemType(field) : fieldType;
-    String verb = collection ? "create" : "set";
-    String fieldName = StringUtil.capitalize(field.getName());
+  private void generateFactories(FormatWriter w, MetaField mf) {
+    boolean collection = mf.getType().isCollection();
+    boolean optional = mf.isOptional();
 
-    if (dynamicPackage.isAbstract(type)) {
-      List<Class> subclasses = getSubclasses(dynamicPackage.classes, type);
+    MetaClass type = collection || optional ? mf.getItemType() : mf.getType();
+    String verb = collection ? "create" : "set";
+    String fieldName = StringUtil.capitalize(mf.getName());
+
+    if (type.isAbstract()) {
+      Field field = (Field)mf.getField();
+      Class fieldType = field.getType();
+      Class typeOld = collection || optional ? dynamicPackage.getItemType(field) : fieldType;
+      List<Class> subclasses = getSubclasses(dynamicPackage.classes, typeOld);
 
       for (Class subclass : subclasses) {
         String typeName =  StringUtil.capitalize(subclass.getSimpleName());
         String factoryName = verb + fieldName + typeName;
-        generateFactory(w, field, MetaClass.of(subclass), factoryName);
+        generateFactory(w, mf, MetaClass.of(subclass), factoryName);
       }
     } else {
       String factoryName = verb + type.getSimpleName();
-      generateFactory(w, field, MetaClass.of(type), factoryName);
+      generateFactory(w, mf, type, factoryName);
     }
   }
 
-  private void generateFactory(FormatWriter w, Field field, MetaClass type, String factoryName) {
+  private void generateFactory(FormatWriter w, MetaField mf, MetaClass type, String factoryName) {
+    Field field = (Field)mf.getField();
     Class fieldType = field.getType();
     boolean collection = dynamicPackage.isCollection(fieldType);
     String visibility = String.join(" ", getVisibilityModifiers(field));
@@ -708,13 +721,13 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
     w.println("{0} {1} {2}({3}) '{'", visibility, returnedType, factoryName, parameters);
     w.indent();
-    generateFactoryBody(w, field, type, constructorParameters, readOnlyFields);
+    generateFactoryBody(w, mf, type, constructorParameters, readOnlyFields);
     w.unindent();
     w.println("}");
     w.println();
   }
 
-  private void generateFactoryBody(FormatWriter w, Field field, MetaClass type, List<Member> constructorParameters, List<? extends Member> readOnlyMembers) {
+  private void generateFactoryBody(FormatWriter w, MetaField mf, MetaClass type, List<Member> constructorParameters, List<? extends Member> readOnlyMembers) {
     String typeName = type.getSimpleName();
     String instance = StringUtil.uncapitalize(typeName);
 
@@ -725,19 +738,19 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       }
     }
 
-    String prefix = dynamicPackage.isStatic(field) ? field.getDeclaringClass().getSimpleName() : "this";
+    String prefix = mf.isStatic() ? mf.getDeclaringClass().getSimpleName() : "this";
     String arguments = String.join(", ", dynamicPackage.getMemberNames(fields));
     String allArguments = fields.isEmpty() ? "this" : "this, " + arguments;
-    boolean collection = dynamicPackage.isCollection(field.getType());
-    boolean optional = dynamicPackage.isOptional(field);
+    boolean collection = mf.getType().isCollection();
+    boolean optional = mf.isOptional();
     String value = optional ? "Optional.of(" + instance + ")" : instance;
 
     w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
 
     if (collection) {
-      w.println("{0}.{1}.add({2});", prefix, field.getName(), instance);
+      w.println("{0}.{1}.add({2});", prefix, mf.getName(), instance);
     } else {
-      w.println("{0}.{1} = {2};", prefix, field.getName(), value);
+      w.println("{0}.{1} = {2};", prefix, mf.getName(), value);
     }
 
     if (collection) {
@@ -745,26 +758,26 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
   }
 
-  private void generateAdder(FormatWriter w, Field field) {
-    String visibility = String.join(" ", getVisibilityModifiers(field));
-    String name = StringUtil.capitalize(field.getName());
-    String itemType = dynamicPackage.getItemType(field).getSimpleName();
+  private void generateAdder(FormatWriter w, MetaField mf) {
+    String visibility = String.join(" ", mf.getVisibilityModifiers());
+    String name = StringUtil.capitalize(mf.getName());
+    String itemType = mf.getItemType().getSimpleName();
     String parameter = StringUtil.uncapitalize(itemType);
 
     w.println("{0} void addTo{1}({2} {3}) '{'", visibility, name, itemType, parameter);
-    w.printlnIndented("this.{0}.add({1});", field.getName(), parameter);
+    w.printlnIndented("this.{0}.add({1});", mf.getName(), parameter);
     w.println("}");
     w.println();
   }
 
-  private void generateRemover(FormatWriter w, Field field) {
-    String visibility = String.join(" ", getVisibilityModifiers(field));
-    String name = StringUtil.capitalize(field.getName());
-    String itemType = dynamicPackage.getItemType(field).getSimpleName();
+  private void generateRemover(FormatWriter w, MetaField mf) {
+    String visibility = String.join(" ", mf.getVisibilityModifiers());
+    String name = StringUtil.capitalize(mf.getName());
+    String itemType = mf.getItemType().getSimpleName();
     String parameter = StringUtil.uncapitalize(itemType);
 
     w.println("{0} void removeFrom{1}({2} {3}) '{'", visibility, name, itemType, parameter);
-    w.printlnIndented("this.{0}.remove({1});", field.getName(), parameter);
+    w.printlnIndented("this.{0}.remove({1});", mf.getName(), parameter);
     w.println("}");
     w.println();
   }
@@ -1073,6 +1086,11 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
 
     return getterList;
+  }
+
+  private String getGetterName(MetaField mf) {
+    Field field = (Field)mf.getField();
+    return getGetterName(field);
   }
 
   private String getGetterName(Field field) {

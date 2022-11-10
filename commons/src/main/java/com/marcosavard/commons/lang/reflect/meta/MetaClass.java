@@ -71,6 +71,8 @@ public abstract class MetaClass {
 
     public abstract boolean isImmutable();
 
+    public abstract boolean isPrimitive();
+
     public abstract boolean isPublic();
 
     @Override
@@ -91,7 +93,6 @@ public abstract class MetaClass {
     public List<MetaField> getVariables() {
         return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).toList();
     }
-
 
 
     private static class ReflectiveMetaClass extends MetaClass {
@@ -171,6 +172,19 @@ public abstract class MetaClass {
         @Override
         public boolean isImmutable() {
             return claz.getAnnotation(Immutable.class) != null;
+        }
+
+        @Override
+        public boolean isPrimitive() {
+            boolean primitive = boolean.class.equals(claz);
+            primitive = primitive || byte.class.equals(claz);
+            primitive = primitive || char.class.equals(claz);
+            primitive = primitive || short.class.equals(claz);
+            primitive = primitive || int.class.equals(claz);
+            primitive = primitive || long.class.equals(claz);
+            primitive = primitive || float.class.equals(claz);
+            primitive = primitive || double.class.equals(claz);
+            return primitive;
         }
 
         @Override

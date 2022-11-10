@@ -1,5 +1,7 @@
 package com.marcosavard.commons.lang.reflect.meta;
 
+import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
 import java.lang.reflect.*;
@@ -23,6 +25,8 @@ public abstract class MetaField {
 
     public abstract MetaClass getType();
 
+    public abstract List<String> getVisibilityModifiers();
+
     public boolean isConstant() {
         return isStatic() && isFinal();
     }
@@ -30,6 +34,8 @@ public abstract class MetaField {
     public abstract boolean isFinal();
 
     public abstract boolean isOptional();
+
+    public abstract boolean isProtected();
 
     public abstract boolean isPublic();
 
@@ -53,7 +59,11 @@ public abstract class MetaField {
         return actualType;
     }
 
+    public abstract MetaClass getDeclaringClass();
 
+    public abstract String getDescription();
+
+    public abstract boolean isComponent();
 
 
     private static class ReflectiveMetaField extends MetaField {
@@ -180,6 +190,21 @@ public abstract class MetaField {
         }
 
         @Override
+        public List<String> getVisibilityModifiers() {
+            List<String> modifiers = new ArrayList<>();
+
+            if (isPublic()) {
+                modifiers.add("public");
+            }
+
+            if (isProtected()) {
+                modifiers.add("protected");
+            }
+
+            return modifiers;
+        }
+
+        @Override
         public boolean isFinal() {
             return Modifier.isFinal(member.getModifiers());
         }
@@ -187,6 +212,11 @@ public abstract class MetaField {
         @Override
         public boolean isOptional() {
             return Optional.class.isAssignableFrom(getType().getClaz());
+        }
+
+        @Override
+        public boolean isProtected() {
+            return Modifier.isProtected(member.getModifiers());
         }
 
         @Override
@@ -211,6 +241,34 @@ public abstract class MetaField {
         @Override
         public boolean isStatic() {
             return Modifier.isStatic(member.getModifiers());
+        }
+
+        @Override
+        public MetaClass getDeclaringClass() {
+            return MetaClass.of(member.getDeclaringClass());
+        }
+
+        @Override
+        public String getDescription() {
+            String desc = "";
+
+            if (member instanceof Field field) {
+                Description description = field.getAnnotation(Description.class);
+                desc = (description == null) ? "" : description.value();
+            }
+
+            return desc;
+        }
+
+        @Override
+        public boolean isComponent() {
+            boolean component = false;
+
+            if (member instanceof Field field) {
+                component = field.getAnnotation(Component.class) != null;
+            }
+
+            return component;
         }
     }
 }
