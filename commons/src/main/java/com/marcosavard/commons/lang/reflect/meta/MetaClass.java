@@ -1,6 +1,7 @@
 package com.marcosavard.commons.lang.reflect.meta;
 
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -67,6 +68,9 @@ public abstract class MetaClass {
     public abstract boolean isCollection() ;
 
     public abstract boolean isEnum();
+
+    public abstract boolean isImmutable();
+
     public abstract boolean isPublic();
 
     @Override
@@ -87,6 +91,8 @@ public abstract class MetaClass {
     public List<MetaField> getVariables() {
         return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).toList();
     }
+
+
 
     private static class ReflectiveMetaClass extends MetaClass {
         private final Class<?> claz;
@@ -160,6 +166,11 @@ public abstract class MetaClass {
         @Override
         public boolean isEnum() {
             return claz.isEnum();
+        }
+
+        @Override
+        public boolean isImmutable() {
+            return claz.getAnnotation(Immutable.class) != null;
         }
 
         @Override

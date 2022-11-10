@@ -52,4 +52,6 @@ public abstract class PojoGenerator {
     }
 
     public abstract File generateClass(MetaClass mc) throws IOException;
+
+    protected abstract MetaField getReferenceForClass(MetaClass mc);
 }

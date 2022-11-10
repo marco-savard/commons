@@ -118,7 +118,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println(" {");
     w.indent();
 
-    Class claz = mc.getClaz();
     generateConstants(w, mc);
     generateVariables(w, mc);
     generateMetaFields(w, mc);
@@ -189,21 +188,20 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   private void generateConstants(FormatWriter w, MetaClass mc) {
     List<MetaField> metaFields = mc.getConstants();
 
-    Class<?> claz = mc.getClaz();
-    List<Field> fields = getConstants(claz);
-
     for (MetaField field : metaFields) {
       generateField(w, field);
     }
 
-    if (!fields.isEmpty()) {
+    if (!metaFields.isEmpty()) {
       w.println();
     }
   }
 
   private void generateVariables(FormatWriter w, MetaClass mc) {
+    MetaField reference = getReferenceForClass(mc);
+
     Class claz = mc.getClaz();
-    DynamicPackage.Reference reference = dynamicPackage.getReferenceByClass().get(claz);
+    DynamicPackage.Reference referenceOld = dynamicPackage.getReferenceByClass().get(claz);
     List<MetaField> fields = mc.getVariables();
 
     if (reference != null) {
@@ -219,8 +217,16 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
   }
 
-  private void generateReference(FormatWriter w, DynamicPackage.Reference reference) {
-    Class<?> type = reference.getOppositeField().getDeclaringClass();
+  @Override
+  protected MetaField getReferenceForClass(MetaClass mc) {
+    Class claz = mc.getClaz();
+    DynamicPackage.Reference reference = dynamicPackage.getReferenceByClass().get(claz);
+    MetaField field = (reference == null) ? null : MetaField.of(reference);
+    return field;
+  }
+
+  private void generateReference(FormatWriter w, MetaField reference) {
+    MetaClass type = reference.getType();
     String typeName = type.getSimpleName();
     w.println("private {0} {1};", typeName, reference.getName());
   }
@@ -231,13 +237,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     modifierList.addAll(field.getOtherModifiers());
     String modifiers = String.join(" ", modifierList);
 
-    Class<?> type = field.getField().getType();
-    boolean collection = dynamicPackage.isCollection(type);
-    boolean optional = dynamicPackage.isOptional(field.getField());
-
-    Class<?> itemType = (collection || optional) ? dynamicPackage.getItemType(field.getField()) : null;
-    String typeName = getTypeName(type, itemType);
-    String initValue = dynamicPackage.getInitialValue(field.getField());
+    String typeName = field.getTypeName();
+    String initValue = field.getInitialValue();
 
     if (initValue == null) {
       w.println("{0} {1} {2};", modifiers, typeName, field.getName());
@@ -281,7 +282,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
   private void generateConstructor(FormatWriter w, MetaClass mc) {
     Class claz = mc.getClaz();
-    List<Member> constructorParameters = findConstructorParameters(claz, true);
+    List<Member> constructorParameters = findConstructorParameters(mc, true);
 
     if (hasRequiredComponent(claz)) {
       generateOfMethods(w, claz, constructorParameters);
@@ -489,8 +490,9 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return requiredComponents;
   }
 
-  private List<Member> findConstructorParameters(Class<?> claz, boolean includeParent) {
+  private List<Member> findConstructorParameters(MetaClass mc, boolean includeParent) {
     List<Member> constructorParameters = new UniqueList<>();
+    Class claz = mc.getClaz();
     List<DynamicPackage.Reference> parentReferences = includeParent ? dynamicPackage.getParentReferences(claz) : new ArrayList<>();
     List<Member> superClassMembers = dynamicPackage.getSuperClassMembers(claz, includeParent);
     List<Member> requiredMembers = dynamicPackage.getRequiredMembers(claz, false);
@@ -556,15 +558,14 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateAccessorsGroupedByProperties(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
-    List<Field> fields = getVariables(claz);
-    boolean immutable = dynamicPackage.isImmutable(claz);
+    List<MetaField> variables = mc.getVariables();
+    boolean immutable = mc.isImmutable();
 
-    for (Field field : fields) {
-      generateGetter(w, field);
+    for (MetaField variable : variables) {
+      generateGetter(w, variable);
 
-      if (!immutable && (!dynamicPackage.isReadOnly(field))) {
-        generateSetter(w, field);
+      if (! immutable && ! variable.isReadOnly()) {
+        generateSetter(w, variable);
       }
     }
 
@@ -572,24 +573,25 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateAccessorsGroupedByGettersSetters(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
-    List<Field> fields = getVariables(claz);
-    boolean immutable = dynamicPackage.isImmutable(claz);
+    List<MetaField> variables = mc.getVariables();
+    boolean immutable = mc.isImmutable();
 
-    for (Field field : fields) {
-      generateGetter(w, field);
+    for (MetaField variable : variables) {
+      generateGetter(w, variable);
     }
 
-    for (Field field : fields) {
-      if (!immutable && (!dynamicPackage.isReadOnly(field))) {
-        generateSetter(w, field);
+    for (MetaField variable : variables) {
+      if (!immutable && ! variable.isReadOnly()) {
+        generateSetter(w, variable);
       }
     }
 
     w.println();
   }
 
-  private void generateGetter(FormatWriter w, Field field) {
+  private void generateGetter(FormatWriter w, MetaField mf) {
+    Field field = (Field)mf.getField();
+
     List<String> modifiers = new ArrayList<>();
     modifiers.addAll(getVisibilityModifiers(field));
     modifiers.addAll(getModifiers(field));
@@ -611,7 +613,9 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println();
   }
 
-  private void generateSetter(FormatWriter w, Field field) {
+  private void generateSetter(FormatWriter w, MetaField mf) {
+    Field field = (Field)mf.getField();
+
     boolean settable = ! dynamicPackage.isConstant(field);
     Class<?> type = field.getType();
     boolean collection = dynamicPackage.isCollection(type);
@@ -684,15 +688,15 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       for (Class subclass : subclasses) {
         String typeName =  StringUtil.capitalize(subclass.getSimpleName());
         String factoryName = verb + fieldName + typeName;
-        generateFactory(w, field, subclass, factoryName);
+        generateFactory(w, field, MetaClass.of(subclass), factoryName);
       }
     } else {
       String factoryName = verb + type.getSimpleName();
-      generateFactory(w, field, type, factoryName);
+      generateFactory(w, field, MetaClass.of(type), factoryName);
     }
   }
 
-  private void generateFactory(FormatWriter w, Field field, Class type, String factoryName) {
+  private void generateFactory(FormatWriter w, Field field, MetaClass type, String factoryName) {
     Class fieldType = field.getType();
     boolean collection = dynamicPackage.isCollection(fieldType);
     String visibility = String.join(" ", getVisibilityModifiers(field));
@@ -700,7 +704,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
     List<Member> constructorParameters = findConstructorParameters(type, false);
     String parameters = String.join(", ", getMemberDeclarations(constructorParameters));
-    List<? extends Member> readOnlyFields = getAllReadOnlyMembers(type);
+    List<? extends Member> readOnlyFields = getAllReadOnlyMembers(type.getClaz());
 
     w.println("{0} {1} {2}({3}) '{'", visibility, returnedType, factoryName, parameters);
     w.indent();
@@ -710,7 +714,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println();
   }
 
-  private void generateFactoryBody(FormatWriter w, Field field, Class type, List<Member> constructorParameters, List<? extends Member> readOnlyMembers) {
+  private void generateFactoryBody(FormatWriter w, Field field, MetaClass type, List<Member> constructorParameters, List<? extends Member> readOnlyMembers) {
     String typeName = type.getSimpleName();
     String instance = StringUtil.uncapitalize(typeName);
 

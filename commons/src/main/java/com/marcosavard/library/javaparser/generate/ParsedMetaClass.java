@@ -86,6 +86,11 @@ public class ParsedMetaClass extends MetaClass {
     }
 
     @Override
+    public boolean isImmutable() {
+        return false;
+    }
+
+    @Override
     public boolean isPublic() {
         return type.isPublic();
     }
