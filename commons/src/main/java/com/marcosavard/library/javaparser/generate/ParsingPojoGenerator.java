@@ -24,4 +24,9 @@ public class ParsingPojoGenerator extends PojoGenerator {
         return null;
     }
 
+    @Override
+    protected String getGetterName(MetaField mf) {
+        return "get";
+    }
+
 }

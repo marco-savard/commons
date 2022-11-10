@@ -12,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.*;
-import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -288,6 +287,10 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       generateParameterlessConstructor(w, mc);
       String visibility = mc.isAbstract() ? "protected" : "public";
       String className = mc.getSimpleName();
+
+      MetaClass superClass = mc.getSuperClass();
+      List<MetaField> superClassFields = superClass.getVariables();
+
       Class claz = mc.getClaz();
       List<Member> superClassMembers = dynamicPackage.getSuperClassMembers(claz, true);
 
@@ -489,11 +492,10 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return requiredComponents;
   }
 
-  private List<Member> findConstructorParameters(MetaClass mc, boolean includeParent) {
-    List<Member> constructorParameters = new UniqueList<>();
+  private List<Member> findConstructorParameters(MetaClass mc, boolean includeOwner) {
     Class claz = mc.getClaz();
-    List<DynamicPackage.Reference> parentReferences = includeParent ? dynamicPackage.getParentReferences(claz) : new ArrayList<>();
-    List<Member> superClassMembers = dynamicPackage.getSuperClassMembers(claz, includeParent);
+    List<DynamicPackage.Reference> ownerReferences = includeOwner ? dynamicPackage.getOwnerReferences(claz) : new ArrayList<>();
+    List<Member> superClassMembers = dynamicPackage.getSuperClassMembers(claz, includeOwner);
     List<Member> requiredMembers = dynamicPackage.getRequiredMembers(claz, false);
     List<String> superClassMemberNames = dynamicPackage.getMemberNames(superClassMembers);
 
@@ -502,7 +504,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
             .filter(m -> ! superClassMemberNames.contains(m.getName()))
             .toList();
 
-    constructorParameters.addAll(parentReferences);
+    List<Member> constructorParameters = new UniqueList<>();
+    constructorParameters.addAll(ownerReferences);
     constructorParameters.addAll(superClassMembers);
     constructorParameters.addAll(requiredMembers);
     return constructorParameters;
@@ -746,177 +749,17 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
   }
 
-  private void generateAdder(FormatWriter w, MetaField mf) {
-    String visibility = String.join(" ", mf.getVisibilityModifiers());
-    String name = StringUtil.capitalize(mf.getName());
-    String itemType = mf.getItemType().getSimpleName();
-    String parameter = StringUtil.uncapitalize(itemType);
 
-    w.println("{0} void addTo{1}({2} {3}) '{'", visibility, name, itemType, parameter);
-    w.printlnIndented("this.{0}.add({1});", mf.getName(), parameter);
-    w.println("}");
-    w.println();
-  }
 
-  private void generateRemover(FormatWriter w, MetaField mf) {
-    String visibility = String.join(" ", mf.getVisibilityModifiers());
-    String name = StringUtil.capitalize(mf.getName());
-    String itemType = mf.getItemType().getSimpleName();
-    String parameter = StringUtil.uncapitalize(itemType);
 
-    w.println("{0} void removeFrom{1}({2} {3}) '{'", visibility, name, itemType, parameter);
-    w.printlnIndented("this.{0}.remove({1});", mf.getName(), parameter);
-    w.println("}");
-    w.println();
-  }
 
-  private void generateMetaAccessors(FormatWriter w, MetaClass mc) {
-    if (generateMetadata) {
-      List<MetaField> fields = mc.getVariables();
-      List<String> metaFields = new ArrayList<>();
 
-      w.println("public static Field[] getFields() {");
-      w.indent();
-      w.print("return new Field[] {");
-      for (MetaField field : fields) {
-        metaFields.add(StringUtil.camelToUnderscore(field.getName()) + "_FIELD");
-      }
-      w.print(String.join(", ", metaFields));
-      w.print("};");
-      w.println();
-      w.unindent();
-      w.println("}");
-      w.println();
-      generateMetaGetter(w);
-      generateMetaSetter(w);
-    }
-  }
 
-  private void generateMetaGetter(FormatWriter w) {
-    w.println("/**");
-    w.println(" * @param field");
-    w.println(" * @return the value for this field");
-    w.println(" */");
-    w.println("public Object get(Field field) throws IllegalAccessException {");
-    w.printlnIndented("return field.get(this);");
-    w.println("}");
-    w.println();
-  }
 
-  private void generateMetaSetter(FormatWriter w) {
-    w.println("/**");
-    w.println(" * @param field");
-    w.println(" * @param value to be assigned");
-    w.println(" */");
-    w.println("public void set(Field field, Object value) throws IllegalAccessException {");
-    w.printlnIndented("field.set(this, value);");
-    w.println("}");
-    w.println();
-  }
 
-  private void generateIdentityMethods(FormatWriter w, MetaClass mc) {
-    generateEquals(w, mc);
-    generateHashCode(w, mc);
-    generateIsEqualTo(w, mc);
-  }
 
-  private void generateEquals(FormatWriter w, MetaClass mc) {
-    w.println("@Override");
-    w.println("public boolean equals(Object other) {");
-    w.indent();
-    generateEqualsBody(w, mc);
-    w.unindent();
-    w.println("}");
-    w.println();
-  }
 
-  private void generateEqualsBody(FormatWriter w, MetaClass mc) {
-    String name = mc.getSimpleName();
-    w.println("boolean equal = false;");
-    w.println();
 
-    w.println("if (other instanceof {0}) '{'", name);
-    w.printlnIndented("{0} that = ({0})other;", name);
-    w.printlnIndented("equal = (hashCode() == that.hashCode()) && isEqualTo(that);");
-    w.println("}");
-    w.println();
-
-    w.println("return equal;");
-  }
-
-  private void generateHashCode(FormatWriter w, MetaClass mc) {
-    w.println("@Override");
-    w.println("public int hashCode() {");
-    w.indent();
-    generateHashCodeBody(w, mc);
-    w.unindent();
-    w.println("}");
-    w.println();
-  }
-
-  private void generateHashCodeBody(FormatWriter w, MetaClass mc) {
-    List<String> hashList = getGetterList(mc);
-
-    if (mc.hasSuperClass()) {
-      hashList.add("super.hashCode()");
-    }
-
-    String fields = String.join(", ", hashList);
-    w.println(MessageFormat.format("return Objects.hash({0});", fields));
-  }
-
-  private void generateIsEqualTo(FormatWriter w, MetaClass mc) {
-    String name = mc.getSimpleName();
-    w.println("protected boolean isEqualTo({0} that) '{'", name);
-    w.indent();
-    generateIsEqualToBody(w, mc);
-    w.unindent();
-    w.println("}");
-    w.println();
-  }
-
-  private void generateIsEqualToBody(FormatWriter w, MetaClass mc) {
-    List<MetaField> fields = mc.getVariables();
-    w.println("boolean equal = true;");
-
-    for (MetaField field : fields) {
-      String getter = getGetterName(field);
-
-      if (field.getType().isPrimitive()) {
-        w.println("equal = equal && {0}() == that.{0}();", getter);
-      } else {
-        w.println(
-            "equal = equal && {0}() == null ? that.{0}() == null : {0}().equals(that.{0}());",
-            getter);
-      }
-    }
-
-    if (mc.hasSuperClass()) {
-      w.println("equal = equal && super.isEqualTo(that);");
-    }
-
-    w.println("return equal;");
-  }
-
-  private void generateToString(FormatWriter w, MetaClass mc) {
-    List<MetaField> allVariables = mc.getAllVariables();
-
-    w.println("@Override");
-    w.println("public String toString() {");
-    w.printlnIndented("StringBuilder sb = new StringBuilder();");
-    w.printlnIndented("sb.append(\"{\");");
-
-    for (MetaField field : allVariables) {
-      String name = field.getName();
-      String getter = getGetterName(field);
-      w.printlnIndented("sb.append(\"{0} = \").append({1}()).append(\", \");", name, getter);
-    }
-
-    w.printlnIndented("sb.append(\"}\");");
-    w.printlnIndented("return sb.toString();");
-    w.println("}");
-    w.println();
-  }
 
   private List<String> getReferenceNames(List<Member> members) {
     List<String> memberNames = new ArrayList<>();
@@ -1056,23 +899,11 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return (itemType == null) ? typeName : typeName + "<" + itemType.getSimpleName() + ">";
   }
 
-  private List<String> getGetterList(MetaClass mc) {
-    List<String> getterList = new ArrayList<>();
-    List<MetaField> variables = mc.getVariables();
 
-    for (MetaField variable : variables) {
-      getterList.add(getGetterName(variable) + "()");
-    }
 
-    return getterList;
-  }
-
-  private String getGetterName(MetaField mf) {
+  @Override
+  protected String getGetterName(MetaField mf) {
     Field field = (Field)mf.getField();
-    return getGetterName(field);
-  }
-
-  private String getGetterName(Field field) {
     Class<?> type = field.getType();
     String verb = type.equals(boolean.class) ? "is" : "get";
     return verb + StringUtil.capitalize(field.getName());

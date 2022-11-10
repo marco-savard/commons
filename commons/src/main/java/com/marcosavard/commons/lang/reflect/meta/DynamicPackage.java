@@ -83,7 +83,7 @@ public class DynamicPackage {
         return memberNames;
     }
 
-    protected List<Reference> getParentReferences(Class<?> claz) {
+    protected List<Reference> getOwnerReferences(Class<?> claz) {
         List<Reference> parentReferences = new ArrayList<>();
         Reference reference = getReferenceByClass().get(claz);
         if (reference != null) {
