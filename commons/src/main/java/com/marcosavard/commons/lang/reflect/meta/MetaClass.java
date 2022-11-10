@@ -29,6 +29,8 @@ public abstract class MetaClass {
 
     public abstract MetaField[] getDeclaredFields();
 
+    public abstract MetaField[] getFields();
+
     public abstract String getDescription();
 
     public abstract String getName();
@@ -90,10 +92,15 @@ public abstract class MetaClass {
         return Arrays.stream(getDeclaredFields()).filter(f -> f.isConstant()).toList();
     }
 
+    public List<MetaField> getAllVariables() {
+        return Arrays.stream(getFields()).filter(f -> ! f.isConstant()).toList();
+    }
+
     public List<MetaField> getVariables() {
         return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).toList();
     }
 
+    public abstract boolean hasSuperClass();
 
     private static class ReflectiveMetaClass extends MetaClass {
         private final Class<?> claz;
@@ -110,6 +117,18 @@ public abstract class MetaClass {
             for (int i=0; i< fields.length; i++) {
                 metaFields[i] = MetaField.of(fields[i]);
              }
+
+            return metaFields;
+        }
+
+        @Override
+        public MetaField[] getFields() {
+            Field[] fields = claz.getFields();
+            MetaField[] metaFields = new MetaField[fields.length];
+
+            for (int i=0; i< fields.length; i++) {
+                metaFields[i] = MetaField.of(fields[i]);
+            }
 
             return metaFields;
         }
@@ -155,6 +174,12 @@ public abstract class MetaClass {
         }
 
         @Override
+        public boolean hasSuperClass() {
+            Class<?> superclass = claz.getSuperclass();
+            return (superclass != null) && (!Object.class.equals(superclass));
+        }
+
+        @Override
         public boolean isAbstract() {
             return Modifier.isAbstract(claz.getModifiers());
         }
@@ -191,6 +216,8 @@ public abstract class MetaClass {
         public boolean isPublic() {
             return Modifier.isPublic(claz.getModifiers());
         }
+
+
 
     }
 }

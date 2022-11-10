@@ -6,8 +6,6 @@ import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 
-import java.util.Collection;
-
 public class ParsedMetaClass extends MetaClass {
     private final TypeDeclaration type;
 
@@ -17,6 +15,11 @@ public class ParsedMetaClass extends MetaClass {
 
     @Override
     public MetaField[] getDeclaredFields() {
+        return new MetaField[0];
+    }
+
+    @Override
+    public MetaField[] getFields() {
         return new MetaField[0];
     }
 
@@ -98,5 +101,10 @@ public class ParsedMetaClass extends MetaClass {
     @Override
     public boolean isPublic() {
         return type.isPublic();
+    }
+
+    @Override
+    public boolean hasSuperClass() {
+        return false;
     }
 }

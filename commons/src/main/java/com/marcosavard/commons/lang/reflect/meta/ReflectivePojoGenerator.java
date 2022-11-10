@@ -278,7 +278,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateConstructor(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
     List<Member> constructorParameters = findConstructorParameters(mc, true);
 
     if (hasRequiredComponent(mc)) {
@@ -289,6 +288,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       generateParameterlessConstructor(w, mc);
       String visibility = mc.isAbstract() ? "protected" : "public";
       String className = mc.getSimpleName();
+      Class claz = mc.getClaz();
       List<Member> superClassMembers = dynamicPackage.getSuperClassMembers(claz, true);
 
       w.println("/**");
@@ -855,10 +855,9 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateHashCodeBody(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
     List<String> hashList = getGetterList(mc);
 
-    if (dynamicPackage.hasSuperClass(claz)) {
+    if (mc.hasSuperClass()) {
       hashList.add("super.hashCode()");
     }
 
@@ -892,8 +891,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       }
     }
 
-    Class claz = mc.getClaz();
-    if (dynamicPackage.hasSuperClass(claz)) {
+    if (mc.hasSuperClass()) {
       w.println("equal = equal && super.isEqualTo(that);");
     }
 
@@ -901,15 +899,14 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private void generateToString(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
-    List<Field> fields = getAllVariables(claz);
+    List<MetaField> allVariables = mc.getAllVariables();
 
     w.println("@Override");
     w.println("public String toString() {");
     w.printlnIndented("StringBuilder sb = new StringBuilder();");
     w.printlnIndented("sb.append(\"{\");");
 
-    for (Field field : fields) {
+    for (MetaField field : allVariables) {
       String name = field.getName();
       String getter = getGetterName(field);
       w.printlnIndented("sb.append(\"{0} = \").append({1}()).append(\", \");", name, getter);
@@ -943,16 +940,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return subClasses;
   }
 
-
-
-  /*
-  private List<Field> getSuperClassReadOnlyFields(Class<?> claz) {
-    List<Field> allReadOnlyFields = getAllReadOnlyFields(claz);
-    List<Field> fields = getReadOnlyFields(claz);
-    List<Field> superclassFields = new ArrayList<>(allReadOnlyFields);
-    superclassFields.removeAll(fields);
-    return superclassFields;
-  }*/
 
   private List<String> getMemberDeclarations(List<? extends Member> members) {
     List<String> declarations = new UniqueList<>();
