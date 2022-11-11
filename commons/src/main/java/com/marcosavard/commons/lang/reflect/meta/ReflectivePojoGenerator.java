@@ -40,177 +40,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   @Override
-  public File generateClass(MetaClass mc) throws IOException {
-    Console.println("Generating code for {0}", mc.getSimpleName());
-
-    // create folder
-    String packageName = mc.getPackageName();
-    String folderName = packageName.replace(".", "//");
-    File subfolder = new File(outputFolder, folderName);
-    subfolder.mkdirs();
-
-    // create file
-    String filename = mc.getSimpleName() + ".java";
-    File generated = new File(subfolder, filename);
-    Writer w = new FileWriter(generated);
-    FormatWriter fw = new FormatWriter(w, indentation);
-
-    // generate code
-    generateType(fw, packageName, mc);
-    fw.close();
-
-    return generated;
-  }
-
-
-  private void generateType(FormatWriter w, String packageName, MetaClass mc) {
-    w.println("package {0};", packageName);
-    w.println();
-
-    if (mc.isEnum()) {
-      generateEnum(w, mc);
-    } else {
-      generateClass(w, mc);
-    }
-  }
-
-  private void generateEnum(FormatWriter w, MetaClass mc) {
-    w.println("public enum {0} '{'", mc.getSimpleName());
-    w.indent();
-    generateLiterals(w, mc);
-    w.unindent();
-    w.println("}");
-  }
-
-  private void generateLiterals(FormatWriter w, MetaClass mc) {
-    MetaField[] fields = mc.getDeclaredFields();
-
-    for (MetaField field : fields) {
-      generateLiteral(w, field);
-    }
-  }
-
-  private void generateLiteral(FormatWriter w, MetaField field) {
-    if (field.isPublic()) {
-      w.println("{0},", field.getName());
-    }
-  }
-
-  private void generateClass(FormatWriter w, MetaClass mc) {
-    List<String> modifierList = new ArrayList<>();
-    modifierList.addAll(mc.getVisibilityModifiers());
-    modifierList.addAll(mc.getOtherModifiers());
-    String modifiers = String.join(" ", modifierList);
-    MetaClass superClass = mc.getSuperClass();
-
-    generateImports(w, mc);
-    generateClassComment(w, mc);
-    w.print("{0} class {1}", modifiers, mc.getSimpleName());
-
-    if ((superClass != null) && !superClass.equals(MetaClass.of(Object.class))) {
-      w.print(" extends {0}", superClass.getSimpleName());
-    }
-
-    w.println(" {");
-    w.indent();
-
-    generateConstants(w, mc);
-    generateVariables(w, mc);
-    generateMetaFields(w, mc);
-    generateConstructor(w, mc);
-    generateMethods(w, mc);
-    w.unindent();
-    w.println("}");
-  }
-
-  private void generateImports(FormatWriter w, MetaClass mc) {
-    MetaPackage mp = mc.getPackage();
-    MetaField[] fields = mc.getDeclaredFields();
-
-    Comparator<MetaClass> comparator = new ImportComparator();
-    List<MetaClass> importees = new SortedList<>(comparator);
-    importees.add(MetaClass.of(Objects.class));
-
-    if (generateMetadata) {
-      importees.add(MetaClass.of(Field.class));
-    }
-
-    for (MetaField field : fields) {
-      MetaClass fieldType = field.getType();
-      MetaPackage fieldPackage = fieldType.getPackage();
-
-      boolean importable = !("".equals(fieldPackage.getName()))
-              && !("java.lang".equals(fieldPackage.getName()))
-              && ! fieldPackage.equals(mp);
-      boolean collection = fieldType.isCollection();
-
-      if (importable) {
-        importees.add(fieldType);
-      }
-
-      if (collection) {
-        MetaClass itemType = field.getItemType();
-
-        if (! itemType.getPackage().equals(mp)) {
-          importees.add(itemType);
-        }
-      }
-    }
-
-    if (importees.contains(MetaClass.of(List.class))) {
-      importees.add(MetaClass.of(ArrayList.class));
-    }
-
-    if (importees.size() > 0) {
-      for (MetaClass importee : importees) {
-        String fullName = importee.getName().replace('$', '.');
-        w.println("import {0};", fullName);
-      }
-      w.println();
-    }
-  }
-
-  private void generateClassComment(FormatWriter w, MetaClass mc) {
-    String description = mc.getDescription();
-    LocalDateTime time = LocalDateTime.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-
-    w.println("/**");
-    w.println(" * " + description);
-    w.println(" * Generated on {0}", time.format(formatter));
-    w.println(" */");
-  }
-
-  private void generateConstants(FormatWriter w, MetaClass mc) {
-    List<MetaField> metaFields = mc.getConstants();
-
-    for (MetaField field : metaFields) {
-      generateField(w, field);
-    }
-
-    if (!metaFields.isEmpty()) {
-      w.println();
-    }
-  }
-
-  private void generateVariables(FormatWriter w, MetaClass mc) {
-    MetaField reference = getReferenceForClass(mc);
-    List<MetaField> fields = mc.getVariables();
-
-    if (reference != null) {
-      generateReference(w, reference);
-    }
-
-    for (MetaField field : fields) {
-      generateField(w, field);
-    }
-
-    if (!fields.isEmpty()) {
-      w.println();
-    }
-  }
-
-  @Override
   protected MetaField getReferenceForClass(MetaClass mc) {
     Class claz = (mc == null) ? null : mc.getClaz();
     DynamicPackage.Reference reference = (claz == null) ? null : dynamicPackage.getReferenceByClass().get(claz);
@@ -218,91 +47,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return field;
   }
 
-  private void generateReference(FormatWriter w, MetaField reference) {
-    MetaClass type = reference.getType();
-    String typeName = type.getSimpleName();
-    w.println("private {0} {1};", typeName, reference.getName());
-  }
 
-  private void generateField(FormatWriter w, MetaField field) {
-    List<String> modifierList = new ArrayList<>();
-    modifierList.add("private");
-    modifierList.addAll(field.getOtherModifiers());
-    String modifiers = String.join(" ", modifierList);
-
-    String typeName = field.getTypeName();
-    String initValue = field.getInitialValue();
-
-    if (initValue == null) {
-      w.println("{0} {1} {2};", modifiers, typeName, field.getName());
-    } else {
-      w.println("{0} {1} {2} = {3};", modifiers, typeName, field.getName(), initValue);
-    }
-  }
-
-  private void generateMetaFields(FormatWriter w, MetaClass mc) {
-    if (generateMetadata) {
-      List<MetaField> fields = mc.getVariables();
-      String className = mc.getSimpleName();
-
-      for (MetaField field : fields) {
-        String metaField = StringUtil.camelToUnderscore(field.getName()) + "_FIELD";
-        w.println("public static final Field {0};", metaField);
-      }
-
-      if (!fields.isEmpty()) {
-        w.println();
-        w.println("static {");
-        w.indent();
-        w.println("try {");
-
-        for (MetaField field : fields) {
-          String name = field.getName();
-          String metaField = StringUtil.camelToUnderscore(name) + "_FIELD";
-          w.printlnIndented(
-              "{0} = {1}.class.getDeclaredField(\"{2}\");", metaField, className, name);
-        }
-
-        w.println("} catch (NoSuchFieldException e) {");
-        w.printlnIndented("throw new RuntimeException(e);");
-        w.println("}");
-        w.unindent();
-        w.println("}");
-        w.println();
-      }
-    }
-  }
-
-  private void generateConstructor(FormatWriter w, MetaClass mc) {
-
-    List<Member> constructorParameters = findConstructorParameters(mc, true);
-    List<MetaField> constructorFields = getConstructorFields(mc);
-
-    if (hasRequiredComponent(mc)) {
-      generateOfMethods(w, mc, constructorParameters);
-    }
-
-    if (!constructorFields.isEmpty()) {
-      generateParameterlessConstructor(w, mc);
-      String visibility = mc.isAbstract() ? "protected" : "public";
-      String className = mc.getSimpleName();
-
-      w.println("/**");
-      for (MetaField field : constructorFields) {
-        w.println(" * @param {0} {1}", field.getName(), field.getDescription());
-      }
-      w.println(" */");
-
-      w.print("{0} {1}(", visibility, className);
-      w.print(String.join(", ", toParameters(constructorFields)));
-      w.println(") {");
-      w.indent();
-      generateConstructorBody(w, mc, constructorFields);
-      w.unindent();
-      w.println("}");
-      w.println();
-    }
-  }
 
   private List<MetaField> getConstructorFields(MetaClass mc) {
     MetaClass superClass = (mc == null) ? null : mc.getSuperClass();
@@ -386,7 +131,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return value;
   }
 
-  private void generateOfMethods(FormatWriter w, MetaClass mc, List<Member> constructorParameters) {
+  private void generateOfMethods(FormatWriter w, MetaClass mc) {
+    List<Member> constructorParameters = findConstructorParameters(mc, true);
     List<Field> requiredComponents = getRequiredComponents(mc);
     List<List<? extends Member>> signatures = dynamicPackage.findConcreteFieldSignatures(requiredComponents);
 
@@ -822,14 +568,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return modifiers;
   }
 
-  private static class ImportComparator implements Comparator<MetaClass> {
-    @Override
-    public int compare(MetaClass c1, MetaClass c2) {
-      String n1 = c1.getName();
-      String n2 = c2.getName();
-      return n1.compareTo(n2);
-    }
-  }
+
 
   private static class ImportComparatorOld implements Comparator<Class<?>> {
     @Override
