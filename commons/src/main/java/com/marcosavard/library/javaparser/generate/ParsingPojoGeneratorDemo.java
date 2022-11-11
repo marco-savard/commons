@@ -1,15 +1,14 @@
 package com.marcosavard.library.javaparser.generate;
 
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
-import com.marcosavard.domain.library.model.LibraryModel;
 import com.marcosavard.domain.mountain.model.MountainModel1;
 
 import java.io.File;
@@ -21,7 +20,7 @@ public class ParsingPojoGeneratorDemo {
 
     public static void main(String[] args) {
         File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        File sourceFile = getSourceFile(LibraryModel.class);
+        File sourceFile = getSourceFile(MountainModel1.class);
         generate(outputFolder, sourceFile);
     }
 
@@ -52,7 +51,8 @@ public class ParsingPojoGeneratorDemo {
 
                 for (Node node : nodes) {
                     if (node instanceof TypeDeclaration<?> td) {
-                        generateType(outputFolder, td);
+                        File generatedFile = generateType(outputFolder, td);
+                        Console.println("File {0} generated", generatedFile.getName());
                     }
                 }
             }
@@ -64,13 +64,17 @@ public class ParsingPojoGeneratorDemo {
         }
     }
 
-    private static void generateType(File outputFolder, TypeDeclaration type) {
+    private static File generateType(File outputFolder, TypeDeclaration type) {
+        File generated = null;
+
         try {
-            MetaClass mc = new ParsedMetaClass(type);
+            MetaClass mc = new SourceMetaClass(type);
             PojoGenerator pojoGenerator = new ParsingPojoGenerator(outputFolder);
-            File generated = pojoGenerator.generateClass(mc);
+            generated = pojoGenerator.generateClass(mc);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        return generated;
     }
 }

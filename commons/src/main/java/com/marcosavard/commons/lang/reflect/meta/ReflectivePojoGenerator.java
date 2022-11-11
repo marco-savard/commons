@@ -1,16 +1,12 @@
 package com.marcosavard.commons.lang.reflect.meta;
 
-import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
-import com.marcosavard.commons.util.collection.SortedList;
 import com.marcosavard.commons.util.collection.UniqueList;
 
 import java.io.*;
 import java.lang.reflect.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ReflectivePojoGenerator extends PojoGenerator {

@@ -16,11 +16,6 @@ public class ParsingPojoGenerator extends PojoGenerator {
     }
 
     @Override
-    public File generateClass(MetaClass mc) throws IOException {
-        return null;
-    }
-
-    @Override
     protected String getInitialValue(MetaField mf) {
         return "null";
     }

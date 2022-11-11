@@ -1,21 +1,34 @@
 package com.marcosavard.library.javaparser.generate;
 
 import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 
-public class ParsedMetaClass extends MetaClass {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SourceMetaClass extends MetaClass {
     private final TypeDeclaration type;
 
-    public ParsedMetaClass(TypeDeclaration type) {
+    public SourceMetaClass(TypeDeclaration type) {
         this.type = type;
     }
 
     @Override
     public MetaField[] getDeclaredFields() {
-        return new MetaField[0];
+        List<FieldDeclaration> fields = type.getFields();
+        List<MetaField> metaFields = new ArrayList<>();
+
+        for (FieldDeclaration field : fields) {
+            MetaField mf = new SourceMetaField(field);
+            metaFields.add(mf);
+        }
+
+        MetaField[] array = metaFields.toArray(new MetaField[0]);
+        return array;
     }
 
     @Override
@@ -35,7 +48,7 @@ public class ParsedMetaClass extends MetaClass {
 
     @Override
     public MetaPackage getPackage() {
-        return new ParsedMetaPackage(this);
+        return new SourceMetaPackage(this);
     }
 
     @Override
