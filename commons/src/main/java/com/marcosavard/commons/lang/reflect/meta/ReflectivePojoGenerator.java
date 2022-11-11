@@ -7,10 +7,7 @@ import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 import com.marcosavard.commons.util.collection.SortedList;
 import com.marcosavard.commons.util.collection.UniqueList;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -327,27 +324,49 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return constructorFields;
   }
 
-  private void generateParameterlessConstructor(FormatWriter w, MetaClass mc) {
-    if (generateParameterlessConstructor) {
-      String className = mc.getSimpleName();
-      w.println("{0} {1}() '{'", "public", className);
-      generateParameterlessConstructorBody(w, mc);
-      w.println("}");
-      w.println();
+
+  @Override
+  protected String getInitialValue(MetaField mf) {
+    Object value;
+
+    try {
+      Member member = mf.getField();
+      Class claz = member.getDeclaringClass();
+      Object instance = instantiate(claz);
+      value = (instance != null) && (member instanceof Field) ? ((Field)member).get(instance) : getDefaultValue(member);
+    } catch (IllegalAccessException e) {
+      value = null;
     }
+
+    String initialValue = toString(value);
+    return initialValue;
   }
 
-  private void generateParameterlessConstructorBody(FormatWriter w, MetaClass mc) {
-    Class claz = mc.getClaz();
-    List<Member> requiredMembers = dynamicPackage.getRequiredMembers(claz, true);
+  private String toString(Object value) {
+    String str;
 
-    w.indent();
-    for (Member member : requiredMembers) {
-      boolean field = (member instanceof Field);
-      String value = field ? dynamicPackage.getInitialValueOfVariable((Field)member) : getDefaultValue(member);
-      w.println("this.{0} = {1};", member.getName(), value);
+    if (value instanceof String) {
+      str = "\"" + value + "\"";
+    } else if (value instanceof Enum e) {
+      str = e.getDeclaringClass().getSimpleName() + "." + e.name();
+    } else {
+      str = Objects.toString(value);
     }
-    w.unindent();
+
+    return str;
+  }
+
+  public Object instantiate(Class<?> claz)  {
+    Object instance;
+
+    try {
+      Constructor<?> constr = claz.getConstructor(new Class[] {});
+      instance = constr.newInstance(new Object[] {});
+    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      instance = null;
+    }
+
+    return instance;
   }
 
   private String getDefaultValue(Member member) {
@@ -415,8 +434,11 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   private void generateOfMethodBody(FormatWriter w, MetaClass mc, List<Member> constructorParameters, List<? extends Member> signature) {
     w.indent();
     String instance = StringUtil.uncapitalize(mc.getSimpleName());
-    String arguments = String.join(", ", dynamicPackage.getMemberNames(constructorParameters));
-    w.println("{0} {1} = new {0}({2});", mc.getSimpleName(), instance, arguments);
+    List<MetaField> constructorFields = getConstructorFields(mc);
+    String arguments = String.join(", ", toNameList(constructorFields));
+
+    String argumentsOld = String.join(", ", dynamicPackage.getMemberNames(constructorParameters));
+    w.println("{0} {1} = new {0}({2});", mc.getSimpleName(), instance, argumentsOld);
 
     for (Member member : signature) {
       List<String> memberArguments = new ArrayList<>();
@@ -436,6 +458,10 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println("return {0};", instance);
     w.unindent();
   }
+
+
+
+
 
   private List<String> getClassNames(List<? extends Member> members) {
     List<String> classNames = new ArrayList<>();

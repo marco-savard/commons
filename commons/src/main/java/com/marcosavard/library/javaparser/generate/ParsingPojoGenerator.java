@@ -21,6 +21,11 @@ public class ParsingPojoGenerator extends PojoGenerator {
     }
 
     @Override
+    protected String getInitialValue(MetaField mf) {
+        return "null";
+    }
+
+    @Override
     protected MetaField getReferenceForClass(MetaClass mc) {
         return null;
     }

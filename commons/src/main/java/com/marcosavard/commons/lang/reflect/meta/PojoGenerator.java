@@ -58,11 +58,33 @@ public abstract class PojoGenerator {
 
     public abstract File generateClass(MetaClass mc) throws IOException;
 
+    protected abstract String getInitialValue(MetaField mf);
+
     protected abstract MetaField getReferenceForClass(MetaClass mc);
 
     protected abstract String getGetterName(MetaField mf);
 
     protected abstract List<MetaClass> getSubClasses(MetaClass mc);
+
+    protected void generateParameterlessConstructor(FormatWriter w, MetaClass mc) {
+        if (generateParameterlessConstructor) {
+            String className = mc.getSimpleName();
+            w.println("{0} {1}() '{'", "public", className);
+            generateParameterlessConstructorBody(w, mc);
+            w.println("}");
+            w.println();
+        }
+    }
+
+    protected void generateParameterlessConstructorBody(FormatWriter w, MetaClass mc) {
+        List<MetaField> requiredFields = mc.getVariables().stream().filter(mf -> ! mf.isOptional()).toList();
+
+        w.indent();
+        for (MetaField mf : requiredFields) {
+            w.println("this.{0} = {1};", mf.getName(), getInitialValue(mf));
+        }
+        w.unindent();
+    }
 
     protected void generateConstructorBody(FormatWriter w, MetaClass mc, List<MetaField> parameters) {
         MetaClass superClass = mc.getSuperClass();
