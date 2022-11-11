@@ -65,6 +65,19 @@ public abstract class MetaField {
 
     public abstract boolean isComponent();
 
+    @Override
+    public boolean equals(Object other) {
+        boolean equal = false;
+
+        if (other instanceof MetaField that) {
+            equal = this.getDeclaringClass().equals(that.getDeclaringClass());
+            equal = equal && this.getName().equals(that.getName());
+        }
+
+        return equal;
+    }
+
+
 
     private static class ReflectiveMetaField extends MetaField {
         private final Member member;

@@ -170,7 +170,9 @@ public abstract class MetaClass {
 
         @Override
         public MetaClass getSuperClass() {
-            return new ReflectiveMetaClass(claz.getSuperclass());
+            Class<?> superclass = claz.getSuperclass();
+            superclass = Object.class.equals(superclass) ? null : superclass;
+            return (superclass == null) ? null : new ReflectiveMetaClass(superclass);
         }
 
         @Override
