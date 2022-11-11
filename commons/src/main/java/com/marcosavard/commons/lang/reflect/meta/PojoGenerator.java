@@ -62,6 +62,48 @@ public abstract class PojoGenerator {
 
     protected abstract String getGetterName(MetaField mf);
 
+    protected void generateFactory(FormatWriter w, MetaField mf, MetaClass type, String factoryName) {
+        boolean collection = mf.getType().isCollection();
+        String visibility = String.join(" ", mf.getVisibilityModifiers());
+        String returnedType = collection ? type.getSimpleName() : "void";
+
+        List<MetaField> requiredFields = getAllRequiredFields(type);
+        List<String> params = toParameters(requiredFields);
+        String parameters = String.join(", ", params);
+
+        w.println("{0} {1} {2}({3}) '{'", visibility, returnedType, factoryName, parameters);
+        w.indent();
+        generateFactoryBody(w, mf, type, requiredFields);
+        w.unindent();
+        w.println("}");
+        w.println();
+    }
+
+    protected void generateFactoryBody(FormatWriter w, MetaField mf, MetaClass type, List<MetaField> requiredFields) {
+        String typeName = type.getSimpleName();
+        String instance = StringUtil.uncapitalize(typeName);
+
+        String prefix = mf.isStatic() ? mf.getDeclaringClass().getSimpleName() : "this";
+        List<String> argumentList = toNameList(requiredFields);
+        String arguments = String.join(", ", argumentList);
+        String allArguments = requiredFields.isEmpty() ? "this" : "this, " + arguments;
+        boolean collection = mf.getType().isCollection();
+        boolean optional = mf.isOptional();
+        String value = optional ? "Optional.of(" + instance + ")" : instance;
+
+        w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
+
+        if (collection) {
+            w.println("{0}.{1}.add({2});", prefix, mf.getName(), instance);
+        } else {
+            w.println("{0}.{1} = {2};", prefix, mf.getName(), value);
+        }
+
+        if (collection) {
+            w.println("return {0};", instance);
+        }
+    }
+
     protected void generateAdder(FormatWriter w, MetaField mf) {
         String visibility = String.join(" ", mf.getVisibilityModifiers());
         String name = StringUtil.capitalize(mf.getName());
@@ -234,6 +276,15 @@ public abstract class PojoGenerator {
         w.println();
     }
 
+    private List<MetaField> getAllRequiredFields(MetaClass mc) {
+        boolean immutable = mc.isImmutable();
+        List<MetaField> allVariables = mc.getAllVariables();
+        List<MetaField> fields = allVariables.stream()
+                .filter(mf -> immutable || ! mf.isOptional())
+                .toList();
+        return fields;
+    }
+
     protected List<String> getGetterList(MetaClass mc) {
         List<String> getterList = new ArrayList<>();
         List<MetaField> variables = mc.getVariables();
@@ -243,5 +294,25 @@ public abstract class PojoGenerator {
         }
 
         return getterList;
+    }
+
+    private List<String> toNameList(List<MetaField> fields) {
+        List<String> nameList = new ArrayList<>() ;
+
+        for (MetaField mf : fields) {
+            nameList.add(mf.getName());
+        }
+
+        return nameList;
+    }
+
+    private List<String> toParameters(List<MetaField> fields) {
+        List<String> parameters = new ArrayList<>();
+
+        for (MetaField mf : fields) {
+            parameters.add(mf.getTypeName() + " " + mf.getName());
+        }
+
+        return parameters;
     }
 }

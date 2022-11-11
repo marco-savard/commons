@@ -717,31 +717,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     }
   }
 
-  private void generateFactory(FormatWriter w, MetaField mf, MetaClass type, String factoryName) {
-    boolean collection = mf.getType().isCollection();
-    String visibility = String.join(" ", mf.getVisibilityModifiers());
-    String returnedType = collection ? type.getSimpleName() : "void";
 
-    List<MetaField> requiredFields = getAllRequiredFields(type);
-    List<String> params = toParameters(requiredFields);
-    String parameters = String.join(", ", params);
-
-    //mf.getType().
-
-    List<Member> constructorParameters = findConstructorParameters(type, false);
-
-    //FIXME
-
-    //String parametersOld = String.join(", ", getMemberDeclarations(constructorParameters));
-    List<? extends Member> readOnlyFields = getAllReadOnlyMembers(type.getClaz());
-
-    w.println("{0} {1} {2}({3}) '{'", visibility, returnedType, factoryName, parameters);
-    w.indent();
-    generateFactoryBody(w, mf, type, requiredFields, constructorParameters, readOnlyFields);
-    w.unindent();
-    w.println("}");
-    w.println();
-  }
 
   private List<String> toParameters(List<MetaField> fields) {
     List<String> parameters = new ArrayList<>();
@@ -753,39 +729,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return parameters;
   }
 
-  private void generateFactoryBody(FormatWriter w, MetaField mf, MetaClass type, List<MetaField> requiredFields,
-                                   List<Member> constructorParameters, List<? extends Member> readOnlyMembers) {
-    String typeName = type.getSimpleName();
-    String instance = StringUtil.uncapitalize(typeName);
 
-    List<Field> fields = new ArrayList<>();
-    for (Member member : constructorParameters) {
-      if (member instanceof Field) {
-        fields.add((Field)member);
-      }
-    }
-
-    String prefix = mf.isStatic() ? mf.getDeclaringClass().getSimpleName() : "this";
-    List<String> argumentList = toNameList(requiredFields);
-    String arguments = String.join(", ", argumentList);
-    //String arguments = String.join(", ", dynamicPackage.getMemberNames(fields));
-    String allArguments = fields.isEmpty() ? "this" : "this, " + arguments;
-    boolean collection = mf.getType().isCollection();
-    boolean optional = mf.isOptional();
-    String value = optional ? "Optional.of(" + instance + ")" : instance;
-
-    w.println("{0} {1} = new {0}({2});", typeName, instance, allArguments);
-
-    if (collection) {
-      w.println("{0}.{1}.add({2});", prefix, mf.getName(), instance);
-    } else {
-      w.println("{0}.{1} = {2};", prefix, mf.getName(), value);
-    }
-
-    if (collection) {
-      w.println("return {0};", instance);
-    }
-  }
 
   private List<String> toNameList(List<MetaField> fields) {
     List<String> nameList = new ArrayList<>() ;
@@ -895,14 +839,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     return Arrays.stream(claz.getDeclaredFields()).filter(f -> !dynamicPackage.isConstant(f)).toList();
   }
 
-  private List<MetaField> getAllRequiredFields(MetaClass mc) {
-    boolean immutable = mc.isImmutable();
-    List<MetaField> allVariables = mc.getAllVariables();
-    List<MetaField> fields = allVariables.stream()
-            .filter(mf -> immutable || ! mf.isOptional())
-            .toList();
-    return fields;
-  }
+
 
   private List<MetaField> getRequiredFields(MetaClass mc) {
     boolean immutable = mc.isImmutable();
