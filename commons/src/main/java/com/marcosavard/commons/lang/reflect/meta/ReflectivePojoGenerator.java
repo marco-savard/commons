@@ -528,33 +528,14 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
 
-  private void generateConstructorBody(FormatWriter w, MetaClass mc, List<MetaField> parameters) {
 
-    MetaClass superClass = mc.getSuperClass();
-    List<MetaField> superClassVariables = getConstructorFields(superClass);
-
-    //generate the super
-    if (!superClassVariables.isEmpty()) {
-      List<String> referenceNames = toNameList(superClassVariables);
-      w.println("super(" + String.join(", ", referenceNames) + ");");
-    }
-
-    List<MetaField> settableParameters = new ArrayList<>(parameters);
-    settableParameters.removeAll(superClassVariables);
-
-    for (MetaField mf : settableParameters) {
-      if (! mf.isOptional() && ! mf.getType().isPrimitive() && ! mf.getType().isCollection()) {
-        verifyNullArgument(w, mf);
-      }
-    }
-
-    for (MetaField m : settableParameters) {
-      w.println("this.{0} = {0};", m.getName());
-    }
-  }
 
   private void verifyNullArgument(FormatWriter w, MetaField mf) {
-    verifyNullArgument(w, mf.getField());
+    w.println("if ({0} == null) '{'", mf.getName());
+    w.printlnIndented(
+            "throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");", mf.getName());
+    w.println("}");
+    w.println();
   }
 
   private void verifyNullArgument(FormatWriter w, Member m) {
@@ -565,158 +546,34 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     w.println();
   }
 
-  private void generateMethods(FormatWriter w, MetaClass mc) {
-    generateAccessors(w, mc);
-    generateMetaAccessors(w, mc);
-    generateIdentityMethods(w, mc);
-    generateToString(w, mc);
-  }
 
-  private void generateAccessors(FormatWriter w, MetaClass mc) {
-    if (this.accessorOrder == AccessorOrder.GROUPED_BY_PROPERTIES) {
-      generateAccessorsGroupedByProperties(w, mc);
-    } else {
-      generateAccessorsGroupedByGettersSetters(w, mc);
-    }
-  }
 
-  private void generateAccessorsGroupedByProperties(FormatWriter w, MetaClass mc) {
-    List<MetaField> variables = mc.getVariables();
-    boolean immutable = mc.isImmutable();
 
-    for (MetaField variable : variables) {
-      generateGetter(w, variable);
 
-      if (! immutable && ! variable.isReadOnly()) {
-        generateSetter(w, variable);
-      }
-    }
 
-    w.println();
-  }
 
-  private void generateAccessorsGroupedByGettersSetters(FormatWriter w, MetaClass mc) {
-    List<MetaField> variables = mc.getVariables();
-    boolean immutable = mc.isImmutable();
 
-    for (MetaField variable : variables) {
-      generateGetter(w, variable);
+
+
+
+
+
+
+
+
+
+  @Override
+  protected List<MetaClass> getSubClasses(MetaClass mc) {
+    List<MetaClass> subClasses = new ArrayList<>();
+    Class claz = mc.getClaz();
+    List<Class> subclasses = getSubclasses(dynamicPackage.classes, claz);
+
+    for (Class sc : subclasses) {
+      subClasses.add(MetaClass.of(sc));
     }
 
-    for (MetaField variable : variables) {
-      if (!immutable && ! variable.isReadOnly()) {
-        generateSetter(w, variable);
-      }
-    }
-
-    w.println();
+    return subClasses;
   }
-
-  private void generateGetter(FormatWriter w, MetaField mf) {
-    List<String> modifiers = new ArrayList<>();
-    modifiers.addAll(mf.getVisibilityModifiers());
-    modifiers.addAll(mf.getOtherModifiers());
-
-    boolean optional = mf.isOptional();
-    String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
-    Field field = (Field)mf.getField();
-    String getter = getGetterName(mf);
-    String orElseNull = optional ? ".orElse(null)" : "";
-
-    w.println("/**");
-    w.println(" * @return " + getDescription(field));
-    w.println(" */");
-    w.println("{0} {1} {2}() '{'", String.join(" ", modifiers), typeName, getter);
-    w.printlnIndented("return {0}{1};", field.getName(), orElseNull);
-    w.println("}");
-    w.println();
-  }
-
-  private void generateSetter(FormatWriter w, MetaField mf) {
-    boolean settable = ! mf.isConstant();
-    boolean collection = mf.getType().isCollection();
-
-    if (settable) {
-      if (collection) {
-        generateAddersRemovers(w, mf);
-      } else {
-        if (mf.isComponent()) {
-            generateFactories(w, mf);
-        } else {
-          generateBasicSetter(w, mf);
-        }
-      }
-    }
-  }
-
-  private void generateBasicSetter(FormatWriter w, MetaField mf) {
-    List<String> modifiers = new ArrayList<>();
-    modifiers.addAll(mf.getVisibilityModifiers());
-    modifiers.addAll(mf.getOtherModifiers());
-
-    String prefix = mf.isStatic() ? mf.getDeclaringClass().getSimpleName() : "this";
-    String name = mf.getName();
-    String methodName = "set" + StringUtil.capitalize(name);
-
-    boolean optional = mf.isOptional();
-    boolean primitive = mf.getType().isPrimitive();
-
-    String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
-    String value = optional ? "Optional.of(" + name + ")" : name;
-
-    w.println("/**");
-    w.println(" * @param " + mf.getName() + " " + mf.getDescription());
-    w.println(" */");
-    w.println("{0} void {1}({2} {3}) '{'", String.join(" ", modifiers), methodName, typeName, name);
-    w.indent();
-
-    if (! primitive && ! optional) {
-      verifyNullArgument(w, mf);
-    }
-
-    w.println("{0}.{1} = {2};", prefix, name, value);
-    w.unindent();
-    w.println("}");
-    w.println();
-  }
-
-  private void generateAddersRemovers(FormatWriter w, MetaField mf) {
-    boolean component = mf.isComponent() && mf.isOptional();
-
-    if (component) {
-      generateFactories(w, mf);
-    } else {
-      generateAdder(w, mf);
-    }
-
-    generateRemover(w, mf);
-  }
-
-  private void generateFactories(FormatWriter w, MetaField mf) {
-    boolean collection = mf.getType().isCollection();
-    boolean optional = mf.isOptional();
-
-    MetaClass type = collection || optional ? mf.getItemType() : mf.getType();
-    String verb = collection ? "create" : "set";
-    String fieldName = StringUtil.capitalize(mf.getName());
-
-    if (type.isAbstract()) {
-      Field field = (Field)mf.getField();
-      Class fieldType = field.getType();
-      Class typeOld = collection || optional ? dynamicPackage.getItemType(field) : fieldType;
-      List<Class> subclasses = getSubclasses(dynamicPackage.classes, typeOld);
-
-      for (Class subclass : subclasses) {
-        String typeName =  StringUtil.capitalize(subclass.getSimpleName());
-        String factoryName = verb + fieldName + typeName;
-        generateFactory(w, mf, MetaClass.of(subclass), factoryName);
-      }
-    } else {
-      String factoryName = verb + type.getSimpleName();
-      generateFactory(w, mf, type, factoryName);
-    }
-  }
-
 
 
   private List<String> toParameters(List<MetaField> fields) {

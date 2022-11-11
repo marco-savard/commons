@@ -6,6 +6,7 @@ import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParsingPojoGenerator extends PojoGenerator {
@@ -27,6 +28,11 @@ public class ParsingPojoGenerator extends PojoGenerator {
     @Override
     protected String getGetterName(MetaField mf) {
         return "get";
+    }
+
+    @Override
+    protected List<MetaClass> getSubClasses(MetaClass mc) {
+        return new ArrayList<>();
     }
 
 }

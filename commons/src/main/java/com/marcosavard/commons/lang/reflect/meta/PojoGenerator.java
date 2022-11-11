@@ -62,6 +62,182 @@ public abstract class PojoGenerator {
 
     protected abstract String getGetterName(MetaField mf);
 
+    protected abstract List<MetaClass> getSubClasses(MetaClass mc);
+
+    protected void generateConstructorBody(FormatWriter w, MetaClass mc, List<MetaField> parameters) {
+        MetaClass superClass = mc.getSuperClass();
+        List<MetaField> superClassVariables = getConstructorFields(superClass);
+
+        //generate the super
+        if (!superClassVariables.isEmpty()) {
+            List<String> referenceNames = toNameList(superClassVariables);
+            w.println("super(" + String.join(", ", referenceNames) + ");");
+        }
+
+        List<MetaField> settableParameters = new ArrayList<>(parameters);
+        settableParameters.removeAll(superClassVariables);
+
+        for (MetaField mf : settableParameters) {
+            if (! mf.isOptional() && ! mf.getType().isPrimitive() && ! mf.getType().isCollection()) {
+                verifyNullArgument(w, mf);
+            }
+        }
+
+        for (MetaField m : settableParameters) {
+            w.println("this.{0} = {0};", m.getName());
+        }
+    }
+
+    protected void generateMethods(FormatWriter w, MetaClass mc) {
+        generateAccessors(w, mc);
+        generateMetaAccessors(w, mc);
+        generateIdentityMethods(w, mc);
+        generateToString(w, mc);
+    }
+
+    protected void generateAccessors(FormatWriter w, MetaClass mc) {
+        if (this.accessorOrder == AccessorOrder.GROUPED_BY_PROPERTIES) {
+            generateAccessorsGroupedByProperties(w, mc);
+        } else {
+            generateAccessorsGroupedByGettersSetters(w, mc);
+        }
+    }
+
+    protected void generateAccessorsGroupedByProperties(FormatWriter w, MetaClass mc) {
+        List<MetaField> variables = mc.getVariables();
+        boolean immutable = mc.isImmutable();
+
+        for (MetaField variable : variables) {
+            generateGetter(w, variable);
+
+            if (! immutable && ! variable.isReadOnly()) {
+                generateSetter(w, variable);
+            }
+        }
+
+        w.println();
+    }
+
+    protected void generateAccessorsGroupedByGettersSetters(FormatWriter w, MetaClass mc) {
+        List<MetaField> variables = mc.getVariables();
+        boolean immutable = mc.isImmutable();
+
+        for (MetaField variable : variables) {
+            generateGetter(w, variable);
+        }
+
+        for (MetaField variable : variables) {
+            if (!immutable && ! variable.isReadOnly()) {
+                generateSetter(w, variable);
+            }
+        }
+
+        w.println();
+    }
+
+    protected void generateGetter(FormatWriter w, MetaField mf) {
+        List<String> modifiers = new ArrayList<>();
+        modifiers.addAll(mf.getVisibilityModifiers());
+        modifiers.addAll(mf.getOtherModifiers());
+
+        boolean optional = mf.isOptional();
+        String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
+        String getter = getGetterName(mf);
+        String orElseNull = optional ? ".orElse(null)" : "";
+
+        w.println("/**");
+        w.println(" * @return {0} {1}" + mf.getName(), mf.getDescription());
+        w.println(" */");
+        w.println("{0} {1} {2}() '{'", String.join(" ", modifiers), typeName, getter);
+        w.printlnIndented("return {0}{1};", mf.getName(), orElseNull);
+        w.println("}");
+        w.println();
+    }
+
+    protected void generateSetter(FormatWriter w, MetaField mf) {
+        boolean settable = ! mf.isConstant();
+        boolean collection = mf.getType().isCollection();
+
+        if (settable) {
+            if (collection) {
+                generateAddersRemovers(w, mf);
+            } else {
+                if (mf.isComponent()) {
+                    generateFactories(w, mf);
+                } else {
+                    generateBasicSetter(w, mf);
+                }
+            }
+        }
+    }
+
+    protected void generateBasicSetter(FormatWriter w, MetaField mf) {
+        List<String> modifiers = new ArrayList<>();
+        modifiers.addAll(mf.getVisibilityModifiers());
+        modifiers.addAll(mf.getOtherModifiers());
+
+        String prefix = mf.isStatic() ? mf.getDeclaringClass().getSimpleName() : "this";
+        String name = mf.getName();
+        String methodName = "set" + StringUtil.capitalize(name);
+
+        boolean optional = mf.isOptional();
+        boolean primitive = mf.getType().isPrimitive();
+
+        String typeName = optional ? mf.getItemType().getSimpleName() : mf.getTypeName();
+        String value = optional ? "Optional.of(" + name + ")" : name;
+
+        w.println("/**");
+        w.println(" * @param " + mf.getName() + " " + mf.getDescription());
+        w.println(" */");
+        w.println("{0} void {1}({2} {3}) '{'", String.join(" ", modifiers), methodName, typeName, name);
+        w.indent();
+
+        if (! primitive && ! optional) {
+            verifyNullArgument(w, mf);
+        }
+
+        w.println("{0}.{1} = {2};", prefix, name, value);
+        w.unindent();
+        w.println("}");
+        w.println();
+    }
+
+
+    protected void generateAddersRemovers(FormatWriter w, MetaField mf) {
+        boolean component = mf.isComponent() && mf.isOptional();
+
+        if (component) {
+            generateFactories(w, mf);
+        } else {
+            generateAdder(w, mf);
+        }
+
+        generateRemover(w, mf);
+    }
+
+    protected void generateFactories(FormatWriter w, MetaField mf) {
+        boolean collection = mf.getType().isCollection();
+        boolean optional = mf.isOptional();
+
+        MetaClass type = collection || optional ? mf.getItemType() : mf.getType();
+        String verb = collection ? "create" : "set";
+        String fieldName = StringUtil.capitalize(mf.getName());
+
+        if (type.isAbstract()) {
+            MetaClass actualType = collection || optional ? mf.getItemType() : mf.getType();
+            List<MetaClass> subclasses = getSubClasses(actualType);
+
+            for (MetaClass subclass : subclasses) {
+                String typeName =  StringUtil.capitalize(subclass.getSimpleName());
+                String factoryName = verb + fieldName + typeName;
+                generateFactory(w, mf, subclass, factoryName);
+            }
+        } else {
+            String factoryName = verb + type.getSimpleName();
+            generateFactory(w, mf, type, factoryName);
+        }
+    }
+
     protected void generateFactory(FormatWriter w, MetaField mf, MetaClass type, String factoryName) {
         boolean collection = mf.getType().isCollection();
         String visibility = String.join(" ", mf.getVisibilityModifiers());
@@ -285,6 +461,35 @@ public abstract class PojoGenerator {
         return fields;
     }
 
+    private List<MetaField> getRequiredFields(MetaClass mc) {
+        boolean immutable = mc.isImmutable();
+        List<MetaField> allVariables = mc.getVariables();
+        List<MetaField> fields = allVariables.stream()
+                .filter(mf -> immutable || ! mf.isOptional())
+                .toList();
+        return fields;
+    }
+
+    private List<MetaField> getConstructorFields(MetaClass mc) {
+        MetaClass superClass = (mc == null) ? null : mc.getSuperClass();
+        List<MetaField> constructorFields = (superClass != null) ? getConstructorFields(superClass): new ArrayList<>();
+
+        MetaField reference = getReferenceForClass(mc);
+        if (reference != null) {
+            constructorFields.add(reference);
+        }
+
+        List<MetaField> requiredFields = (mc == null) ? new ArrayList<>() : getRequiredFields(mc);
+        requiredFields = requiredFields.stream()
+                .filter(mf -> ! mf.isStatic())
+                .filter(mf -> ! mf.isComponent())
+                .filter(mf -> ! mf.getType().isCollection())
+                .toList();
+
+        constructorFields.addAll(requiredFields);
+        return constructorFields;
+    }
+
     protected List<String> getGetterList(MetaClass mc) {
         List<String> getterList = new ArrayList<>();
         List<MetaField> variables = mc.getVariables();
@@ -314,5 +519,13 @@ public abstract class PojoGenerator {
         }
 
         return parameters;
+    }
+
+    private void verifyNullArgument(FormatWriter w, MetaField mf) {
+        w.println("if ({0} == null) '{'", mf.getName());
+        w.printlnIndented(
+                "throw new IllegalArgumentException (\"Parameter ''{0}'' cannot be null\");", mf.getName());
+        w.println("}");
+        w.println();
     }
 }
