@@ -2,12 +2,15 @@ package com.marcosavard.library.javaparser.generate;
 
 import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.Type;
+import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +31,18 @@ public class SourceMetaClass extends MetaClass {
 
     public SourceMetaClass(CompilationUnit cu, TypeDeclaration typeDeclaration) {
         this.compilationUnit = cu;
+        this.typeDeclaration = typeDeclaration;
+        this.simpleName = typeDeclaration.getName().asString();
+        this.qualifiedName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
+        int idx = lastIndexOf(qualifiedName, '.', 2);
+        packageName = qualifiedName.substring(0, idx);
+
         List<Node> nodes = typeDeclaration.getChildNodes();
 
         for (Node node : nodes) {
             List<Node> childNodes = node.getChildNodes();
 
         }
-
-        this.typeDeclaration = typeDeclaration;
-        this.simpleName = typeDeclaration.getName().asString();
-
-        String qualifiedName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
-        int idx = lastIndexOf(qualifiedName, '.', 2);
-        packageName = qualifiedName.substring(0, idx);
-
     }
 
     public SourceMetaClass(CompilationUnit cu, Type type) {
@@ -116,13 +117,28 @@ public class SourceMetaClass extends MetaClass {
     }
 
     @Override
-    public MetaField[] getFields() {
-        return new MetaField[0];
+    public String getDescription() {
+        String descriptionName = Description.class.getSimpleName();
+        List<Node> nodes = typeDeclaration.getChildNodes();
+        String description = "";
+
+        for (Node node : nodes) {
+            if (node instanceof SingleMemberAnnotationExpr annotation) {
+                String name = annotation.getName().asString();
+
+                if (descriptionName.equals(name)) {
+                    description = annotation.getMemberValue().toString();
+                    description = StringUtil.unquote(description).toString();
+                }
+            }
+        }
+
+        return description;
     }
 
     @Override
-    public String getDescription() {
-        return "";
+    public MetaField[] getFields() {
+        return new MetaField[0];
     }
 
     @Override

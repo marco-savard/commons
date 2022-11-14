@@ -195,8 +195,11 @@ public abstract class PojoGenerator {
 
         if (importees.size() > 0) {
             for (MetaClass importee : importees) {
-                String fullName = importee.getQualifiedName().replace('$', '.');
-                w.println("import {0};", fullName);
+                String qualifiedName = importee.getQualifiedName();
+                String fullName = (qualifiedName == null) ? null : qualifiedName.replace('$', '.');
+                if (fullName != null) {
+                    w.println("import {0};", fullName);
+                }
             }
             w.println();
         }

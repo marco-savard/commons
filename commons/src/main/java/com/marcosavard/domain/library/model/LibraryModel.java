@@ -1,15 +1,18 @@
 package com.marcosavard.domain.library.model;
 
 import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
+import java.lang.annotation.Documented;
 import java.util.List;
 import java.util.Optional;
 
 public class LibraryModel {
 
+    @Description("A library with books and writers")
     public static class Library {
-        public final String name = "Unnamed";
+        public final @Description("of the library") String name = "Unnamed";
         public Optional<String> address;
         public @Component List<Writer> writers;
         public @Component List<Book> books;

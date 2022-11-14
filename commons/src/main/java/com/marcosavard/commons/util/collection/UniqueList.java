@@ -19,7 +19,7 @@ public class UniqueList<T> extends ArrayList<T> {
 	public boolean add(T element) { 
 		boolean added = false; 
 		
-		if (! super.contains(element)) { 
+		if ((element != null) && ! super.contains(element)) {
 			super.add(element); 
 			added = true; 
 		}

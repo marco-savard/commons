@@ -11,6 +11,7 @@ import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.resolution.types.ResolvedType;
+import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
@@ -49,23 +50,23 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public String getDescription() {
-        String description = Description.class.getSimpleName();
+        String descriptionName = Description.class.getSimpleName();
         Node parent = variable.getParentNode().orElse(null);
         List<Node> nodes = parent.getChildNodes();
-        String value = "";
+        String description = "";
 
         for (Node node : nodes) {
             if (node instanceof SingleMemberAnnotationExpr annotation) {
                 String name = annotation.getName().asString();
 
-                if (description.equals(name)) {
-                    value = annotation.getMemberValue().toString();
-                    int i=9;
+                if (descriptionName.equals(name)) {
+                    description = annotation.getMemberValue().toString();
+                    description = StringUtil.unquote(description).toString();
                 }
             }
         }
 
-        return value;
+        return description;
     }
 
     @Override
