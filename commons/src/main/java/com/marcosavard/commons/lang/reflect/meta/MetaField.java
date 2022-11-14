@@ -147,8 +147,22 @@ public abstract class MetaField {
             return str;
         }
 
+        @Override
+        public MetaClass getDeclaringClass() {
+            return MetaClass.of(member.getDeclaringClass());
+        }
 
+        @Override
+        public String getDescription() {
+            String desc = "";
 
+            if (member instanceof Field field) {
+                Description description = field.getAnnotation(Description.class);
+                desc = (description == null) ? "" : description.value();
+            }
+
+            return desc;
+        }
 
         @Override
         public MetaClass getItemType() {
@@ -254,23 +268,6 @@ public abstract class MetaField {
         @Override
         public boolean isStatic() {
             return Modifier.isStatic(member.getModifiers());
-        }
-
-        @Override
-        public MetaClass getDeclaringClass() {
-            return MetaClass.of(member.getDeclaringClass());
-        }
-
-        @Override
-        public String getDescription() {
-            String desc = "";
-
-            if (member instanceof Field field) {
-                Description description = field.getAnnotation(Description.class);
-                desc = (description == null) ? "" : description.value();
-            }
-
-            return desc;
         }
 
         @Override

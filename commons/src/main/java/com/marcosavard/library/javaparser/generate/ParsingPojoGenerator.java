@@ -1,5 +1,7 @@
 package com.marcosavard.library.javaparser.generate;
 
+import com.github.javaparser.ast.CompilationUnit;
+import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
@@ -10,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParsingPojoGenerator extends PojoGenerator {
+    protected CompilationUnit cu;
 
-    protected ParsingPojoGenerator(File outputFolder) {
+    protected ParsingPojoGenerator(File outputFolder, CompilationUnit cu) {
         super(outputFolder);
+        this.cu = cu;
     }
 
     @Override
@@ -27,7 +31,8 @@ public class ParsingPojoGenerator extends PojoGenerator {
 
     @Override
     protected String getGetterName(MetaField mf) {
-        return "get";
+        String verb = "get";
+        return verb + StringUtil.capitalize(mf.getName());
     }
 
     @Override
