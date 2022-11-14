@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class UniqueList<T> extends ArrayList<T> {
+public class UniqueList<T> extends NullSafeList<T> {
 
 	public UniqueList() {
 	}
@@ -19,7 +19,7 @@ public class UniqueList<T> extends ArrayList<T> {
 	public boolean add(T element) { 
 		boolean added = false; 
 		
-		if ((element != null) && ! super.contains(element)) {
+		if (! super.contains(element)) {
 			super.add(element); 
 			added = true; 
 		}
