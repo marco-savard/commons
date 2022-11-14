@@ -3,6 +3,7 @@ package com.marcosavard.library.javaparser.generate;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.SimpleName;
@@ -20,16 +21,25 @@ import java.util.List;
 public class SourceMetaField extends MetaField {
     private CompilationUnit compilationUnit;
 
-    private final VariableDeclarator variable;
+    private VariableDeclarator variable;
+
+    private EnumConstantDeclaration literal;
+
     private final String name;
 
-    private final Type type;
+    private Type type;
 
     public SourceMetaField(CompilationUnit cu, VariableDeclarator variable) {
         this.compilationUnit = cu;
         this.variable = variable;
         name = variable.getName().asString();
         type = variable.getType();
+    }
+
+    public SourceMetaField(CompilationUnit cu, EnumConstantDeclaration literal) {
+        this.compilationUnit = cu;
+        this.literal = literal;
+        this.name = literal.getNameAsString();
     }
 
     @Override
@@ -133,7 +143,18 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public boolean isPublic() {
-        return false;
+        boolean isPublic = false;
+
+        if (literal != null) {
+            isPublic = isPublicLiteral(literal);
+        }
+
+        return isPublic;
+    }
+
+    private boolean isPublicLiteral(EnumConstantDeclaration literal) {
+        List<Node> nodes = literal.getChildNodes();
+        return true;
     }
 
     @Override

@@ -1,12 +1,7 @@
 package com.marcosavard.library.javaparser.generate;
 
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.TypeDeclaration;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.Type;
@@ -82,22 +77,42 @@ public class SourceMetaClass extends MetaClass {
     public MetaField[] getDeclaredFields() {
         List<MetaField> metaFields = new ArrayList<>();
 
-        if (typeDeclaration != null) {
-            List<FieldDeclaration> fields = typeDeclaration.getFields();
-            for (FieldDeclaration field : fields) {
-                List<VariableDeclarator> variables = field.getVariables();
-
-                for (VariableDeclarator variable : variables) {
-                    MetaField mf = new SourceMetaField(compilationUnit, variable);
-                    metaFields.add(mf);
-                }
-            }
-        } else if (type != null) {
-            List<Node> nodes = type.getChildNodes();
+        if (typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+            metaFields = getClassFields(claz);
+        } else if (typeDeclaration instanceof EnumDeclaration enumDeclaration) {
+            metaFields = getEnumLiterals(enumDeclaration);
         }
 
         MetaField[] array = metaFields.toArray(new MetaField[0]);
         return array;
+    }
+
+    private List<MetaField> getClassFields(ClassOrInterfaceDeclaration claz) {
+        List<MetaField> metaFields = new ArrayList<>();
+
+        List<FieldDeclaration> fields = claz.getFields();
+        for (FieldDeclaration field : fields) {
+            List<VariableDeclarator> variables = field.getVariables();
+
+            for (VariableDeclarator variable : variables) {
+                MetaField mf = new SourceMetaField(compilationUnit, variable);
+                metaFields.add(mf);
+            }
+        }
+
+        return metaFields;
+    }
+
+    private List<MetaField> getEnumLiterals(EnumDeclaration enumDeclaration) {
+        List<MetaField> metaFields = new ArrayList<>();
+        NodeList<EnumConstantDeclaration> entries = enumDeclaration.getEntries();
+
+        for (EnumConstantDeclaration entry : entries) {
+            MetaField mf = new SourceMetaField(compilationUnit, entry);
+            metaFields.add(mf);
+        }
+
+        return metaFields;
     }
 
     @Override
@@ -165,7 +180,13 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public boolean isEnum() {
-        return false; //type.isEnumDeclaration();
+        boolean enumeration = false;
+
+        if (this.typeDeclaration instanceof EnumDeclaration) {
+            enumeration = true;
+        }
+
+        return enumeration;
     }
 
     @Override

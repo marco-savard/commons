@@ -5,12 +5,11 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import com.github.javaparser.ast.type.Type;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
-import com.marcosavard.domain.mountain.model.MountainModel1;
+import com.marcosavard.domain.library.model.LibraryModel;
 import com.marcosavard.domain.mountain.model.MountainModel2;
 
 import java.io.File;
@@ -22,7 +21,7 @@ public class ParsingPojoGeneratorDemo {
 
     public static void main(String[] args) {
         File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        File sourceFile = getSourceFile(MountainModel2.class);
+        File sourceFile = getSourceFile(LibraryModel.class);
         generate(outputFolder, sourceFile);
     }
 
