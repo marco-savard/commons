@@ -173,19 +173,33 @@ public class SourceMetaClass extends MetaClass {
     @Override
     public boolean isCollection() {
         boolean collection = false;
-        //TODO : Collection.class.isAssignableFrom(claz);
+
+        if (this.type instanceof ClassOrInterfaceType claz) {
+            collection = isCollectionClass(claz);
+        }
+
+        return collection;
+    }
+
+    //TODO : Collection.class.isAssignableFrom(claz);
+    private boolean isCollectionClass(ClassOrInterfaceType claz) {
+        boolean collection = false;
+
+        if ("java.util.List".equals(qualifiedName)) {
+            collection = true;
+        }
+
+       //String qualifiedName = claz.getFullyQualifiedName();
+       // NodeList<ClassOrInterfaceType> extendedTypes = claz.getExtendedTypes();
+     //   NodeList<ClassOrInterfaceType> implementedTypes = claz.getImplementedTypes();
+
         return collection;
     }
 
 
     @Override
     public boolean isEnum() {
-        boolean enumeration = false;
-
-        if (this.typeDeclaration instanceof EnumDeclaration) {
-            enumeration = true;
-        }
-
+        boolean enumeration = (this.typeDeclaration instanceof EnumDeclaration);
         return enumeration;
     }
 
@@ -201,7 +215,15 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public boolean isPublic() {
-        return true; //type.isPublic();
+        boolean isPublic = true;
+
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+            isPublic = claz.isPublic();
+        } else if (this.typeDeclaration instanceof EnumDeclaration enu) {
+            isPublic = enu.isPublic();
+        }
+
+        return isPublic;
     }
 
     @Override
