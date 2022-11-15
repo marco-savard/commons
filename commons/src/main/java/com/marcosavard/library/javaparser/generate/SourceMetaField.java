@@ -1,7 +1,9 @@
 package com.marcosavard.library.javaparser.generate;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
@@ -9,6 +11,7 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.marcosavard.commons.lang.StringUtil;
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceMetaField extends MetaField {
-    private CompilationUnit compilationUnit;
+    private SourceMetaClass ownerClass;
 
     private VariableDeclarator variable;
 
@@ -30,22 +33,22 @@ public class SourceMetaField extends MetaField {
 
     private Type type;
 
-    public SourceMetaField(CompilationUnit cu, VariableDeclarator variable) {
-        this.compilationUnit = cu;
+    public SourceMetaField(SourceMetaClass mc, VariableDeclarator variable) {
+        this.ownerClass = mc;
         this.variable = variable;
         name = variable.getName().asString();
         type = variable.getType();
     }
 
-    public SourceMetaField(CompilationUnit cu, EnumConstantDeclaration literal) {
-        this.compilationUnit = cu;
+    public SourceMetaField(SourceMetaClass mc, EnumConstantDeclaration literal) {
+        this.ownerClass = mc;
         this.literal = literal;
         this.name = literal.getNameAsString();
     }
 
     @Override
     public MetaClass getDeclaringClass() {
-        return null;
+        return this.ownerClass;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class SourceMetaField extends MetaField {
 
         for (Node node : nodes) {
             if (node instanceof ClassOrInterfaceType claz) {
-                itemType = SourceMetaClass.of(compilationUnit, claz);
+                itemType = SourceMetaClass.of(ownerClass.getPackage(), claz);
             }
         }
 
@@ -101,7 +104,43 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public MetaClass getType() {
-        return SourceMetaClass.of(compilationUnit, type);
+        CompilationUnit cu = ownerClass.getPackage().getCompilationUnit();
+        String simpleName = getSimpleName(type);
+        String qualifiedName = findQualifiedName(cu, simpleName);
+        int idx = qualifiedName.lastIndexOf('.');
+        String packageName = (idx == -1) ? "" : qualifiedName.substring(0, idx-1);
+        SourceMetaPackage mp = SourceMetaPackage.of(cu, packageName);
+        return SourceMetaClass.of(mp, type);
+    }
+
+    private String getSimpleName(Type type) {
+        String simpleName = null;
+
+        if (type instanceof ClassOrInterfaceType claz) {
+            simpleName = claz.getName().asString();
+        } else if (type instanceof PrimitiveType primitive) {
+            simpleName = primitive.asString();
+        }
+
+        return simpleName;
+    }
+
+    private String findQualifiedName(CompilationUnit cu, String simpleName) {
+        NodeList<ImportDeclaration> imports = cu.getImports();
+        String qualifiedName = "";
+
+        for (ImportDeclaration id : imports) {
+            String imported = id.getName().asString();
+            int idx = imported.lastIndexOf('.');
+            String basename = imported.substring(idx+1);
+
+            if (simpleName.equals(basename)) {
+                qualifiedName = imported;
+                break;
+            }
+        }
+
+        return qualifiedName;
     }
 
     @Override

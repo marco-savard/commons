@@ -145,7 +145,6 @@ public abstract class PojoGenerator {
 
         w.println(" {");
         w.indent();
-
         generateConstants(w, mc);
         generateVariables(w, mc);
         generateMetaFields(w, mc);

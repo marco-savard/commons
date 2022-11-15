@@ -6,17 +6,19 @@ import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.metamodel.ClassOrInterfaceTypeMetaModel;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
+import com.marcosavard.commons.meta.classes.MetaModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SourceMetaClass extends MetaClass {
-    private CompilationUnit compilationUnit;
+    private final SourceMetaPackage ownerPackage;
 
     private TypeDeclaration typeDeclaration;
     private Type type;
@@ -25,17 +27,35 @@ public class SourceMetaClass extends MetaClass {
 
     private String packageName;
 
-    public static SourceMetaClass of(CompilationUnit cu, Type type) {
-        return new SourceMetaClass(cu, type);
+    public static SourceMetaClass of(SourceMetaPackage mp, Type type) {
+        String simpleName = getTypeName(type);
+        SourceMetaClass mc = mp.findClassByName(simpleName);
+        mc = (mc != null) ? mc : new SourceMetaClass(mp, type);
+        return mc;
     }
 
-    public SourceMetaClass(CompilationUnit cu, TypeDeclaration typeDeclaration) {
-        this.compilationUnit = cu;
+    private static String getTypeName(Type type) {
+        String typeName = "";
+
+        if (type.isClassOrInterfaceType()) {
+            ClassOrInterfaceType claz = type.asClassOrInterfaceType();
+            typeName = claz.getName().asString();
+        } else if (type.isPrimitiveType()) {
+            PrimitiveType primitiveType = type.asPrimitiveType();
+            typeName = primitiveType.asString();
+        }
+
+        return typeName;
+    }
+
+    public SourceMetaClass(SourceMetaPackage mp, TypeDeclaration typeDeclaration) {
+        this.ownerPackage = mp;
         this.typeDeclaration = typeDeclaration;
         this.simpleName = typeDeclaration.getName().asString();
         this.qualifiedName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
         int idx = lastIndexOf(qualifiedName, '.', 2);
         packageName = qualifiedName.substring(0, idx);
+        mp.addClass(this.simpleName, this);
 
         List<Node> nodes = typeDeclaration.getChildNodes();
 
@@ -45,8 +65,8 @@ public class SourceMetaClass extends MetaClass {
         }
     }
 
-    public SourceMetaClass(CompilationUnit cu, Type type) {
-        this.compilationUnit = cu;
+    public SourceMetaClass(SourceMetaPackage mp, Type type) {
+        this.ownerPackage = mp;
         this.type = type;
         String simpleName = null;
         String qualifiedName = null;
@@ -59,7 +79,7 @@ public class SourceMetaClass extends MetaClass {
             simpleName = pt.asString();
         }
 
-        List<ImportDeclaration> imports = cu.getImports();
+        List<ImportDeclaration> imports = mp.getCompilationUnit().getImports();
         for (ImportDeclaration id : imports) {
             String imported = id.getName().asString();
             int idx = imported.lastIndexOf('.');
@@ -77,6 +97,12 @@ public class SourceMetaClass extends MetaClass {
     @Override
     public MetaField[] getDeclaredFields() {
         List<MetaField> metaFields = new ArrayList<>();
+
+        if (type instanceof ClassOrInterfaceType claz) {
+            //TODO
+            ClassOrInterfaceTypeMetaModel model = claz.getMetaModel();
+            //model.g
+        }
 
         if (typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
             metaFields = getClassFields(claz);
@@ -96,7 +122,7 @@ public class SourceMetaClass extends MetaClass {
             List<VariableDeclarator> variables = field.getVariables();
 
             for (VariableDeclarator variable : variables) {
-                MetaField mf = new SourceMetaField(compilationUnit, variable);
+                MetaField mf = new SourceMetaField(this, variable);
                 metaFields.add(mf);
             }
         }
@@ -109,7 +135,7 @@ public class SourceMetaClass extends MetaClass {
         NodeList<EnumConstantDeclaration> entries = enumDeclaration.getEntries();
 
         for (EnumConstantDeclaration entry : entries) {
-            MetaField mf = new SourceMetaField(compilationUnit, entry);
+            MetaField mf = new SourceMetaField(this, entry);
             metaFields.add(mf);
         }
 
@@ -147,8 +173,8 @@ public class SourceMetaClass extends MetaClass {
     }
 
     @Override
-    public MetaPackage getPackage() {
-        return new SourceMetaPackage(this);
+    public SourceMetaPackage getPackage() {
+        return ownerPackage;
     }
 
     @Override
@@ -158,7 +184,16 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public MetaClass getSuperClass() {
-        return null;
+        MetaClass superClass = null;
+
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+            SourceMetaPackage mp = this.getPackage();
+            NodeList<ClassOrInterfaceType> extendedTypes = claz.getExtendedTypes();
+            ClassOrInterfaceType type = extendedTypes.isEmpty() ? null : extendedTypes.get(0);
+            superClass = (type == null) ? null : SourceMetaClass.of(mp, type);
+        }
+
+        return superClass;
     }
 
     @Override
@@ -168,22 +203,30 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public String getQualifiedName() {
-        /*
-        String qualifiedName = (String)type.getFullyQualifiedName().orElse(null);
-        int idx = qualifiedName.lastIndexOf('.');
-        qualifiedName = qualifiedName.substring(0, idx);
-        idx = qualifiedName.lastIndexOf('.');
-        qualifiedName = qualifiedName.substring(0, idx);
-        return qualifiedName;
-
-         */
-
         return qualifiedName;
     }
 
     @Override
+    public boolean hasSuperClass() {
+        boolean hasSuperClass = false;
+
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+            NodeList<ClassOrInterfaceType> extendedTypes = claz.getExtendedTypes();
+            hasSuperClass = ! extendedTypes.isEmpty();
+        }
+
+        return hasSuperClass;
+    }
+
+    @Override
     public boolean isAbstract() {
-        return false; //type.hasModifier(Modifier.Keyword.ABSTRACT);
+        boolean isAbstract = false;
+
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+            isAbstract = claz.isAbstract();
+        }
+
+        return isAbstract;
     }
 
     @Override
@@ -240,11 +283,6 @@ public class SourceMetaClass extends MetaClass {
         }
 
         return isPublic;
-    }
-
-    @Override
-    public boolean hasSuperClass() {
-        return false;
     }
 
     private int lastIndexOf(String str, char ch, int position) {

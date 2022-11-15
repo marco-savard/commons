@@ -11,6 +11,7 @@ import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 import com.marcosavard.domain.library.model.LibraryModel;
 import com.marcosavard.domain.mountain.model.MountainModel2;
+import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +22,7 @@ public class ParsingPojoGeneratorDemo {
 
     public static void main(String[] args) {
         File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        File sourceFile = getSourceFile(LibraryModel.class);
+        File sourceFile = getSourceFile(PurchaseOrderModel.class);
         generate(outputFolder, sourceFile);
     }
 
@@ -45,6 +46,17 @@ public class ParsingPojoGeneratorDemo {
         try {
             JavaParser parser = new JavaParser();
             CompilationUnit cu = parser.parse(sourceFile).getResult().orElse(null);
+
+            //new
+            ParsingPojoGenerator pojoGenerator = new ParsingPojoGenerator(outputFolder, cu);
+            List<File> generatedFiles = pojoGenerator.generate(cu);
+
+            for (File file : generatedFiles) {
+                Console.println("File {0} generated", file.getName());
+            }
+
+            /*
+
             NodeList<TypeDeclaration<?>> types = cu.getTypes();
 
             for (TypeDeclaration type : types) {
@@ -58,9 +70,11 @@ public class ParsingPojoGeneratorDemo {
                 }
             }
             
-            cu.getTypes(); 
+            cu.getTypes();
 
-        } catch (FileNotFoundException e) {
+             */
+
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -68,13 +82,13 @@ public class ParsingPojoGeneratorDemo {
     private static File generateType(File outputFolder, CompilationUnit cu, TypeDeclaration typeDeclaration) {
         File generated = null;
 
-        try {
-            MetaClass mc = new SourceMetaClass(cu, typeDeclaration);
+       // try {
+          //  MetaClass mc = new SourceMetaClass(cu, typeDeclaration);
             PojoGenerator pojoGenerator = new ParsingPojoGenerator(outputFolder, cu);
-            generated = pojoGenerator.generateClass(mc);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+           // generated = pojoGenerator.generateClass(mc);
+      //  } catch (IOException e) {
+     //       throw new RuntimeException(e);
+    //    }
 
         return generated;
     }
