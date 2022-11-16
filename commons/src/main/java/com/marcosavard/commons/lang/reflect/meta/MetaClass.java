@@ -15,6 +15,10 @@ public abstract class MetaClass {
 
     protected MetaClass(MetaPackage ownerPackage) {
         this.ownerPackage = ownerPackage;
+
+        if (ownerPackage != null) {
+            ownerPackage.addClass(this);
+        }
     }
 
     public static MetaClass of(Class claz) {

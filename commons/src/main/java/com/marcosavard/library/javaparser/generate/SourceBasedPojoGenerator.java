@@ -8,6 +8,7 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
+import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 
 import java.io.File;
@@ -70,8 +71,18 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
     }
 
     @Override
-    protected List<MetaClass> getSubClasses(MetaClass mc) {
-        return new ArrayList<>();
+    protected List<MetaClass> getSubClasses(MetaClass givenClass) {
+        MetaPackage mp = givenClass.getPackage();
+        List<MetaClass> classes = mp.getClasses();
+        List<MetaClass> subclasses = new ArrayList<>();
+
+        for (MetaClass mc : classes) {
+            if (givenClass.equals(mc.getSuperClass())) {
+                //TODO subclasses.add(mc);
+            }
+        }
+
+        return subclasses;
     }
 
 
