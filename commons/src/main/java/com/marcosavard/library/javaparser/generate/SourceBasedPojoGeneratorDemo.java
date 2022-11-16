@@ -2,23 +2,17 @@ package com.marcosavard.library.javaparser.generate;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
-import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
-import com.marcosavard.domain.library.model.LibraryModel;
-import com.marcosavard.domain.mountain.model.MountainModel2;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public class ParsingPojoGeneratorDemo {
+public class SourceBasedPojoGeneratorDemo {
 
     public static void main(String[] args) {
         File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
@@ -48,7 +42,7 @@ public class ParsingPojoGeneratorDemo {
             CompilationUnit cu = parser.parse(sourceFile).getResult().orElse(null);
 
             //new
-            ParsingPojoGenerator pojoGenerator = new ParsingPojoGenerator(outputFolder, cu);
+            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
             List<File> generatedFiles = pojoGenerator.generate(cu);
 
             for (File file : generatedFiles) {
@@ -84,7 +78,7 @@ public class ParsingPojoGeneratorDemo {
 
        // try {
           //  MetaClass mc = new SourceMetaClass(cu, typeDeclaration);
-            PojoGenerator pojoGenerator = new ParsingPojoGenerator(outputFolder, cu);
+            PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
            // generated = pojoGenerator.generateClass(mc);
       //  } catch (IOException e) {
      //       throw new RuntimeException(e);

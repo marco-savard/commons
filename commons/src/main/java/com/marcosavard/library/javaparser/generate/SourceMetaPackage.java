@@ -3,6 +3,7 @@ package com.marcosavard.library.javaparser.generate;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
+import com.marcosavard.commons.lang.reflect.meta.MetaModel;
 import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 
 import java.util.HashMap;
@@ -15,12 +16,15 @@ public class SourceMetaPackage extends MetaPackage {
     private Map<String, SourceMetaClass> ownedMetaClasses = new HashMap<>();
 
     public static SourceMetaPackage of(CompilationUnit cu, String packageName) {
-        return new SourceMetaPackage(cu, packageName);
+        SourceMetaPackage mp = (SourceMetaPackage)MetaModel.getInstance().findPackageByName(packageName);
+        mp = (mp != null) ? mp : new SourceMetaPackage(cu, packageName);
+        return mp;
     }
 
     private SourceMetaPackage(CompilationUnit cu, String packageName) {
         compilationUnit = cu;
         name = packageName;
+        MetaModel.getInstance().addPackage(name, this);
     }
 
     public SourceMetaPackage(CompilationUnit cu, PackageDeclaration pack) {
@@ -28,6 +32,7 @@ public class SourceMetaPackage extends MetaPackage {
         String packageName = pack.getName().asString();
         int idx = packageName.lastIndexOf('.');
         name = (idx == -1) ? "" : packageName.substring(0, idx);
+        MetaModel.getInstance().addPackage(name, this);
     }
 
     public SourceMetaPackage(MetaClass mc) {

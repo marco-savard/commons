@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceMetaClass extends MetaClass {
-    private final SourceMetaPackage ownerPackage;
 
     private TypeDeclaration typeDeclaration;
     private Type type;
@@ -51,12 +50,14 @@ public class SourceMetaClass extends MetaClass {
     }
 
     public SourceMetaClass(SourceMetaPackage mp, TypeDeclaration typeDeclaration) {
-        this.ownerPackage = mp;
+        super(mp);
         this.typeDeclaration = typeDeclaration;
         this.simpleName = typeDeclaration.getName().asString();
-        this.qualifiedName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
-        int idx = lastIndexOf(qualifiedName, '.', 2);
-        packageName = qualifiedName.substring(0, idx);
+
+        String packageName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
+        int idx = lastIndexOf(packageName, '.', 2);
+        this.packageName = packageName.substring(0, idx);
+        this.qualifiedName = this.packageName + "." + this.simpleName;
         mp.addClass(this.simpleName, this);
 
         List<Node> nodes = typeDeclaration.getChildNodes();
@@ -68,7 +69,7 @@ public class SourceMetaClass extends MetaClass {
     }
 
     public SourceMetaClass(SourceMetaPackage mp, Type type) {
-        this.ownerPackage = mp;
+        super(mp);
         this.type = type;
         String simpleName = null;
         String qualifiedName = null;
@@ -116,34 +117,6 @@ public class SourceMetaClass extends MetaClass {
         return array;
     }
 
-    private List<MetaField> getClassFields(ClassOrInterfaceDeclaration claz) {
-        List<MetaField> metaFields = new ArrayList<>();
-
-        List<FieldDeclaration> fields = claz.getFields();
-        for (FieldDeclaration field : fields) {
-            List<VariableDeclarator> variables = field.getVariables();
-
-            for (VariableDeclarator variable : variables) {
-                MetaField mf = new SourceMetaField(this, variable);
-                metaFields.add(mf);
-            }
-        }
-
-        return metaFields;
-    }
-
-    private List<MetaField> getEnumLiterals(EnumDeclaration enumDeclaration) {
-        List<MetaField> metaFields = new ArrayList<>();
-        NodeList<EnumConstantDeclaration> entries = enumDeclaration.getEntries();
-
-        for (EnumConstantDeclaration entry : entries) {
-            MetaField mf = new SourceMetaField(this, entry);
-            metaFields.add(mf);
-        }
-
-        return metaFields;
-    }
-
     @Override
     public String getDescription() {
         String descriptionName = Description.class.getSimpleName();
@@ -178,11 +151,6 @@ public class SourceMetaClass extends MetaClass {
     }
 
     @Override
-    public SourceMetaPackage getPackage() {
-        return ownerPackage;
-    }
-
-    @Override
     public String getSimpleName() {
         return simpleName;
     }
@@ -192,7 +160,7 @@ public class SourceMetaClass extends MetaClass {
         MetaClass superClass = null;
 
         if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
-            SourceMetaPackage mp = this.getPackage();
+            SourceMetaPackage mp = (SourceMetaPackage)this.getPackage();
             NodeList<ClassOrInterfaceType> extendedTypes = claz.getExtendedTypes();
             ClassOrInterfaceType type = extendedTypes.isEmpty() ? null : extendedTypes.get(0);
             superClass = (type == null) ? null : SourceMetaClass.of(mp, type);
@@ -274,7 +242,7 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public boolean isPrimitive() {
-        return type.isPrimitiveType();
+        return (type == null) ? false : type.isPrimitiveType();
     }
 
     @Override
@@ -288,6 +256,34 @@ public class SourceMetaClass extends MetaClass {
         }
 
         return isPublic;
+    }
+
+    private List<MetaField> getClassFields(ClassOrInterfaceDeclaration claz) {
+        List<MetaField> metaFields = new ArrayList<>();
+
+        List<FieldDeclaration> fields = claz.getFields();
+        for (FieldDeclaration field : fields) {
+            List<VariableDeclarator> variables = field.getVariables();
+
+            for (VariableDeclarator variable : variables) {
+                MetaField mf = new SourceMetaField(this, variable);
+                metaFields.add(mf);
+            }
+        }
+
+        return metaFields;
+    }
+
+    private List<MetaField> getEnumLiterals(EnumDeclaration enumDeclaration) {
+        List<MetaField> metaFields = new ArrayList<>();
+        NodeList<EnumConstantDeclaration> entries = enumDeclaration.getEntries();
+
+        for (EnumConstantDeclaration entry : entries) {
+            MetaField mf = new SourceMetaField(this, entry);
+            metaFields.add(mf);
+        }
+
+        return metaFields;
     }
 
     private int lastIndexOf(String str, char ch, int position) {

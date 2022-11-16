@@ -11,9 +11,14 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class MetaClass {
+    private MetaPackage ownerPackage;
+
+    protected MetaClass(MetaPackage ownerPackage) {
+        this.ownerPackage = ownerPackage;
+    }
 
     public static MetaClass of(Class claz) {
-        return new ReflectiveMetaClass(claz);
+        return ReflectiveMetaClass.of(claz);
     }
 
     @Override
@@ -45,7 +50,9 @@ public abstract class MetaClass {
         return modifiers;
     }
 
-    public abstract MetaPackage getPackage();
+    public MetaPackage getPackage() {
+        return ownerPackage;
+    }
 
     public abstract String getPackageName();
 
@@ -105,7 +112,14 @@ public abstract class MetaClass {
     private static class ReflectiveMetaClass extends MetaClass {
         private final Class<?> claz;
 
-        public ReflectiveMetaClass(Class claz) {
+        public static MetaClass of(Class claz) {
+            String packageName = claz.getPackageName();
+            MetaPackage mp = MetaModel.getInstance().findPackageByName(packageName);
+            return new ReflectiveMetaClass(mp, claz);
+        }
+
+        private ReflectiveMetaClass(MetaPackage mp, Class claz) {
+            super(mp);
             this.claz = claz;
         }
 
@@ -147,11 +161,6 @@ public abstract class MetaClass {
         }
 
         @Override
-        public MetaPackage getPackage() {
-            return MetaPackage.of(claz.getPackage());
-        }
-
-        @Override
         public String getPackageName() {
             String modelPackage = claz.getPackageName();
             int idx = modelPackage.lastIndexOf('.');
@@ -172,7 +181,7 @@ public abstract class MetaClass {
         public MetaClass getSuperClass() {
             Class<?> superclass = claz.getSuperclass();
             superclass = Object.class.equals(superclass) ? null : superclass;
-            return (superclass == null) ? null : new ReflectiveMetaClass(superclass);
+            return (superclass == null) ? null : ReflectiveMetaClass.of(superclass);
         }
 
         @Override

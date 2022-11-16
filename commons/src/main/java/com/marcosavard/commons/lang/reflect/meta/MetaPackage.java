@@ -2,10 +2,6 @@ package com.marcosavard.commons.lang.reflect.meta;
 
 public abstract class MetaPackage {
 
-    public static MetaPackage of(Package pack) {
-        return new ReflectiveMetaPackage(pack);
-    }
-
     @Override
     public boolean equals(Object other) {
         boolean equal = false;
@@ -25,15 +21,25 @@ public abstract class MetaPackage {
     }
 
     public static class ReflectiveMetaPackage extends MetaPackage {
+        private final String name;
         private final Package pack;
 
-        public ReflectiveMetaPackage(Package pack) {
+        public static MetaPackage of(Package pack) {
+            String name = (pack == null) ? "" : pack.getName();
+            MetaPackage mp = MetaModel.getInstance().findPackageByName(name);
+            mp = (mp != null) ? mp :  new ReflectiveMetaPackage(pack);
+            return mp;
+        }
+
+        private ReflectiveMetaPackage(Package pack) {
             this.pack = pack;
+            this.name = (pack == null) ? "" : pack.getName();
+            MetaModel.getInstance().addPackage(this.name, this);
         }
 
         @Override
         public String getName() {
-            return (pack == null) ? "" : pack.getName();
+            return this.name;
         }
     }
 }

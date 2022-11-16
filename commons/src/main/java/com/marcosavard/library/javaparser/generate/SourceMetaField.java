@@ -4,26 +4,26 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.Type;
-import com.github.javaparser.resolution.types.ResolvedType;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
+import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
+import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SourceMetaField extends MetaField {
-    private SourceMetaClass ownerClass;
+    private SourceMetaClass declaringClass;
 
     private VariableDeclarator variable;
 
@@ -34,42 +34,55 @@ public class SourceMetaField extends MetaField {
     private Type type;
 
     public SourceMetaField(SourceMetaClass mc, VariableDeclarator variable) {
-        this.ownerClass = mc;
+        this.declaringClass = mc;
         this.variable = variable;
         name = variable.getName().asString();
         type = variable.getType();
     }
 
     public SourceMetaField(SourceMetaClass mc, EnumConstantDeclaration literal) {
-        this.ownerClass = mc;
+        this.declaringClass = mc;
         this.literal = literal;
         this.name = literal.getNameAsString();
     }
 
     @Override
     public MetaClass getDeclaringClass() {
-        return this.ownerClass;
+        return this.declaringClass;
     }
 
     @Override
     public String getDescription() {
-        String descriptionName = Description.class.getSimpleName();
-        Node parent = variable.getParentNode().orElse(null);
-        List<Node> nodes = parent.getChildNodes();
+        AnnotationExpr annotation = findAnnotationByName(Description.class.getSimpleName());
         String description = "";
 
-        for (Node node : nodes) {
-            if (node instanceof SingleMemberAnnotationExpr annotation) {
-                String name = annotation.getName().asString();
+        if (annotation instanceof SingleMemberAnnotationExpr sma) {
+            description = (annotation == null) ? "" : sma.getMemberValue().toString();
+        }
 
-                if (descriptionName.equals(name)) {
-                    description = annotation.getMemberValue().toString();
-                    description = StringUtil.unquote(description).toString();
+        description = StringUtil.unquote(description).toString();
+        return description;
+    }
+
+    private AnnotationExpr findAnnotationByName(String givenName) {
+        Node parent = variable.getParentNode().orElse(null);
+        List<Node> nodes = parent.getChildNodes();
+        AnnotationExpr foundAnnotation = null;
+
+        for (Node node : nodes) {
+            String name = null;
+
+            if (node instanceof AnnotationExpr annotation) {
+                name = annotation.getName().asString();
+
+                if (givenName.equals(name)) {
+                    foundAnnotation = annotation;
+                    break;
                 }
             }
         }
 
-        return description;
+        return foundAnnotation;
     }
 
     @Override
@@ -84,7 +97,8 @@ public class SourceMetaField extends MetaField {
 
         for (Node node : nodes) {
             if (node instanceof ClassOrInterfaceType claz) {
-                itemType = SourceMetaClass.of(ownerClass.getPackage(), claz);
+                SourceMetaPackage mp = (SourceMetaPackage)declaringClass.getPackage();
+                itemType = SourceMetaClass.of(mp, claz);
             }
         }
 
@@ -104,13 +118,16 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public MetaClass getType() {
-        CompilationUnit cu = ownerClass.getPackage().getCompilationUnit();
         String simpleName = getSimpleName(type);
-        String qualifiedName = findQualifiedName(cu, simpleName);
+        String qualifiedName = findQualifiedName(simpleName);
         int idx = qualifiedName.lastIndexOf('.');
-        String packageName = (idx == -1) ? "" : qualifiedName.substring(0, idx-1);
+        String packageName = (idx == -1) ? "" : qualifiedName.substring(0, idx);
+        SourceMetaPackage declaringClassMp = (SourceMetaPackage)declaringClass.getPackage();
+        CompilationUnit cu = declaringClassMp.getCompilationUnit();
         SourceMetaPackage mp = SourceMetaPackage.of(cu, packageName);
-        return SourceMetaClass.of(mp, type);
+        MetaClass type = mp.findClassByName(simpleName);
+        type = (type != null) ? type : SourceMetaClass.of(mp, this.type);
+        return type;
     }
 
     private String getSimpleName(Type type) {
@@ -125,18 +142,26 @@ public class SourceMetaField extends MetaField {
         return simpleName;
     }
 
-    private String findQualifiedName(CompilationUnit cu, String simpleName) {
+    private String findQualifiedName(String simpleName) {
+        SourceMetaPackage mp = (SourceMetaPackage)declaringClass.getPackage();
+        CompilationUnit cu = mp.getCompilationUnit();
         NodeList<ImportDeclaration> imports = cu.getImports();
         String qualifiedName = "";
 
-        for (ImportDeclaration id : imports) {
-            String imported = id.getName().asString();
-            int idx = imported.lastIndexOf('.');
-            String basename = imported.substring(idx+1);
+        MetaClass mc = mp.findClassByName(simpleName);
 
-            if (simpleName.equals(basename)) {
-                qualifiedName = imported;
-                break;
+        if (mc != null) {
+            qualifiedName = mc.getQualifiedName();
+        } else {
+            for (ImportDeclaration id : imports) {
+                String imported = id.getName().asString();
+                int idx = imported.lastIndexOf('.');
+                String basename = imported.substring(idx+1);
+
+                if (simpleName.equals(basename)) {
+                    qualifiedName = imported;
+                    break;
+                }
             }
         }
 
@@ -209,6 +234,7 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public boolean isComponent() {
-        return false;
+        AnnotationExpr annotation = findAnnotationByName(Component.class.getSimpleName());
+        return (annotation != null);
     }
 }

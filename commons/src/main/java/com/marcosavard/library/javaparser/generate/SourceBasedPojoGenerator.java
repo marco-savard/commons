@@ -8,7 +8,6 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
-import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 
 import java.io.File;
@@ -16,10 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParsingPojoGenerator extends PojoGenerator {
+public class SourceBasedPojoGenerator extends PojoGenerator {
     protected CompilationUnit cu;
 
-    protected ParsingPojoGenerator(File outputFolder, CompilationUnit cu) {
+    protected SourceBasedPojoGenerator(File outputFolder, CompilationUnit cu) {
         super(outputFolder);
         this.cu = cu;
     }
