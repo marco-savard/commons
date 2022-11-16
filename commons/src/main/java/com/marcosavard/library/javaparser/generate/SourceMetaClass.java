@@ -13,7 +13,9 @@ import com.marcosavard.commons.lang.reflect.meta.MetaField;
 import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 import com.marcosavard.commons.meta.classes.MetaModel;
+import com.marcosavard.commons.util.ArrayUtil;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,7 +166,10 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public MetaField[] getFields() {
-        return new MetaField[0];
+        MetaClass sc = getSuperClass();
+        MetaField[] inherited = (sc != null) ? sc.getFields() : new MetaField[] {};
+        MetaField[] declaredFields = getDeclaredFields();
+        return ArrayUtil.concat(inherited, declaredFields);
     }
 
     @Override

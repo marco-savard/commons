@@ -434,7 +434,7 @@ public abstract class PojoGenerator {
         String orElseNull = optional ? ".orElse(null)" : "";
 
         w.println("/**");
-        w.println(" * @return {0} {1}" + mf.getName(), mf.getDescription());
+        w.println(" * @return {0} {1}", mf.getName(), mf.getDescription());
         w.println(" */");
         w.println("{0} {1} {2}() '{'", String.join(" ", modifiers), typeName, getter);
         w.printlnIndented("return {0}{1};", mf.getName(), orElseNull);
