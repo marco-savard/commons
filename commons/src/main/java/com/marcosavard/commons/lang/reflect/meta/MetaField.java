@@ -11,8 +11,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class MetaField {
+    protected MetaClass declaringClass;
+
     public static MetaField of(Member member) {
         return new ReflectiveMetaField(member);
+    }
+
+    protected MetaField(MetaClass declaringClass) {
+        this.declaringClass = declaringClass;
+    }
+
+    public MetaClass getDeclaringClass() {
+        return declaringClass;
     }
 
     public abstract String getInitialValue();
@@ -59,8 +69,6 @@ public abstract class MetaField {
         return actualType;
     }
 
-    public abstract MetaClass getDeclaringClass();
-
     public abstract String getDescription();
 
     public abstract boolean isComponent();
@@ -83,6 +91,7 @@ public abstract class MetaField {
         private final Member member;
 
         public ReflectiveMetaField(Member member) {
+            super(MetaClass.of(member.getDeclaringClass()));
             this.member = member;
         }
 

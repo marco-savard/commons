@@ -10,12 +10,9 @@ import com.github.javaparser.metamodel.ClassOrInterfaceTypeMetaModel;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.MetaField;
-import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
-import com.marcosavard.commons.meta.classes.MetaModel;
 import com.marcosavard.commons.util.ArrayUtil;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +24,8 @@ public class SourceMetaClass extends MetaClass {
     private String simpleName, qualifiedName;
 
     private String packageName;
+
+    private List<MetaField> metaFields = new ArrayList<>();
 
     public static SourceMetaClass of(SourceMetaPackage mp, Type type) {
         String simpleName = getTypeName(type);
@@ -60,11 +59,10 @@ public class SourceMetaClass extends MetaClass {
         this.qualifiedName = this.packageName + "." + this.simpleName;
         mp.addClass(this.simpleName, this);
 
-        List<Node> nodes = typeDeclaration.getChildNodes();
-
-        for (Node node : nodes) {
-            List<Node> childNodes = node.getChildNodes();
-
+        if (typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+            createClassFields(claz);
+        } else if (typeDeclaration instanceof EnumDeclaration enumDeclaration) {
+            createClassFields(enumDeclaration);
         }
     }
 
@@ -99,20 +97,6 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public MetaField[] getDeclaredFields() {
-        List<MetaField> metaFields = new ArrayList<>();
-
-        if (type instanceof ClassOrInterfaceType claz) {
-            //TODO
-            ClassOrInterfaceTypeMetaModel model = claz.getMetaModel();
-            //model.g
-        }
-
-        if (typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
-            metaFields = getClassFields(claz);
-        } else if (typeDeclaration instanceof EnumDeclaration enumDeclaration) {
-            metaFields = getEnumLiterals(enumDeclaration);
-        }
-
         MetaField[] array = metaFields.toArray(new MetaField[0]);
         return array;
     }
@@ -258,9 +242,7 @@ public class SourceMetaClass extends MetaClass {
         return isPublic;
     }
 
-    private List<MetaField> getClassFields(ClassOrInterfaceDeclaration claz) {
-        List<MetaField> metaFields = new ArrayList<>();
-
+    private void createClassFields(ClassOrInterfaceDeclaration claz) {
         List<FieldDeclaration> fields = claz.getFields();
         for (FieldDeclaration field : fields) {
             List<VariableDeclarator> variables = field.getVariables();
@@ -270,20 +252,15 @@ public class SourceMetaClass extends MetaClass {
                 metaFields.add(mf);
             }
         }
-
-        return metaFields;
     }
 
-    private List<MetaField> getEnumLiterals(EnumDeclaration enumDeclaration) {
-        List<MetaField> metaFields = new ArrayList<>();
+    private void createClassFields(EnumDeclaration enumDeclaration) {
         NodeList<EnumConstantDeclaration> entries = enumDeclaration.getEntries();
 
         for (EnumConstantDeclaration entry : entries) {
             MetaField mf = new SourceMetaField(this, entry);
             metaFields.add(mf);
         }
-
-        return metaFields;
     }
 
     private int lastIndexOf(String str, char ch, int position) {

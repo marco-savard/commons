@@ -5,11 +5,9 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.lang.reflect.meta.MetaClass;
-import com.marcosavard.commons.lang.reflect.meta.MetaField;
-import com.marcosavard.commons.lang.reflect.meta.MetaPackage;
-import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
+import com.marcosavard.commons.lang.reflect.meta.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +42,21 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
             }
         }
 
-        //pass 2 : fill meta classes
+        //pass 2 : find references
+        for (MetaClass mc : metaClasses) {
+            List<MetaField> fields = mc.getAllVariables();
+            for (MetaField mf : fields) {
+                if (mf.isComponent()) {
+                    MetaClass type = mf.getType();
+                    MetaClass child = type.isCollection() ? mf.getItemType() : type;
+                    MetaReference mr = new MetaReference(child, mf, containerName);
+
+                    Console.println("{0}", child.getName());
+                }
+            }
+        }
+
+        //pass 3 : fill meta classes
         for (MetaClass mc : metaClasses) {
             File generated = generateClass(mc);
             generatedFiles.add(generated);

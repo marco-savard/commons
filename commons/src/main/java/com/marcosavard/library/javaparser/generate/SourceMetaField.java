@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceMetaField extends MetaField {
-    private SourceMetaClass declaringClass;
 
     private VariableDeclarator variable;
 
@@ -33,22 +32,17 @@ public class SourceMetaField extends MetaField {
 
     private Type type;
 
-    public SourceMetaField(SourceMetaClass mc, VariableDeclarator variable) {
-        this.declaringClass = mc;
+    public SourceMetaField(SourceMetaClass declaringClass, VariableDeclarator variable) {
+        super(declaringClass);
         this.variable = variable;
         name = variable.getName().asString();
         type = variable.getType();
     }
 
-    public SourceMetaField(SourceMetaClass mc, EnumConstantDeclaration literal) {
-        this.declaringClass = mc;
+    public SourceMetaField(SourceMetaClass declaringClass, EnumConstantDeclaration literal) {
+        super(declaringClass);
         this.literal = literal;
         this.name = literal.getNameAsString();
-    }
-
-    @Override
-    public MetaClass getDeclaringClass() {
-        return this.declaringClass;
     }
 
     @Override
@@ -65,8 +59,8 @@ public class SourceMetaField extends MetaField {
     }
 
     private AnnotationExpr findAnnotationByName(String givenName) {
-        Node parent = variable.getParentNode().orElse(null);
-        List<Node> nodes = parent.getChildNodes();
+        Node parent = (variable == null) ? null : variable.getParentNode().orElse(null);
+        List<Node> nodes = (parent != null) ? parent.getChildNodes() : new ArrayList<>();
         AnnotationExpr foundAnnotation = null;
 
         for (Node node : nodes) {
