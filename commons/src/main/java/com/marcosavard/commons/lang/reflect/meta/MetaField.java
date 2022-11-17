@@ -13,29 +13,38 @@ import java.util.Optional;
 public abstract class MetaField {
     protected MetaClass declaringClass;
 
+    private String name;
+
     public static MetaField of(Member member) {
         return new ReflectiveMetaField(member);
     }
 
-    protected MetaField(MetaClass declaringClass) {
+    protected MetaField(MetaClass declaringClass, String fieldName) {
         this.declaringClass = declaringClass;
+        this.name = fieldName;
     }
 
     public MetaClass getDeclaringClass() {
         return declaringClass;
     }
 
+    public abstract String getDescription();
+
     public abstract String getInitialValue();
 
     public abstract MetaClass getItemType();
 
-    public abstract String getName();
+    public String getName() {
+        return name;
+    }
 
     public abstract List<String> getOtherModifiers();
 
     public abstract MetaClass getType();
 
     public abstract List<String> getVisibilityModifiers();
+
+    public abstract boolean isComponent();
 
     public boolean isConstant() {
         return isStatic() && isFinal();
@@ -69,10 +78,6 @@ public abstract class MetaField {
         return actualType;
     }
 
-    public abstract String getDescription();
-
-    public abstract boolean isComponent();
-
     @Override
     public boolean equals(Object other) {
         boolean equal = false;
@@ -91,7 +96,7 @@ public abstract class MetaField {
         private final Member member;
 
         public ReflectiveMetaField(Member member) {
-            super(MetaClass.of(member.getDeclaringClass()));
+            super(MetaClass.of(member.getDeclaringClass()), member.getName());
             this.member = member;
         }
 
@@ -189,11 +194,6 @@ public abstract class MetaField {
             }
 
             return MetaClass.of(itemType);
-        }
-
-        @Override
-        public String getName() {
-            return member.getName();
         }
 
         @Override

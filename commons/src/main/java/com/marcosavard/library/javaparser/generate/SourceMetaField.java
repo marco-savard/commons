@@ -28,21 +28,17 @@ public class SourceMetaField extends MetaField {
 
     private EnumConstantDeclaration literal;
 
-    private final String name;
-
     private Type type;
 
     public SourceMetaField(SourceMetaClass declaringClass, VariableDeclarator variable) {
-        super(declaringClass);
+        super(declaringClass, variable.getName().asString());
         this.variable = variable;
-        name = variable.getName().asString();
         type = variable.getType();
     }
 
     public SourceMetaField(SourceMetaClass declaringClass, EnumConstantDeclaration literal) {
-        super(declaringClass);
+        super(declaringClass, literal.getNameAsString());
         this.literal = literal;
-        this.name = literal.getNameAsString();
     }
 
     @Override
@@ -97,11 +93,6 @@ public class SourceMetaField extends MetaField {
         }
 
         return itemType;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

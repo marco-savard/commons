@@ -745,6 +745,7 @@ public abstract class PojoGenerator {
         List<MetaField> allVariables = mc.getAllVariables();
         List<MetaField> fields = allVariables.stream()
                 .filter(mf -> immutable || ! mf.isOptional())
+                .filter(mf -> ! (mf instanceof MetaReference))
                 .toList();
         return fields;
     }

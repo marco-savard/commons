@@ -7,12 +7,9 @@ public class MetaReference extends MetaField {
 
     private MetaField oppositeField;
 
-    private String name;
-
     public MetaReference(MetaClass declaringClass, MetaField oppositeField, String fieldName) {
-        super(declaringClass);
+        super(declaringClass, fieldName);
         this.oppositeField = oppositeField;
-        this.name = fieldName;
         declaringClass.addReference(this);
     }
 
@@ -24,11 +21,6 @@ public class MetaReference extends MetaField {
     @Override
     public MetaClass getItemType() {
         return null;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
     }
 
     @Override

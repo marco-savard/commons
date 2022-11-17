@@ -90,7 +90,7 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         for (MetaClass mc : classes) {
             if (givenClass.equals(mc.getSuperClass())) {
-                //TODO subclasses.add(mc);
+                subclasses.add(mc);
             }
         }
 
