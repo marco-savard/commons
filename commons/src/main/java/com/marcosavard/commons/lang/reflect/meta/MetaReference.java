@@ -1,9 +1,10 @@
 package com.marcosavard.commons.lang.reflect.meta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MetaReference extends MetaField {
-    private MetaClass declaringClass;
+
     private MetaField oppositeField;
 
     private String name;
@@ -12,6 +13,7 @@ public class MetaReference extends MetaField {
         super(declaringClass);
         this.oppositeField = oppositeField;
         this.name = fieldName;
+        declaringClass.addReference(this);
     }
 
     @Override
@@ -31,7 +33,7 @@ public class MetaReference extends MetaField {
 
     @Override
     public List<String> getOtherModifiers() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -41,7 +43,7 @@ public class MetaReference extends MetaField {
 
     @Override
     public List<String> getVisibilityModifiers() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

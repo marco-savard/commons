@@ -25,8 +25,6 @@ public class SourceMetaClass extends MetaClass {
 
     private String packageName;
 
-    private List<MetaField> metaFields = new ArrayList<>();
-
     public static SourceMetaClass of(SourceMetaPackage mp, Type type) {
         String simpleName = getTypeName(type);
         SourceMetaClass mc = mp.findClassByName(simpleName);
@@ -93,12 +91,6 @@ public class SourceMetaClass extends MetaClass {
 
         this.simpleName = simpleName;
         this.qualifiedName = qualifiedName;
-    }
-
-    @Override
-    public MetaField[] getDeclaredFields() {
-        MetaField[] array = metaFields.toArray(new MetaField[0]);
-        return array;
     }
 
     @Override

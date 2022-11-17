@@ -13,6 +13,8 @@ import java.util.List;
 public abstract class MetaClass {
     private MetaPackage ownerPackage;
 
+    protected List<MetaField> metaFields = new ArrayList<>();
+
     protected MetaClass(MetaPackage ownerPackage) {
         this.ownerPackage = ownerPackage;
 
@@ -23,6 +25,10 @@ public abstract class MetaClass {
 
     public static MetaClass of(Class claz) {
         return ReflectiveMetaClass.of(claz);
+    }
+
+    public void addReference(MetaReference mr) {
+        metaFields.add(0, mr);
     }
 
     @Override
@@ -36,7 +42,10 @@ public abstract class MetaClass {
         return equal;
     }
 
-    public abstract MetaField[] getDeclaredFields();
+    public MetaField[] getDeclaredFields() {
+        MetaField[] array = metaFields.toArray(new MetaField[0]);
+        return array;
+    }
 
     public abstract MetaField[] getFields();
 
@@ -125,18 +134,15 @@ public abstract class MetaClass {
         private ReflectiveMetaClass(MetaPackage mp, Class claz) {
             super(mp);
             this.claz = claz;
+            addDeclaredFields();
         }
 
-        @Override
-        public MetaField[] getDeclaredFields() {
+        public void addDeclaredFields() {
             Field[] fields = claz.getDeclaredFields();
-            MetaField[] metaFields = new MetaField[fields.length];
 
             for (int i=0; i< fields.length; i++) {
-                metaFields[i] = MetaField.of(fields[i]);
+                metaFields.add(MetaField.of(fields[i]));
              }
-
-            return metaFields;
         }
 
         @Override
