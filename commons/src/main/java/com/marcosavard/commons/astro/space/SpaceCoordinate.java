@@ -3,120 +3,122 @@ package com.marcosavard.commons.astro.space;
 import java.text.MessageFormat;
 import java.time.ZonedDateTime;
 
-import static com.marcosavard.commons.astro.AstroMath.sind; 
-import static com.marcosavard.commons.astro.AstroMath.cosd; 
-import static com.marcosavard.commons.astro.AstroMath.asind; 
-import static com.marcosavard.commons.astro.AstroMath.acosd; 
+import static com.marcosavard.commons.astro.AstroMath.acosd;
+import static com.marcosavard.commons.astro.AstroMath.asind;
 import static com.marcosavard.commons.astro.AstroMath.atan2d;
+import static com.marcosavard.commons.astro.AstroMath.cosd;
+import static com.marcosavard.commons.astro.AstroMath.sind;
 import static java.lang.Math.sqrt;
 
 // // see https://stjarnhimlen.se/comp/ppcomp.html
 public class SpaceCoordinate {
-    public static final SpaceCoordinate VERNAL_POINT = SpaceCoordinate.sphereOf(0, 0);
-    private double x, y, z; //rectangular
-    private double ra, dec, distance; //spheric
+  public static final SpaceCoordinate VERNAL_POINT = SpaceCoordinate.sphereOf(0, 0);
+  private double x, y, z; // rectangular
+  private double ra, dec, distance; // spheric
 
-    private SpaceCoordinateFormatter defaultFormatter = new SpaceCoordinateFormatter();
+  private SpaceCoordinateFormatter defaultFormatter = new SpaceCoordinateFormatter();
 
-    public static SpaceCoordinate rectangleOf(double x, double y, double z) {
-        double distance = sqrt( x*x + y*y + z*z );
-        double ra = atan2d(y, x);
-        double dec = asind( z / distance );
-        return new SpaceCoordinate(x, y, z, distance, ra, dec);
-    }
+  public static SpaceCoordinate rectangleOf(double x, double y, double z) {
+    double distance = sqrt(x * x + y * y + z * z);
+    double ra = atan2d(y, x);
+    double dec = asind(z / distance);
+    return new SpaceCoordinate(x, y, z, distance, ra, dec);
+  }
 
-    public static SpaceCoordinate sphereOf(double raDeg, double dec) {
-        return sphereOf(raDeg, dec, Double.MAX_VALUE);
-    }
+  public static SpaceCoordinate sphereOf(double raDeg, double dec) {
+    return sphereOf(raDeg, dec, Double.MAX_VALUE);
+  }
 
-    public static SpaceCoordinate sphereOf(double raDeg, double dec, double distance) {
-        double x = distance * cosd(raDeg) * cosd(dec);
-        double y = distance * sind(raDeg) * cosd(dec);
-        double z = distance * sind(dec);
-        return new SpaceCoordinate(x, y, z, distance, raDeg, dec);
-    }
+  public static SpaceCoordinate sphereOf(double raDeg, double dec, double distance) {
+    double x = distance * cosd(raDeg) * cosd(dec);
+    double y = distance * sind(raDeg) * cosd(dec);
+    double z = distance * sind(dec);
+    return new SpaceCoordinate(x, y, z, distance, raDeg, dec);
+  }
 
-    public static SpaceCoordinate of(RightAscension ascension, Declination declination) {
-        return sphereOf(ascension.toHour(), declination.toDegrees());
-    }
+  public static SpaceCoordinate of(RightAscension ascension, Declination declination) {
+    return sphereOf(ascension.toHour(), declination.toDegrees());
+  }
 
-    private SpaceCoordinate(double x, double y, double z, double distance, double ra, double dec) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.distance = distance;
-        this.ra = ra;
-        this.dec = dec;
-    }
+  private SpaceCoordinate(double x, double y, double z, double distance, double ra, double dec) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.distance = distance;
+    this.ra = ra;
+    this.dec = dec;
+  }
 
-    public double getX() {
-        return x;
-    }
+  public double getX() {
+    return x;
+  }
 
-    public double getY() {
-        return y;
-    }
+  public double getY() {
+    return y;
+  }
 
-    public double getZ() {
-        return z;
-    }
+  public double getZ() {
+    return z;
+  }
 
-    public double getRightAscensionDegree() {
-        return ra;
-    }
+  public double getRightAscensionDegree() {
+    return ra;
+  }
 
-    public double getDeclinationDegree() {
-        return dec;
-    }
-    public double getDistance() {
-        return distance;
-    }
+  public double getRightAscensionHour() {
+    return ra / 15.0;
+  }
 
+  public double getDeclinationDegree() {
+    return dec;
+  }
 
-    /**
-     * Compute the angular distance, in degrees, between that location.
-     *
-     * @param other to which distance is computed
-     * @return the distance in degrees
-     */
-    public double distanceFrom(SpaceCoordinate other) {
-        double dec1 = dec;
-        double ra1 = ra;
-        double dec2 = other.dec;
-        double ra2 = other.ra;
+  public double getDistance() {
+    return distance;
+  }
 
-        double cosDist = sind(dec1) * sind(dec2) + cosd(dec1) * cosd(dec2) * cosd(ra1 - ra2);
-        double dist = acosd(cosDist);
-        return dist;
-    }
+  /**
+   * Compute the angular distance, in degrees, between that location.
+   *
+   * @param other to which distance is computed
+   * @return the distance in degrees
+   */
+  public double distanceFrom(SpaceCoordinate other) {
+    double dec1 = dec;
+    double ra1 = ra;
+    double dec2 = other.dec;
+    double ra2 = other.ra;
 
-    public double[] findZenithAt(ZonedDateTime moment) {
-        double n = moment.getDayOfYear();
-        int h = moment.getHour();
-        int m = moment.getMinute();
-        int s = moment.getSecond();
-        double decimalHour = h + (m / 60.0) + (s / 3600.0);
-        double a = 0.98563 * n;
-        double b = 15.0405 * decimalHour;
-        double latitude = dec;
-        double longitude = ra - a - b - 98.971;
-        double[] coordinates = new double[] {latitude, longitude};
-        return coordinates;
-    }
+    double cosDist = sind(dec1) * sind(dec2) + cosd(dec1) * cosd(dec2) * cosd(ra1 - ra2);
+    double dist = acosd(cosDist);
+    return dist;
+  }
 
-    @Override
-    public String toString() {
-        return defaultFormatter.format(this);
-    }
+  public double[] findZenithAt(ZonedDateTime moment) {
+    double n = moment.getDayOfYear();
+    int h = moment.getHour();
+    int m = moment.getMinute();
+    int s = moment.getSecond();
+    double decimalHour = h + (m / 60.0) + (s / 3600.0);
+    double a = 0.98563 * n;
+    double b = 15.0405 * decimalHour;
+    double latitude = dec;
+    double longitude = ra - a - b - 98.971;
+    double[] coordinates = new double[] {latitude, longitude};
+    return coordinates;
+  }
 
-
+  @Override
+  public String toString() {
+    return defaultFormatter.format(this);
+  }
 
   /*
   //celestrial north, south poles
   public static final SpaceCoordinate NORTH_POLE = SpaceCoordinate.of(0, 90);
   public static final SpaceCoordinate SOUTH_POLE = SpaceCoordinate.of(0, -90);
 
-  
+
 
 
   public SpaceCoordinate rotate(double lon) {
@@ -137,7 +139,7 @@ public class SpaceCoordinate {
 
   private double rightAscension; // [0-24 hr]
   private double declination; // [0-360 degrees]
-  private double distance; 
+  private double distance;
   private double x, y, z;
 
   public static SpaceCoordinate of(int ra1, int ra2, int ra3, Unit raUnit, int dec1, int dec2,
@@ -151,14 +153,14 @@ public class SpaceCoordinate {
   }
 
 
-  
+
 
 
   public static SpaceCoordinate of(double rightAscensionInHours, double declinationInDegrees, double distance) {
     SpaceCoordinate position = new SpaceCoordinate(rightAscensionInHours, declinationInDegrees, distance);
     return position;
   }
-  
+
 
 
 
@@ -166,13 +168,13 @@ public class SpaceCoordinate {
 
   //rotate around x-axis
   public SpaceCoordinate rotateX(double angle) {
-		double x1 = x;
-		double y1 = y * cosd(angle) - z * sind(angle);
-		double z1 = y * sind(angle) + z * cosd(angle);
-		SpaceCoordinate rotated = rectangleOf(x1, y1, z1);
-		return rotated;
+  double x1 = x;
+  double y1 = y * cosd(angle) - z * sind(angle);
+  double z1 = y * sind(angle) + z * cosd(angle);
+  SpaceCoordinate rotated = rectangleOf(x1, y1, z1);
+  return rotated;
   }
-  
+
 
   public static SpaceCoordinate findSpaceLocation(SpaceCoordinate location1, LocalDate date1,
                                                   LocalDate date2) {
@@ -318,8 +320,9 @@ public class SpaceCoordinate {
       double degree = Math.floor(value);
       double minute = Math.floor((value - degree) * 60);
       double second = Math.round(((value - degree) * 60 - minute) * 60);
-      String str = MessageFormat.format("{0}{1} {2}{3} {4}{5}", degree, DEGREE, minute, MINUTE,
-          second, SECOND);
+      String str =
+          MessageFormat.format(
+              "{0}{1} {2}{3} {4}{5}", degree, DEGREE, minute, MINUTE, second, SECOND);
       return str;
     }
 
@@ -328,58 +331,52 @@ public class SpaceCoordinate {
     }
   }
 
-  public static class InvalidDeclinationException extends ArithmeticException {
-
-  }
-
+  public static class InvalidDeclinationException extends ArithmeticException {}
 
   /* *
-   * Compute the angular distance, in radians, between that location.
-   * 
-   * @param other to which distance is computed
-   * @return the distance in radians
-   * /
-  public double distanceFromOld(SpaceCoordinate other) {
-    if (other == null) {
-      return 0;
+     * Compute the angular distance, in radians, between that location.
+     *
+     * @param other to which distance is computed
+     * @return the distance in radians
+     * /
+    public double distanceFromOld(SpaceCoordinate other) {
+      if (other == null) {
+        return 0;
+      }
+
+      double ra0 = Math.toRadians(rightAscension * 15.0);
+      double ra1 = Math.toRadians(other.rightAscension * 15.0);
+
+      double decl0 = Math.toRadians(declination);
+      double decl1 = Math.toRadians(other.declination);
+
+      double deltaLon = Math.abs(ra0 - ra1);
+      double greatCircle = (Math.sin(decl0) * Math.sin(decl1))
+          + (Math.cos(decl0) * Math.cos(decl1) * Math.cos(deltaLon));
+      double deltaAngle = Math.acos(greatCircle);
+      return deltaAngle;
     }
 
-    double ra0 = Math.toRadians(rightAscension * 15.0);
-    double ra1 = Math.toRadians(other.rightAscension * 15.0);
+    @SuppressWarnings("serial")
+    private static class InvalidDeclinationException extends ArithmeticException {
+      private static final String MESSAGE =
+          "Degrees, minutes, seconds must be all positive or all negative";
 
-    double decl0 = Math.toRadians(declination);
-    double decl1 = Math.toRadians(other.declination);
+      InvalidDeclinationException() {
+        super(MESSAGE);
+      }
 
-    double deltaLon = Math.abs(ra0 - ra1);
-    double greatCircle = (Math.sin(decl0) * Math.sin(decl1))
-        + (Math.cos(decl0) * Math.cos(decl1) * Math.cos(deltaLon));
-    double deltaAngle = Math.acos(greatCircle);
-    return deltaAngle;
-  }
-
-  @SuppressWarnings("serial")
-  private static class InvalidDeclinationException extends ArithmeticException {
-    private static final String MESSAGE =
-        "Degrees, minutes, seconds must be all positive or all negative";
-
-    InvalidDeclinationException() {
-      super(MESSAGE);
     }
 
-  }
-
-  public SpaceCoordinate addTo(SpaceCoordinate addend) {
-	  double x1 = this.x + addend.x;
-	  double y1 = this.y + addend.y;
-	  double z1 = this.z + addend.z;
-	  SpaceCoordinate summation = SpaceCoordinate.rectangleOf(x1, y1, z1);
-	  return summation;
-  }
+    public SpaceCoordinate addTo(SpaceCoordinate addend) {
+  	  double x1 = this.x + addend.x;
+  	  double y1 = this.y + addend.y;
+  	  double z1 = this.z + addend.z;
+  	  SpaceCoordinate summation = SpaceCoordinate.rectangleOf(x1, y1, z1);
+  	  return summation;
+    }
 
 
-*/
-
-
-
+  */
 
 }
