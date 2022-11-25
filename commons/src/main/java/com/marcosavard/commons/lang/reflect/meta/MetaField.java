@@ -82,15 +82,14 @@ public abstract class MetaField {
     public boolean equals(Object other) {
         boolean equal = false;
 
-        if (other instanceof MetaField that) {
+        if (other instanceof MetaField) {
+            MetaField that = (MetaField)other;
             equal = this.getDeclaringClass().equals(that.getDeclaringClass());
             equal = equal && this.getName().equals(that.getName());
         }
 
         return equal;
     }
-
-
 
     private static class ReflectiveMetaField extends MetaField {
         private final Member member;
@@ -120,8 +119,9 @@ public abstract class MetaField {
         protected String getInitialValueOfVariable(Member member) {
             String initialValue = null;
 
-            if (member instanceof Field field) {
+            if (member instanceof Field) {
                 try {
+                    Field field = (Field)member;
                     Class<?> claz = member.getDeclaringClass();
                     Object instance = instantiate(claz);
                     Object value = field.get(instance);
@@ -152,7 +152,8 @@ public abstract class MetaField {
 
             if (value instanceof String) {
                 str = "\"" + value + "\"";
-            } else if (value instanceof Enum e) {
+            } else if (value instanceof Enum) {
+                Enum e = (Enum)value;
                 str = e.getDeclaringClass().getSimpleName() + "." + e.name();
             } else {
                 str = Objects.toString(value);
@@ -170,7 +171,8 @@ public abstract class MetaField {
         public String getDescription() {
             String desc = "";
 
-            if (member instanceof Field field) {
+            if (member instanceof Field) {
+                Field field = (Field)member;
                 Description description = field.getAnnotation(Description.class);
                 desc = (description == null) ? "" : description.value();
             }
@@ -182,10 +184,12 @@ public abstract class MetaField {
         public MetaClass getItemType() {
             Class<?> itemType = Object.class;
 
-            if (member instanceof Field field) {
+            if (member instanceof Field) {
+                Field field = (Field)member;
                 Type type = field.getGenericType();
 
-                if (type instanceof ParameterizedType pt) {
+                if (type instanceof ParameterizedType) {
+                    ParameterizedType pt = (ParameterizedType)type;
                     Type[] types = pt.getActualTypeArguments();
                     if (types[0] instanceof Class) {
                         itemType = (Class<?>) types[0];
@@ -215,9 +219,11 @@ public abstract class MetaField {
         public MetaClass getType() {
             Class type = null;
 
-            if (member instanceof Field field) {
+            if (member instanceof Field) {
+                Field field = (Field)member;
                 type = field.getType();
-            } else if (member instanceof DynamicPackage.Reference reference) {
+            } else if (member instanceof DynamicPackage.Reference) {
+                DynamicPackage.Reference reference = (DynamicPackage.Reference)member;
                 Field opposite = reference.getOppositeField();
                 type = opposite.getDeclaringClass();
             }
@@ -264,7 +270,8 @@ public abstract class MetaField {
         public boolean isReadOnly() {
             boolean readOnly = false;
 
-            if (member instanceof Field field) {
+            if (member instanceof Field) {
+                Field field = (Field)member;
                 Class claz = field.getDeclaringClass();
                 boolean immutable = MetaClass.of(claz).isImmutable();
                 boolean isFinal = isFinal();
@@ -283,7 +290,8 @@ public abstract class MetaField {
         public boolean isComponent() {
             boolean component = false;
 
-            if (member instanceof Field field) {
+            if (member instanceof Field) {
+                Field field = (Field)member;
                 component = field.getAnnotation(Component.class) != null;
             }
 

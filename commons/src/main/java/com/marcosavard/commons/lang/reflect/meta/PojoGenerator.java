@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class PojoGenerator {
     protected final File outputFolder;
@@ -343,7 +344,9 @@ public abstract class PojoGenerator {
     }
 
     protected void generateParameterlessConstructorBody(FormatWriter w, MetaClass mc) {
-        List<MetaField> requiredFields = mc.getVariables().stream().filter(mf -> ! mf.isOptional()).toList();
+        List<MetaField> requiredFields = mc.getVariables().stream()
+                .filter(mf -> ! mf.isOptional())
+                .collect(Collectors.toList());
 
         w.indent();
         for (MetaField mf : requiredFields) {
@@ -746,7 +749,7 @@ public abstract class PojoGenerator {
         List<MetaField> fields = allVariables.stream()
                 .filter(mf -> immutable || ! mf.isOptional())
                 .filter(mf -> ! (mf instanceof MetaReference))
-                .toList();
+                .collect(Collectors.toList());
         return fields;
     }
 
@@ -755,7 +758,7 @@ public abstract class PojoGenerator {
         List<MetaField> allVariables = mc.getVariables();
         List<MetaField> fields = allVariables.stream()
                 .filter(mf -> immutable || ! mf.isOptional())
-                .toList();
+                .collect(Collectors.toList());
         return fields;
     }
 
@@ -773,7 +776,7 @@ public abstract class PojoGenerator {
                 .filter(mf -> ! mf.isStatic())
                 .filter(mf -> ! mf.isComponent())
                 .filter(mf -> ! mf.getType().isCollection())
-                .toList();
+                .collect(Collectors.toList());
 
         constructorFields.addAll(requiredFields);
         return constructorFields;

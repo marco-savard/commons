@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MetaClass {
     private MetaPackage ownerPackage;
@@ -35,7 +36,8 @@ public abstract class MetaClass {
     public boolean equals(Object other) {
         boolean equal = false;
 
-        if (other instanceof MetaClass that) {
+        if (other instanceof MetaClass) {
+            MetaClass that = (MetaClass)other;
             equal = getName().equals(that.getName());
         }
 
@@ -109,15 +111,15 @@ public abstract class MetaClass {
     }
 
     public List<MetaField> getConstants() {
-        return Arrays.stream(getDeclaredFields()).filter(f -> f.isConstant()).toList();
+        return Arrays.stream(getDeclaredFields()).filter(f -> f.isConstant()).collect(Collectors.toList());
     }
 
     public List<MetaField> getAllVariables() {
-        return Arrays.stream(getFields()).filter(f -> ! f.isConstant()).toList();
+        return Arrays.stream(getFields()).filter(f -> ! f.isConstant()).collect(Collectors.toList());
     }
 
     public List<MetaField> getVariables() {
-        return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).toList();
+        return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).collect(Collectors.toList());
     }
 
     public abstract boolean hasSuperClass();

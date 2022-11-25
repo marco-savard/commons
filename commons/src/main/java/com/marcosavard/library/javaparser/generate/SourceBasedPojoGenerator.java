@@ -35,7 +35,8 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
             List<Node> nodes = type.getChildNodes();
 
             for (Node node : nodes) {
-                if (node instanceof TypeDeclaration<?> td) {
+                if (node instanceof TypeDeclaration<?>) {
+                    TypeDeclaration<?> td = (TypeDeclaration<?>)node;
                     MetaClass mc = new SourceMetaClass(mp, td);
                     metaClasses.add(mc);
                 }

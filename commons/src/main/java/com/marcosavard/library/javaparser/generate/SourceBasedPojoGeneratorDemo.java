@@ -39,7 +39,7 @@ public class SourceBasedPojoGeneratorDemo {
     private static void generate(File outputFolder, File sourceFile) {
         try {
             JavaParser parser = new JavaParser();
-            CompilationUnit cu = parser.parse(sourceFile).getResult().orElse(null);
+            CompilationUnit cu = parser.parse(sourceFile);
 
             //new
             SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);

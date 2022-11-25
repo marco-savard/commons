@@ -6,6 +6,7 @@ import com.marcosavard.commons.util.ArrayUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // https://dgeq.org/donnees.html
 public class ElectionDemo {
@@ -29,16 +30,16 @@ public class ElectionDemo {
         electeurs.stream()
             .filter(
                 e -> Arrays.binarySearch(circonscriptionsVilleQc, e.getCodeCirconscription()) >= 0)
-            .toList();
+            .collect(Collectors.toList());
     List<ElecteurInscrit> electeursMtl =
         electeurs.stream()
             .filter(e -> Arrays.binarySearch(circonscriptionsMtl, e.getCodeCirconscription()) >= 0)
-            .toList();
+                .collect(Collectors.toList());
     List<ElecteurInscrit> electeursLaval =
         electeurs.stream()
             .filter(
                 e -> Arrays.binarySearch(circonscriptionsLaval, e.getCodeCirconscription()) >= 0)
-            .toList();
+                .collect(Collectors.toList());
 
     double nbElecteurs =
         electeurs.stream().mapToDouble(e -> e.getNbElecteursApres()).average().orElse(0.0);

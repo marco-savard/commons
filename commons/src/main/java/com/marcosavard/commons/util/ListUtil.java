@@ -10,7 +10,7 @@ public class ListUtil {
 
   public static <T> void ensureSize(List<T> list, int size) {
     // Prevent excessive copying while we're adding
-    if (list instanceof ArrayList<T>) {
+    if (list instanceof ArrayList) {
       ((ArrayList) list).ensureCapacity(size);
     }
 

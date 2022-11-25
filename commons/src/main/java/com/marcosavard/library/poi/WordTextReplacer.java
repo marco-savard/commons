@@ -69,14 +69,15 @@ public class WordTextReplacer {
     }
 
     public void replace(XWPFParagraph paragraph) {
+        /* TODO
         List<XWPFRun> runs =  paragraph.getRuns();
         for (XWPFRun run : runs) {
             replace(run);
-        }
+        }*/
     }
 
     public void replace(XWPFRun run) {
-        String text = run.getText(0);
+        String text = ""; //TODO run.getText(0);
         text = (text == null) ? "" : text;
         boolean changed = false;
 
@@ -104,7 +105,7 @@ public class WordTextReplacer {
         }
 
         if (changed) {
-            run.setText(text, 0);
+            //TODO run.setText(text, 0);
         }
     }
 }

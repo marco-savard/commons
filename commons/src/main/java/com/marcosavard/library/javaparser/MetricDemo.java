@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class MetricDemo {
   private static final File sourceFolder =
@@ -28,8 +29,8 @@ public class MetricDemo {
 
     List<File> sourceFiles = getSourceFiles();
     List<File> selection =
-        sourceFiles.stream().filter(f -> !f.getName().endsWith("Demo.java")).toList();
-    selection = selection.stream().filter(f -> !f.getPath().contains("meta")).toList();
+        sourceFiles.stream().filter(f -> !f.getName().endsWith("Demo.java")).collect(Collectors.toList());
+    selection = selection.stream().filter(f -> !f.getPath().contains("meta")).collect(Collectors.toList());
 
     for (Metric metric : metrics) {
       computeMetric(metric, selection);
@@ -74,9 +75,8 @@ public class MetricDemo {
 
     for (File file : sourceFiles) {
       try {
-        ParseResult<CompilationUnit> result = parser.parse(file);
-        CompilationUnit unit = result.getResult().orElse(null);
-        parsedFiles.put(file, unit);
+        CompilationUnit cu = parser.parse(file) ;
+        parsedFiles.put(file, cu);
       } catch (FileNotFoundException e) {
         // ignore
       }

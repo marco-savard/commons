@@ -15,7 +15,8 @@ public abstract class MetaPackage {
     public boolean equals(Object other) {
         boolean equal = false;
 
-        if (other instanceof MetaPackage that) {
+        if (other instanceof MetaPackage) {
+            MetaPackage that = (MetaPackage)other;
             equal = getName().equals(that.getName());
         }
 

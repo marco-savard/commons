@@ -46,7 +46,8 @@ public class SourceMetaField extends MetaField {
         AnnotationExpr annotation = findAnnotationByName(Description.class.getSimpleName());
         String description = "";
 
-        if (annotation instanceof SingleMemberAnnotationExpr sma) {
+        if (annotation instanceof SingleMemberAnnotationExpr) {
+            SingleMemberAnnotationExpr sma = (SingleMemberAnnotationExpr)annotation;
             description = (annotation == null) ? "" : sma.getMemberValue().toString();
         }
 
@@ -62,7 +63,8 @@ public class SourceMetaField extends MetaField {
         for (Node node : nodes) {
             String name = null;
 
-            if (node instanceof AnnotationExpr annotation) {
+            if (node instanceof AnnotationExpr) {
+                AnnotationExpr annotation = (AnnotationExpr)node;
                 name = annotation.getName().asString();
 
                 if (givenName.equals(name)) {
@@ -86,7 +88,8 @@ public class SourceMetaField extends MetaField {
         List<Node> nodes = type.getChildNodes();
 
         for (Node node : nodes) {
-            if (node instanceof ClassOrInterfaceType claz) {
+            if (node instanceof ClassOrInterfaceType) {
+                ClassOrInterfaceType claz = (ClassOrInterfaceType)node;
                 SourceMetaPackage mp = (SourceMetaPackage)declaringClass.getPackage();
                 itemType = SourceMetaClass.of(mp, claz);
             }
@@ -118,9 +121,11 @@ public class SourceMetaField extends MetaField {
     private String getSimpleName(Type type) {
         String simpleName = null;
 
-        if (type instanceof ClassOrInterfaceType claz) {
+        if (type instanceof ClassOrInterfaceType) {
+            ClassOrInterfaceType claz = (ClassOrInterfaceType)type;
             simpleName = claz.getName().asString();
-        } else if (type instanceof PrimitiveType primitive) {
+        } else if (type instanceof PrimitiveType) {
+            PrimitiveType primitive = (PrimitiveType)type;
             simpleName = primitive.asString();
         }
 
@@ -168,11 +173,11 @@ public class SourceMetaField extends MetaField {
     public boolean isOptional() {
         String name = null;
 
-        if (type.isClassOrInterfaceType()) {
-            ClassOrInterfaceType claz = type.asClassOrInterfaceType();
+        if (type instanceof ClassOrInterfaceType) {
+            ClassOrInterfaceType claz = (ClassOrInterfaceType)type;
             name = claz.getName().asString();
 
-            String nameWithScope = claz.getNameWithScope();
+            //String nameWithScope = claz.getNameWithScope();
             SimpleName simpleName = claz.getName();
             String id1 = simpleName.getIdentifier();
             String id2 = simpleName.getId();

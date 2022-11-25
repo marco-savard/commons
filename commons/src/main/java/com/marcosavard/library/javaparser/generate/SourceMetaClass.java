@@ -35,11 +35,11 @@ public class SourceMetaClass extends MetaClass {
     private static String getTypeName(Type type) {
         String typeName = "";
 
-        if (type.isClassOrInterfaceType()) {
-            ClassOrInterfaceType claz = type.asClassOrInterfaceType();
+        if (type instanceof ClassOrInterfaceType) {
+            ClassOrInterfaceType claz = (ClassOrInterfaceType)type;
             typeName = claz.getName().asString();
-        } else if (type.isPrimitiveType()) {
-            PrimitiveType primitiveType = type.asPrimitiveType();
+        } else if (type instanceof PrimitiveType) {
+            PrimitiveType primitiveType = (PrimitiveType)type;
             typeName = primitiveType.asString();
         }
 
@@ -51,17 +51,25 @@ public class SourceMetaClass extends MetaClass {
         this.typeDeclaration = typeDeclaration;
         this.simpleName = typeDeclaration.getName().asString();
 
-        String packageName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
+        String packageName = getFullyQualifiedName(typeDeclaration);
+        //String packageName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
         int idx = lastIndexOf(packageName, '.', 2);
         this.packageName = packageName.substring(0, idx);
         this.qualifiedName = this.packageName + "." + this.simpleName;
         mp.addClass(this.simpleName, this);
 
-        if (typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+        if (typeDeclaration instanceof ClassOrInterfaceDeclaration) {
+            ClassOrInterfaceDeclaration claz = (ClassOrInterfaceDeclaration)typeDeclaration;
             createClassFields(claz);
-        } else if (typeDeclaration instanceof EnumDeclaration enumDeclaration) {
+        } else if (typeDeclaration instanceof EnumDeclaration) {
+            EnumDeclaration enumDeclaration = (EnumDeclaration)typeDeclaration;
             createClassFields(enumDeclaration);
         }
+    }
+
+    private String getFullyQualifiedName(TypeDeclaration typeDeclaration) {
+        String qualifiedName = packageName + typeDeclaration.getName(); //true ?
+        return qualifiedName;
     }
 
     public SourceMetaClass(SourceMetaPackage mp, Type type) {
@@ -70,11 +78,11 @@ public class SourceMetaClass extends MetaClass {
         String simpleName = null;
         String qualifiedName = null;
 
-        if (type.isClassOrInterfaceType()) {
-            ClassOrInterfaceType claz = type.asClassOrInterfaceType();
+        if (type instanceof ClassOrInterfaceType) {
+            ClassOrInterfaceType claz = (ClassOrInterfaceType)type;
             simpleName = claz.getName().asString();
-        } else if (type.isPrimitiveType()) {
-            PrimitiveType pt = type.asPrimitiveType();
+        } else if (type instanceof PrimitiveType) {
+            PrimitiveType pt = (PrimitiveType)type;
             simpleName = pt.asString();
         }
 
@@ -100,7 +108,8 @@ public class SourceMetaClass extends MetaClass {
         String description = "";
 
         for (Node node : nodes) {
-            if (node instanceof SingleMemberAnnotationExpr annotation) {
+            if (node instanceof SingleMemberAnnotationExpr) {
+                SingleMemberAnnotationExpr annotation = (SingleMemberAnnotationExpr)node;
                 String name = annotation.getName().asString();
 
                 if (descriptionName.equals(name)) {
@@ -135,7 +144,8 @@ public class SourceMetaClass extends MetaClass {
     public MetaClass getSuperClass() {
         MetaClass superClass = null;
 
-        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration) {
+            ClassOrInterfaceDeclaration claz = (ClassOrInterfaceDeclaration)this.typeDeclaration;
             SourceMetaPackage mp = (SourceMetaPackage)this.getPackage();
             NodeList<ClassOrInterfaceType> extendedTypes = claz.getExtendedTypes();
             ClassOrInterfaceType type = extendedTypes.isEmpty() ? null : extendedTypes.get(0);
@@ -159,7 +169,8 @@ public class SourceMetaClass extends MetaClass {
     public boolean hasSuperClass() {
         boolean hasSuperClass = false;
 
-        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration) {
+            ClassOrInterfaceDeclaration claz = (ClassOrInterfaceDeclaration)this.typeDeclaration;
             NodeList<ClassOrInterfaceType> extendedTypes = claz.getExtendedTypes();
             hasSuperClass = ! extendedTypes.isEmpty();
         }
@@ -171,7 +182,8 @@ public class SourceMetaClass extends MetaClass {
     public boolean isAbstract() {
         boolean isAbstract = false;
 
-        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration) {
+            ClassOrInterfaceDeclaration claz = (ClassOrInterfaceDeclaration)this.typeDeclaration;
             isAbstract = claz.isAbstract();
         }
 
@@ -182,7 +194,8 @@ public class SourceMetaClass extends MetaClass {
     public boolean isCollection() {
         boolean collection = false;
 
-        if (this.type instanceof ClassOrInterfaceType claz) {
+        if (this.type instanceof ClassOrInterfaceType) {
+            ClassOrInterfaceType claz = (ClassOrInterfaceType)this.type;
             collection = isCollectionClass(claz);
         }
 
@@ -218,16 +231,18 @@ public class SourceMetaClass extends MetaClass {
 
     @Override
     public boolean isPrimitive() {
-        return (type == null) ? false : type.isPrimitiveType();
+        return (type == null) ? false : (type instanceof PrimitiveType);
     }
 
     @Override
     public boolean isPublic() {
         boolean isPublic = true;
 
-        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration claz) {
+        if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration) {
+            ClassOrInterfaceDeclaration claz = (ClassOrInterfaceDeclaration)this.typeDeclaration;
             isPublic = claz.isPublic();
-        } else if (this.typeDeclaration instanceof EnumDeclaration enu) {
+        } else if (this.typeDeclaration instanceof EnumDeclaration) {
+            EnumDeclaration enu = (EnumDeclaration)this.typeDeclaration;
             isPublic = enu.isPublic();
         }
 
