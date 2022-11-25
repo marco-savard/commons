@@ -53,7 +53,7 @@ public class PojoGenController {
         }
 
         processFile(file);
-        return "/pojogen";
+        return "pojogen";
     }
 
     private void processFile(MultipartFile file) {

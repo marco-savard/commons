@@ -52,7 +52,7 @@ public class MetricController {
         }
 
         processFile(file);
-        return "/metric";
+        return "metric";
     }
 
     private void processFile(MultipartFile file) {
