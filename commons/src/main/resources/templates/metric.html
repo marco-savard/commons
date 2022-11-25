@@ -29,11 +29,8 @@
     });
 
     if (response.status == 200) {
-      document.location.href = '/fileinfo'
+      document.location.href = '/metric/result'
     } else {
-      //const text = await response.text();
-     // alert("File not uploaded : " + response.status + "." + text);
-
       const json = await response.json();
       alert(response.status + " " + json.error + " : " + json.message);
     }
