@@ -52,51 +52,51 @@ public class EducationalNetworkReader {
 
     Organization organization = null;
 
-    if ("Regroupement légal(uni)".equals(type)) {
+    if ("Regroupement lÃ©gal(uni)".equals(type)) {
       organization =
           new UniversitySystem(network, region, code, nom, codePostal, latitude, longitude);
     } else if ("Constituante".equals(type)) {
       organization =
           new University(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Université".equals(type)) {
+    } else if ("UniversitÃ©".equals(type)) {
       organization =
           new University(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Org. décernant grade univ.".equals(type)) {
+    } else if ("Org. dÃ©cernant grade univ.".equals(type)) {
       organization =
           new University(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Cégep".equals(type)) {
+    } else if ("CÃ©gep".equals(type)) {
       organization = new College(network, region, code, nom, codePostal, latitude, longitude);
-    } else if ("Collège régional".equals(type)) {
+    } else if ("CollÃ¨ge rÃ©gional".equals(type)) {
       organization = new College(network, region, code, nom, codePostal, latitude, longitude);
-    } else if ("Entité juridique".equals(type)) {
+    } else if ("EntitÃ© juridique".equals(type)) {
       organization = new College(network, region, code, nom, codePostal, latitude, longitude);
     } else if ("Centre coll de transfert tech.".equals(type)) {
       organization =
           new Installation(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Campus collégial".equals(type)) {
+    } else if ("Campus collÃ©gial".equals(type)) {
       organization =
           new Installation(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Collège constituant".equals(type)) {
+    } else if ("CollÃ¨ge constituant".equals(type)) {
       organization =
           new Installation(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Collège privé".equals(type)) {
+    } else if ("CollÃ¨ge privÃ©".equals(type)) {
       organization =
           new School(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("École gouvernementale".equals(type)) {
+    } else if ("Ã‰cole gouvernementale".equals(type)) {
       organization =
           new School(network, region, code, codeParent, nom, codePostal, latitude, longitude);
     } else if ("Commission scolaire".equals(type)) {
       organization = new SchoolBoard(network, region, code, nom, codePostal, latitude, longitude);
-    } else if ("École".equals(type)) {
+    } else if ("Ã‰cole".equals(type)) {
       organization =
           new School(network, region, code, codeParent, nom, codePostal, latitude, longitude);
     } else if ("Centre de formation prof.".equals(type)) {
       organization =
           new School(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Centre éducation des adultes".equals(type)) {
+    } else if ("Centre Ã©ducation des adultes".equals(type)) {
       organization =
           new School(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Établissement d'enseignement".equals(type)) {
+    } else if ("Ã‰tablissement d'enseignement".equals(type)) {
       organization =
           new School(network, region, code, codeParent, nom, codePostal, latitude, longitude);
     } else if ("Centre d'enseignement".equals(type)) {
@@ -105,14 +105,14 @@ public class EducationalNetworkReader {
     } else if ("Installation".equals(type)) {
       organization =
           new Installation(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Installation du collège privé".equals(type)) {
+    } else if ("Installation du collÃ¨ge privÃ©".equals(type)) {
       organization =
           new Installation(network, region, code, codeParent, nom, codePostal, latitude, longitude);
-    } else if ("Étab. d'enseig. collège privé".equals(type)) {
+    } else if ("Ã‰tab. d'enseig. collÃ¨ge privÃ©".equals(type)) {
       organization =
           new Installation(network, region, code, codeParent, nom, codePostal, latitude, longitude);
     } else {
-      System.out.println(" NOt found" + type);
+      System.out.println(" Not found" + type);
     }
 
     return organization;
