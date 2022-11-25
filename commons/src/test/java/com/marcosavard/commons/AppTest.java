@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class AppTest {
 
     class Foo {
-        static String name = "Foo";
+        String name = "Foo";
        void print() {
           System.out.println(this.name);
        }
@@ -21,11 +21,12 @@ public class AppTest {
     class Bar extends Foo {
        String name = "Bar";
 
-       static void printName() {
+       void printName() {
            //super.print();
        }
 
     }
+
 
     public static void main(String[] args) {
         LocalTime time = LocalTime.of(1, 15, 30);

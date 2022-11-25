@@ -2,8 +2,7 @@ package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.geog.GeoLocation;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

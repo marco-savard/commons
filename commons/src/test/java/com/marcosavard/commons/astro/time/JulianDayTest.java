@@ -1,8 +1,8 @@
 package com.marcosavard.commons.astro.time;
 
 import com.marcosavard.commons.debug.StopWatch;
-import org.junit.Assert;
-import org.junit.Test;
+import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;

@@ -55,7 +55,7 @@ public class EducationalNetworkDemo {
   }
 
   private static void printUniversityNetwork(IndentWriter iw, EducationalNetwork network) {
-    iw.println("Réseau universitaire:");
+    iw.println("RÃ©seau universitaire:");
     iw.indent();
 
     List<UniversitySystem> systems = network.getUniversitySystems();
@@ -74,7 +74,7 @@ public class EducationalNetworkDemo {
   }
 
   private static void printCollegialNetwork(IndentWriter iw, EducationalNetwork network) {
-    iw.println("Réseau collégiale:");
+    iw.println("RÃ©seau collÃ©giale:");
     iw.indent();
 
     List<College> colleges = network.getColleges();
@@ -86,7 +86,7 @@ public class EducationalNetworkDemo {
   }
 
   private static void printGeneralNetwork(IndentWriter iw, EducationalNetwork network) {
-    iw.println("Réseau scolaire:");
+    iw.println("RÃ©seau scolaire:");
     iw.indent();
 
     for (RegionAdministrative region : RegionAdministrative.values()) {
@@ -97,7 +97,7 @@ public class EducationalNetworkDemo {
       List<SchoolBoard> schoolBoards = network.getSchoolBoardsByRegion(region);
 
       if (!schools.isEmpty()) {
-        iw.println("Ecoles privées et gouvernementales");
+        iw.println("Ecoles privÃ©es et gouvernementales");
         iw.indent();
 
         for (School school : schools) {

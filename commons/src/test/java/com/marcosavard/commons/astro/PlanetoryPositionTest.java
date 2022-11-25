@@ -2,8 +2,8 @@ package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.time.JulianDay;
-import org.junit.Assert;
-import org.junit.Test;
+import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 

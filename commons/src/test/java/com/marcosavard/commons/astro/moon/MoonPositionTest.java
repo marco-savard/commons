@@ -1,11 +1,12 @@
 package com.marcosavard.commons.astro.moon;
 
+import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class MoonPositionTest {
 

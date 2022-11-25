@@ -1,8 +1,8 @@
 package com.marcosavard.commons.math;
 
-import org.junit.Assert;
-import org.junit.Test;
 import com.marcosavard.commons.math.algebra.Interpolation;
+import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 public class InterpolationTest {
 	private static double DELTA = 0.01;
