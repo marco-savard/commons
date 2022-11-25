@@ -3,6 +3,7 @@ package com.marcosavard.webapp.controller;
 import com.marcosavard.webapp.model.FileData;
 import com.marcosavard.webapp.service.FileInfoService;
 import com.marcosavard.webapp.service.JavaMetricService;
+import com.marcosavard.webapp.service.PojoGenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class PojoGenController {
     private FileInfoService fileInfoService;
 
     @Autowired
-    private JavaMetricService javaMetricService;
+    private PojoGenService pojoGenService;
 
     @GetMapping("/pojogen")
     public String upload() {
@@ -64,7 +65,7 @@ public class PojoGenController {
             InputStream input = file.getInputStream();
             Reader reader = new InputStreamReader(input);
             FileData fileData = new FileData(file.getOriginalFilename(), file.getSize());
-            javaMetricService.process(reader, fileData);
+            pojoGenService.process(reader);
             reader.close();
 
             fileInfoService.process(fileData);
