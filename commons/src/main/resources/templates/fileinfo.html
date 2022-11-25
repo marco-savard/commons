@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Web Application</title>
+</head>
+<body>
+
+<table>
+    <thead>
+      <tr>
+          <th>Attribute</th>
+          <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr><td>File name</td><td th:text="${fileData.fileName}"></td></tr>
+        <tr><td>File size</td><td th:text="${fileData.fileSize}"></td></tr>
+        <tr><td>Nb. imports</td><td th:text="${fileData.nbImports}"></td></tr>
+        <tr><td>Genericity</td><td th:text="${fileData.genericity}"></td></tr>
+    </tbody>
+</table><br>
+
+<a th:href="@{|/download|}">Download File</a><br><br>
+
+</body>
+</html>
