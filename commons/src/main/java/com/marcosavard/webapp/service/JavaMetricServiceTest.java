@@ -19,15 +19,17 @@ public class JavaMetricServiceTest {
             JavaMetricService service = new JavaMetricService();
             Package pack = JavaMetricService.class.getPackage();
             List<File> sourceFiles = FileSystem.getSourceFiles(sourceFolder, pack);
-            File sourceFile = sourceFiles.get(0);
+            File sourceFile = sourceFiles.get(1);
             Reader reader = new FileReader(sourceFile);
-            String filename = sourceFile.getName() + ".java";
+            String filename = sourceFile.getName();
             long fileSize = sourceFile.length();
             FileData fileData = new FileData(filename, fileSize);
             service.process(reader, fileData);
             String nbImport = fileData.getNbImports();
             String genericity = fileData.getGenericity();
+            System.out.println(filename);
             System.out.println(nbImport);
+            System.out.println(genericity);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

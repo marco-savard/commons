@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-public class UploadController {
+public class MetricController {
     private static final long MAX_FILE_SIZE = 50 * 1024;
     @Autowired
     private FileInfoService fileInfoService;
@@ -28,12 +28,12 @@ public class UploadController {
     @Autowired
     private JavaMetricService javaMetricService;
 
-    @GetMapping("/upload")
+    @GetMapping("/metric")
     public String upload() {
-        return "upload";
+        return "metric";
     }
 
-    @PostMapping("/uploadFile")
+    @PostMapping("/metric/upload")
     public String uploadFile(
             HttpServletRequest request,
             @RequestParam("file") MultipartFile file) {
@@ -52,7 +52,7 @@ public class UploadController {
         }
 
         processFile(file);
-        return "upload";
+        return "/metric";
     }
 
     private void processFile(MultipartFile file) {
