@@ -20,10 +20,6 @@ public class FileInfoController {
         model.addAttribute("fileData", fileData);
 
 
-       // model.addAttribute("fileName", fileName);
-       // model.addAttribute("fileSize", fileSize);
-       // model.addAttribute("nbImports", nbImports);
-
         return "fileinfo";
     }
 }

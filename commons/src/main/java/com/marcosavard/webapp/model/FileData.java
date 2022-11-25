@@ -10,11 +10,9 @@ public class FileData {
 
     private String genericity;
 
-    public FileData(Map<String, String> fileProperties) {
-        fileName = fileProperties.get("fileName");
-        fileSize = fileProperties.get("fileSize");
-        nbImports = fileProperties.get("nbImports");
-        genericity = fileProperties.get("genericity");
+    public FileData(String fileName, long fileSize) {
+        this.fileName = fileName;
+        this.fileSize = fileSize + " B";
     }
 
     public String getFileName() {return fileName;}
@@ -24,4 +22,12 @@ public class FileData {
     public String getNbImports() {return nbImports;}
 
     public String getGenericity() {return genericity;}
+
+    public void setNbImports(int nbImports) {
+        this.nbImports = Integer.toString(nbImports);
+    }
+
+    public void setGenericity(double percent) {
+        this.genericity = percent + " %";
+    }
 }

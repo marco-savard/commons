@@ -63,10 +63,10 @@ public class UploadController {
 
             InputStream input = file.getInputStream();
             Reader reader = new InputStreamReader(input);
-            javaMetricService.process(reader, fileProperties);
+            FileData fileData = new FileData(file.getOriginalFilename(), file.getSize());
+            javaMetricService.process(reader, fileData);
             reader.close();
 
-            FileData fileData = new FileData(fileProperties);
             fileInfoService.process(fileData);
         } catch (IOException e) {
             throw new RuntimeException(e);
