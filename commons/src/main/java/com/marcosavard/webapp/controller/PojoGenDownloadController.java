@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class PojoGenDownloadController {
@@ -14,14 +17,18 @@ public class PojoGenDownloadController {
         try {
             File tmpFolder = FileSystem.getTemporaryFolder();
             File pojogen = new File(tmpFolder, "pojogen");
-            File textFile = new File(pojogen, "text.txt");
-            downloadFile(response, textFile);
+           // File textFile = new File(pojogen, "text.txt");
+            downloadFile(response, pojogen);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private void downloadFile(HttpServletResponse response, File file) throws IOException {
+    private void downloadFile(HttpServletResponse response, File pojogen) throws IOException {
+        File[] files = pojogen.listFiles();
+        List<File> javaFiles = Arrays.stream(files).filter(f -> getExtention(f).equals(".java")).collect(Collectors.toList());
+        File file = javaFiles.get(0);
+
         String fileName = file.getName();
         response.setContentType("test/plain");
         String headerKey = "Content-Disposition";
@@ -32,7 +39,7 @@ public class PojoGenDownloadController {
         BufferedReader br = new BufferedReader(r);
         String line;
 
-        response.getOutputStream();
+        //response.getOutputStream();
 
         do {
             line = br.readLine();
@@ -44,5 +51,12 @@ public class PojoGenDownloadController {
         br.close();
         r.close();
         response.getWriter().close();
+    }
+
+    private String getExtention(File file) {
+        String filename = file.getName();
+        int idx = filename.lastIndexOf('.');
+        String ext = (idx == -1) ? "" : filename.substring(idx);
+        return ext;
     }
 }

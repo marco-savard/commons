@@ -68,7 +68,7 @@ public class PojoGenController {
             pojoGenService.process(reader);
             reader.close();
 
-            fileInfoService.process(fileData);
+           // fileInfoService.process(fileData);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
