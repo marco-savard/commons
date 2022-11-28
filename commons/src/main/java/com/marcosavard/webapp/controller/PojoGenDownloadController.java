@@ -32,6 +32,8 @@ public class PojoGenDownloadController {
         BufferedReader br = new BufferedReader(r);
         String line;
 
+        response.getOutputStream();
+
         do {
             line = br.readLine();
             if (line != null) {

@@ -5,11 +5,13 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
+import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
 public class SourceBasedPojoGeneratorDemo {
@@ -43,30 +45,13 @@ public class SourceBasedPojoGeneratorDemo {
 
             //new
             SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
-            List<File> generatedFiles = pojoGenerator.generate(cu);
+            List<MetaClass> generatedClasses = pojoGenerator.generate(cu);
 
-            for (File file : generatedFiles) {
+            for (MetaClass mc : generatedClasses) {
+                File file = pojoGenerator.generateFile(mc);
                 Console.println("File {0} generated", file.getName());
             }
 
-            /*
-
-            NodeList<TypeDeclaration<?>> types = cu.getTypes();
-
-            for (TypeDeclaration type : types) {
-                List<Node> nodes = type.getChildNodes();
-
-                for (Node node : nodes) {
-                    if (node instanceof TypeDeclaration<?> td) {
-                        File generatedFile = generateType(outputFolder, cu, td);
-                        Console.println("File {0} generated", generatedFile.getName());
-                    }
-                }
-            }
-            
-            cu.getTypes();
-
-             */
 
         } catch (IOException e) {
             throw new RuntimeException(e);

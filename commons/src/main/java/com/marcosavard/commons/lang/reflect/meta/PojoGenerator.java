@@ -74,7 +74,7 @@ public abstract class PojoGenerator {
 
     protected abstract List<MetaClass> getSubClasses(MetaClass mc);
 
-    public File generateClass(MetaClass mc) throws IOException {
+    public File generateFile(MetaClass mc) throws IOException {
         Console.println("Generating code for {0}", mc.getSimpleName());
 
         // create folder
@@ -87,14 +87,19 @@ public abstract class PojoGenerator {
         String filename = mc.getSimpleName() + ".java";
         File generated = new File(subfolder, filename);
         Writer w = new FileWriter(generated);
-        FormatWriter fw = new FormatWriter(w, indentation);
-
-        // generate code
-        generateType(fw, packageName, mc);
-        fw.close();
+        generateClass(mc, w);
 
         return generated;
     }
+
+    public void generateClass(MetaClass mc, Writer w) {
+        // generate code
+        FormatWriter fw = new FormatWriter(w, indentation);
+        String packageName = mc.getPackageName();
+        generateType(fw, packageName, mc);
+        fw.close();
+    }
+
 
     protected void generateType(FormatWriter w, String packageName, MetaClass mc) {
         w.println("package {0};", packageName);

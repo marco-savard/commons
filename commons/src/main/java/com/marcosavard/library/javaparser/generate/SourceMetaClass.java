@@ -46,12 +46,12 @@ public class SourceMetaClass extends MetaClass {
         return typeName;
     }
 
-    public SourceMetaClass(SourceMetaPackage mp, TypeDeclaration typeDeclaration) {
+    public SourceMetaClass(SourceMetaPackage mp, CompilationUnit cu, TypeDeclaration typeDeclaration) {
         super(mp);
         this.typeDeclaration = typeDeclaration;
         this.simpleName = typeDeclaration.getName().asString();
 
-        String packageName = getFullyQualifiedName(typeDeclaration);
+        String packageName = getFullyQualifiedName(cu, typeDeclaration);
         //String packageName = (String)typeDeclaration.getFullyQualifiedName().orElse(null);
         int idx = lastIndexOf(packageName, '.', 2);
         this.packageName = packageName.substring(0, idx);
@@ -67,8 +67,10 @@ public class SourceMetaClass extends MetaClass {
         }
     }
 
-    private String getFullyQualifiedName(TypeDeclaration typeDeclaration) {
-        String qualifiedName = packageName + typeDeclaration.getName(); //true ?
+    private String getFullyQualifiedName(CompilationUnit cu, TypeDeclaration typeDeclaration) {
+        PackageDeclaration packageDecl = cu.getPackageDeclaration().orElse(null);
+        String packageName = packageDecl.getNameAsString();
+        String qualifiedName = packageName + "." + typeDeclaration.getName(); //true ?
         return qualifiedName;
     }
 

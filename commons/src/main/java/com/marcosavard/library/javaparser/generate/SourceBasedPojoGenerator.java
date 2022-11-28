@@ -11,6 +11,8 @@ import com.marcosavard.commons.lang.reflect.meta.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PipedWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
     }
 
     //entry point
-    public List<File> generate(CompilationUnit cu) throws IOException {
+    public List<MetaClass> generate(CompilationUnit cu) throws IOException {
         //pass 1 : generate meta classes
         PackageDeclaration pack = cu.getPackageDeclaration().orElse(null);
         SourceMetaPackage mp = new SourceMetaPackage(cu, pack);
@@ -37,7 +39,7 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
             for (Node node : nodes) {
                 if (node instanceof TypeDeclaration<?>) {
                     TypeDeclaration<?> td = (TypeDeclaration<?>)node;
-                    MetaClass mc = new SourceMetaClass(mp, td);
+                    MetaClass mc = new SourceMetaClass(mp, cu, td);
                     metaClasses.add(mc);
                 }
             }
@@ -59,13 +61,12 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         //pass 3 : fill meta classes
         for (MetaClass mc : metaClasses) {
-            File generated = generateClass(mc);
+            File generated = generateFile(mc);
             generatedFiles.add(generated);
         }
 
-        return generatedFiles;
+        return metaClasses;
     }
-
 
     @Override
     protected String getInitialValue(MetaField mf) {
@@ -97,6 +98,7 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         return subclasses;
     }
+
 
 
 }

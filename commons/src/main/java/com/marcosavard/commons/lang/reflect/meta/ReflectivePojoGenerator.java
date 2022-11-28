@@ -25,7 +25,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
     for (Class claz : dynamicPackage.classes) {
       MetaClass mc = MetaClass.of(claz);
-      generatedFiles.add(generateClass(mc));
+      generatedFiles.add(generateFile(mc));
     }
 
     return generatedFiles;
@@ -33,7 +33,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
   public File generate(Class<?> claz) throws IOException {
     MetaClass mc = MetaClass.of(claz);
-    return generateClass(mc);
+    return generateFile(mc);
   }
 
   @Override
@@ -65,7 +65,6 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     constructorFields.addAll(requiredFields);
     return constructorFields;
   }
-
 
   @Override
   protected String getInitialValue(MetaField mf) {

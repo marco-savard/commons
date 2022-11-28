@@ -17,6 +17,10 @@ public class PojoGenService {
             File pojogen = new File(tmpFolder, "pojogen");
             pojogen.mkdir();
 
+            //TODO generate text files
+            //TODO zip them
+            //TODO put the zip in temp
+
             File textFile = new File(pojogen, "text.txt");
             Writer w = new FileWriter(textFile);
             PrintWriter pw = new PrintWriter(w);
