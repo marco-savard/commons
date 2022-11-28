@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller
-public class DownloadController {
-    @GetMapping("/download")
+public class MetricDownloadController {
+    @GetMapping("/metric/download")
     public void download(HttpServletResponse response) {
         try {
             String fileName = "result.txt";

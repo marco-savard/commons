@@ -19,6 +19,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     dynamicPackage = new DynamicPackage(classes);
   }
 
+  @Override
   public List<File> generate() throws IOException {
     dynamicPackage.buildReferenceByClass(containerName);
     List<File> generatedFiles = new ArrayList<>();

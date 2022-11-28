@@ -7,6 +7,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
@@ -65,6 +66,14 @@ public class SourceMetaField extends MetaField {
 
             if (node instanceof AnnotationExpr) {
                 AnnotationExpr annotation = (AnnotationExpr)node;
+                name = annotation.getName().asString();
+
+                if (givenName.equals(name)) {
+                    foundAnnotation = annotation;
+                    break;
+                }
+            } else if (node instanceof MarkerAnnotationExpr) {
+                MarkerAnnotationExpr annotation = (MarkerAnnotationExpr)node;
                 name = annotation.getName().asString();
 
                 if (givenName.equals(name)) {

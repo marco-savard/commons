@@ -187,6 +187,9 @@ public class SourceMetaClass extends MetaClass {
         if (this.typeDeclaration instanceof ClassOrInterfaceDeclaration) {
             ClassOrInterfaceDeclaration claz = (ClassOrInterfaceDeclaration)this.typeDeclaration;
             isAbstract = claz.isAbstract();
+        } else if ((this.type instanceof ClassOrInterfaceType)) {
+            ClassOrInterfaceType claz = (ClassOrInterfaceType)this.type;
+            String name = claz.getName().asString();
         }
 
         return isAbstract;
@@ -275,7 +278,7 @@ public class SourceMetaClass extends MetaClass {
     private int lastIndexOf(String str, char ch, int position) {
         int idx = str.length();
 
-        for (int i=0; i<=position; i++) {
+        for (int i=0; i<position; i++) {
             idx = str.lastIndexOf(ch, idx - 1);
         }
 

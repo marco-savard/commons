@@ -1,9 +1,13 @@
 package com.marcosavard.webapp.service;
 
 import com.marcosavard.commons.io.FileSystem;
+import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
+import com.marcosavard.library.javaparser.generate.SourceBasedPojoGenerator;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class PojoGenService {
@@ -16,6 +20,10 @@ public class PojoGenService {
             File tmpFolder = FileSystem.getTemporaryFolder();
             File pojogen = new File(tmpFolder, "pojogen");
             pojogen.mkdir();
+
+            //generate Java files
+            PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(pojogen, reader);
+            List<File> generatedFiles = pojoGenerator.generate();
 
             //TODO generate text files
             //TODO zip them

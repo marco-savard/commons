@@ -32,6 +32,8 @@ public abstract class PojoGenerator {
 
     protected String containerName = "owner";
 
+    public abstract List<File> generate() throws IOException;
+
     public enum AccessorOrder {
         GROUPED_BY_PROPERTIES,
         GROUPED_BY_GETTERS_SETTERS
@@ -238,7 +240,7 @@ public abstract class PojoGenerator {
         List<MetaField> fields = mc.getVariables();
 
         if (reference != null) {
-            generateReference(w, reference);
+            //generateReference(w, reference);
         }
 
         for (MetaField field : fields) {
@@ -771,7 +773,7 @@ public abstract class PojoGenerator {
         MetaClass superClass = (mc == null) ? null : mc.getSuperClass();
         List<MetaField> constructorFields = (superClass != null) ? getConstructorFields(superClass): new ArrayList<>();
 
-        MetaField reference = getReferenceForClass(mc);
+        MetaField reference = (mc == null) ? null : getReferenceForClass(mc);
         if (reference != null) {
             constructorFields.add(reference);
         }
@@ -781,6 +783,7 @@ public abstract class PojoGenerator {
                 .filter(mf -> ! mf.isStatic())
                 .filter(mf -> ! mf.isComponent())
                 .filter(mf -> ! mf.getType().isCollection())
+                .filter(mf -> ! mf.getName().equals(containerName))
                 .collect(Collectors.toList());
 
         constructorFields.addAll(requiredFields);
