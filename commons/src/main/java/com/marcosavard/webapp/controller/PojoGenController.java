@@ -1,5 +1,6 @@
 package com.marcosavard.webapp.controller;
 
+import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.webapp.model.PojoModel;
 import com.marcosavard.webapp.service.PojoGenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +52,18 @@ public class PojoGenController {
 
     private void processFile(MultipartFile file) {
         try {
-            String originalFilename = file.getOriginalFilename();
-            int idx = originalFilename.lastIndexOf('.');
-            String filename = originalFilename.substring(0, idx) + ".zip";
+            String sourceFile = file.getOriginalFilename();
+            PojoModel pojoModel = new PojoModel(sourceFile, file.getSize());
+            String generatedFile = pojoModel.getGeneratedFile();
+            String model = pojoModel.getModelAsString();
+            long sourceLoc = StringUtil.countCharacters(model, '\n');
+
+            /*
             Map<String, String> fileProperties = new HashMap<>();
-            fileProperties.put("fileName", filename);
-            fileProperties.put("fileSize", file.getSize() + " B");
-            PojoModel pojoModel = new PojoModel(filename, file.getSize());
+            fileProperties.put("sourceLoc", Long.toString(sourceLoc));
+            fileProperties.put("sourceFile", sourceFile);
+            fileProperties.put("generatedFile", generatedFile);
+            fileProperties.put("fileSize", file.getSize() + " B");*/
 
             InputStream input = file.getInputStream();
             Reader reader = new InputStreamReader(input);
@@ -82,6 +88,8 @@ public class PojoGenController {
             throw new RuntimeException(e);
         }
     }
+
+
 
     private static class FileTooLargeException extends RuntimeException {
         public FileTooLargeException(MultipartFile file) {

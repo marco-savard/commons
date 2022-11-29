@@ -24,12 +24,12 @@ public class PojoGenService {
         return pojoModel;
     }
 
-    public Map<String, String> process(PojoModel pojoModel) {
+    public void process(PojoModel pojoModel) {
         //generate Java files
         Reader reader = new StringReader(pojoModel.getModelAsString());
-        Map<String, String> codeByClassName = new HashMap<>();
-        PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByClassName);
+        Map<String, String> pojoByClassName = new HashMap<>();
+        PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, pojoByClassName);
         pojoGenerator.generatePojos();
-        return codeByClassName;
+        pojoModel.storePojos(pojoByClassName);
     }
 }

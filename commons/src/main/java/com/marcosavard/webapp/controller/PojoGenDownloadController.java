@@ -1,7 +1,5 @@
 package com.marcosavard.webapp.controller;
 
-import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
-import com.marcosavard.library.javaparser.generate.SourceBasedPojoGenerator;
 import com.marcosavard.webapp.model.PojoModel;
 import com.marcosavard.webapp.service.PojoGenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -31,7 +28,7 @@ public class PojoGenDownloadController {
 
     private void downloadFile(HttpServletResponse response) throws IOException {
         PojoModel pojoModel = pojoGenService.getPojoModel();
-        String fileName = pojoModel.getFileName();
+        String fileName = pojoModel.getGeneratedFile();
         response.setContentType("application/zip");
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"", fileName);
@@ -43,12 +40,8 @@ public class PojoGenDownloadController {
     }
 
     private void writeContent(PojoModel pojoModel, OutputStream output) throws IOException {
-        String model = pojoModel.getModelAsString();
-        Reader reader = new StringReader(model);
-        Map<String, String> codeByClassName = new HashMap<>();
-        PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByClassName);
-        pojoGenerator.generatePojos();
         ZipOutputStream zos =  new ZipOutputStream(new BufferedOutputStream(output));
+        Map<String, String> codeByClassName = pojoModel.getPojos();
 
         for (String className : codeByClassName.keySet()) {
             String filename = className + ".java";

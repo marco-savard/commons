@@ -15,16 +15,15 @@
       </tr>
     </thead>
     <tbody>
-    <!--
-        <tr><td>File name</td><td th:text="${fileData.fileName}"></td></tr>
-        <tr><td>File size</td><td th:text="${fileData.fileSize}"></td></tr>
-        <tr><td>Nb. imports</td><td th:text="${fileData.nbImports}"></td></tr>
-        <tr><td>Genericity</td><td th:text="${fileData.genericity}"></td></tr>
-        -->
+      <tr><td>Source file:</td><td th:text="${sourceFile}"></td></tr>
+      <tr><td>LOC in source file:</td><td th:text="${sourceLoc}"></td></tr>
+      <tr><td>Generated file:</td><td th:text="${generatedFile}"></td></tr>
+      <tr><td>Nb. of POJOs generated</td><td th:text="${nbPojos}"></td></tr>
+      <tr><td>Nb. of LOCs generated</td><td th:text="${generatedLOC}"></td></tr>
     </tbody>
 </table><br>
 
-<a th:href="@{|/pojogen/download|}">Download File</a><br><br>
+<a th:href="@{|/pojogen/download|}" th:text="${generatedFile}">Download</a><br><br>
 
 </body>
 </html>

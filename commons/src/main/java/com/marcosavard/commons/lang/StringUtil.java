@@ -20,7 +20,6 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
-
     public enum Alignment {
     LEFT,
     RIGHT
@@ -122,6 +121,11 @@ public class StringUtil {
       CharSequence original, CharSequence other, Locale locale) {
     return stripAccents(toLowerCase(original, locale))
         .compareToIgnoreCase(stripAccents(toLowerCase(other, locale)));
+  }
+
+  public static long countCharacters(String str, char given) {
+    long count = str.chars().filter(ch -> ch == given).count();
+    return count;
   }
 
   // count occurrences of substring in str
