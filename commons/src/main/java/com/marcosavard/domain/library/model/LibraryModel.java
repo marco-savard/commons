@@ -2,9 +2,7 @@ package com.marcosavard.domain.library.model;
 
 import com.marcosavard.commons.lang.reflect.meta.annotations.Component;
 import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
-import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 
-import java.lang.annotation.Documented;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +31,4 @@ public class LibraryModel {
     public enum BookCategory {
         SCIENCE_FICTION, BIOGRAPHY, MYSTERY
     }
-
-
 }
-
-
-
-

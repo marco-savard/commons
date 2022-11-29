@@ -1,0 +1,25 @@
+body {
+  padding-top: 1rem;
+}
+
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+h1 {
+	color:#0000FF;
+}
+
+h2 {
+	color:#FF0000;
+}
+
+tbody td {
+  color:#0000FF;
+  padding: 30px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #dddddd;
+}
