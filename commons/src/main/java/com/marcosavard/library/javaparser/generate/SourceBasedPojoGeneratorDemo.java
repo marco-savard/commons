@@ -7,18 +7,19 @@ import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
+import com.marcosavard.domain.library.model.LibraryModel;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SourceBasedPojoGeneratorDemo {
 
     public static void main(String[] args) {
         File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        File sourceFile = getSourceFile(PurchaseOrderModel.class);
+        File sourceFile = getSourceFile(LibraryModel.class);
         generate(outputFolder, sourceFile);
     }
 
@@ -41,16 +42,18 @@ public class SourceBasedPojoGeneratorDemo {
     private static void generate(File outputFolder, File sourceFile) {
         try {
             JavaParser parser = new JavaParser();
-            CompilationUnit cu = parser.parse(sourceFile);
+            Reader r = new FileReader(sourceFile); 
+            CompilationUnit cu = parser.parse(r);
+            r.close();
+
 
             //new
-            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
-            List<MetaClass> generatedClasses = pojoGenerator.generate(cu);
+            Map<String, String> codeByFileName = new HashMap<>();
+            Reader reader = new FileReader(sourceFile);
+            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByFileName);
+            pojoGenerator.generatePojos();
 
-            for (MetaClass mc : generatedClasses) {
-                File file = pojoGenerator.generateFile(mc);
-                Console.println("File {0} generated", file.getName());
-            }
+
 
 
         } catch (IOException e) {
@@ -63,7 +66,7 @@ public class SourceBasedPojoGeneratorDemo {
 
        // try {
           //  MetaClass mc = new SourceMetaClass(cu, typeDeclaration);
-            PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
+          //  PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
            // generated = pojoGenerator.generateClass(mc);
       //  } catch (IOException e) {
      //       throw new RuntimeException(e);

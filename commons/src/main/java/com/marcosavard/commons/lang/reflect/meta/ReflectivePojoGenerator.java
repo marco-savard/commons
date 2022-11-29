@@ -14,27 +14,24 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
   private DynamicPackage dynamicPackage;
 
-  public ReflectivePojoGenerator(File outputFolder, Class<?>[] classes) {
-    super(outputFolder);
+  public ReflectivePojoGenerator(Map<String, String> codeByFileName, Class<?>[] classes) {
+    super(codeByFileName);
     dynamicPackage = new DynamicPackage(classes);
   }
 
   @Override
-  public List<File> generate() throws IOException {
+  public void generatePojos() {
     dynamicPackage.buildReferenceByClass(containerName);
-    List<File> generatedFiles = new ArrayList<>();
 
     for (Class claz : dynamicPackage.classes) {
       MetaClass mc = MetaClass.of(claz);
-      generatedFiles.add(generateFile(mc));
+      generatePojo(mc);
     }
-
-    return generatedFiles;
   }
 
-  public File generate(Class<?> claz) throws IOException {
+  public void generate(Class<?> claz) throws IOException {
     MetaClass mc = MetaClass.of(claz);
-    return generateFile(mc);
+    generatePojo(mc);
   }
 
   @Override

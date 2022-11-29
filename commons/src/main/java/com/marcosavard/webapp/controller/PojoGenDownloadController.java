@@ -1,82 +1,67 @@
 package com.marcosavard.webapp.controller;
 
-import com.marcosavard.commons.io.FileSystem;
+import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
+import com.marcosavard.library.javaparser.generate.SourceBasedPojoGenerator;
+import com.marcosavard.webapp.model.PojoModel;
+import com.marcosavard.webapp.service.PojoGenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Controller
 public class PojoGenDownloadController {
+    @Autowired
+    private PojoGenService pojoGenService;
+
     @GetMapping("/pojogen/download")
     public void download(HttpServletResponse response) {
         try {
-            File tmpFolder = FileSystem.getTemporaryFolder();
-            File pojogen = new File(tmpFolder, "pojogen");
-           // File textFile = new File(pojogen, "text.txt");
-            downloadFile(response, pojogen);
+            downloadFile(response);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private void downloadFile(HttpServletResponse response, File pojogen) throws IOException {
-        String fileName = "classes.zip";
-        response.setContentType("test/plain");
+    private void downloadFile(HttpServletResponse response) throws IOException {
+        PojoModel pojoModel = pojoGenService.getPojoModel();
+        String fileName = pojoModel.getFileName();
+        response.setContentType("application/zip");
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"", fileName);
         response.setHeader(headerKey, headerValue);
 
         OutputStream output = response.getOutputStream();
-        writeContent(output);
+        writeContent(pojoModel, output);
         output.close();
-
-        //  response.getWriter().close();
-
-        /*
-        File[] files = pojogen.listFiles();
-        List<File> javaFiles = Arrays.stream(files).filter(f -> getExtention(f).equals(".java")).collect(Collectors.toList());
-        File file = javaFiles.get(0);
-
-        String fileName = file.getName();
-
-
-        Reader r = new FileReader(file);
-        BufferedReader br = new BufferedReader(r);
-        String line;
-
-
-        do {
-            line = br.readLine();
-            if (line != null) {
-                response.getWriter().println(line);
-            }
-        } while (line != null);
-
-        br.close();
-        r.close();
-
-
-         */
     }
 
-    private void writeContent(OutputStream output) throws IOException {
+    private void writeContent(PojoModel pojoModel, OutputStream output) throws IOException {
+        String model = pojoModel.getModelAsString();
+        Reader reader = new StringReader(model);
+        Map<String, String> codeByClassName = new HashMap<>();
+        PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByClassName);
+        pojoGenerator.generatePojos();
         ZipOutputStream zos =  new ZipOutputStream(new BufferedOutputStream(output));
 
-        writeEntry(zos, "Class.java");
+        for (String className : codeByClassName.keySet()) {
+            String filename = className + ".java";
+            String code = codeByClassName.get(className);
+            writeEntry(zos, filename, code);
+        }
 
         zos.close();
     }
 
-    private void writeEntry(ZipOutputStream zos, String entryName) throws IOException {
+    private void writeEntry(ZipOutputStream zos, String entryName, String code) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
-        zos.write("Hello World!".getBytes());
+        zos.write(code.getBytes());
         zos.closeEntry();
     }
 

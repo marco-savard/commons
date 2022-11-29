@@ -13,43 +13,34 @@ import com.marcosavard.commons.lang.reflect.meta.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 
 public class SourceBasedPojoGenerator extends PojoGenerator {
     protected CompilationUnit cu;
 
-    public SourceBasedPojoGenerator(File outputFolder, Reader reader) {
-        super(outputFolder);
+    public SourceBasedPojoGenerator(Reader reader, Map<String, String> codeByClassName) {
+        super(codeByClassName);
         JavaParser parser = new JavaParser();
         this.cu = parser.parse(reader);
     }
 
-    public SourceBasedPojoGenerator(File outputFolder, CompilationUnit cu) {
-        super(outputFolder);
-        this.cu = cu;
-    }
-
-    //entry point
     @Override
-    public List<File> generate() throws IOException {
+    public void generatePojos() {
         List<MetaClass> metaClasses = generate(this.cu);
-        List<File> files = new ArrayList<>();
 
         for (MetaClass mc : metaClasses) {
-            files.add(super.generateFile(mc));
+            super.generatePojo(mc);
         }
-
-        return files;
     }
 
 
-    public List<MetaClass> generate(CompilationUnit cu) throws IOException {
+    private List<MetaClass> generate(CompilationUnit cu) {
         //pass 1 : generate meta classes
         PackageDeclaration pack = cu.getPackageDeclaration().orElse(null);
         SourceMetaPackage mp = new SourceMetaPackage(cu, pack);
         NodeList<TypeDeclaration<?>> types = cu.getTypes();
         List<MetaClass> metaClasses = new ArrayList<>();
-        List<File> generatedFiles = new ArrayList<>();
 
         for (TypeDeclaration type : types) {
             List<Node> nodes = type.getChildNodes();
@@ -80,8 +71,8 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         //pass 3 : fill meta classes
         for (MetaClass mc : metaClasses) {
-            File generated = generateFile(mc);
-            generatedFiles.add(generated);
+          //  String generated = generateFile(mc);
+           // generatedFiles.add(generated);
         }
 
         return metaClasses;

@@ -67,7 +67,7 @@ public class MetricController {
             javaMetricService.process(reader, fileData);
             reader.close();
 
-            fileInfoService.process(fileData);
+            fileInfoService.store(fileData);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

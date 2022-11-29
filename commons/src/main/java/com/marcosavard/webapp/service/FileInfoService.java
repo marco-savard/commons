@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class FileInfoService {
     private FileData fileData;
 
-    public void process(FileData fileData) {
+    public void store(FileData fileData) {
         this.fileData = fileData;
     }
 

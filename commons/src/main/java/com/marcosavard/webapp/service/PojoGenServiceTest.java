@@ -2,23 +2,35 @@ package com.marcosavard.webapp.service;
 
 import com.marcosavard.commons.io.FileSystem;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
+import com.marcosavard.webapp.model.PojoModel;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.List;
 
 public class PojoGenServiceTest {
 
     public static void main(String[] args) {
         try {
-            PojoGenService service = new PojoGenService();
-            File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
             File sourceFile = getSourceFile(PurchaseOrderModel.class);
+            PojoModel pojoModel = new PojoModel(sourceFile.getName(), sourceFile.length());
             Reader reader = new FileReader(sourceFile);
-            service.process(reader);
-        } catch (FileNotFoundException e) {
+            BufferedReader br = new BufferedReader(reader);
+            String line = null;
+
+            do {
+                line = br.readLine();
+                pojoModel.printLine(line);
+            } while (line != null);
+
+           br.close();
+           PojoGenService service = new PojoGenService();
+           service.store(pojoModel);
+
+           service.process(pojoModel);
+
+            File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
+
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

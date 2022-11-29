@@ -1,8 +1,6 @@
 package com.marcosavard.webapp.controller;
 
-import com.marcosavard.webapp.model.FileData;
-import com.marcosavard.webapp.service.FileInfoService;
-import com.marcosavard.webapp.service.JavaMetricService;
+import com.marcosavard.webapp.model.PojoModel;
 import com.marcosavard.webapp.service.PojoGenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +18,6 @@ import java.util.Map;
 @Controller
 public class PojoGenController {
     private static final long MAX_FILE_SIZE = 50 * 1024;
-    @Autowired
-    private FileInfoService fileInfoService;
 
     @Autowired
     private PojoGenService pojoGenService;
@@ -58,17 +51,33 @@ public class PojoGenController {
 
     private void processFile(MultipartFile file) {
         try {
+            String originalFilename = file.getOriginalFilename();
+            int idx = originalFilename.lastIndexOf('.');
+            String filename = originalFilename.substring(0, idx) + ".zip";
             Map<String, String> fileProperties = new HashMap<>();
-            fileProperties.put("fileName", file.getOriginalFilename());
+            fileProperties.put("fileName", filename);
             fileProperties.put("fileSize", file.getSize() + " B");
+            PojoModel pojoModel = new PojoModel(filename, file.getSize());
 
             InputStream input = file.getInputStream();
             Reader reader = new InputStreamReader(input);
-            FileData fileData = new FileData(file.getOriginalFilename(), file.getSize());
-            pojoGenService.process(reader);
+            BufferedReader br = new BufferedReader(reader);
+            String line;
+
+            do {
+                line = br.readLine();
+
+                if (line != null) {
+                    pojoModel.printLine(line);
+                }
+            } while (line != null);
+
+            pojoModel.close();
+            br.close();
             reader.close();
 
-           // fileInfoService.process(fileData);
+            pojoGenService.store(pojoModel);
+            pojoGenService.process(pojoModel);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -101,6 +110,4 @@ public class PojoGenController {
             return msg;
         }
     }
-
-
 }

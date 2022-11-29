@@ -5,22 +5,16 @@ import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.util.collection.SortedList;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class PojoGenerator {
-    protected final File outputFolder;
+    protected final Map<String, String> codeByClassName;
 
     //Options
     protected int indentation = 2;
@@ -32,15 +26,15 @@ public abstract class PojoGenerator {
 
     protected String containerName = "owner";
 
-    public abstract List<File> generate() throws IOException;
+    public abstract void generatePojos();
 
     public enum AccessorOrder {
         GROUPED_BY_PROPERTIES,
         GROUPED_BY_GETTERS_SETTERS
     }
 
-    protected PojoGenerator(File outputFolder) {
-        this.outputFolder = outputFolder;
+    protected PojoGenerator(Map<String, String> codeByClassName) {
+        this.codeByClassName = codeByClassName;
     }
 
     public PojoGenerator withAccessors(AccessorOrder accessorOrder) {
@@ -76,25 +70,15 @@ public abstract class PojoGenerator {
 
     protected abstract List<MetaClass> getSubClasses(MetaClass mc);
 
-    public File generateFile(MetaClass mc) throws IOException {
+    public void generatePojo(MetaClass mc) {
         Console.println("Generating code for {0}", mc.getSimpleName());
+        StringWriter sw = new StringWriter();
+        generateClass(mc, sw);
 
-        // create folder
-        String packageName = mc.getPackageName();
-        String folderName = packageName.replace(".", "//");
-        File subfolder = new File(outputFolder, folderName);
-        subfolder.mkdirs();
-
-        // create file
-        String filename = mc.getSimpleName() + ".java";
-        File generated = new File(subfolder, filename);
-        Writer w = new FileWriter(generated);
-        generateClass(mc, w);
-
-        return generated;
+        codeByClassName.put(mc.getSimpleName(), sw.toString());
     }
 
-    public void generateClass(MetaClass mc, Writer w) {
+    protected void generateClass(MetaClass mc, Writer w) {
         // generate code
         FormatWriter fw = new FormatWriter(w, indentation);
         String packageName = mc.getPackageName();
