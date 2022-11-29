@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Controller
 public class PojoGenDownloadController {
@@ -25,21 +27,30 @@ public class PojoGenDownloadController {
     }
 
     private void downloadFile(HttpServletResponse response, File pojogen) throws IOException {
-        File[] files = pojogen.listFiles();
-        List<File> javaFiles = Arrays.stream(files).filter(f -> getExtention(f).equals(".java")).collect(Collectors.toList());
-        File file = javaFiles.get(0);
-
-        String fileName = file.getName();
+        String fileName = "classes.zip";
         response.setContentType("test/plain");
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"", fileName);
         response.setHeader(headerKey, headerValue);
 
+        OutputStream output = response.getOutputStream();
+        writeContent(output);
+        output.close();
+
+        //  response.getWriter().close();
+
+        /*
+        File[] files = pojogen.listFiles();
+        List<File> javaFiles = Arrays.stream(files).filter(f -> getExtention(f).equals(".java")).collect(Collectors.toList());
+        File file = javaFiles.get(0);
+
+        String fileName = file.getName();
+
+
         Reader r = new FileReader(file);
         BufferedReader br = new BufferedReader(r);
         String line;
 
-        //response.getOutputStream();
 
         do {
             line = br.readLine();
@@ -50,7 +61,23 @@ public class PojoGenDownloadController {
 
         br.close();
         r.close();
-        response.getWriter().close();
+
+
+         */
+    }
+
+    private void writeContent(OutputStream output) throws IOException {
+        ZipOutputStream zos =  new ZipOutputStream(new BufferedOutputStream(output));
+
+        writeEntry(zos, "Class.java");
+
+        zos.close();
+    }
+
+    private void writeEntry(ZipOutputStream zos, String entryName) throws IOException {
+        zos.putNextEntry(new ZipEntry(entryName));
+        zos.write("Hello World!".getBytes());
+        zos.closeEntry();
     }
 
     private String getExtention(File file) {
