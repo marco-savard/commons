@@ -80,7 +80,23 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
     @Override
     protected String getInitialValue(MetaField mf) {
-        return "null";
+        String initialValue = mf.getInitialValue();
+
+        if (initialValue == null) {
+            MetaClass type = mf.getType();
+
+            if (type.isNumber()) {
+                initialValue = "0";
+            } else if (type.isBoolean()) {
+                initialValue = "false";
+            } else if (type.isCharacter()) {
+                initialValue = "'\0''";
+            } else  {
+                initialValue = "null";
+            }
+        }
+
+        return initialValue;
     }
 
     @Override

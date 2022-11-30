@@ -6,7 +6,8 @@ public class MountainModel1 {
 
     public static class Mountain {
         public final String name = "Unnamed";
-        public final double latitude = 0.0, longitude = 0.0;
+        public double latitude, longitude;
+        public double altitude;
         public Optional<String> country;
     }
 }

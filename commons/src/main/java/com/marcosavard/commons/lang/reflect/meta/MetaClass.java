@@ -89,11 +89,17 @@ public abstract class MetaClass {
 
     public abstract boolean isAbstract();
 
+    public abstract boolean isBoolean();
+
+    public abstract boolean isCharacter();
+
     public abstract boolean isCollection() ;
 
     public abstract boolean isEnum();
 
     public abstract boolean isImmutable();
+
+    public abstract boolean isNumber();
 
     public abstract boolean isPrimitive();
 
@@ -208,6 +214,18 @@ public abstract class MetaClass {
         }
 
         @Override
+        public boolean isBoolean() {
+            boolean bool = boolean.class.equals(claz);
+            return bool;
+        }
+
+        @Override
+        public boolean isCharacter() {
+            boolean character = char.class.equals(claz);
+            return character;
+        }
+
+        @Override
         public boolean isCollection() {
             return Collection.class.isAssignableFrom(claz);
         }
@@ -223,15 +241,21 @@ public abstract class MetaClass {
         }
 
         @Override
+        public boolean isNumber() {
+            boolean number = byte.class.equals(claz);
+            number = number || short.class.equals(claz);
+            number = number || int.class.equals(claz);
+            number = number || long.class.equals(claz);
+            number = number || float.class.equals(claz);
+            number = number || double.class.equals(claz);
+            return number;
+        }
+
+        @Override
         public boolean isPrimitive() {
-            boolean primitive = boolean.class.equals(claz);
-            primitive = primitive || byte.class.equals(claz);
-            primitive = primitive || char.class.equals(claz);
-            primitive = primitive || short.class.equals(claz);
-            primitive = primitive || int.class.equals(claz);
-            primitive = primitive || long.class.equals(claz);
-            primitive = primitive || float.class.equals(claz);
-            primitive = primitive || double.class.equals(claz);
+            boolean primitive = isNumber();
+            primitive = primitive || isBoolean();
+            primitive = primitive || isCharacter();
             return primitive;
         }
 

@@ -14,6 +14,7 @@ import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 import com.marcosavard.commons.util.ArrayUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SourceMetaClass extends MetaClass {
@@ -196,6 +197,32 @@ public class SourceMetaClass extends MetaClass {
     }
 
     @Override
+    public boolean isBoolean() {
+        boolean bool = false;
+
+        if (type instanceof PrimitiveType) {
+            PrimitiveType pt = (PrimitiveType)type;
+            String str = pt.asString();
+            bool = "boolean".equals(str);
+        }
+
+        return bool;
+    }
+
+    @Override
+    public boolean isCharacter() {
+        boolean character = false;
+
+        if (type instanceof PrimitiveType) {
+            PrimitiveType pt = (PrimitiveType)type;
+            String str = pt.asString();
+            character = "char".equals(str);
+        }
+
+        return character;
+    }
+
+    @Override
     public boolean isCollection() {
         boolean collection = false;
 
@@ -232,6 +259,20 @@ public class SourceMetaClass extends MetaClass {
     @Override
     public boolean isImmutable() {
         return false;
+    }
+
+    @Override
+    public boolean isNumber() {
+        boolean number = false;
+
+        if (type instanceof PrimitiveType) {
+            PrimitiveType pt = (PrimitiveType)type;
+            String str = pt.asString();
+            String[] numbers = new String[] {"short", "int", "long", "float", "double"};
+            number = Arrays.asList(numbers).contains(str);
+        }
+
+        return number;
     }
 
     @Override

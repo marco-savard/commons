@@ -302,6 +302,9 @@ public abstract class PojoGenerator {
             generateParameterlessConstructor(w, mc);
             String visibility = mc.isAbstract() ? "protected" : "public";
             String className = mc.getSimpleName();
+            List<MetaField> nonFinalFields = constructorFields.stream()
+                    .filter(mf -> ! mf.isFinal())
+                    .collect(Collectors.toList());
 
             w.println("/**");
             for (MetaField field : constructorFields) {
@@ -370,8 +373,7 @@ public abstract class PojoGenerator {
         }
 
         for (MetaField mf : settableParameters) {
-            String value = mf.isFinal() ? mf.getInitialValue() : mf.getName();
-            w.println("this.{0} = {1};", mf.getName(), value);
+            w.println("this.{0} = {0};", mf.getName());
         }
     }
 

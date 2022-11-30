@@ -50,7 +50,9 @@ public class SourceBasedPojoGeneratorDemo {
             Map<MetaClass, String> codeByClassName = new HashMap<>();
             Reader reader = new FileReader(sourceFile);
             SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByClassName);
-            pojoGenerator.generatePojos();
+            pojoGenerator
+                    .withParameterlessConstructor()
+                    .generatePojos();
             reader.close();
 
             //Write POJOs
