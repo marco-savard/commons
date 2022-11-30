@@ -1,5 +1,6 @@
 body {
-  padding-top: 1rem;
+  padding: 5px;
+  font-family: Helvetica, Verdana, sans-serif;
 }
 
 .starter-template {
@@ -7,19 +8,45 @@ body {
   text-align: center;
 }
 
-h1 {
-	color:#0000FF;
+p {
+  font-family: Tahoma, Verdana, sans-serif;
+  margin: 6px;
 }
 
-h2 {
-	color:#FF0000;
+h1 {
+  color:#000077;
+}
+
+a {
+    background-color: #f0f0f0;
+    border: 1px solid #a9a9a9;
+    border-radius: 3px;
+    color: black;
+    font-size: 80%;
+    padding: 6px;
+    text-decoration: none;
+}
+
+a:hover {
+  border: 1px solid black;
+}
+
+
+table {
+  border-collapse: collapse;
+  font-size: 80%;
+}
+
+th, td {
+  border: 1px solid black;
 }
 
 tbody td {
-  color:#0000FF;
-  padding: 30px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #dddddd;
+  background-color: #f0f0f0;
 }
+
