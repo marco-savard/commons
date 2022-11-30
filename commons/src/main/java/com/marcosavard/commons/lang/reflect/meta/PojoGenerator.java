@@ -360,13 +360,18 @@ public abstract class PojoGenerator {
         settableParameters.removeAll(superClassVariables);
 
         for (MetaField mf : settableParameters) {
-            if (! mf.isOptional() && ! mf.getType().isPrimitive() && ! mf.getType().isCollection()) {
+            boolean notNull = ! mf.isOptional()
+                    && ! mf.isFinal()
+                    && ! mf.getType().isPrimitive()
+                    && ! mf.getType().isCollection();
+            if (notNull) {
                 verifyNullArgument(w, mf);
             }
         }
 
-        for (MetaField m : settableParameters) {
-            w.println("this.{0} = {0};", m.getName());
+        for (MetaField mf : settableParameters) {
+            String value = mf.isFinal() ? mf.getInitialValue() : mf.getName();
+            w.println("this.{0} = {1};", mf.getName(), value);
         }
     }
 

@@ -260,7 +260,7 @@ public class SourceMetaClass extends MetaClass {
             List<VariableDeclarator> variables = field.getVariables();
 
             for (VariableDeclarator variable : variables) {
-                MetaField mf = new SourceMetaField(this, variable);
+                MetaField mf = new SourceMetaField(this, field, variable);
                 metaFields.add(mf);
             }
         }

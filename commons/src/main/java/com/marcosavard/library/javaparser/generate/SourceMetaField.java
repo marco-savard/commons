@@ -5,11 +5,9 @@ import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.Type;
@@ -22,8 +20,11 @@ import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SourceMetaField extends MetaField {
+
+    private FieldDeclaration field;
 
     private VariableDeclarator variable;
 
@@ -31,8 +32,9 @@ public class SourceMetaField extends MetaField {
 
     private Type type;
 
-    public SourceMetaField(SourceMetaClass declaringClass, VariableDeclarator variable) {
+    public SourceMetaField(SourceMetaClass declaringClass, FieldDeclaration field, VariableDeclarator variable) {
         super(declaringClass, variable.getName().asString());
+        this.field = field;
         this.variable = variable;
         type = variable.getType();
     }
@@ -88,7 +90,13 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public String getInitialValue() {
-        return null;
+        LiteralExpr literalExpr = (LiteralExpr)variable.getChildNodes()
+                .stream().filter(n -> n instanceof LiteralExpr)
+                .findFirst()
+                .orElse(null);
+
+        String intitalValue = (literalExpr == null) ? null : literalExpr.toString();
+        return intitalValue;
     }
 
     @Override
@@ -170,12 +178,17 @@ public class SourceMetaField extends MetaField {
     @Override
     public List<String> getVisibilityModifiers() {
         List<String> modifiers = new ArrayList<>();
+
+        if (field.isPublic()) {
+            modifiers.add("public");
+        }
+
         return modifiers;
     }
 
     @Override
     public boolean isFinal() {
-        return false;
+        return field.isFinal();
     }
 
     @Override
@@ -223,7 +236,7 @@ public class SourceMetaField extends MetaField {
 
     @Override
     public boolean isReadOnly() {
-        return false;
+        return isFinal();
     }
 
     @Override
