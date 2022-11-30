@@ -1,6 +1,7 @@
 package com.marcosavard.webapp.controller;
 
 import com.marcosavard.commons.lang.StringUtil;
+import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.webapp.model.FileData;
 import com.marcosavard.webapp.model.PojoModel;
 import com.marcosavard.webapp.service.FileInfoService;
@@ -22,7 +23,7 @@ public class PojoGenResultController {
     @GetMapping("/pojogen/result")
     public String fileinfo(HttpServletRequest request, Model model) {
         PojoModel pojoModel = pojoGenService.getPojoModel();
-        Map<String, String> pojos = pojoModel.getPojos();
+        Map<MetaClass, String> pojos = pojoModel.getPojos();
         String modelCode = pojoModel.getModelAsString();
         long sourceLoc = StringUtil.countCharacters(modelCode, '\n');
         long generatedLOC = findGeneratedLOC(pojoModel);
@@ -37,10 +38,10 @@ public class PojoGenResultController {
 
     private long findGeneratedLOC(PojoModel pojoModel) {
         long totalLoc = 0L;
-        Set<String> keys = pojoModel.getPojos().keySet();
+        Set<MetaClass> keys = pojoModel.getPojos().keySet();
 
-        for (String key : keys) {
-            String code = pojoModel.getPojos().get(key);
+        for (MetaClass mc : keys) {
+            String code = pojoModel.getPojos().get(mc);
             long loc = StringUtil.countCharacters(code, '\n');
             totalLoc += loc;
         }

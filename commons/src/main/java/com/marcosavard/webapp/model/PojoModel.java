@@ -1,5 +1,7 @@
 package com.marcosavard.webapp.model;
 
+import com.marcosavard.commons.lang.reflect.meta.MetaClass;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -10,7 +12,7 @@ public class PojoModel {
     private String fileSize;
     private StringWriter sw;
     private PrintWriter pw;
-    private Map<String, String> pojoByClassName = new HashMap<>();
+    private Map<MetaClass, String> pojoByClassName = new HashMap<>();
 
     public PojoModel(String sourceFile, long fileSize) {
         this.sourceFile = sourceFile;
@@ -42,12 +44,12 @@ public class PojoModel {
         return sw.toString();
     }
 
-    public void storePojos(Map<String, String> pojoByClassName) {
+    public void storePojos(Map<MetaClass, String> pojoByClassName) {
         this.pojoByClassName.clear();
         this.pojoByClassName.putAll(pojoByClassName);
     }
 
-    public Map<String, String> getPojos() {
+    public Map<MetaClass, String> getPojos() {
         return pojoByClassName;
     }
 

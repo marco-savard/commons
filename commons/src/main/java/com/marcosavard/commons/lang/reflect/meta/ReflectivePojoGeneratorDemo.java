@@ -17,7 +17,7 @@ public class ReflectivePojoGeneratorDemo {
     File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
     //File outputFolder = new File("C:/Users/User/IdeaProjects/commons/commons/src/main/java");
 
-    Map<String, String> codeByFileName = new HashMap<>();
+    Map<MetaClass, String> codeByFileName = new HashMap<>();
     generate(codeByFileName, MountainModel1.class.getClasses());
     generate(codeByFileName, LibraryModel.class.getClasses());
     generate(codeByFileName, PurchaseOrderModel.class.getClasses());
@@ -29,7 +29,7 @@ public class ReflectivePojoGeneratorDemo {
  //   generate(outputFolder, new Class[] {claz});
   //}
 
-  private static void generate(Map<String, String> codeByFileName, Class<?>[] classes) {
+  private static void generate(Map<MetaClass, String> codeByFileName, Class<?>[] classes) {
       ReflectivePojoGenerator generator = new ReflectivePojoGenerator(codeByFileName, classes);
       generator.withParameterlessConstructor();
       generator.generatePojos();

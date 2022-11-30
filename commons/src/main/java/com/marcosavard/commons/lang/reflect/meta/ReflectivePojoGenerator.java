@@ -14,7 +14,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
   private DynamicPackage dynamicPackage;
 
-  public ReflectivePojoGenerator(Map<String, String> codeByFileName, Class<?>[] classes) {
+  public ReflectivePojoGenerator(Map<MetaClass, String> codeByFileName, Class<?>[] classes) {
     super(codeByFileName);
     dynamicPackage = new DynamicPackage(classes);
   }

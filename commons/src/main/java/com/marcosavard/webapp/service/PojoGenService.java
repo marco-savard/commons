@@ -1,5 +1,6 @@
 package com.marcosavard.webapp.service;
 
+import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 import com.marcosavard.library.javaparser.generate.SourceBasedPojoGenerator;
 import com.marcosavard.webapp.model.PojoModel;
@@ -27,9 +28,9 @@ public class PojoGenService {
     public void process(PojoModel pojoModel) {
         //generate Java files
         Reader reader = new StringReader(pojoModel.getModelAsString());
-        Map<String, String> pojoByClassName = new HashMap<>();
-        PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, pojoByClassName);
+        Map<MetaClass, String> pojoByMetaclass = new HashMap<>();
+        PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, pojoByMetaclass);
         pojoGenerator.generatePojos();
-        pojoModel.storePojos(pojoByClassName);
+        pojoModel.storePojos(pojoByMetaclass);
     }
 }

@@ -1,5 +1,6 @@
 package com.marcosavard.webapp.controller;
 
+import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.webapp.model.PojoModel;
 import com.marcosavard.webapp.service.PojoGenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,11 @@ public class PojoGenDownloadController {
 
     private void writeContent(PojoModel pojoModel, OutputStream output) throws IOException {
         ZipOutputStream zos =  new ZipOutputStream(new BufferedOutputStream(output));
-        Map<String, String> codeByClassName = pojoModel.getPojos();
+        Map<MetaClass, String> codeByClassName = pojoModel.getPojos();
 
-        for (String className : codeByClassName.keySet()) {
-            String filename = className + ".java";
-            String code = codeByClassName.get(className);
+        for (MetaClass mc : codeByClassName.keySet()) {
+            String filename = mc.getSimpleName() + ".java";
+            String code = codeByClassName.get(mc);
             writeEntry(zos, filename, code);
         }
 

@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class PojoGenerator {
-    protected final Map<String, String> codeByClassName;
+    protected final Map<MetaClass, String> pojoByMetaclass;
 
     //Options
     protected int indentation = 2;
@@ -33,8 +33,8 @@ public abstract class PojoGenerator {
         GROUPED_BY_GETTERS_SETTERS
     }
 
-    protected PojoGenerator(Map<String, String> codeByClassName) {
-        this.codeByClassName = codeByClassName;
+    protected PojoGenerator(Map<MetaClass, String> codeByClassName) {
+        this.pojoByMetaclass = codeByClassName;
     }
 
     public PojoGenerator withAccessors(AccessorOrder accessorOrder) {
@@ -75,7 +75,7 @@ public abstract class PojoGenerator {
         StringWriter sw = new StringWriter();
         generateClass(mc, sw);
 
-        codeByClassName.put(mc.getSimpleName(), sw.toString());
+        pojoByMetaclass.put(mc, sw.toString());
     }
 
     protected void generateClass(MetaClass mc, Writer w) {

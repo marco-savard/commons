@@ -8,6 +8,7 @@ import com.marcosavard.commons.io.FileSystem;
 import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
 import com.marcosavard.domain.library.model.LibraryModel;
+import com.marcosavard.domain.mountain.model.MountainModel1;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.*;
@@ -16,11 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 public class SourceBasedPojoGeneratorDemo {
+    private static final String SOURCE_FOLDER = "C:/Users/Marco/IdeaProjects/commons/commons/src/main/java";
+    private static final String OUTPUT_FOLDER = "C:/Users/Marco/IdeaProjects/commons/commons/src/main/java";
 
     public static void main(String[] args) {
-        File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        File sourceFile = getSourceFile(LibraryModel.class);
-        generate(outputFolder, sourceFile);
+        File sourceFile = getSourceFile(MountainModel1.class);
+        File outputFolder = new File(OUTPUT_FOLDER);
+        generate(sourceFile, outputFolder);
     }
 
     private static File getSourceFile(Class claz) {
@@ -32,30 +35,33 @@ public class SourceBasedPojoGeneratorDemo {
     }
 
     private static List<File> getSourceFiles(Class claz) {
-        File sourceFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
+        File sourceFolder = new File(SOURCE_FOLDER);
         Package pack = claz.getPackage();
         List<File> sourceFiles = FileSystem.getSourceFiles(sourceFolder, pack);
         sourceFiles.addAll(sourceFiles);
         return sourceFiles;
     }
 
-    private static void generate(File outputFolder, File sourceFile) {
+    private static void generate(File sourceFile, File outputFolder) {
         try {
-            JavaParser parser = new JavaParser();
-            Reader r = new FileReader(sourceFile); 
-            CompilationUnit cu = parser.parse(r);
-            r.close();
-
-
-            //new
-            Map<String, String> codeByFileName = new HashMap<>();
+            //generate POJOs
+            Map<MetaClass, String> codeByClassName = new HashMap<>();
             Reader reader = new FileReader(sourceFile);
-            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByFileName);
+            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByClassName);
             pojoGenerator.generatePojos();
+            reader.close();
 
-
-
-
+            //Write POJOs
+            for (MetaClass mc : codeByClassName.keySet()) {
+                String packName = mc.getPackage().getName().replace('.', '/');
+                File packageFolder = new File(outputFolder, packName);
+                String fileName = mc.getSimpleName() + ".java";
+                File generatedFile = new File(packageFolder, fileName);
+                Writer w = new FileWriter(generatedFile);
+                String pojo = codeByClassName.get(mc);
+                w.write(pojo);
+                w.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

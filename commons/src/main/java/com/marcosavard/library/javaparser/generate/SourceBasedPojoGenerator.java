@@ -19,7 +19,7 @@ import java.util.jar.JarEntry;
 public class SourceBasedPojoGenerator extends PojoGenerator {
     protected CompilationUnit cu;
 
-    public SourceBasedPojoGenerator(Reader reader, Map<String, String> codeByClassName) {
+    public SourceBasedPojoGenerator(Reader reader, Map<MetaClass, String> codeByClassName) {
         super(codeByClassName);
         JavaParser parser = new JavaParser();
         this.cu = parser.parse(reader);
