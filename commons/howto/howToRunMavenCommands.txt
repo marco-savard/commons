@@ -1,0 +1,13 @@
+
+HOW TO RUN MAVEN
+================
+
+A) In Window Explorer, open command prompt
+1. Go to C:\Windows\System32
+2. Run as admin cmd.exe
+
+B) In Command Prompt
+1. cd C:\Users\Marco\IdeaProjects\commons\commons\src\main
+
+
+
