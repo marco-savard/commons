@@ -21,8 +21,8 @@ public class SourceBasedPojoGeneratorDemo {
     private static final String OUTPUT_FOLDER = "C:/Users/Marco/IdeaProjects/commons/commons/src/main/java";
 
     public static void main(String[] args) {
-        Class model = MountainModel1.class;
-       // Class model = PurchaseOrderModel.class;
+       // Class model = MountainModel1.class;
+        Class model = PurchaseOrderModel.class;
         File sourceFile = getSourceFile(model);
         File outputFolder = new File(OUTPUT_FOLDER);
         generate(sourceFile, outputFolder);

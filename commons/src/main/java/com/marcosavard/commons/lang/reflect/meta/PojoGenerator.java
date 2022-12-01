@@ -140,7 +140,7 @@ public abstract class PojoGenerator {
         generateConstants(w, mc);
         generateVariables(w, mc);
         generateMetaFields(w, mc);
-        generateConstructor(w, mc);
+        generateConstructors(w, mc);
         generateMethods(w, mc);
         w.unindent();
         w.println("}");
@@ -291,36 +291,47 @@ public abstract class PojoGenerator {
         }
     }
 
-    protected void generateConstructor(FormatWriter w, MetaClass mc) {
+    protected void generateConstructors(FormatWriter w, MetaClass mc) {
         List<MetaField> constructorFields = getConstructorFields(mc);
+        List<MetaField> requiredConstructorFields = constructorFields.stream()
+                .filter(mf -> mf.getInitialValue() == null)
+                .collect(Collectors.toList());
 
         if (hasRequiredComponent(mc)) {
             //TODO generateOfMethods(w, mc);
         }
 
-        if (!constructorFields.isEmpty()) {
+        if (! constructorFields.isEmpty()) {
             generateParameterlessConstructor(w, mc);
-            String visibility = mc.isAbstract() ? "protected" : "public";
-            String className = mc.getSimpleName();
-            List<MetaField> nonFinalFields = constructorFields.stream()
-                    .filter(mf -> ! mf.isFinal())
-                    .collect(Collectors.toList());
-
-            w.println("/**");
-            for (MetaField field : constructorFields) {
-                w.println(" * @param {0} {1}", field.getName(), field.getDescription());
-            }
-            w.println(" */");
-
-            w.print("{0} {1}(", visibility, className);
-            w.print(String.join(", ", toParameters(constructorFields)));
-            w.println(") {");
-            w.indent();
-            generateConstructorBody(w, mc, constructorFields);
-            w.unindent();
-            w.println("}");
-            w.println();
         }
+
+        if (! requiredConstructorFields.isEmpty()) {
+            generateConstructor(w, mc, requiredConstructorFields, constructorFields);
+        }
+
+        if (! constructorFields.isEmpty() && (constructorFields.size() > requiredConstructorFields.size())) {
+            generateConstructor(w, mc, constructorFields, constructorFields);
+        }
+    }
+
+    private void generateConstructor(FormatWriter w, MetaClass mc, List<MetaField> constructorParams, List<MetaField> constructorFields) {
+        String visibility = mc.isAbstract() ? "protected" : "public";
+        String className = mc.getSimpleName();
+
+        w.println("/**");
+        for (MetaField field : constructorParams) {
+            w.println(" * @param {0} {1}", field.getName(), field.getDescription());
+        }
+        w.println(" */");
+
+        w.print("{0} {1}(", visibility, className);
+        w.print(String.join(", ", toParameters(constructorParams)));
+        w.println(") {");
+        w.indent();
+        generateConstructorBody(w, mc, constructorParams, constructorFields);
+        w.unindent();
+        w.println("}");
+        w.println();
     }
 
     private boolean hasRequiredComponent(MetaClass mc) {
@@ -375,30 +386,41 @@ public abstract class PojoGenerator {
         return values;
     }
 
-    protected void generateConstructorBody(FormatWriter w, MetaClass mc, List<MetaField> parameters) {
+    protected void generateConstructorBody(FormatWriter w, MetaClass mc,
+                                           List<MetaField> parameters, List<MetaField> constructorFields) {
         MetaClass superClass = mc.getSuperClass();
         List<MetaField> superClassVariables = getConstructorFields(superClass);
 
         //generate the super
         if (!superClassVariables.isEmpty()) {
-            List<String> referenceNames = toNameList(superClassVariables);
-            w.println("super(" + String.join(", ", referenceNames) + ");");
+            List<String> values = new ArrayList<>();
+
+            for (MetaField mf : superClassVariables) {
+                String value = parameters.contains(mf) ? mf.getName() : mf.getInitialValue();
+                values.add(value);
+            }
+
+            String valueList = String.join(", ", values);
+            w.println("super(" + valueList + ");");
         }
 
-        List<MetaField> settableParameters = new ArrayList<>(parameters);
-        settableParameters.removeAll(superClassVariables);
+        List<MetaField> settableFields = new ArrayList<>(constructorFields);
+        settableFields.removeAll(superClassVariables);
 
-        for (MetaField mf : settableParameters) {
+        for (MetaField mf : settableFields) {
             boolean notNull = ! mf.isOptional()
                     && ! mf.getType().isPrimitive()
-                    && ! mf.getType().isCollection();
+                    && ! mf.getType().isCollection()
+                    && parameters.contains(mf);
             if (notNull) {
                 verifyNullArgument(w, mf);
             }
         }
 
-        for (MetaField mf : settableParameters) {
-            w.println("this.{0} = {0};", mf.getName());
+        for (MetaField mf : settableFields) {
+            String initialValue = mf.getInitialValue();
+            String value = (initialValue != null) ? initialValue : mf.getName();
+            w.println("this.{0} = {1};", mf.getName(), value);
         }
     }
 
