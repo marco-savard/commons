@@ -118,6 +118,11 @@ public class SourceMetaField extends MetaField {
     @Override
     public List<String> getOtherModifiers() {
         List<String> modifiers = new ArrayList<>();
+
+        if (isFinal()) {
+            modifiers.add("final");
+        }
+
         return modifiers;
     }
 

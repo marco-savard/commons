@@ -142,7 +142,7 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
     @Override
     protected String getGetterName(MetaField mf) {
-        String verb = "get";
+        String verb = mf.getType().isBoolean() ? "is" : "get";
         return verb + StringUtil.capitalize(mf.getName());
     }
 
@@ -160,7 +160,4 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         return subclasses;
     }
-
-
-
 }

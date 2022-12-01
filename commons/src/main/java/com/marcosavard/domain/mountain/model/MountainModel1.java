@@ -8,5 +8,6 @@ public class MountainModel1 {
         public double latitude, longitude;
         public double altitude;
         public Optional<String> country;
+        public boolean explored;
     }
 }

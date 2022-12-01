@@ -97,6 +97,8 @@ public abstract class MetaClass {
 
     public abstract boolean isEnum();
 
+    public abstract boolean isFloatingNumber();
+
     public abstract boolean isImmutable();
 
     public abstract boolean isNumber();
@@ -120,6 +122,24 @@ public abstract class MetaClass {
         return Arrays.stream(getDeclaredFields()).filter(f -> f.isConstant()).collect(Collectors.toList());
     }
 
+    public String getDefaultValue() {
+        String defaultValue;
+
+        if (isFloatingNumber()) {
+            defaultValue = "0.0";
+        } if (isNumber()) {
+            defaultValue = "0";
+        } else if (isBoolean()) {
+            defaultValue = "false";
+        } else if (isCharacter()) {
+            defaultValue = "'\0''";
+        } else  {
+            defaultValue = "null";
+        }
+
+        return defaultValue;
+    }
+
     public List<MetaField> getAllVariables() {
         return Arrays.stream(getFields()).filter(f -> ! f.isConstant()).collect(Collectors.toList());
     }
@@ -129,6 +149,7 @@ public abstract class MetaClass {
     }
 
     public abstract boolean hasSuperClass();
+
 
     private static class ReflectiveMetaClass extends MetaClass {
         private final Class<?> claz;
@@ -233,6 +254,13 @@ public abstract class MetaClass {
         @Override
         public boolean isEnum() {
             return claz.isEnum();
+        }
+
+        @Override
+        public boolean isFloatingNumber() {
+            boolean floatingNumber = float.class.equals(claz);
+            floatingNumber = floatingNumber || double.class.equals(claz);
+            return floatingNumber;
         }
 
         @Override

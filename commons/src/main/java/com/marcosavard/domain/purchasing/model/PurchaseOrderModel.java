@@ -54,7 +54,7 @@ public class PurchaseOrderModel {
 
     public static class GlobalAddress extends Address {
         public final String postalCode = "?";
-        public String country;
+        public String country = "?";
     }
 
     public enum OrderStatus {

@@ -257,6 +257,20 @@ public class SourceMetaClass extends MetaClass {
     }
 
     @Override
+    public boolean isFloatingNumber() {
+        boolean number = false;
+
+        if (type instanceof PrimitiveType) {
+            PrimitiveType pt = (PrimitiveType)type;
+            String str = pt.asString();
+            String[] numbers = new String[] {"float", "double"};
+            number = Arrays.asList(numbers).contains(str);
+        }
+
+        return number;
+    }
+
+    @Override
     public boolean isImmutable() {
         return false;
     }
@@ -268,7 +282,7 @@ public class SourceMetaClass extends MetaClass {
         if (type instanceof PrimitiveType) {
             PrimitiveType pt = (PrimitiveType)type;
             String str = pt.asString();
-            String[] numbers = new String[] {"short", "int", "long", "float", "double"};
+            String[] numbers = new String[] {"byte", "short", "int", "long", "float", "double"};
             number = Arrays.asList(numbers).contains(str);
         }
 

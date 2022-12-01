@@ -249,7 +249,7 @@ public abstract class PojoGenerator {
         String modifiers = String.join(" ", modifierList);
 
         String typeName = field.getTypeName();
-        String initValue = field.getInitialValue();
+        String initValue = field.isFinal() ? null : field.getInitialValue();
 
         if (initValue == null) {
             w.println("{0} {1} {2};", modifiers, typeName, field.getName());
@@ -338,15 +338,41 @@ public abstract class PojoGenerator {
     }
 
     protected void generateParameterlessConstructorBody(FormatWriter w, MetaClass mc) {
+        List<MetaField> constructorFields = getConstructorFields(mc);
+        MetaField anyRequiredField = constructorFields.stream()
+                .filter(mf -> ! mf.isOptional())
+                .findAny()
+                .orElse(null);
+        boolean atLeastOneRequiredField = (anyRequiredField != null);
+        constructorFields = atLeastOneRequiredField ? new ArrayList<>() : constructorFields;
+        List<String> initialValues = toDefaultValues(constructorFields);
+
+        w.indent();
+
+        if (! constructorFields.isEmpty()) {
+            w.println("this({0});", String.join(", ", initialValues));
+        }
+
         List<MetaField> requiredFields = mc.getVariables().stream()
                 .filter(mf -> ! mf.isOptional())
                 .collect(Collectors.toList());
 
-        w.indent();
         for (MetaField mf : requiredFields) {
-            w.println("this.{0} = {1};", mf.getName(), getInitialValue(mf));
+            if (! constructorFields.contains(mf)) {
+                w.println("this.{0} = {1};", mf.getName(), getInitialValue(mf));
+            }
         }
         w.unindent();
+    }
+
+    private List<String> toDefaultValues(List<MetaField> fields) {
+        List<String> values = new ArrayList<>();
+
+        for (MetaField mf : fields) {
+            values.add(mf.getDefaultValue());
+        }
+
+        return values;
     }
 
     protected void generateConstructorBody(FormatWriter w, MetaClass mc, List<MetaField> parameters) {
@@ -364,7 +390,6 @@ public abstract class PojoGenerator {
 
         for (MetaField mf : settableParameters) {
             boolean notNull = ! mf.isOptional()
-                    && ! mf.isFinal()
                     && ! mf.getType().isPrimitive()
                     && ! mf.getType().isCollection();
             if (notNull) {

@@ -91,6 +91,16 @@ public abstract class MetaField {
         return equal;
     }
 
+    public String getDefaultValue() {
+        String defaultValue = getInitialValue();
+
+        if (defaultValue == null) {
+            MetaClass type = getType();
+            defaultValue = type.getDefaultValue();
+        }
+        return defaultValue;
+    }
+
     private static class ReflectiveMetaField extends MetaField {
         private final Member member;
 
