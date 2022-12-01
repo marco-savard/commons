@@ -418,8 +418,7 @@ public abstract class PojoGenerator {
         }
 
         for (MetaField mf : settableFields) {
-            String initialValue = mf.getInitialValue();
-            String value = (initialValue != null) ? initialValue : mf.getName();
+            String value = parameters.contains(mf) ? mf.getName() : mf.getInitialValue();
             w.println("this.{0} = {1};", mf.getName(), value);
         }
     }
