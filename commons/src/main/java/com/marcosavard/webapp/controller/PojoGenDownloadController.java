@@ -27,6 +27,15 @@ public class PojoGenDownloadController {
         }
     }
 
+    @GetMapping("/pojogen/download/pojogen")
+    public void downloadPojogen(HttpServletResponse response) {
+        try {
+            downloadPojogenFile(response);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     private void downloadFile(HttpServletResponse response) throws IOException {
         PojoModel pojoModel = pojoGenService.getPojoModel();
         String fileName = pojoModel.getGeneratedFile();
@@ -65,4 +74,15 @@ public class PojoGenDownloadController {
         String ext = (idx == -1) ? "" : filename.substring(idx);
         return ext;
     }
+
+    private void downloadPojogenFile(HttpServletResponse response) throws IOException {
+        File file = new File("application.properties");
+        InputStream input = new FileInputStream(file);
+        byte[] bytes = input.readAllBytes();
+        input.close();
+
+    }
+
 }
+
+

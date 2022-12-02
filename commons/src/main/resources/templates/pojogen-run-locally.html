@@ -1,0 +1,44 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset = "ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" href="styles.css" th:href="@{/styles.css}"/>
+    <title>Spring Boot Application</title>
+</head>
+
+<body>
+<h1>Plain Old Java Object Generator</h1><br>
+
+How to run POJO generator locally<br>
+<br>
+<span>Download these three files: </span><br><br>
+
+<a href="/code/pojogen.jar" download>
+    pojogen.jar
+</a>
+<span style="display:inline-block; width:12px;"></span>
+<a href="/code/javaparser-core-3.3.2.jar" download>
+    javaparser-core-3.3.2.jar
+</a>
+<span style="display:inline-block; width:12px;"></span>
+<a href="/code/MountainModel1.java" download>
+    MountainModel1.java
+</a><br>
+<br>
+<br>
+<br>
+<span>Open a Command Prompt and run: </span><br>
+<pre>
+java -cp pojogen.jar;javaparser-core-3.3.2.jar com.marcosavard.library.javaparser.generate.SourceBasedPojoGeneratorMain MountainModel1.java
+</pre>
+<br>
+<span>That will generate the .java files locally.</span><br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+</body>
+</html>
