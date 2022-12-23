@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@Controller
+//@Controller
 public class PojoGenDownloadController {
     @Autowired
     private PojoGenService pojoGenService;

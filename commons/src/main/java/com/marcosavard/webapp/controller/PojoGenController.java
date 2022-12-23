@@ -21,6 +21,7 @@ public class PojoGenController {
 
     @GetMapping("/pojogen")
     public String upload() {
+        System.out.println("User get /pojogen");
         return "pojogen";
     }
 

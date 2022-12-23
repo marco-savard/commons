@@ -19,9 +19,10 @@ public class TestController {
 
     @GetMapping("/test")
     public String test(Model model) {
+        System.out.println("User get /test");
         LocalDateTime now = LocalDateTime.now();
         String responseTime = DateTimeFormatter.ofPattern(TIME_PATTERN).format(now);
-        model.addAttribute("startTime", startTime);
+        model.addAttribute("startTime", startTime + " v01");
         model.addAttribute("responseTime", responseTime);
         return "test";
     }

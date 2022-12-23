@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Set;
 
-@Controller
+//@Controller
 public class PojoGenRunLocallyController {
     @Autowired
     private PojoGenService pojoGenService;

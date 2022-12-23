@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.MessageFormat;
 
-@Controller
+//@Controller
 public class PojoGenChooseController {
     private static final long MAX_FILE_SIZE = 50 * 1024;
 

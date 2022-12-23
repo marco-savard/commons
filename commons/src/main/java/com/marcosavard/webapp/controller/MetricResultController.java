@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+//@Controller
 public class MetricResultController {
     @Autowired
     private FileInfoService fileInfoService;
