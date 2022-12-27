@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <link rel="stylesheet" type="text/css" href="styles.css" th:href="@{/styles.css}"/>
+    <title>Web Application</title>
+</head>
+
+<body>
+<h1>Plain Old Java Object Generation</h1>
+
+<table>
+    <thead>
+      <tr>
+          <th>Attribute</th>
+          <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Source file:</td><td th:text="${sourceFile}"></td></tr>
+      <tr><td>LOC in source file:</td><td th:text="${sourceLoc}"></td></tr>
+      <tr><td>Generated file:</td><td th:text="${generatedFile}"></td></tr>
+      <tr><td>Nb. of POJOs generated</td><td th:text="${nbPojos}"></td></tr>
+      <tr><td>Nb. of LOCs generated</td><td th:text="${generatedLOC}"></td></tr>
+    </tbody>
+</table><br>
+
+<br>
+<span>Click to Download:</span><br><br>
+<a th:href="@{|/pojogen/download|}" th:text="${generatedFile}">Download</a><br><br>
+
+</body>
+</html>

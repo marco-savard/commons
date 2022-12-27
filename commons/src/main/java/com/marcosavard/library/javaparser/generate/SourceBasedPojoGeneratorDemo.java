@@ -5,19 +5,27 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
+import com.marcosavard.commons.lang.reflect.meta.MetaClass;
 import com.marcosavard.commons.lang.reflect.meta.PojoGenerator;
+import com.marcosavard.domain.library.model.LibraryModel;
+import com.marcosavard.domain.mountain.model.MountainModel1;
 import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SourceBasedPojoGeneratorDemo {
+    private static final String SOURCE_FOLDER = "C:/Users/Marco/IdeaProjects/commons/commons/src/main/java";
+    private static final String OUTPUT_FOLDER = "C:/Users/Marco/IdeaProjects/commons/commons/src/main/java";
 
     public static void main(String[] args) {
-        File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
-        File sourceFile = getSourceFile(PurchaseOrderModel.class);
-        generate(outputFolder, sourceFile);
+       // Class model = MountainModel1.class;
+        Class model = PurchaseOrderModel.class;
+        File sourceFile = getSourceFile(model);
+        File outputFolder = new File(OUTPUT_FOLDER);
+        generate(sourceFile, outputFolder);
     }
 
     private static File getSourceFile(Class claz) {
@@ -29,45 +37,35 @@ public class SourceBasedPojoGeneratorDemo {
     }
 
     private static List<File> getSourceFiles(Class claz) {
-        File sourceFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
+        File sourceFolder = new File(SOURCE_FOLDER);
         Package pack = claz.getPackage();
         List<File> sourceFiles = FileSystem.getSourceFiles(sourceFolder, pack);
         sourceFiles.addAll(sourceFiles);
         return sourceFiles;
     }
 
-    private static void generate(File outputFolder, File sourceFile) {
+    private static void generate(File sourceFile, File outputFolder) {
         try {
-            JavaParser parser = new JavaParser();
-            CompilationUnit cu = parser.parse(sourceFile).getResult().orElse(null);
+            //generate POJOs
+            Map<MetaClass, String> codeByClassName = new HashMap<>();
+            Reader reader = new FileReader(sourceFile);
+            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(reader, codeByClassName);
+            pojoGenerator
+                    .withParameterlessConstructor()
+                    .generatePojos();
+            reader.close();
 
-            //new
-            SourceBasedPojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
-            List<File> generatedFiles = pojoGenerator.generate(cu);
-
-            for (File file : generatedFiles) {
-                Console.println("File {0} generated", file.getName());
+            //Write POJOs
+            for (MetaClass mc : codeByClassName.keySet()) {
+                String packName = mc.getPackage().getName().replace('.', '/');
+                File packageFolder = new File(outputFolder, packName);
+                String fileName = mc.getSimpleName() + ".java";
+                File generatedFile = new File(packageFolder, fileName);
+                Writer w = new FileWriter(generatedFile);
+                String pojo = codeByClassName.get(mc);
+                w.write(pojo);
+                w.close();
             }
-
-            /*
-
-            NodeList<TypeDeclaration<?>> types = cu.getTypes();
-
-            for (TypeDeclaration type : types) {
-                List<Node> nodes = type.getChildNodes();
-
-                for (Node node : nodes) {
-                    if (node instanceof TypeDeclaration<?> td) {
-                        File generatedFile = generateType(outputFolder, cu, td);
-                        Console.println("File {0} generated", generatedFile.getName());
-                    }
-                }
-            }
-            
-            cu.getTypes();
-
-             */
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -78,7 +76,7 @@ public class SourceBasedPojoGeneratorDemo {
 
        // try {
           //  MetaClass mc = new SourceMetaClass(cu, typeDeclaration);
-            PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
+          //  PojoGenerator pojoGenerator = new SourceBasedPojoGenerator(outputFolder, cu);
            // generated = pojoGenerator.generateClass(mc);
       //  } catch (IOException e) {
      //       throw new RuntimeException(e);

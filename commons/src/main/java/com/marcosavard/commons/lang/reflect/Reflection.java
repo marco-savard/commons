@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 
@@ -177,7 +178,7 @@ public class Reflection {
             .filter(m -> m.getName().startsWith("get") || m.getName().startsWith("is"))
             .filter(m -> types.contains(m.getReturnType()))
             .sorted(comparing(Method::getName))
-            .toList();
+            .collect(Collectors.toList());
 
     for (Method m : getters) {
       String name = m.getName();
@@ -274,7 +275,7 @@ public class Reflection {
         methods.stream()
             .filter(m -> isStatic(m))
             .sorted(comparing(Method::getParameterCount))
-            .toList();
+             .collect(Collectors.toList());
     Method[] array = factoryMethods.toArray(new Method[0]);
     return array;
   }

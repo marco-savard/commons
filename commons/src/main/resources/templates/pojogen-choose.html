@@ -1,0 +1,40 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset = "ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" href="styles.css" th:href="@{/styles.css}"/>
+    <title>Spring Boot Application</title>
+</head>
+
+<body>
+<h1>Plain Old Java Object Generator</h1><br>
+<label>Choose a local Java file (.java) : </label><br>
+<input id="fileupload" type="file" name="fileupload" data-buttonText="Your label here." onclick="enabledButton()"></input><br><br>
+<label>Then, upload the chosen file :</label><br>
+<button id="upload-button" disabled onclick="uploadFile()"> Upload File</button><br><br>
+
+<!-- Ajax JavaScript File Upload to Spring Boot Logic -->
+<script>
+  function enabledButton() {
+    var button = document.getElementById("upload-button");
+    button.disabled = false;
+  }
+
+  async function uploadFile() {
+    let formData = new FormData();
+    formData.append("file", fileupload.files[0]);
+
+    let response = await fetch('/pojogen/upload', {
+      method: "POST",
+      body: formData
+    });
+
+    if (response.status == 200) {
+      document.location.href = '/pojogen/result'
+    } else {
+      const json = await response.json();
+      alert(response.status + " " + json.error + " : " + json.message);
+    }
+  }
+ </script>
+</body>
+</html>

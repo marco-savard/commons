@@ -5,21 +5,16 @@ import com.marcosavard.commons.io.FormatWriter;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.util.collection.SortedList;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class PojoGenerator {
-    protected final File outputFolder;
+    protected final Map<MetaClass, String> pojoByMetaclass;
 
     //Options
     protected int indentation = 2;
@@ -31,13 +26,15 @@ public abstract class PojoGenerator {
 
     protected String containerName = "owner";
 
+    public abstract void generatePojos();
+
     public enum AccessorOrder {
         GROUPED_BY_PROPERTIES,
         GROUPED_BY_GETTERS_SETTERS
     }
 
-    protected PojoGenerator(File outputFolder) {
-        this.outputFolder = outputFolder;
+    protected PojoGenerator(Map<MetaClass, String> codeByClassName) {
+        this.pojoByMetaclass = codeByClassName;
     }
 
     public PojoGenerator withAccessors(AccessorOrder accessorOrder) {
@@ -73,27 +70,22 @@ public abstract class PojoGenerator {
 
     protected abstract List<MetaClass> getSubClasses(MetaClass mc);
 
-    public File generateClass(MetaClass mc) throws IOException {
+    public void generatePojo(MetaClass mc) {
         Console.println("Generating code for {0}", mc.getSimpleName());
+        StringWriter sw = new StringWriter();
+        generateClass(mc, sw);
 
-        // create folder
-        String packageName = mc.getPackageName();
-        String folderName = packageName.replace(".", "//");
-        File subfolder = new File(outputFolder, folderName);
-        subfolder.mkdirs();
+        pojoByMetaclass.put(mc, sw.toString());
+    }
 
-        // create file
-        String filename = mc.getSimpleName() + ".java";
-        File generated = new File(subfolder, filename);
-        Writer w = new FileWriter(generated);
-        FormatWriter fw = new FormatWriter(w, indentation);
-
+    protected void generateClass(MetaClass mc, Writer w) {
         // generate code
+        FormatWriter fw = new FormatWriter(w, indentation);
+        String packageName = mc.getPackageName();
         generateType(fw, packageName, mc);
         fw.close();
-
-        return generated;
     }
+
 
     protected void generateType(FormatWriter w, String packageName, MetaClass mc) {
         w.println("package {0};", packageName);
@@ -148,7 +140,7 @@ public abstract class PojoGenerator {
         generateConstants(w, mc);
         generateVariables(w, mc);
         generateMetaFields(w, mc);
-        generateConstructor(w, mc);
+        generateConstructors(w, mc);
         generateMethods(w, mc);
         w.unindent();
         w.println("}");
@@ -232,7 +224,7 @@ public abstract class PojoGenerator {
         List<MetaField> fields = mc.getVariables();
 
         if (reference != null) {
-            generateReference(w, reference);
+            //generateReference(w, reference);
         }
 
         for (MetaField field : fields) {
@@ -257,7 +249,7 @@ public abstract class PojoGenerator {
         String modifiers = String.join(" ", modifierList);
 
         String typeName = field.getTypeName();
-        String initValue = field.getInitialValue();
+        String initValue = field.isFinal() ? null : field.getInitialValue();
 
         if (initValue == null) {
             w.println("{0} {1} {2};", modifiers, typeName, field.getName());
@@ -299,33 +291,47 @@ public abstract class PojoGenerator {
         }
     }
 
-    protected void generateConstructor(FormatWriter w, MetaClass mc) {
+    protected void generateConstructors(FormatWriter w, MetaClass mc) {
         List<MetaField> constructorFields = getConstructorFields(mc);
+        List<MetaField> requiredConstructorFields = constructorFields.stream()
+                .filter(mf -> mf.getInitialValue() == null)
+                .collect(Collectors.toList());
 
         if (hasRequiredComponent(mc)) {
             //TODO generateOfMethods(w, mc);
         }
 
-        if (!constructorFields.isEmpty()) {
+        if (! constructorFields.isEmpty()) {
             generateParameterlessConstructor(w, mc);
-            String visibility = mc.isAbstract() ? "protected" : "public";
-            String className = mc.getSimpleName();
-
-            w.println("/**");
-            for (MetaField field : constructorFields) {
-                w.println(" * @param {0} {1}", field.getName(), field.getDescription());
-            }
-            w.println(" */");
-
-            w.print("{0} {1}(", visibility, className);
-            w.print(String.join(", ", toParameters(constructorFields)));
-            w.println(") {");
-            w.indent();
-            generateConstructorBody(w, mc, constructorFields);
-            w.unindent();
-            w.println("}");
-            w.println();
         }
+
+        if (! requiredConstructorFields.isEmpty()) {
+            generateConstructor(w, mc, requiredConstructorFields, constructorFields);
+        }
+
+        if (! constructorFields.isEmpty() && (constructorFields.size() > requiredConstructorFields.size())) {
+            generateConstructor(w, mc, constructorFields, constructorFields);
+        }
+    }
+
+    private void generateConstructor(FormatWriter w, MetaClass mc, List<MetaField> constructorParams, List<MetaField> constructorFields) {
+        String visibility = mc.isAbstract() ? "protected" : "public";
+        String className = mc.getSimpleName();
+
+        w.println("/**");
+        for (MetaField field : constructorParams) {
+            w.println(" * @param {0} {1}", field.getName(), field.getDescription());
+        }
+        w.println(" */");
+
+        w.print("{0} {1}(", visibility, className);
+        w.print(String.join(", ", toParameters(constructorParams)));
+        w.println(") {");
+        w.indent();
+        generateConstructorBody(w, mc, constructorParams, constructorFields);
+        w.unindent();
+        w.println("}");
+        w.println();
     }
 
     private boolean hasRequiredComponent(MetaClass mc) {
@@ -343,36 +349,77 @@ public abstract class PojoGenerator {
     }
 
     protected void generateParameterlessConstructorBody(FormatWriter w, MetaClass mc) {
-        List<MetaField> requiredFields = mc.getVariables().stream().filter(mf -> ! mf.isOptional()).toList();
+        List<MetaField> constructorFields = getConstructorFields(mc);
+        MetaField anyRequiredField = constructorFields.stream()
+                .filter(mf -> ! mf.isOptional())
+                .findAny()
+                .orElse(null);
+        boolean atLeastOneRequiredField = (anyRequiredField != null);
+        constructorFields = atLeastOneRequiredField ? new ArrayList<>() : constructorFields;
+        List<String> initialValues = toDefaultValues(constructorFields);
 
         w.indent();
+
+        if (! constructorFields.isEmpty()) {
+            w.println("this({0});", String.join(", ", initialValues));
+        }
+
+        List<MetaField> requiredFields = mc.getVariables().stream()
+                .filter(mf -> ! mf.isOptional())
+                .collect(Collectors.toList());
+
         for (MetaField mf : requiredFields) {
-            w.println("this.{0} = {1};", mf.getName(), getInitialValue(mf));
+            if (! constructorFields.contains(mf)) {
+                w.println("this.{0} = {1};", mf.getName(), getInitialValue(mf));
+            }
         }
         w.unindent();
     }
 
-    protected void generateConstructorBody(FormatWriter w, MetaClass mc, List<MetaField> parameters) {
+    private List<String> toDefaultValues(List<MetaField> fields) {
+        List<String> values = new ArrayList<>();
+
+        for (MetaField mf : fields) {
+            values.add(mf.getDefaultValue());
+        }
+
+        return values;
+    }
+
+    protected void generateConstructorBody(FormatWriter w, MetaClass mc,
+                                           List<MetaField> parameters, List<MetaField> constructorFields) {
         MetaClass superClass = mc.getSuperClass();
         List<MetaField> superClassVariables = getConstructorFields(superClass);
 
         //generate the super
         if (!superClassVariables.isEmpty()) {
-            List<String> referenceNames = toNameList(superClassVariables);
-            w.println("super(" + String.join(", ", referenceNames) + ");");
+            List<String> values = new ArrayList<>();
+
+            for (MetaField mf : superClassVariables) {
+                String value = parameters.contains(mf) ? mf.getName() : mf.getInitialValue();
+                values.add(value);
+            }
+
+            String valueList = String.join(", ", values);
+            w.println("super(" + valueList + ");");
         }
 
-        List<MetaField> settableParameters = new ArrayList<>(parameters);
-        settableParameters.removeAll(superClassVariables);
+        List<MetaField> settableFields = new ArrayList<>(constructorFields);
+        settableFields.removeAll(superClassVariables);
 
-        for (MetaField mf : settableParameters) {
-            if (! mf.isOptional() && ! mf.getType().isPrimitive() && ! mf.getType().isCollection()) {
+        for (MetaField mf : settableFields) {
+            boolean notNull = ! mf.isOptional()
+                    && ! mf.getType().isPrimitive()
+                    && ! mf.getType().isCollection()
+                    && parameters.contains(mf);
+            if (notNull) {
                 verifyNullArgument(w, mf);
             }
         }
 
-        for (MetaField m : settableParameters) {
-            w.println("this.{0} = {0};", m.getName());
+        for (MetaField mf : settableFields) {
+            String value = parameters.contains(mf) ? mf.getName() : mf.getInitialValue();
+            w.println("this.{0} = {1};", mf.getName(), value);
         }
     }
 
@@ -746,7 +793,7 @@ public abstract class PojoGenerator {
         List<MetaField> fields = allVariables.stream()
                 .filter(mf -> immutable || ! mf.isOptional())
                 .filter(mf -> ! (mf instanceof MetaReference))
-                .toList();
+                .collect(Collectors.toList());
         return fields;
     }
 
@@ -755,7 +802,7 @@ public abstract class PojoGenerator {
         List<MetaField> allVariables = mc.getVariables();
         List<MetaField> fields = allVariables.stream()
                 .filter(mf -> immutable || ! mf.isOptional())
-                .toList();
+                .collect(Collectors.toList());
         return fields;
     }
 
@@ -763,7 +810,7 @@ public abstract class PojoGenerator {
         MetaClass superClass = (mc == null) ? null : mc.getSuperClass();
         List<MetaField> constructorFields = (superClass != null) ? getConstructorFields(superClass): new ArrayList<>();
 
-        MetaField reference = getReferenceForClass(mc);
+        MetaField reference = (mc == null) ? null : getReferenceForClass(mc);
         if (reference != null) {
             constructorFields.add(reference);
         }
@@ -773,7 +820,8 @@ public abstract class PojoGenerator {
                 .filter(mf -> ! mf.isStatic())
                 .filter(mf -> ! mf.isComponent())
                 .filter(mf -> ! mf.getType().isCollection())
-                .toList();
+                .filter(mf -> ! mf.getName().equals(containerName))
+                .collect(Collectors.toList());
 
         constructorFields.addAll(requiredFields);
         return constructorFields;

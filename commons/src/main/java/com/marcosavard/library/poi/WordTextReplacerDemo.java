@@ -17,7 +17,7 @@ public class WordTextReplacerDemo {
 
   public static void main(String[] args) throws Exception {
     // read source
-    String resourceName = "Mise à jour du questionnaire.docx";
+    String resourceName = "Mise a jour du questionnaire.docx";
     InputStream input = WordTextReplacerDemo.class.getResourceAsStream(resourceName);
 
     // create target

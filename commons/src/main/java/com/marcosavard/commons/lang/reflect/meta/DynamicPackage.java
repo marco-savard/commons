@@ -7,6 +7,7 @@ import com.marcosavard.commons.lang.reflect.meta.annotations.Readonly;
 import java.lang.reflect.*;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DynamicPackage {
 
@@ -111,11 +112,12 @@ public class DynamicPackage {
         boolean immutable = isImmutable(claz);
         List<Member> requiredMembers = new ArrayList<>();
         Field[] fields = declared ? claz.getDeclaredFields() : claz.getFields();
+
         requiredMembers.addAll(Arrays.stream(fields)
                 .filter(f -> (immutable || ! isOptional(f)))
                 .filter(f -> ! isStatic(f))
                 .filter(f -> !isCollection(f.getType()))
-                .toList());
+                .collect(Collectors.toList()));
         return requiredMembers;
     }
 
@@ -273,7 +275,8 @@ public class DynamicPackage {
 
         if (value instanceof String) {
             str = "\"" + value + "\"";
-        } else if (value instanceof Enum e) {
+        } else if (value instanceof Enum) {
+            Enum e = (Enum)value;
             str = e.getDeclaringClass().getSimpleName() + "." + e.name();
         } else {
             str = Objects.toString(value);
@@ -302,9 +305,11 @@ public class DynamicPackage {
     protected Class<?> getType(Member member) {
         Class<?> type = null;
 
-        if (member instanceof Field field) {
+        if (member instanceof Field) {
+            Field field = (Field)member;
             type = field.getType();
-        } else if (member instanceof DynamicField field) {
+        } else if (member instanceof DynamicField) {
+            DynamicField field = (DynamicField)member;
             type = field.getType();
         }
 
@@ -375,7 +380,8 @@ public class DynamicPackage {
     private boolean isNotNull(Member member) {
         boolean notNull = false;
 
-        if (member instanceof Field field) {
+        if (member instanceof Field) {
+            Field field = (Field)member;
             boolean readonly = isReadOnly(field);
             boolean optional = isOptional(field);
             notNull = readonly || (! optional);
@@ -388,7 +394,8 @@ public class DynamicPackage {
         boolean immutable = isImmutable(member.getDeclaringClass());
         boolean optional = false;
 
-        if (member instanceof Field f) {
+        if (member instanceof Field) {
+            Field f = (Field)member;
             optional =  Optional.class.isAssignableFrom(f.getType());
         }
 

@@ -1,14 +1,9 @@
 package com.marcosavard.commons.lang.reflect.meta;
 
-import com.marcosavard.commons.lang.reflect.meta.annotations.Description;
-import com.marcosavard.commons.lang.reflect.meta.annotations.Immutable;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MetaClass {
     private MetaPackage ownerPackage;
@@ -35,7 +30,8 @@ public abstract class MetaClass {
     public boolean equals(Object other) {
         boolean equal = false;
 
-        if (other instanceof MetaClass that) {
+        if (other instanceof MetaClass) {
+            MetaClass that = (MetaClass)other;
             equal = getName().equals(that.getName());
         }
 
@@ -87,11 +83,19 @@ public abstract class MetaClass {
 
     public abstract boolean isAbstract();
 
+    public abstract boolean isBoolean();
+
+    public abstract boolean isCharacter();
+
     public abstract boolean isCollection() ;
 
     public abstract boolean isEnum();
 
+    public abstract boolean isFloatingNumber();
+
     public abstract boolean isImmutable();
+
+    public abstract boolean isNumber();
 
     public abstract boolean isPrimitive();
 
@@ -109,136 +113,36 @@ public abstract class MetaClass {
     }
 
     public List<MetaField> getConstants() {
-        return Arrays.stream(getDeclaredFields()).filter(f -> f.isConstant()).toList();
+        return Arrays.stream(getDeclaredFields()).filter(f -> f.isConstant()).collect(Collectors.toList());
+    }
+
+    public String getDefaultValue() {
+        String defaultValue;
+
+        if (isFloatingNumber()) {
+            defaultValue = "0.0";
+        } if (isNumber()) {
+            defaultValue = "0";
+        } else if (isBoolean()) {
+            defaultValue = "false";
+        } else if (isCharacter()) {
+            defaultValue = "'\0''";
+        } else  {
+            defaultValue = "null";
+        }
+
+        return defaultValue;
     }
 
     public List<MetaField> getAllVariables() {
-        return Arrays.stream(getFields()).filter(f -> ! f.isConstant()).toList();
+        return Arrays.stream(getFields()).filter(f -> ! f.isConstant()).collect(Collectors.toList());
     }
 
     public List<MetaField> getVariables() {
-        return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).toList();
+        return Arrays.stream(getDeclaredFields()).filter(f -> ! f.isConstant()).collect(Collectors.toList());
     }
 
     public abstract boolean hasSuperClass();
 
-    private static class ReflectiveMetaClass extends MetaClass {
-        private final Class<?> claz;
 
-        public static MetaClass of(Class claz) {
-            String packageName = claz.getPackageName();
-            MetaPackage mp = MetaModel.getInstance().findPackageByName(packageName);
-            return new ReflectiveMetaClass(mp, claz);
-        }
-
-        private ReflectiveMetaClass(MetaPackage mp, Class claz) {
-            super(mp);
-            this.claz = claz;
-            addDeclaredFields();
-        }
-
-        public void addDeclaredFields() {
-            Field[] fields = claz.getDeclaredFields();
-
-            for (int i=0; i< fields.length; i++) {
-                metaFields.add(MetaField.of(fields[i]));
-             }
-        }
-
-        @Override
-        public MetaField[] getFields() {
-            Field[] fields = claz.getFields();
-            MetaField[] metaFields = new MetaField[fields.length];
-
-            for (int i=0; i< fields.length; i++) {
-                metaFields[i] = MetaField.of(fields[i]);
-            }
-
-            return metaFields;
-        }
-
-        @Override
-        public String getDescription() {
-            String name = claz.getSimpleName();
-            Description description = claz.getAnnotation(Description.class);
-            String desc = (description == null) ? "" : description.value();
-            return name + " " + desc;
-        }
-
-        @Override
-        public String getName() {
-            return claz.getName();
-        }
-
-        @Override
-        public String getPackageName() {
-            String modelPackage = claz.getPackageName();
-            int idx = modelPackage.lastIndexOf('.');
-            return modelPackage.substring(0, idx);
-        }
-
-        @Override
-        public String getQualifiedName() {
-            return claz.getPackageName() + "." + getSimpleName();
-        }
-
-        @Override
-        public String getSimpleName() {
-            return claz.getSimpleName();
-        }
-
-        @Override
-        public MetaClass getSuperClass() {
-            Class<?> superclass = claz.getSuperclass();
-            superclass = Object.class.equals(superclass) ? null : superclass;
-            return (superclass == null) ? null : ReflectiveMetaClass.of(superclass);
-        }
-
-        @Override
-        public boolean hasSuperClass() {
-            Class<?> superclass = claz.getSuperclass();
-            return (superclass != null) && (!Object.class.equals(superclass));
-        }
-
-        @Override
-        public boolean isAbstract() {
-            return Modifier.isAbstract(claz.getModifiers());
-        }
-
-        @Override
-        public boolean isCollection() {
-            return Collection.class.isAssignableFrom(claz);
-        }
-
-        @Override
-        public boolean isEnum() {
-            return claz.isEnum();
-        }
-
-        @Override
-        public boolean isImmutable() {
-            return claz.getAnnotation(Immutable.class) != null;
-        }
-
-        @Override
-        public boolean isPrimitive() {
-            boolean primitive = boolean.class.equals(claz);
-            primitive = primitive || byte.class.equals(claz);
-            primitive = primitive || char.class.equals(claz);
-            primitive = primitive || short.class.equals(claz);
-            primitive = primitive || int.class.equals(claz);
-            primitive = primitive || long.class.equals(claz);
-            primitive = primitive || float.class.equals(claz);
-            primitive = primitive || double.class.equals(claz);
-            return primitive;
-        }
-
-        @Override
-        public boolean isPublic() {
-            return Modifier.isPublic(claz.getModifiers());
-        }
-
-
-
-    }
 }

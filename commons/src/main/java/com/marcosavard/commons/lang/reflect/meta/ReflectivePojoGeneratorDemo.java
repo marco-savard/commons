@@ -7,34 +7,31 @@ import com.marcosavard.domain.purchasing.model.PurchaseOrderModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReflectivePojoGeneratorDemo {
 
   public static void main(String[] args) {
     File outputFolder = new File("C:/Users/Marco/IdeaProjects/commons/commons/src/main/java");
     //File outputFolder = new File("C:/Users/User/IdeaProjects/commons/commons/src/main/java");
-    generate(outputFolder, MountainModel1.class.getClasses());
-    generate(outputFolder, LibraryModel.class.getClasses());
-    generate(outputFolder, PurchaseOrderModel.class.getClasses());
+
+    Map<MetaClass, String> codeByFileName = new HashMap<>();
+    generate(codeByFileName, MountainModel1.class.getClasses());
+    generate(codeByFileName, LibraryModel.class.getClasses());
+    generate(codeByFileName, PurchaseOrderModel.class.getClasses());
+
+    //TODO write in file
   }
 
-  private static void generate(File outputFolder, Class<?> claz) {
-    generate(outputFolder, new Class[] {claz});
-  }
+  //private static void generate(File outputFolder, Class<?> claz) {
+ //   generate(outputFolder, new Class[] {claz});
+  //}
 
-  private static void generate(File outputFolder, Class<?>[] classes) {
-    try {
-      ReflectivePojoGenerator generator = new ReflectivePojoGenerator(outputFolder, classes);
+  private static void generate(Map<MetaClass, String> codeByFileName, Class<?>[] classes) {
+      ReflectivePojoGenerator generator = new ReflectivePojoGenerator(codeByFileName, classes);
       generator.withParameterlessConstructor();
-      List<File> generatedFiles = generator.generate();
-
-      for (File generatedFile : generatedFiles) {
-        Console.println("File {0} generated", generatedFile);
-      }
-
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+      generator.generatePojos();
   }
 }

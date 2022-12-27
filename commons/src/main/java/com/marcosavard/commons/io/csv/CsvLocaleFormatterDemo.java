@@ -11,6 +11,7 @@ import com.marcosavard.commons.util.PropertiesConverter;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CsvLocaleFormatterDemo {
 
@@ -22,7 +23,10 @@ public class CsvLocaleFormatterDemo {
     private static void formatLocalesUsingSubclass() {
         //get data
         Locale[] locales = Locale.getAvailableLocales();
-        List<Locale> languages = Arrays.asList(locales).stream().filter(l -> ! l.getLanguage().equals("")).toList().subList(0, 220);
+        List<Locale> languages = Arrays.asList(locales).stream()
+                .filter(l -> ! l.getLanguage().equals(""))
+                .collect(Collectors.toList())
+                .subList(0, 220);
 
         //format data
         CsvFormatter formatter = new LocaleFormatter(Locale.class);
@@ -39,7 +43,10 @@ public class CsvLocaleFormatterDemo {
     private static void formatLocalesUsingProperties() throws ClassNotFoundException {
         //get data
         Locale[] locales = Locale.getAvailableLocales();
-        List<Locale> languages = Arrays.asList(locales).stream().filter(l -> ! l.getLanguage().equals("")).toList().subList(0, 220);
+        List<Locale> languages = Arrays.asList(locales).stream()
+                .filter(l -> ! l.getLanguage().equals(""))
+                .collect(Collectors.toList())
+                .subList(0, 220);
 
         //format data
         String resources = "resources/LocaleFormatter.properties";

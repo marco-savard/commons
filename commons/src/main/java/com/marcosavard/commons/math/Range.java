@@ -18,7 +18,7 @@ public class Range extends ArrayList<Integer> {
   public static final BinaryOperator<Integer> MULTIPLICATION = (x, y) -> x * y;
 
   private Range(int min, int max) {
-    addAll(IntStream.rangeClosed(min, max - 1).boxed().toList());
+    addAll(IntStream.rangeClosed(min, max - 1).boxed().collect(Collectors.toList()));
   }
 
   private Range(List<Integer> list) {
@@ -42,7 +42,7 @@ public class Range extends ArrayList<Integer> {
     replaced = replaced.replace(",", " ");
     String[] splitted = replaced.split(" +");
     Function<String, Integer> parse = Integer::parseInt;
-    List<Integer> list = Arrays.stream(splitted).map(parse).toList();
+    List<Integer> list = Arrays.stream(splitted).map(parse).collect(Collectors.toList());
     return new Range(list);
   }
 

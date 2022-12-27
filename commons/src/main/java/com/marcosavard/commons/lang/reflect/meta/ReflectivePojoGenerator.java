@@ -8,31 +8,30 @@ import com.marcosavard.commons.util.collection.UniqueList;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ReflectivePojoGenerator extends PojoGenerator {
 
   private DynamicPackage dynamicPackage;
 
-  public ReflectivePojoGenerator(File outputFolder, Class<?>[] classes) {
-    super(outputFolder);
+  public ReflectivePojoGenerator(Map<MetaClass, String> codeByFileName, Class<?>[] classes) {
+    super(codeByFileName);
     dynamicPackage = new DynamicPackage(classes);
   }
 
-  public List<File> generate() throws IOException {
+  @Override
+  public void generatePojos() {
     dynamicPackage.buildReferenceByClass(containerName);
-    List<File> generatedFiles = new ArrayList<>();
 
     for (Class claz : dynamicPackage.classes) {
       MetaClass mc = MetaClass.of(claz);
-      generatedFiles.add(generateClass(mc));
+      generatePojo(mc);
     }
-
-    return generatedFiles;
   }
 
-  public File generate(Class<?> claz) throws IOException {
+  public void generate(Class<?> claz) throws IOException {
     MetaClass mc = MetaClass.of(claz);
-    return generateClass(mc);
+    generatePojo(mc);
   }
 
   @Override
@@ -59,12 +58,11 @@ public class ReflectivePojoGenerator extends PojoGenerator {
             .filter(mf -> ! mf.isStatic())
             .filter(mf -> ! mf.isComponent())
             .filter(mf -> ! mf.getType().isCollection())
-            .toList();
+            .collect(Collectors.toList());
 
     constructorFields.addAll(requiredFields);
     return constructorFields;
   }
-
 
   @Override
   protected String getInitialValue(MetaField mf) {
@@ -88,7 +86,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
     if (value instanceof String) {
       str = "\"" + value + "\"";
-    } else if (value instanceof Enum e) {
+    } else if (value instanceof Enum) {
+      Enum e = (Enum)value;
       str = e.getDeclaringClass().getSimpleName() + "." + e.name();
     } else {
       str = Objects.toString(value);
@@ -120,7 +119,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
       value = "0";
     } else if (long.class.equals(type)) {
       value = "0L";
-    } else if ((member instanceof Field f) && Enum.class.isAssignableFrom(type)) {
+    } else if ((member instanceof Field) && Enum.class.isAssignableFrom(type)) {
+      Field f = (Field)member;
       value = dynamicPackage.getInitialValueOfVariable(f);
     }
 
@@ -247,7 +247,8 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     List<Class> memberTypes = new ArrayList<>();
 
     for (Member member : members) {
-      if (member instanceof Field field) {
+      if (member instanceof Field) {
+        Field field = (Field)member;
         memberTypes.add(field.getType());
       }
     }
@@ -265,14 +266,15 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     List<Field> readOnlyFields = new ArrayList<>();
 
     for (Member member : readOnlyMembers) {
-      if (member instanceof Field field) {
+      if (member instanceof Field) {
+        Field field = (Field)member;
         readOnlyFields.add(field);
       }
     }
 
     List<Field> requiredComponents = readOnlyFields.stream()
             .filter(f -> dynamicPackage.isComponent(f))
-            .toList();
+            .collect(Collectors.toList());
     return requiredComponents;
   }
 
@@ -284,9 +286,9 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     List<String> superClassMemberNames = dynamicPackage.getMemberNames(superClassMembers);
 
     requiredMembers = requiredMembers.stream()
-            .filter(m -> (m instanceof Field f) && !dynamicPackage.isComponent(f))
+            .filter(m -> (m instanceof Field) && !dynamicPackage.isComponent((Field)m))
             .filter(m -> ! superClassMemberNames.contains(m.getName()))
-            .toList();
+            .collect(Collectors.toList());
 
     List<Member> constructorParameters = new UniqueList<>();
     constructorParameters.addAll(ownerReferences);
@@ -453,15 +455,15 @@ public class ReflectivePojoGenerator extends PojoGenerator {
   }
 
   private List<Field> getConstants(Class<?> claz) {
-    return Arrays.stream(claz.getDeclaredFields()).filter(f -> dynamicPackage.isConstant(f)).toList();
+    return Arrays.stream(claz.getDeclaredFields()).filter(f -> dynamicPackage.isConstant(f)).collect(Collectors.toList());
   }
 
   private List<Field> getAllVariables(Class<?> claz) {
-    return Arrays.stream(claz.getFields()).filter(f -> !dynamicPackage.isConstant(f)).toList();
+    return Arrays.stream(claz.getFields()).filter(f -> !dynamicPackage.isConstant(f)).collect(Collectors.toList());
   }
 
   private List<Field> getVariables(Class<?> claz) {
-    return Arrays.stream(claz.getDeclaredFields()).filter(f -> !dynamicPackage.isConstant(f)).toList();
+    return Arrays.stream(claz.getDeclaredFields()).filter(f -> !dynamicPackage.isConstant(f)).collect(Collectors.toList());
   }
 
 
@@ -471,7 +473,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     List<MetaField> allVariables = mc.getVariables();
     List<MetaField> fields = allVariables.stream()
             .filter(mf -> immutable || ! mf.isOptional())
-            .toList();
+            .collect(Collectors.toList());
     return fields;
   }
 
@@ -479,7 +481,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     boolean immutable = dynamicPackage.isImmutable(claz);
     List<Field> readOnlyFields = Arrays.stream(claz.getFields())
             .filter(f -> immutable || dynamicPackage.isReadOnly(f))
-            .toList();
+            .collect(Collectors.toList());
 
     List<Member> readOnlyMembers = new ArrayList<>();
     readOnlyMembers.addAll(readOnlyFields);
@@ -490,7 +492,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
     boolean immutable = dynamicPackage.isImmutable(claz);
     List<Field> requiredFields = Arrays.stream(claz.getFields())
             .filter(f -> immutable || ! dynamicPackage.isOptional(f))
-            .toList();
+            .collect(Collectors.toList());
 
     List<Member> requiredMembers = new ArrayList<>();
     requiredMembers.addAll(requiredFields);
@@ -500,7 +502,7 @@ public class ReflectivePojoGenerator extends PojoGenerator {
 
 
   private List<Field> getNotNullFields(Class<?> claz) {
-    return Arrays.stream(claz.getDeclaredFields()).filter(f -> ! dynamicPackage.isOptional(f)).toList();
+    return Arrays.stream(claz.getDeclaredFields()).filter(f -> ! dynamicPackage.isOptional(f)).collect(Collectors.toList());
   }
 
   private String getTypeName(Field field) {

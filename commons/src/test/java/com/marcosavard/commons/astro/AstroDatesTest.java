@@ -1,12 +1,11 @@
 package com.marcosavard.commons.astro;
 
 import java.util.Date;
-import org.junit.Test;
 import com.marcosavard.commons.astro.legacy.AstroDates;
-import junit.framework.Assert;
 
 public class AstroDatesTest {
 
+  /*
   @Test
   public void testDateUnixEra() {
     int year = 1970 - 1900;
@@ -51,6 +50,6 @@ public class AstroDatesTest {
     printResults(expected, result);
     Assert.assertEquals(expected, result, delta);
   }
-
+*/
 }
 

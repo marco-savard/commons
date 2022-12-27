@@ -1,6 +1,7 @@
 package com.marcosavard.commons.ling;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.marcosavard.commons.lang.CharUtil.isDiacritical;
 
@@ -156,7 +157,9 @@ public class Language {
 
     private void findCountryLocales() {
         List<Locale> allLocales = getAllLocales();
-        List<Locale> foundLocales = allLocales.stream().filter(l -> languageLocale.getLanguage().equals(l.getLanguage())).toList();
+        List<Locale> foundLocales = allLocales.stream()
+                .filter(l -> languageLocale.getLanguage().equals(l.getLanguage()))
+                .collect(Collectors.toList());
         countryLocales.addAll(foundLocales);
     }
 

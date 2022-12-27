@@ -9,6 +9,7 @@ import java.time.format.TextStyle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class LanguageDemo {
 
@@ -90,7 +91,7 @@ public class LanguageDemo {
                 .stream()
              //   .filter(l -> l.isLatinScript() &&  ! (l.isOceanianLanguage() || l.isAmericanLanguage() || l.isEuropeanLanguage() || l.isWorldLanguage() || l.isIndianLanguage() || l.isFarEastLanguage() ||  l.isCentralAsiaLanguage() || l.isSouthAfricaLanguage() || l.isCentralAfricaLanguage() || l.isEastAfricaLanguage()))
                 .filter(l -> l.isLatinScript() &&  l.isCentralEuropeanLanguage( ))
-                .toList();
+                .collect(Collectors.toList());
 
         for (Language language : foundLanguages) {
             Locale locale = language.toLocale();

@@ -1,0 +1,27 @@
+
+HOW TO RUN JAVA COMMANDS
+========================
+
+A) In Window Explorer, open command prompt
+1. Go to C:\Windows\System32
+2. Run as admin cmd.exe
+
+B) In Command Prompt, create the .jar
+1. cd C:\Users\Marco\IdeaProjects\commons\commons\target\classes
+2. "C:\Program Files\Java\jdk-19\bin\java" -version
+3. "C:\Program Files\Java\jdk-19\bin\jar" -cf pojogen.jar com/marcosavard/library/javaparser/generate/SourceBasedPojoGeneratorMain.class *
+4. dir --you could see the generated pojogen.jar
+5. copy pojogen.jar C:\Users\Marco\IdeaProjects\commons\commons\run\pojogen.jar
+
+C) In Command Prompt, run the .jar
+1. cd C:\Users\Marco\IdeaProjects\commons\commons\run
+2. "C:\Program Files\Java\jdk-19\bin\java" -cp pojogen.jar;javaparser-core-3.3.2.jar com.marcosavard.library.javaparser.generate.SourceBasedPojoGeneratorMain MountainModel1.java
+
+
+
+
+
+
+
+
+

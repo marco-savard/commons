@@ -1,5 +1,6 @@
 package com.marcosavard.library.javaparser.generate;
 
+import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
@@ -9,34 +10,45 @@ import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.lang.reflect.meta.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.jar.JarEntry;
 
 public class SourceBasedPojoGenerator extends PojoGenerator {
     protected CompilationUnit cu;
 
-    protected SourceBasedPojoGenerator(File outputFolder, CompilationUnit cu) {
-        super(outputFolder);
-        this.cu = cu;
+    public SourceBasedPojoGenerator(Reader reader, Map<MetaClass, String> codeByClassName) {
+        super(codeByClassName);
+        JavaParser parser = new JavaParser();
+        this.cu = parser.parse(reader);
     }
 
-    //entry point
-    public List<File> generate(CompilationUnit cu) throws IOException {
+    @Override
+    public void generatePojos() {
+        List<MetaClass> metaClasses = generate(this.cu);
+
+        for (MetaClass mc : metaClasses) {
+            super.generatePojo(mc);
+        }
+    }
+
+
+    private List<MetaClass> generate(CompilationUnit cu) {
         //pass 1 : generate meta classes
         PackageDeclaration pack = cu.getPackageDeclaration().orElse(null);
         SourceMetaPackage mp = new SourceMetaPackage(cu, pack);
         NodeList<TypeDeclaration<?>> types = cu.getTypes();
         List<MetaClass> metaClasses = new ArrayList<>();
-        List<File> generatedFiles = new ArrayList<>();
 
         for (TypeDeclaration type : types) {
             List<Node> nodes = type.getChildNodes();
 
             for (Node node : nodes) {
-                if (node instanceof TypeDeclaration<?> td) {
-                    MetaClass mc = new SourceMetaClass(mp, td);
+                if (node instanceof TypeDeclaration<?>) {
+                    TypeDeclaration<?> td = (TypeDeclaration<?>)node;
+                    MetaClass mc = new SourceMetaClass(mp, cu, td);
                     metaClasses.add(mc);
                 }
             }
@@ -49,7 +61,8 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
                 if (mf.isComponent()) {
                     MetaClass type = mf.getType();
                     MetaClass child = type.isCollection() ? mf.getItemType() : type;
-                    MetaReference mr = new MetaReference(child, mf, containerName);
+                    child = mf.isOptional() ? mf.getItemType() : child;
+                    MetaReference mr = MetaReference.of(child, mf, containerName);
 
                     Console.println("{0}", child.getName());
                 }
@@ -58,27 +71,78 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         //pass 3 : fill meta classes
         for (MetaClass mc : metaClasses) {
-            File generated = generateClass(mc);
-            generatedFiles.add(generated);
+          //  String generated = generateFile(mc);
+           // generatedFiles.add(generated);
         }
 
-        return generatedFiles;
+        return metaClasses;
     }
-
 
     @Override
     protected String getInitialValue(MetaField mf) {
-        return "null";
+        String initialValue = mf.getInitialValue();
+
+        if (initialValue == null) {
+            MetaClass type = mf.getType();
+
+            if (type.isNumber()) {
+                initialValue = "0";
+            } else if (type.isBoolean()) {
+                initialValue = "false";
+            } else if (type.isCharacter()) {
+                initialValue = "'\0''";
+            } else  {
+                initialValue = "null";
+            }
+        }
+
+        return initialValue;
     }
 
     @Override
     protected MetaField getReferenceForClass(MetaClass mc) {
-        return null;
+        MetaPackage mp = mc.getPackage();
+        List<MetaClass> metaClasses = mp.getClasses();
+        MetaField opposite = null, reference = null;
+
+        for (MetaField thisField : mc.getDeclaredFields()) {
+            if (thisField.getName().equals(containerName)) {
+                reference = thisField;
+                break;
+            }
+        }
+
+        if (reference == null) {
+            for (MetaClass that : metaClasses) {
+                MetaField[] thoseFields = that.getFields();
+                for (MetaField thatField : thoseFields) {
+                    if (thatField.isComponent()) {
+                        MetaClass type = thatField.getType();
+                        type = type.isCollection() ? thatField.getItemType() : type;
+
+                        if (type.equals(mc)) {
+                            opposite = thatField;
+                            break;
+                        }
+                    }
+                }
+
+                if (opposite != null) {
+                    break;
+                }
+            }
+
+            if (opposite != null) {
+                reference = MetaReference.of(mc, opposite, containerName);
+            }
+        }
+
+        return reference;
     }
 
     @Override
     protected String getGetterName(MetaField mf) {
-        String verb = "get";
+        String verb = mf.getType().isBoolean() ? "is" : "get";
         return verb + StringUtil.capitalize(mf.getName());
     }
 
@@ -96,6 +160,4 @@ public class SourceBasedPojoGenerator extends PojoGenerator {
 
         return subclasses;
     }
-
-
 }

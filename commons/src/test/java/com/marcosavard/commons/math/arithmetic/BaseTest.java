@@ -1,7 +1,7 @@
 package com.marcosavard.commons.math.arithmetic;
 
-import org.junit.Assert;
-import org.junit.Test;
+import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 public class BaseTest {
 

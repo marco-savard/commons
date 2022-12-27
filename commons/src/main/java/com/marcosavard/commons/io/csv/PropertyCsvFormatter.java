@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class PropertyCsvFormatter extends CsvFormatter {
@@ -107,7 +108,9 @@ public class PropertyCsvFormatter extends CsvFormatter {
         Constructor[] constructors = claz.getConstructors();
         List<Constructor> constructorList = Arrays.asList(constructors);
         Comparator<Constructor> constructorComparator = new ConstructorComparator();
-        constructorList = constructorList.stream().sorted(constructorComparator).toList();
+        constructorList = constructorList.stream()
+                .sorted(constructorComparator)
+                .collect(Collectors.toList());
         Constructor foundConstructor = constructorList.get(0);
 
         for (Constructor constructor : constructorList) {

@@ -11,18 +11,18 @@ public enum RegionAdministrative {
 	CAPITALE_NATIONALE("Capitale-Nationale"),
 	MAURICIE("Mauricie"),
 	ESTRIE("Estrie"),
-	MONTREAL("Montréal"),
+	MONTREAL("MontrÃ©al"),
 	OUTAOUAIS("Outaouais"),
-	ABITIBI("Abitibi-Témiscamingue"),
+	ABITIBI("Abitibi-TÃ©miscamingue"),
 	COTE_NORD("Cote-Nord"),
-	NORD_DU_QUEBEC("Nord-du-Québec"),
-	GASPESIE("Gaspésie--Iles-de-la-Madeleine"),
-	CHAUDIERE_APPALACHES("Chaudière-Appalaches"),
+	NORD_DU_QUEBEC("Nord-du-QuÃ©bec"),
+	GASPESIE("GaspÃ©sie--Iles-de-la-Madeleine"),
+	CHAUDIERE_APPALACHES("ChaudiÃ¨re-Appalaches"),
 	LAVAL("Laval"),
-	LANAUDIERE("Lanaudière"),
+	LANAUDIERE("LanaudiÃ¨re"),
 	LAURENTIDES("Laurentides"),
-	MONTEREGIE("Montérégie"),
-	CENTRE_DU_QUEBEC("Centre-du-Québec"); 
+	MONTEREGIE("MontÃ©rÃ©gie"),
+	CENTRE_DU_QUEBEC("Centre-du-QuÃ©bec");
 
 	private String name; 
 	

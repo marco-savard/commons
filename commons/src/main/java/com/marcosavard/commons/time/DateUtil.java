@@ -6,9 +6,11 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.IsoFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,7 +19,8 @@ import java.util.concurrent.TimeUnit;
  * @author Marco
  *
  */
-public class Dates {
+public class DateUtil {
+
   public enum Time {
     BEFORE, AFTER
   };
@@ -59,6 +62,22 @@ public class Dates {
     return daysBefore;
   }
 
+  public static int findQuarter(LocalDate date) {
+    int quarter = date.get(IsoFields.QUARTER_OF_YEAR);
+    return quarter;
+  }
+
+  public static int findQuarterOld(LocalDate date) {
+    int month = date.getMonthValue();
+    int quarter = ((month-1) / 3) + 1;
+    return quarter;
+  }
+
+  public static int findQuarter(Date date) {
+    Calendar calendar = new GregorianCalendar();
+    int quarter = (calendar.get(Calendar.MONTH) / 3) + 1;
+    return quarter;
+  }
 
   /**
    * Get a relative date (yesterday, last week, etc.) compared to the reference date.<br>
@@ -133,6 +152,11 @@ public class Dates {
   public static boolean isLeapYear(int year) {
     boolean leap = ((year % 4 == 0) && ((year % 100 != 0)) || (year % 400 == 0));
     return leap;
+  }
+
+  public static boolean isOverlapping(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
+    boolean overlap = false;
+    return overlap;
   }
 
   public static LocalDate of(int year, Month month, int weekInMonth, DayOfWeek dayOfWeek) {

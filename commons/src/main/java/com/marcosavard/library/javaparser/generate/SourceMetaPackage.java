@@ -16,7 +16,8 @@ public class SourceMetaPackage extends MetaPackage {
     private Map<String, SourceMetaClass> ownedMetaClasses = new HashMap<>();
 
     public static SourceMetaPackage of(CompilationUnit cu, String packageName) {
-        SourceMetaPackage mp = (SourceMetaPackage)MetaModel.getInstance().findPackageByName(packageName);
+        MetaModel metaModel = MetaModel.getInstance();
+        SourceMetaPackage mp = (SourceMetaPackage)metaModel.findPackageByName(packageName);
         mp = (mp != null) ? mp : new SourceMetaPackage(cu, packageName);
         return mp;
     }

@@ -77,7 +77,8 @@ public class CharString implements CharSequence, StringInterface, CharStringInte
     public boolean equals(Object that) {
         boolean equal = false;
 
-        if (that instanceof CharSequence thatSequence) {
+        if (that instanceof CharSequence) {
+            CharSequence thatSequence = (CharSequence)this;
             equal = thatSequence.equals(this);
         }
 

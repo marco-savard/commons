@@ -20,7 +20,6 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
-
     public enum Alignment {
     LEFT,
     RIGHT
@@ -124,6 +123,11 @@ public class StringUtil {
         .compareToIgnoreCase(stripAccents(toLowerCase(other, locale)));
   }
 
+  public static long countCharacters(String str, char given) {
+    long count = str.chars().filter(ch -> ch == given).count();
+    return count;
+  }
+
   // count occurrences of substring in str
   public static int countMatches(CharSequence original, CharSequence substring) {
     original = NullSafe.of(original);
@@ -206,13 +210,17 @@ public class StringUtil {
   public static boolean isBoolean(CharString original) {
     boolean isBoolean = false;
 
-    if ((original != null) && (!original.isEmpty())) {
+    if ((original != null) && (!isEmpty(original))) {
       char first = Character.toLowerCase(original.charAt(0));
       List<Character> booleans = Arrays.asList(BOOLEANS);
       isBoolean = booleans.contains(first);
     }
 
     return isBoolean;
+  }
+
+  private static boolean isEmpty(CharSequence original) {
+    return (original.length() == 0);
   }
 
   // returns true for "20201231", "2020/12/31", "2020-12-31"
@@ -285,7 +293,7 @@ public class StringUtil {
    * @return true if null or empty
    */
   public static boolean isNullOrEmpty(CharSequence original) {
-    return (original == null) || original.isEmpty();
+    return (original == null) || isEmpty(original);
   }
 
   public static boolean isNumber(CharSequence cs) {

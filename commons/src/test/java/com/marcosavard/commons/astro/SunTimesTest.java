@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
-import org.junit.Test;
 
 import com.marcosavard.commons.astro.finder.SunTimes;
 
 import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 public class SunTimesTest {
 	

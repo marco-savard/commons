@@ -1,0 +1,235 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset = "ISO-8859-1" />
+    <link rel="stylesheet" type="text/css" href="styles.css" th:href="@{/styles.css}"/>
+    <title>Spring Boot Application</title>
+</head>
+
+<body>
+<h1>Plain Old Java Object Generator</h1><br>
+
+<div class="row">
+    <div class="column">Write Code:</div>
+    <div class="column">Generated Code:</div>
+</div>
+<div class="row">
+    <div class="column" style="font-size:80%; font-style: italic;">Write a minimalist class, and define only the fields needed</div>
+    <div class="column" style="font-size:80%; font-style: italic;">Generate code that contains constructors, getters, setters, equals() and all the boilerplate code</div>
+</div>
+<div class="row">
+    <div class="column">
+    <div style="overflow:scroll; height:16em; background-color:#ffffe0; margin:12px; "><pre>
+package com.mycompany.domain.mountain.model;
+
+import java.util.Optional;
+import java.util.Objects;
+
+public class MountainModel1 {
+    public static class Mountain {
+        public final String name = "Unnamed";
+        public double latitude, longitude;
+        public double altitude;
+        public Optional&lt;String&gt; country;
+        public boolean explored;
+    }
+}
+    </pre></div>
+    </div>
+    <div class="column">
+    <div style="overflow:scroll; height:16em; background-color:#ffffe0; margin:12px; "><pre>
+package com.mycompany.domain.mountain;
+
+import java.util.Optional;
+import java.util.Objects;
+
+/**
+ *
+ * Generated on 2022/12/01 10:08
+ */
+public class Mountain {
+  private final String name;
+  private double latitude;
+  private double longitude;
+  private double altitude;
+  private Optional&lt;String&gt; country;
+  private boolean explored;
+
+  public Mountain() {
+    this.name = "Unnamed";
+    this.latitude = 0;
+    this.longitude = 0;
+    this.altitude = 0;
+    this.explored = false;
+  }
+
+  /**
+   * @param latitude
+   * @param longitude
+   * @param altitude
+   * @param explored
+   */
+  public Mountain(double latitude, double longitude, double altitude, boolean explored) {
+    this.name = "Unnamed";
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.altitude = altitude;
+    this.explored = explored;
+  }
+
+  /**
+   * @param name
+   * @param latitude
+   * @param longitude
+   * @param altitude
+   * @param explored
+   */
+  public Mountain(String name, double latitude, double longitude, double altitude, boolean explored) {
+    if (name == null) {
+      throw new IllegalArgumentException ("Parameter 'name' cannot be null");
+    }
+
+    this.name = name;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.altitude = altitude;
+    this.explored = explored;
+  }
+
+  /**
+   * @return name
+   */
+  public final String getName() {
+    return name;
+  }
+
+  /**
+   * @return latitude
+   */
+  public double getLatitude() {
+    return latitude;
+  }
+
+  /**
+   * @param latitude
+   */
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
+
+  /**
+   * @return longitude
+   */
+  public double getLongitude() {
+    return longitude;
+  }
+
+  /**
+   * @param longitude
+   */
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
+  }
+
+  /**
+   * @return altitude
+   */
+  public double getAltitude() {
+    return altitude;
+  }
+
+  /**
+   * @param altitude
+   */
+  public void setAltitude(double altitude) {
+    this.altitude = altitude;
+  }
+
+  /**
+   * @return country
+   */
+  public String getCountry() {
+    return country.orElse(null);
+  }
+
+  /**
+   * @param country
+   */
+  public void setCountry(String country) {
+    this.country = Optional.of(country);
+  }
+
+  /**
+   * @return explored
+   */
+  public boolean isExplored() {
+    return explored;
+  }
+
+  /**
+   * @param explored
+   */
+  public void setExplored(boolean explored) {
+    this.explored = explored;
+  }
+
+
+  @Override
+  public boolean equals(Object other) {
+    boolean equal = false;
+
+    if (other instanceof Mountain) {
+      Mountain that = (Mountain)other;
+      equal = (hashCode() == that.hashCode()) && isEqualTo(that);
+    }
+
+    return equal;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName(), getLatitude(), getLongitude(), getAltitude(), getCountry(), isExplored());
+  }
+
+  protected boolean isEqualTo(Mountain that) {
+    boolean equal = true;
+    equal = equal && getName() == null ? that.getName() == null : getName().equals(that.getName());
+    equal = equal && getLatitude() == that.getLatitude();
+    equal = equal && getLongitude() == that.getLongitude();
+    equal = equal && getAltitude() == that.getAltitude();
+    equal = equal && getCountry() == null ? that.getCountry() == null : getCountry().equals(that.getCountry());
+    equal = equal && isExplored() == that.isExplored();
+    return equal;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("{");
+    sb.append("name = ").append(getName()).append(", ");
+    sb.append("latitude = ").append(getLatitude()).append(", ");
+    sb.append("longitude = ").append(getLongitude()).append(", ");
+    sb.append("altitude = ").append(getAltitude()).append(", ");
+    sb.append("country = ").append(getCountry()).append(", ");
+    sb.append("explored = ").append(isExplored()).append(", ");
+    sb.append("}");
+    return sb.toString();
+  }
+
+}
+    </pre></div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+To generate POJOs online, go to the Choose Page<br><br>
+<a th:href="@{|/pojogen/choose|}">Go to the Choose Page</a><br><br>
+<br>
+To generate POJOs locally, go to the Run Locally Page<br><br>
+<a th:href="@{|/pojogen/run/locally|}">Go to the Run Locally Page</a><br><br>
+
+
+
+</body>
+</html>

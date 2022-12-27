@@ -24,7 +24,7 @@ public class MunicipaliteDemo {
     compare(city1, city2);
 
     city1 = Municipalite.of("Montreal ");
-    city2 = Municipalite.of("Montréal");
+    city2 = Municipalite.of("MontrÃ©al");
     compare(city1, city2);
 
     city1 = Municipalite.of("Mont Tremblant");

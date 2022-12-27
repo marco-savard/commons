@@ -51,7 +51,7 @@ public class HolidayCalendarDemo {
 		for (Date date : nextHolidays) {
 			Holiday holiday = nextHolidaysByDate.get(date); 
 			String s = new SimpleDateFormat("MMMM d yyyy").format(date); 
-			long daysRemaining = Dates.daysBetween(today, date);
+			long daysRemaining = DateUtil.daysBetween(today, date);
 			System.out.println(MessageFormat.format("  {0} : {1} (in {2} days)", s, holiday, daysRemaining)); 
 		}
 		

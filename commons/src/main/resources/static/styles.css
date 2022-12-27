@@ -1,0 +1,67 @@
+body {
+  padding: 5px;
+  font-family: Helvetica, Verdana, sans-serif;
+}
+
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+p {
+  font-family: Tahoma, Verdana, sans-serif;
+  margin: 6px;
+}
+
+h1 {
+  color:#000099;
+}
+
+a {
+    background-color: #f0f0f0;
+    border: 1px solid #a9a9a9;
+    border-radius: 3px;
+    color: black;
+    font-size: 80%;
+    padding: 6px;
+    text-decoration: none;
+}
+
+a:hover {
+  border: 1px solid black;
+}
+
+span {
+  font-size: 80%;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 80%;
+}
+
+th, td {
+  border: 1px solid black;
+}
+
+tbody td {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f0f0f0;
+}
+
+.column {
+  float: left;
+  width: 45%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+

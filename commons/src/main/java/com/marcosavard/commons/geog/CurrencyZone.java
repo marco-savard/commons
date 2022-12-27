@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CurrencyZone {
     private static Map<Currency, List<Locale>> currencyZones;
@@ -19,7 +20,9 @@ public class CurrencyZone {
         Map<Currency, List<Locale>> currencyZones = new HashMap<>();
 
         for (String isoCountry: isoCountries) {
-            List<Locale> locales = Arrays.stream(allLocales).filter(l -> l.getCountry().equals(isoCountry)).toList();
+            List<Locale> locales = Arrays.stream(allLocales)
+                    .filter(l -> l.getCountry().equals(isoCountry))
+                    .collect(Collectors.toList());
 
             for (Locale locale : locales) {
                 Currency currency = (locale == null) ? null : Currency.getInstance(locale);

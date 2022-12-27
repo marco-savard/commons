@@ -3,6 +3,7 @@ package com.marcosavard.commons.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ArrayUtil {
 
@@ -49,10 +50,10 @@ public class ArrayUtil {
   }
 
   public static int[] removeAll(int[] array, int[] toRemoved) {
-    List<Integer> sourceList = Arrays.stream(array).boxed().toList();
+    List<Integer> sourceList = Arrays.stream(array).boxed().collect(Collectors.toList());
     List<Integer> targetList = new ArrayList<>();
     targetList.addAll(sourceList);
-    targetList.removeAll(Arrays.stream(toRemoved).boxed().toList());
+    targetList.removeAll(Arrays.stream(toRemoved).boxed().collect(Collectors.toList()));
     int[] result = targetList.stream().mapToInt(i -> i).toArray();
     return result;
   }
@@ -66,7 +67,7 @@ public class ArrayUtil {
   }
 
   public static List<Integer> toList(int[] array) {
-    return Arrays.stream(array).boxed().toList();
+    return Arrays.stream(array).boxed().collect(Collectors.toList());
   }
 
   public static String toString(int[] array) {

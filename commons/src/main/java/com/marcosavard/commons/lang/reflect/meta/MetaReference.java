@@ -7,11 +7,27 @@ public class MetaReference extends MetaField {
 
     private MetaField oppositeField;
 
-    public MetaReference(MetaClass declaringClass, MetaField oppositeField, String fieldName) {
+    public static MetaReference of(MetaClass declaringClass, MetaField oppositeField, String fieldName) {
+        MetaReference metaReference = (MetaReference)declaringClass.getAllVariables().stream()
+                .filter(mf -> mf instanceof MetaReference)
+                .filter(mf -> mf.getName().equals(fieldName))
+                .findFirst()
+                .orElse(null);
+
+        if (metaReference == null) {
+            metaReference = new MetaReference(declaringClass, oppositeField, fieldName);
+        }
+
+        return metaReference;
+    }
+
+    private MetaReference(MetaClass declaringClass, MetaField oppositeField, String fieldName) {
         super(declaringClass, fieldName);
         this.oppositeField = oppositeField;
         declaringClass.addReference(this);
     }
+
+
 
     @Override
     public String getInitialValue() {

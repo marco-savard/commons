@@ -3,8 +3,8 @@ package com.marcosavard.commons.time;
 import java.time.LocalDate;
 import java.time.Month;
 
-import org.junit.Assert;
-import org.junit.Test;
+import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 public class EasterTest {
 	
