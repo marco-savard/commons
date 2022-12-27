@@ -20,7 +20,7 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
-    public enum Alignment {
+  public enum Alignment {
     LEFT,
     RIGHT
   };
@@ -205,6 +205,10 @@ public class StringUtil {
     }
 
     return (smallestIdx == Integer.MAX_VALUE) ? -1 : smallestIdx;
+  }
+
+  public static int indexOfIgnoreAccent(CharSequence original, String ch) {
+    return stripAccents(original).indexOf(ch);
   }
 
   public static boolean isBoolean(CharString original) {
@@ -454,7 +458,8 @@ public class StringUtil {
     for (int i = 1; i < camel.length(); i++) {
       char ch = camel.charAt(i);
       boolean lowercase = Character.isLowerCase(ch);
-      underscore += lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
+      underscore +=
+          lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
     }
 
     return underscore.toUpperCase();

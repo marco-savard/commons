@@ -5,7 +5,7 @@ public class StringUtilDemo {
 
   public static void main(String[] args) {
     demoCenterLongString();
-    demoStartWith();
+    demoStringWithAccents();
   }
 
   private static void demoCenterLongString() {
@@ -19,7 +19,11 @@ public class StringUtilDemo {
     System.out.println();
   }
 
-  private static void demoStartWith() {
+  private static void demoStringWithAccents() {
+    System.out.println(QUEBEC.indexOf("e"));
+    System.out.println(StringUtil.indexOfIgnoreAccent(QUEBEC, "e"));
+    System.out.println();
+
     System.out.println(StringUtil.startsWith(QUEBEC, "Que"));
     System.out.println(StringUtil.startsWithIgnoreAccent(QUEBEC, "Que"));
     System.out.println(StringUtil.startsWithIgnoreCase(QUEBEC, "que"));

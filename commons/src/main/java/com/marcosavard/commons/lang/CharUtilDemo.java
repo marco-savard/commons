@@ -2,6 +2,8 @@ package com.marcosavard.commons.lang;
 
 import com.marcosavard.commons.debug.Console;
 
+import java.util.Locale;
+
 public class CharUtilDemo {
 
   public static void main(String[] args) {
@@ -18,7 +20,7 @@ public class CharUtilDemo {
     for (int i = 0; i < 256; i++) {
       char ch = (char) i;
 
-      if (CharUtil.isLigature(ch)) {
+      if (CharUtil.isDiacritical(ch, Locale.FRENCH)) {
         Console.println(ch);
       }
     }
