@@ -6,15 +6,11 @@ import org.junit.Test;
 
 public class StringUtilTest {
   private static final char eacute = '\u00e9';
+  private static final String MONTREAL = "Montr" + eacute + "al";
 
   @Test
   public void testCamelToUnderscore() {
     Assert.assertEquals("PHONE_QUALIFIER", StringUtil.camelToUnderscore("phoneQualifier"));
-  }
-
-  @Test
-  public void testUnderscoreToCamel() {
-    Assert.assertEquals("phoneQualifier", StringUtil.underscoreToCamel("PHONE_QUALIFIER"));
   }
 
   @Test
@@ -30,7 +26,7 @@ public class StringUtilTest {
     boolean result = StringUtil.equalsIgnoreAccents("montreal", "montr\u00e9al");
     Assert.assertEquals(true, result);
 
-    result = StringUtil.equalsIgnoreAccents("montreal", "Montr" + eacute + "al");
+    result = StringUtil.equalsIgnoreAccents("montreal", MONTREAL);
     Assert.assertEquals(false, result);
 
     result = StringUtil.equalsIgnoreAccents("montreal", AccentCoding.of("Montre'al"));
@@ -45,7 +41,7 @@ public class StringUtilTest {
     boolean result = StringUtil.equalsIgnoreCaseAndAccents("montreal", null);
     Assert.assertEquals(false, result);
 
-    result = StringUtil.equalsIgnoreCaseAndAccents(null, "Montr�al");
+    result = StringUtil.equalsIgnoreCaseAndAccents(null, MONTREAL);
     Assert.assertEquals(false, result);
 
     result = StringUtil.equalsIgnoreCaseAndAccents("", null);
@@ -56,10 +52,21 @@ public class StringUtilTest {
   }
 
   @Test
+  public void testStripAccents() {
+    String stripped = StringUtil.stripAccents(MONTREAL);
+    Assert.assertEquals("Montreal", stripped);
+  }
+
+  @Test
   public void testUncapitalize() {
     Assert.assertEquals("", StringUtil.uncapitalize((String) null));
     Assert.assertEquals("", StringUtil.uncapitalize(""));
     Assert.assertEquals("b", StringUtil.uncapitalize("B"));
     Assert.assertEquals("be", StringUtil.uncapitalize("Be"));
+  }
+
+  @Test
+  public void testUnderscoreToCamel() {
+    Assert.assertEquals("phoneQualifier", StringUtil.underscoreToCamel("PHONE_QUALIFIER"));
   }
 }

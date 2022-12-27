@@ -1,6 +1,9 @@
 package com.marcosavard.commons.lang;
 
 import java.text.Normalizer;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class CharUtil {
 
@@ -8,16 +11,39 @@ public class CharUtil {
 
   public static final String VOYELS = "aeiou";
   public static final String FRENCH_DIACRITICS = "ÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸàâäçéèêëïîôöùûüÿ";
-  public static final String FRENCH_LIGATURES = "ÆŒæœ"; // AE, OE, ae, oe
+  public static final String LIGATURES = "ÆŒæœ"; // AE, OE, ae, oe
+
+  private static Map<Locale, String> diacriticalsByLocale = null;
 
   public static boolean isAscii(char c) {
     boolean ascii = (c <= 127);
     return ascii;
   }
 
+  public static boolean isDiacritical(char c, Locale locale) {
+    Map<Locale, String> diacriticalsByLocale = getDiacriticalsByLocale();
+    String diacriticals = diacriticalsByLocale.get(locale);
+    boolean diacritical = (diacriticals != null) ? diacriticals.indexOf(c) >= 0 : isDiacritical(c);
+    return diacritical;
+  }
+
   public static boolean isDiacritical(char c) {
     boolean diacritical = Character.isLetter(c) && !isAscii(c);
     return diacritical;
+  }
+
+  private static Map<Locale, String> getDiacriticalsByLocale() {
+    if (diacriticalsByLocale == null) {
+      diacriticalsByLocale = new HashMap<>();
+      diacriticalsByLocale.put(Locale.FRENCH, FRENCH_DIACRITICS);
+    }
+
+    return diacriticalsByLocale;
+  }
+
+  public static boolean isLigature(char c) {
+    boolean ligature = LIGATURES.indexOf(c) >= 0;
+    return ligature;
   }
 
   public static boolean isVowel(char c) {
