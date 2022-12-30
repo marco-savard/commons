@@ -3,6 +3,8 @@ package com.marcosavard.commons.lang.reflect;
 import com.marcosavard.commons.lang.NullSafe;
 import com.marcosavard.commons.lang.StringUtil;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -16,6 +18,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +26,54 @@ import java.util.stream.Collectors;
 import static java.util.Comparator.comparing;
 
 public class Reflection {
+  private static final int MAX_DEPTH = 10;
+  private static final String ROOT = "root";
 
   private Reflection() {}
+
+  // TODO
+  // https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
+  public static Class[] getClasses(Package pack) {
+    List<Class> classes = new ArrayList<>();
+
+    try {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      String path = pack.getName().replace('.', '/');
+      Enumeration<URL> resources = classLoader.getResources(path);
+      List<File> dirs = new ArrayList<>();
+
+      while (resources.hasMoreElements()) {
+        URL resource = resources.nextElement();
+        dirs.add(new File(resource.getFile()));
+      }
+
+      for (File directory : dirs) {
+        classes.addAll(findClasses(directory, pack.getName()));
+      }
+
+    } catch (IOException | ClassNotFoundException e) {
+      // return empty array
+    }
+
+    return classes.toArray(new Class[classes.size()]);
+  }
+
+  private static <T> Method[] getFactoryMethods(Class<T> claz) {
+    List<Method> methods = Arrays.asList(claz.getDeclaredMethods());
+    List<Method> factoryMethods =
+        methods.stream()
+            .filter(m -> isStatic(m))
+            .sorted(comparing(Method::getParameterCount))
+            .collect(Collectors.toList());
+    Method[] array = factoryMethods.toArray(new Method[0]);
+    return array;
+  }
+
+  public static TreeNode getJavaPackageTree() {
+    List<Package> javaPackages = findJavaPackages();
+    TreeNode tree = toTree(javaPackages);
+    return tree;
+  }
 
   public static <T> T instantiate(Class<T> claz) {
     T instance = null;
@@ -79,22 +128,6 @@ public class Reflection {
     invoke(instance, method, values);
   }
 
-  public static boolean isAbstract(Member member) {
-    return Modifier.isAbstract(member.getModifiers());
-  }
-
-  public static boolean isPublic(Member member) {
-    return Modifier.isPublic(member.getModifiers());
-  }
-
-  public static boolean isStatic(Member member) {
-    return Modifier.isStatic(member.getModifiers());
-  }
-
-  public static boolean isTransient(Member member) {
-    return Modifier.isTransient(member.getModifiers());
-  }
-
   public static Object invoke(Object instance, String methodName, Object... args) {
     List<Method> namedMethods = findNamedMethods(instance.getClass(), methodName, args);
     Object value = null;
@@ -140,31 +173,20 @@ public class Reflection {
     return value;
   }
 
-  // TODO
-  // https://stackoverflow.com/questions/520328/can-you-find-all-classes-in-a-package-using-reflection
-  public static Class[] getClasses(Package pack) {
-    List<Class> classes = new ArrayList<>();
+  public static boolean isAbstract(Member member) {
+    return Modifier.isAbstract(member.getModifiers());
+  }
 
-    try {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      String path = pack.getName().replace('.', '/');
-      Enumeration<URL> resources = classLoader.getResources(path);
-      List<File> dirs = new ArrayList<>();
+  public static boolean isPublic(Member member) {
+    return Modifier.isPublic(member.getModifiers());
+  }
 
-      while (resources.hasMoreElements()) {
-        URL resource = resources.nextElement();
-        dirs.add(new File(resource.getFile()));
-      }
+  public static boolean isStatic(Member member) {
+    return Modifier.isStatic(member.getModifiers());
+  }
 
-      for (File directory : dirs) {
-        classes.addAll(findClasses(directory, pack.getName()));
-      }
-
-    } catch (IOException | ClassNotFoundException e) {
-      // return empty array
-    }
-
-    return classes.toArray(new Class[classes.size()]);
+  public static boolean isTransient(Member member) {
+    return Modifier.isTransient(member.getModifiers());
   }
 
   public static String toString(Object instance) {
@@ -267,17 +289,6 @@ public class Reflection {
       }
     }
     return instance;
-  }
-
-  private static <T> Method[] getFactoryMethods(Class<T> claz) {
-    List<Method> methods = Arrays.asList(claz.getDeclaredMethods());
-    List<Method> factoryMethods =
-        methods.stream()
-            .filter(m -> isStatic(m))
-            .sorted(comparing(Method::getParameterCount))
-             .collect(Collectors.toList());
-    Method[] array = factoryMethods.toArray(new Method[0]);
-    return array;
   }
 
   private static <T> T instantiateByFactoryMethod(Class<T> claz, Method method) {
@@ -511,5 +522,76 @@ public class Reflection {
       }
     }
     return classes;
+  }
+
+  private static TreeNode toTree(List<Package> packages) {
+    DefaultMutableTreeNode root = new DefaultMutableTreeNode(ROOT);
+
+    for (int i = 0; i < MAX_DEPTH; i++) {
+      for (Package p : packages) {
+        String name = p.getName();
+        long count = StringUtil.countCharacters(name, '.');
+
+        if (count == i) {
+          String parentName = name.substring(0, name.lastIndexOf('.'));
+          DefaultMutableTreeNode parent = findNodeByName(root, parentName);
+
+          if (parent == null) {
+            parent = createNode(root, parentName);
+          }
+
+          DefaultMutableTreeNode node = new DefaultMutableTreeNode(name);
+          parent.add(node);
+        }
+      }
+    }
+
+    return root;
+  }
+
+  private static DefaultMutableTreeNode createNode(DefaultMutableTreeNode root, String parentName) {
+    int idx = parentName.lastIndexOf('.');
+    String ancestorName = (idx == -1) ? ROOT : parentName.substring(0, idx);
+    DefaultMutableTreeNode ancestor = findNodeByName(root, ancestorName);
+
+    if (ancestor == null) {
+      ancestor = createNode(root, ancestorName);
+    }
+
+    DefaultMutableTreeNode parent = new DefaultMutableTreeNode(parentName);
+    ancestor.add(parent);
+    return parent;
+  }
+
+  private static DefaultMutableTreeNode findNodeByName(DefaultMutableTreeNode node, String name) {
+    DefaultMutableTreeNode foundNode = null;
+
+    String nodeName = node.getUserObject().toString();
+
+    if (nodeName.equals(name)) {
+      foundNode = node;
+    } else {
+      for (int i = 0; i < node.getChildCount(); i++) {
+        DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
+        foundNode = findNodeByName(child, name);
+
+        if (foundNode != null) {
+          break;
+        }
+      }
+    }
+
+    return foundNode;
+  }
+
+  private static List<Package> findJavaPackages() {
+    List<Package> allPackages = Arrays.asList(Package.getPackages());
+    Comparator<Package> comparator = Comparator.comparing(Package::getName);
+    List<Package> javaPackages =
+        allPackages.stream()
+            .filter(p -> p.getName().startsWith("java"))
+            .sorted(comparator)
+            .collect(Collectors.toList());
+    return javaPackages;
   }
 }
