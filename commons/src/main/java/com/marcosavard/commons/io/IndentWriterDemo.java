@@ -1,87 +1,84 @@
 package com.marcosavard.commons.io;
 
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import com.marcosavard.commons.util.Wildcards;
+import com.marcosavard.commons.lang.reflect.Reflection;
 
-public class IndentWriterDemo implements Runnable {
+import javax.swing.tree.TreeNode;
+import java.io.PrintWriter;
+import java.io.Writer;
+
+public class IndentWriterDemo {
 
   public static void main(String[] args) {
-    IndentWriterDemo demo = new IndentWriterDemo();
-    demo.run();
+    TreeNode root = Reflection.getJavaPackageTree();
+    int indentation = 2;
+    printIndentedList1(root, indentation);
+    printIndentedList2(root, indentation);
   }
 
-  public IndentWriterDemo() {
-
+  //
+  // IMPLEMENTATION 1 with PrintWriter
+  //
+  private static void printIndentedList1(TreeNode root, int indentation) {
+    PrintWriter pw = new PrintWriter(System.out);
+    int currentIndentation = 0;
+    printChildren(pw, root, indentation, currentIndentation);
   }
 
-  @Override
-  public void run() {
-    // find packages whose name start with java.*
-    List<Package> javaPackages = findPackages("java.*");
+  private static void printChildren(
+      PrintWriter pw, TreeNode node, int indentation, int currentIndentation) {
+    String indent = buildIndent(currentIndentation);
+    pw.println(indent + node.toString());
+    int count = node.getChildCount();
 
-    // write Java packages
-    IndentWriter iw = new IndentWriter(new PrintWriter(System.out));
-    iw.println("Java Packages");
-    iw.println();
-    iw.indent();
+    if (count > 0) {
+      currentIndentation += indentation;
 
-    for (Package p : javaPackages) {
-      // print first level packages
-      int level = countOccurences(p.getName(), ".");
-
-      if (level == 1) {
-        printPackage(iw, javaPackages, p);
+      for (int i = 0; i < count; i++) {
+        TreeNode child = node.getChildAt(i);
+        printChildren(pw, child, indentation, currentIndentation);
       }
+
+      pw.println();
     }
 
-    iw.unindent();
-    iw.close();
+    pw.flush();
   }
 
-  private static void printPackage(IndentWriter iw, List<Package> javaPackages, Package pack) {
-    iw.println(pack.getName());
-    List<Package> subPackages = findSubpackagesOf(javaPackages, pack);
+  private static String buildIndent(int indentation) {
+    StringBuilder sb = new StringBuilder();
 
-    if (!subPackages.isEmpty()) {
+    for (int i = 0; i < indentation; i++) {
+      sb.append(" ");
+    }
+
+    return sb.toString();
+  }
+
+  //
+  // IMPLEMENTATION 2 with IndentWriter
+  //
+  private static void printIndentedList2(TreeNode root, int indentation) {
+    Writer w = new PrintWriter(System.out);
+    IndentWriter iw = new IndentWriter(w, indentation);
+    printChildren(iw, root);
+  }
+
+  private static void printChildren(IndentWriter iw, TreeNode node) {
+    iw.println(node.toString());
+    int count = node.getChildCount();
+
+    if (count > 0) {
       iw.indent();
 
-      for (Package subPackage : subPackages) {
-        printPackage(iw, subPackages, subPackage);
+      for (int i = 0; i < count; i++) {
+        TreeNode child = node.getChildAt(i);
+        printChildren(iw, child);
       }
 
       iw.println();
       iw.unindent();
     }
+
+    iw.flush();
   }
-
-  private static List<Package> findSubpackagesOf(List<Package> javaPackages, Package pack) {
-    Predicate<Package> predicate = p -> (p.getName().startsWith(pack.getName())
-        && (countOccurences(p.getName(), ".") == countOccurences(pack.getName(), ".") + 1));
-    List<Package> subPackages =
-        javaPackages.stream().filter(predicate).collect(Collectors.toList());
-    return subPackages;
-  }
-
-  private static int countOccurences(String str, String substring) {
-    int count = str.length() - str.replace(substring, "").length();
-    return count;
-  }
-
-  private static List<Package> findPackages(String wildcards) {
-    String javaHome = System.getProperty("java.home");
-    System.out.println(javaHome);;
-
-    String regex = Wildcards.toRegex(wildcards);
-    List<Package> allPackages = Arrays.asList(Package.getPackages());
-    Comparator<Package> comparator = Comparator.comparing(Package::getName);
-    List<Package> javaPackages = allPackages.stream().filter(p -> p.getName().matches(regex))
-        .sorted(comparator).collect(Collectors.toList());
-    return javaPackages;
-  }
-
 }
