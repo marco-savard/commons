@@ -1,37 +1,49 @@
 package com.marcosavard.commons.lang;
 
+import com.marcosavard.commons.debug.Console;
+
 public class StringUtilDemo {
   private static final String QUEBEC = "Québec";
 
   public static void main(String[] args) {
-    demoCenterLongString();
     demoStringWithAccents();
+    demoCenterLongString();
+  }
+
+  private static void demoStringWithAccents() {
+    // stripAccent
+    Console.println("{0} stripped : {1}", QUEBEC, StringUtil.stripAccents(QUEBEC));
+
+    // equalsIgnoreCase
+    boolean equal = StringUtil.endsWithIgnoreAccent("Quebec", QUEBEC);
+    Console.println("{0} equals {1} : {2}", "Quebec", QUEBEC, equal);
+
+    // indexOf, lastIndexOf
+    Console.println("indexOf e in {0} : {1}", QUEBEC, QUEBEC.indexOf("e"));
+    Console.println("indexOf e in {0} : {1}", QUEBEC, StringUtil.indexOfIgnoreAccent(QUEBEC, "e"));
+    Console.println();
+
+    // startWith, endWith
+    Console.println("Québec starts w/ Que : {0}", StringUtil.startsWith(QUEBEC, "Que"));
+    Console.println("Québec starts w/ Que : {0}", StringUtil.startsWithIgnoreAccent(QUEBEC, "Que"));
+    Console.println("Québec starts w/ que : {0}", StringUtil.startsWithIgnoreCase(QUEBEC, "que"));
+    Console.println();
+
+    Console.println("Québec ends w/ ebec : {0}", StringUtil.endsWith(QUEBEC, "ebec"));
+    Console.println("Québec ends w/ ebec : {0}", StringUtil.endsWithIgnoreAccent(QUEBEC, "ebec"));
+    Console.println("Québec ends w/ EBEC : {0}", StringUtil.endsWithIgnoreCase(QUEBEC, "EBEC"));
+    Console.println();
   }
 
   private static void demoCenterLongString() {
     String longString = "United States of America";
     String quoted = StringUtil.quote(longString);
 
-    System.out.println(StringUtil.abbreviate(longString, 20));
-    System.out.println(StringUtil.center(longString, 64));
-    System.out.println(StringUtil.center(quoted, 64));
-    System.out.println(StringUtil.center(StringUtil.unquote(quoted), 64));
-    System.out.println();
-  }
-
-  private static void demoStringWithAccents() {
-    System.out.println(QUEBEC.indexOf("e"));
-    System.out.println(StringUtil.indexOfIgnoreAccent(QUEBEC, "e"));
-    System.out.println();
-
-    System.out.println(StringUtil.startsWith(QUEBEC, "Que"));
-    System.out.println(StringUtil.startsWithIgnoreAccent(QUEBEC, "Que"));
-    System.out.println(StringUtil.startsWithIgnoreCase(QUEBEC, "que"));
-    System.out.println();
-
-    System.out.println(StringUtil.endsWith(QUEBEC, "ebec"));
-    System.out.println(StringUtil.endsWithIgnoreAccent(QUEBEC, "ebec"));
-    System.out.println(StringUtil.endsWithIgnoreCase(QUEBEC, "EBEC"));
-    System.out.println();
+    Console.println(StringUtil.abbreviate(longString, 20));
+    Console.println(StringUtil.abbreviate(longString, 20, StringUtil.ELLIPSIS));
+    Console.println(StringUtil.center(longString, 64));
+    Console.println(StringUtil.center(quoted, 64));
+    Console.println(StringUtil.center(StringUtil.unquote(quoted), 64));
+    Console.println();
   }
 }
