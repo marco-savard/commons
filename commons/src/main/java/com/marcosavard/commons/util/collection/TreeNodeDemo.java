@@ -28,7 +28,6 @@ public class TreeNodeDemo {
 
   private static TreeNode buildTreeCanada1() {
     DefaultMutableTreeNode canada = new DefaultMutableTreeNode("Canada");
-
     DefaultMutableTreeNode east = new DefaultMutableTreeNode("East");
     DefaultMutableTreeNode central = new DefaultMutableTreeNode("Central");
     DefaultMutableTreeNode west = new DefaultMutableTreeNode("West");

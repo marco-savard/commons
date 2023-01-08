@@ -42,7 +42,7 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode {
     return equal;
   }
 
-  private static boolean equals(TreeNode node1, TreeNode node2) {
+  public static boolean equals(TreeNode node1, TreeNode node2) {
     boolean equal = false;
 
     if (node1 instanceof DefaultMutableTreeNode treeNode1) {
