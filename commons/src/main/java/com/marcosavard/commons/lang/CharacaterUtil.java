@@ -1,19 +1,58 @@
 package com.marcosavard.commons.lang;
 
+import com.marcosavard.commons.util.collection.SafeArrayList;
+
 import java.text.Normalizer;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CharUtil {
+public class CharacaterUtil {
+
+  public enum Diacritical {
+    NONE,
+    ACUTE,
+    GRAVE,
+    CIRC,
+    UML,
+    CEDILLA,
+    TILDE
+  };
 
   public static final char eacute = '\u00e9';
 
-  public static final String VOYELS = "aeiou";
-  public static final String FRENCH_DIACRITICS = "ÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸàâäçéèêëïîôöùûüÿ";
+  public static final String VOYELS = "aeiouy";
+
+  public static final String ES_DIACRITICS = "áçéíñóú";
+  public static final String FR_DIACRITICS = "àâäçéèêëïîôöùûüÿ";
+
   public static final String LIGATURES = "ÆŒæœ"; // AE, OE, ae, oe
 
   private static Map<Locale, String> diacriticalsByLocale = null;
+
+  public static Map<Character, List<Character>> getDiacriticals(Locale locale) {
+    Map<Character, List<Character>> diacriticals = new LinkedHashMap<>();
+    for (int i = 0; i < 256; i++) {
+      char ch = (char) i;
+
+      if (Character.isLowerCase(ch) && CharacaterUtil.isDiacritical(ch, locale)) {
+        char letter = CharacaterUtil.stripAccent(ch);
+        CharacaterUtil.Diacritical diacritical = CharacaterUtil.getDiacritical(ch);
+        List<Character> letterDiaciticals = diacriticals.get(letter);
+
+        if (letterDiaciticals == null) {
+          letterDiaciticals = new SafeArrayList<>('-');
+          diacriticals.put(letter, letterDiaciticals);
+        }
+
+        letterDiaciticals.add(diacritical.ordinal() - 1, ch);
+      }
+    }
+
+    return diacriticals;
+  }
 
   public static boolean isAscii(char c) {
     boolean ascii = (c <= 127);
@@ -35,7 +74,8 @@ public class CharUtil {
   private static Map<Locale, String> getDiacriticalsByLocale() {
     if (diacriticalsByLocale == null) {
       diacriticalsByLocale = new HashMap<>();
-      diacriticalsByLocale.put(Locale.FRENCH, FRENCH_DIACRITICS);
+      diacriticalsByLocale.put(Locale.forLanguageTag("es"), ES_DIACRITICS);
+      diacriticalsByLocale.put(Locale.FRENCH, FR_DIACRITICS);
     }
 
     return diacriticalsByLocale;
@@ -57,6 +97,27 @@ public class CharUtil {
     String replaced = normalized.replaceAll("[^\\p{ASCII}]", "");
     char stripped = (replaced.length() == 0) ? '\0' : replaced.charAt(0);
     return stripped;
+  }
+
+  public static Diacritical getDiacritical(char ch) {
+    ch = Character.toLowerCase(ch);
+    Diacritical diacritical = Diacritical.NONE;
+
+    if ("ç".indexOf(ch) >= 0) {
+      diacritical = Diacritical.CIRC;
+    } else if ("áéíóúý".indexOf(ch) >= 0) {
+      diacritical = Diacritical.ACUTE;
+    } else if ("âêîôû".indexOf(ch) >= 0) {
+      diacritical = Diacritical.CIRC;
+    } else if ("àèìòù".indexOf(ch) >= 0) {
+      diacritical = Diacritical.GRAVE;
+    } else if ("äëöïüÿ".indexOf(ch) >= 0) {
+      diacritical = Diacritical.UML;
+    } else if ("ñ".indexOf(ch) >= 0) {
+      diacritical = Diacritical.TILDE;
+    }
+
+    return diacritical;
   }
 
   public static String getDiacriticalMark(char ch) {
