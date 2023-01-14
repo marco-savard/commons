@@ -7,15 +7,16 @@ public class StringUtilDemo {
 
   public static void main(String[] args) {
     demoStringWithAccents();
-    demoCenterLongString();
+    // demoCenterLongString();
   }
 
   private static void demoStringWithAccents() {
     // stripAccent
+    Console.println("{0} translated : {1}", QUEBEC, StringUtil.translate(QUEBEC, "é", "e"));
     Console.println("{0} stripped : {1}", QUEBEC, StringUtil.stripAccents(QUEBEC));
 
     // equalsIgnoreCase
-    boolean equal = StringUtil.endsWithIgnoreAccent("Quebec", QUEBEC);
+    boolean equal = StringUtil.equalsIgnoreAccents("Quebec", QUEBEC);
     Console.println("{0} equals {1} : {2}", "Quebec", QUEBEC, equal);
 
     // indexOf, lastIndexOf

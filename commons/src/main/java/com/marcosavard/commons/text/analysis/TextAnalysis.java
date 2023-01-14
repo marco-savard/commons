@@ -1,6 +1,6 @@
 package com.marcosavard.commons.text.analysis;
 
-import com.marcosavard.commons.lang.CharUtil;
+import com.marcosavard.commons.lang.CharacaterUtil;
 import com.marcosavard.commons.util.collection.TreeValueMap;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class TextAnalysis {
 
   private Map<Character, Integer> frequencyByLetter = new TreeValueMap<>();
   private Map<Character, Integer> frequencyByDiacritic = new TreeValueMap<>();
-  
+
   private long wordCount, letterCount;
 
   private List<Character> discriticals = new ArrayList<>();
@@ -27,14 +27,15 @@ public class TextAnalysis {
     this.wordCount = words.size();
 
     for (String word : words) {
-      this.letterCount += word.length(); 
-      
+      this.letterCount += word.length();
+
       for (int i = 0; i < word.length(); i++) {
         char ch = Character.toLowerCase(word.charAt(i));
         boolean diacritic = isDiacritical(ch);
-        char ascii = CharUtil.stripAccent(ch);
+        char ascii = CharacaterUtil.stripAccent(ch);
 
-        int letterFrequency = frequencyByLetter.containsKey(ascii) ? frequencyByLetter.get(ascii) : 0;
+        int letterFrequency =
+            frequencyByLetter.containsKey(ascii) ? frequencyByLetter.get(ascii) : 0;
         frequencyByLetter.put(ascii, 1 + letterFrequency);
 
         if (diacritic) {
@@ -50,12 +51,12 @@ public class TextAnalysis {
     }
 
     for (char diacritic : frequencyByDiacritic.keySet()) {
-      if (! discriticals.contains(diacritic)) {
+      if (!discriticals.contains(diacritic)) {
         discriticals.add(diacritic);
       }
     }
 
-    //TODO sort diacritics
+    // TODO sort diacritics
   }
 
   public List<Character> findDiacriticals() {
@@ -87,7 +88,6 @@ public class TextAnalysis {
     boolean vowel = "aeiou".indexOf(ch) != -1;
     return vowel;
   }
-
 
   public double findWordLength() {
     double wordLength = (letterCount * 10) / wordCount;

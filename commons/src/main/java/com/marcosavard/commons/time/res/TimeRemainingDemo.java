@@ -1,5 +1,8 @@
 package com.marcosavard.commons.time.res;
 
+import com.marcosavard.commons.math.arithmetic.Base;
+import com.marcosavard.commons.util.Joiner;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.text.MessageFormat;
@@ -7,21 +10,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import com.marcosavard.commons.math.arithmetic.Base;
-import com.marcosavard.commons.util.Joiner;
 
 public class TimeRemainingDemo {
-  private static int[] COUNTDOWN = new int[] { //
-      3662, 3661, 3660, 3659, //
-      3602, 3601, 3600, 3599, //
-      122, 121, 120, 119, //
-      62, 61, 60, 59, //
-      30, 10, 5, 3, 2, 1};
+  private static int[] COUNTDOWN =
+      new int[] { //
+        3662, 3661, 3660, 3659, //
+        3602, 3601, 3600, 3599, //
+        122, 121, 120, 119, //
+        62, 61, 60, 59, //
+        30, 10, 5, 3, 2, 1
+      };
 
-  private static String[] KEYS = new String[] { //
-      "0_hour", "0_hours", //
-      "0_minute", "0_minutes", //
-      "0_second", "0_seconds"};
+  private static String[] KEYS =
+      new String[] { //
+        "0_hour", "0_hours", //
+        "0_minute", "0_minutes", //
+        "0_second", "0_seconds"
+      };
 
   public static void main(String[] args) {
     printTime(Locale.ENGLISH);
@@ -32,7 +37,6 @@ public class TimeRemainingDemo {
   private static void printTime(Locale locale) {
     print(locale);
     // System.out.println(locale);
-
 
     for (int i = 0; i < COUNTDOWN.length; i++) {
       int remaining = COUNTDOWN[i];
@@ -57,7 +61,6 @@ public class TimeRemainingDemo {
     }
 
     Parameter p;
-
   }
 
   private static void printTimeRemaining(int seconds, Locale locale) {
@@ -84,5 +87,4 @@ public class TimeRemainingDemo {
     String formatted = MessageFormat.format(pattern, joined);
     System.out.println("  " + formatted);
   }
-
 }

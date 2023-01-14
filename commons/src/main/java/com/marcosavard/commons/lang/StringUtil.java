@@ -17,6 +17,9 @@ import java.util.Locale;
  * @author Marco
  */
 public class StringUtil {
+  public static final String DIACRITICALS = "áàâäéèêëíìïîóòôöúùûüÿçñ";
+  public static final String ASCII = "aaaaeeeeiiiiooooooooycn";
+
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
@@ -400,6 +403,10 @@ public class StringUtil {
    * @return stripped text
    */
   public static String stripAccents(CharSequence original) {
+    return translate(original, DIACRITICALS, ASCII);
+  }
+
+  public static String stripAccentsOld(CharSequence original) {
     String stripped = Normalizer.normalize(NullSafe.of(original), Normalizer.Form.NFD);
     return stripped.replaceAll("[^\\p{ASCII}]", "");
   }
@@ -450,6 +457,21 @@ public class StringUtil {
   public static CharSequence subSequence(CharSequence original, int beginIdx) {
     original = NullSafe.of(original);
     return original.subSequence(beginIdx, original.length());
+  }
+
+  public static String translate(CharSequence str, CharSequence old, CharSequence target) {
+    int n = Math.min(old.length(), target.length());
+    char[] array = str.toString().toCharArray();
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < array.length; j++) {
+        if (array[j] == old.charAt(i)) {
+          array[j] = target.charAt(i);
+        }
+      }
+    }
+
+    return String.valueOf(array);
   }
 
   public static String camelToUnderscore(String camel) {

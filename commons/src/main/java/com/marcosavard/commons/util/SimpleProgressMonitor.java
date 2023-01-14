@@ -2,7 +2,7 @@ package com.marcosavard.commons.util;
 
 /**
  * A simple implementation of ProgressMonitor
- * 
+ *
  * @author Marco
  */
 public class SimpleProgressMonitor implements ProgressMonitor {
@@ -48,7 +48,5 @@ public class SimpleProgressMonitor implements ProgressMonitor {
   }
 
   @Override
-  public void terminateTask(String string) {
-
-  }
+  public void terminateTask(String string) {}
 }
