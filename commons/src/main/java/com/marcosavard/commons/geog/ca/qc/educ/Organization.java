@@ -1,11 +1,12 @@
 package com.marcosavard.commons.geog.ca.qc.educ;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.geog.ca.qc.RegionAdministrative;
 import com.marcosavard.commons.util.ToStringBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Organization {
   protected EducationalNetwork network;
@@ -17,8 +18,15 @@ public abstract class Organization {
   private GeoLocation coordinate;
   private List<Organization> components = null;
 
-  protected Organization(EducationalNetwork network, RegionAdministrative region, String code,
-      String parentCode, String name, String codePostal, double latitude, double longitude) {
+  protected Organization(
+      EducationalNetwork network,
+      RegionAdministrative region,
+      String code,
+      String parentCode,
+      String name,
+      String codePostal,
+      double latitude,
+      double longitude) {
     this.network = network;
     this.region = region;
     this.code = code;
@@ -51,11 +59,12 @@ public abstract class Organization {
   public List<Organization> getComponents() {
     if (components == null) {
       components = new ArrayList<>();
-      List<Organization> organizations = network.getAllOrganizations().stream()
-          .filter(o -> o.getParentCode().equals(this.code)).collect(Collectors.toList());
+      List<Organization> organizations =
+          network.getAllOrganizations().stream()
+              .filter(o -> o.getParentCode().equals(this.code))
+              .collect(Collectors.toList());
       components.addAll(organizations);
     }
-
 
     return components;
   }
@@ -72,7 +81,4 @@ public abstract class Organization {
   public String getParentCode() {
     return parentCode;
   }
-
-
-
 }

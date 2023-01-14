@@ -7,10 +7,19 @@ public class MoonPhase {
   private double percent;
 
   public enum Tendency {
-    INCREASING, DECREASING
+    INCREASING,
+    DECREASING
   };
+
   public enum PhaseName {
-    NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRST_QUARTER, WANING_CRESCENT
+    NEW,
+    WAXING_CRESCENT,
+    FIRST_QUARTER,
+    WAXING_GIBBOUS,
+    FULL,
+    WANING_GIBBOUS,
+    THIRST_QUARTER,
+    WANING_CRESCENT
   };
 
   public static MoonPhase of(double percent) {
@@ -48,5 +57,4 @@ public class MoonPhase {
   public String toString() {
     return ToStringBuilder.build(this);
   }
-
 }
