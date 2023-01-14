@@ -25,8 +25,10 @@ public class CharacaterUtil {
 
   public static final String VOYELS = "aeiouy";
 
-  public static final String ES_DIACRITICS = "áçéíñóú";
+  public static final String DE_DIACRITICS = "äëïöü";
+  public static final String ES_DIACRITICS = "áçéíñóúü";
   public static final String FR_DIACRITICS = "àâäçéèêëïîôöùûüÿ";
+  public static final String IT_DIACRITICS = "àèéìòù";
 
   public static final String LIGATURES = "ÆŒæœ"; // AE, OE, ae, oe
 
@@ -76,6 +78,8 @@ public class CharacaterUtil {
       diacriticalsByLocale = new HashMap<>();
       diacriticalsByLocale.put(Locale.forLanguageTag("es"), ES_DIACRITICS);
       diacriticalsByLocale.put(Locale.FRENCH, FR_DIACRITICS);
+      diacriticalsByLocale.put(Locale.GERMAN, DE_DIACRITICS);
+      diacriticalsByLocale.put(Locale.ITALIAN, DE_DIACRITICS);
     }
 
     return diacriticalsByLocale;
