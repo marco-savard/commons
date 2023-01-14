@@ -95,7 +95,6 @@ public class NestedMap extends LinkedHashMap<String, Object> {
     return value;
   }
 
-
   private Object getRoot(String root, String path) {
     Object value = null;
     int begin = root.indexOf('[');

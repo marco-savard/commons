@@ -35,5 +35,4 @@ public class Joiner {
 
     return joined;
   }
-
 }
