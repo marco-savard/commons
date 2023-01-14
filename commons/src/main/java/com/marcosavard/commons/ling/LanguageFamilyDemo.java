@@ -9,14 +9,14 @@ import java.io.StringWriter;
 
 public class LanguageFamilyDemo {
 
-    public static void main(String[] args) {
-        String fieldName = "IndoEuropean";
-        TreeNode languageFamily = ReflectionTreeBuilder.of(LanguageFamily.class, fieldName).build();
-        Console.println(languageFamily.toString());
+  public static void main(String[] args) {
+    String fieldName = "IndoEuropean";
+    TreeNode languageFamily = ReflectionTreeBuilder.of(LanguageFamily.class, fieldName).build();
+    Console.println(languageFamily.toString());
 
-        StringWriter sw = new StringWriter();
-        TreeWriter tw = new TreeWriter(sw);
-        tw.write(languageFamily);
-        Console.println(sw.toString());
-    }
+    StringWriter sw = new StringWriter();
+    TreeWriter tw = new TreeWriter(sw);
+    tw.write(languageFamily);
+    Console.println(sw.toString());
+  }
 }
