@@ -34,12 +34,12 @@ public class ElectionDemo {
     List<ElecteurInscrit> electeursMtl =
         electeurs.stream()
             .filter(e -> Arrays.binarySearch(circonscriptionsMtl, e.getCodeCirconscription()) >= 0)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
     List<ElecteurInscrit> electeursLaval =
         electeurs.stream()
             .filter(
                 e -> Arrays.binarySearch(circonscriptionsLaval, e.getCodeCirconscription()) >= 0)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
 
     double nbElecteurs =
         electeurs.stream().mapToDouble(e -> e.getNbElecteursApres()).average().orElse(0.0);
