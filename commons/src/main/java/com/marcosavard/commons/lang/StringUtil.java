@@ -1,5 +1,7 @@
 package com.marcosavard.commons.lang;
 
+import com.marcosavard.commons.lang.soundex.Soundex;
+
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +49,19 @@ public class StringUtil {
     boolean tooLong = original.length() > maxLength;
     String truncated = truncate(original, maxLength);
     return tooLong ? original.subSequence(0, maxLength - suffix.length()) + suffix : truncated;
+  }
+
+  public static String camelToUnderscore(String camel) {
+    String underscore = String.valueOf(Character.toLowerCase(camel.charAt(0)));
+
+    for (int i = 1; i < camel.length(); i++) {
+      char ch = camel.charAt(i);
+      boolean lowercase = Character.isLowerCase(ch);
+      underscore +=
+              lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
+    }
+
+    return underscore.toUpperCase();
   }
 
   /**
@@ -374,7 +389,15 @@ public class StringUtil {
   public static String repeat(char ch, int len) {
     char[] chars = new char[len];
     Arrays.fill(chars, ch);
-    return new String(chars);
+    return String.valueOf(chars);
+  }
+
+  public static String soundex(String str) {
+    return Soundex.of(str);
+  }
+
+  public static String space(int n) {
+    return repeat(' ', n);
   }
 
   public static String[] splitLine(CharSequence original) {
@@ -459,42 +482,6 @@ public class StringUtil {
     return original.subSequence(beginIdx, original.length());
   }
 
-  public static String translate(CharSequence str, CharSequence old, CharSequence target) {
-    int n = Math.min(old.length(), target.length());
-    char[] array = str.toString().toCharArray();
-
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < array.length; j++) {
-        if (array[j] == old.charAt(i)) {
-          array[j] = target.charAt(i);
-        }
-      }
-    }
-
-    return String.valueOf(array);
-  }
-
-  public static String camelToUnderscore(String camel) {
-    String underscore = String.valueOf(Character.toLowerCase(camel.charAt(0)));
-
-    for (int i = 1; i < camel.length(); i++) {
-      char ch = camel.charAt(i);
-      boolean lowercase = Character.isLowerCase(ch);
-      underscore +=
-          lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
-    }
-
-    return underscore.toUpperCase();
-  }
-
-  public static String underscoreToCamel(String underscore) {
-    String camel = underscore.toLowerCase();
-    camel = camel.replace('_', ' ');
-    camel = capitalizeWords(camel);
-    camel = camel.replace(" ", "");
-    return uncapitalize(camel);
-  }
-
   /**
    * Convert "HELLO_WORLD" to "Hello World"
    *
@@ -525,10 +512,51 @@ public class StringUtil {
     return original.toString().toUpperCase(locale);
   }
 
+  public static String translate(CharSequence str, CharSequence old, CharSequence target) {
+    int n = Math.min(old.length(), target.length());
+    char[] array = str.toString().toCharArray();
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < array.length; j++) {
+        if (array[j] == old.charAt(i)) {
+          array[j] = target.charAt(i);
+        }
+      }
+    }
+
+    return String.valueOf(array);
+  }
+
+
   public static String trimDoubleBlanks(CharSequence original) {
     original = NullSafe.of(original);
     return original.toString().replace(" +", " ");
   }
+
+  public static CharSequence trimLeft(CharSequence original) {
+     return trimLeft(original, ' ');
+  }
+
+  public static CharSequence trimLeft(CharSequence original, char charToTrim) {
+    int i = 0;
+    while (i < original.length() && (original.charAt(i)) == charToTrim) {
+      i++;
+    }
+    return original.subSequence(i, original.length());
+  }
+
+  public static CharSequence trimRight(CharSequence original) {
+    return trimRight(original, ' ');
+  }
+
+  public static CharSequence trimRight(CharSequence original, char charToTrim) {
+    int i = original.length()-1;
+    while (i >= 0 && (original.charAt(i) == charToTrim)) {
+      i--;
+    }
+    return original.subSequence(0, i+1);
+  }
+
 
   /**
    * Truncate source at a given length
@@ -550,6 +578,15 @@ public class StringUtil {
     String remaining = (len <= 1) ? "" : str.subSequence(1, str.length()).toString();
     return firstLetter + remaining;
   }
+
+  public static String underscoreToCamel(String underscore) {
+    String camel = underscore.toLowerCase();
+    camel = camel.replace('_', ' ');
+    camel = capitalizeWords(camel);
+    camel = camel.replace(" ", "");
+    return uncapitalize(camel);
+  }
+
 
   public static CharSequence unquote(CharSequence original) {
     return unquote(original, '\"');

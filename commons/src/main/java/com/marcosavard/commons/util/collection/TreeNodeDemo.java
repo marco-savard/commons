@@ -12,7 +12,7 @@ public class TreeNodeDemo {
 
   public static void main(String[] args) {
     TreeNode canada1 = buildTreeCanada1(); // 33 LOC
-    TreeNode canada2 = buildTreeCanada2(); // 8 LOC
+    ITreeNode canada2 = buildTreeCanada2(); // 8 LOC
 
     compareTree(canada1, canada2);
     printTree(canada2);
@@ -61,7 +61,7 @@ public class TreeNodeDemo {
     return canada;
   }
 
-  private static TreeNode buildTreeCanada2() {
+  private static ITreeNode buildTreeCanada2() {
     SimpleTreeNode<String> canada = SimpleTreeNode.createRoot("Canada");
     SimpleTreeNode east = canada.addChild("East");
     SimpleTreeNode central = canada.addChild("Central");
