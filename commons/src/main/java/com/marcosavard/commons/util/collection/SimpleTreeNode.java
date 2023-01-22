@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 
-public class SimpleTreeNode<T> extends DefaultMutableTreeNode {
+public class SimpleTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode {
 
   private SimpleTreeNode(T data) {
     super(data);
@@ -35,7 +35,8 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode {
   public boolean equals(Object that) {
     boolean equal = false;
 
-    if (that instanceof TreeNode treeNode) {
+    if (that instanceof TreeNode) {
+      TreeNode treeNode = (TreeNode)that;
       equal = equals(this, treeNode);
     }
 
@@ -45,8 +46,10 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode {
   public static boolean equals(TreeNode node1, TreeNode node2) {
     boolean equal = false;
 
-    if (node1 instanceof DefaultMutableTreeNode treeNode1) {
-      if (node2 instanceof DefaultMutableTreeNode treeNode2) {
+    if (node1 instanceof DefaultMutableTreeNode) {
+      DefaultMutableTreeNode treeNode1 = (DefaultMutableTreeNode)node1;
+      if (node2 instanceof DefaultMutableTreeNode) {
+        DefaultMutableTreeNode treeNode2 = (DefaultMutableTreeNode)node2;
         Object data1 = treeNode1.getUserObject();
         Object data2 = treeNode2.getUserObject();
 
@@ -150,7 +153,8 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode {
     List<String> items = new ArrayList<>();
 
     for (TreeNode child : children) {
-      if (child instanceof DefaultMutableTreeNode mutableTreeNode) {
+      if (child instanceof DefaultMutableTreeNode) {
+        DefaultMutableTreeNode mutableTreeNode = (DefaultMutableTreeNode)child;
         String data = String.valueOf(mutableTreeNode.getUserObject());
         items.add(data);
       }
@@ -170,7 +174,8 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode {
     List<String> items = new ArrayList<>();
 
     for (TreeNode node : nodes) {
-      if (node instanceof SimpleTreeNode<?> sn) {
+      if (node instanceof SimpleTreeNode<?>) {
+        SimpleTreeNode<?> sn = (SimpleTreeNode<?>)node;
         String s = sn.toNestedString();
         items.add(s);
       }
