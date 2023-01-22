@@ -1,4 +1,4 @@
-package com.marcosavard.commons.util.collection;
+package com.marcosavard.commons.util.tree;
 
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.TreeWriter;
@@ -21,8 +21,8 @@ public class TreeNodeDemo {
 
   private static void compareTree(TreeNode node1, TreeNode node2) {
     boolean equal = node2.equals(node1);
-    System.out.println("node1 : " + SimpleTreeNode.toString(node1));
-    System.out.println("node2 : " + SimpleTreeNode.toString(node2));
+    System.out.println("node1 : " + SwingTreeNode.toString(node1));
+    System.out.println("node2 : " + SwingTreeNode.toString(node2));
     System.out.println("Trees are equal : " + equal);
   }
 
@@ -62,7 +62,22 @@ public class TreeNodeDemo {
   }
 
   private static ITreeNode buildTreeCanada2() {
-    SimpleTreeNode<String> canada = SimpleTreeNode.createRoot("Canada");
+    SwingTreeNode<String> canada = SwingTreeNode.createRoot("Canada");
+    SimpleTreeNode east = canada.addChild("East");
+    SimpleTreeNode central = canada.addChild("Central");
+    SimpleTreeNode west = canada.addChild("West");
+
+    // add leaves
+    east.addChildren("NL", "NS", "PE", "NB");
+    central.addChildren("QC", "ON");
+    west.addChildren("MB", "SK", "AB", "BC");
+
+    return canada;
+  }
+
+  private static ITreeNode buildTreeCanada3() {
+    TreeNodeFactory treeNodeFactory = new SwingTreeNodeFactory();
+    SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
     SimpleTreeNode east = canada.addChild("East");
     SimpleTreeNode central = canada.addChild("Central");
     SimpleTreeNode west = canada.addChild("West");
@@ -85,13 +100,13 @@ public class TreeNodeDemo {
     canada.add(east);
     canada.add(central);
     canada.add(west);
-    System.out.println("tree : " + SimpleTreeNode.toString(canada));
+    System.out.println("tree : " + SwingTreeNode.toString(canada));
 
     canada.add(east); // add twice, do not complain
-    System.out.println("tree : " + SimpleTreeNode.toString(canada));
+    System.out.println("tree : " + SwingTreeNode.toString(canada));
 
     west.add(east); // add node under child, do not complain
-    System.out.println("tree : " + SimpleTreeNode.toString(canada));
+    System.out.println("tree : " + SwingTreeNode.toString(canada));
 
     // east.add(canada); // recursion : compiles, but fails at runtime
 
@@ -106,11 +121,11 @@ public class TreeNodeDemo {
   public static void mainOld(String[] args) {
     TreeNode usa = buildTreeUsa();
 
-    Console.println(((SimpleTreeNode) usa).toLongString());
+    Console.println(((SwingTreeNode) usa).toLongString());
     Console.println(usa.isLeaf());
-    Console.println(((SimpleTreeNode) usa).isRoot());
+    Console.println(((SwingTreeNode) usa).isRoot());
     Console.println(Integer.toString(usa.getChildCount()));
-    Console.println(Integer.toString(((SimpleTreeNode) usa).getLevel()));
+    Console.println(Integer.toString(((SwingTreeNode) usa).getLevel()));
 
     // print a tree structure
     StringWriter sw = new StringWriter();
@@ -119,8 +134,8 @@ public class TreeNodeDemo {
     Console.println(sw.toString());
   }
 
-  private static SimpleTreeNode buildTreeUsa() {
-    SimpleTreeNode usa = SimpleTreeNode.createRoot("USA");
+  private static SwingTreeNode buildTreeUsa() {
+    SwingTreeNode usa = SwingTreeNode.createRoot("USA");
     SimpleTreeNode northeast = usa.addChild("Northeast");
     SimpleTreeNode midwest = usa.addChild("Midwest");
     SimpleTreeNode south = usa.addChild("South");

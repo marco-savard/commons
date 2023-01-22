@@ -1,4 +1,4 @@
-package com.marcosavard.commons.util.collection;
+package com.marcosavard.commons.util.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -8,19 +8,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 
-public class SimpleTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode {
+class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<T> {
 
-  private SimpleTreeNode(T data) {
+  private SwingTreeNode(T data) {
     super(data);
   }
 
-  public static <T> SimpleTreeNode createRoot(T data) {
-    SimpleTreeNode<T> treeNode = new SimpleTreeNode<T>(data);
+  static <T> SwingTreeNode createRoot(T data) {
+    SwingTreeNode<T> treeNode = new SwingTreeNode<T>(data);
     return treeNode;
   }
 
+  @Override
   public SimpleTreeNode addChild(T childData) {
-    SimpleTreeNode child = new SimpleTreeNode(childData);
+    SwingTreeNode child = new SwingTreeNode(childData);
     this.add(child);
     return child;
   }
@@ -69,7 +70,7 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode implements ITreeNo
     return equal;
   }
 
-  public SimpleTreeNode[] getPath() {
+  public SwingTreeNode[] getPath() {
     List<TreeNode> pathToRoot = new ArrayList<>();
     TreeNode ancestor = this;
 
@@ -79,10 +80,10 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode implements ITreeNo
     } while (ancestor != null);
 
     Collections.reverse(pathToRoot);
-    return pathToRoot.toArray(new SimpleTreeNode[0]);
+    return pathToRoot.toArray(new SwingTreeNode[0]);
   }
 
-  public SimpleTreeNode getRoot() {
+  public SwingTreeNode getRoot() {
     return getPath()[0];
   }
 
@@ -174,8 +175,8 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode implements ITreeNo
     List<String> items = new ArrayList<>();
 
     for (TreeNode node : nodes) {
-      if (node instanceof SimpleTreeNode<?>) {
-        SimpleTreeNode<?> sn = (SimpleTreeNode<?>)node;
+      if (node instanceof SwingTreeNode<?>) {
+        SwingTreeNode<?> sn = (SwingTreeNode<?>)node;
         String s = sn.toNestedString();
         items.add(s);
       }
@@ -183,4 +184,6 @@ public class SimpleTreeNode<T> extends DefaultMutableTreeNode implements ITreeNo
 
     return "[" + String.join(", ", items) + "]";
   }
+
+
 }
