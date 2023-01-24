@@ -10,7 +10,7 @@ import java.util.Vector;
 
 class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<T> {
 
-  private SwingTreeNode(T data) {
+  SwingTreeNode(T data) {
     super(data);
   }
 

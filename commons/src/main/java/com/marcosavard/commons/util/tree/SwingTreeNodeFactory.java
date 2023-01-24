@@ -4,6 +4,7 @@ public class SwingTreeNodeFactory<T> extends TreeNodeFactory<T> {
 
     @Override
     public SimpleTreeNode createRoot(T data) {
-        return null;
+        SimpleTreeNode<T> root = new SwingTreeNode<>(data);
+        return root;
     }
 }

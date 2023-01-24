@@ -13,16 +13,21 @@ public class TreeNodeDemo {
   public static void main(String[] args) {
     TreeNode canada1 = buildTreeCanada1(); // 33 LOC
     ITreeNode canada2 = buildTreeCanada2(); // 8 LOC
+    ITreeNode canada3 = buildTreeCanada3(); // 8 LOC
+    ITreeNode canada4 = buildTreeCanada4(); // 8 LOC
 
     compareTree(canada1, canada2);
+    compareTree(canada2, canada3);
+    compareTree(canada3, canada4);
+
     printTree(canada2);
     buildTreeWithErrors(); // error
   }
 
   private static void compareTree(TreeNode node1, TreeNode node2) {
     boolean equal = node2.equals(node1);
-    System.out.println("node1 : " + SwingTreeNode.toString(node1));
-    System.out.println("node2 : " + SwingTreeNode.toString(node2));
+    System.out.println("  node1 : " + SwingTreeNode.toString(node1));
+    System.out.println("  node2 : " + SwingTreeNode.toString(node2));
     System.out.println("Trees are equal : " + equal);
   }
 
@@ -77,6 +82,21 @@ public class TreeNodeDemo {
 
   private static ITreeNode buildTreeCanada3() {
     TreeNodeFactory treeNodeFactory = new SwingTreeNodeFactory();
+    SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
+    SimpleTreeNode east = canada.addChild("East");
+    SimpleTreeNode central = canada.addChild("Central");
+    SimpleTreeNode west = canada.addChild("West");
+
+    // add leaves
+    east.addChildren("NL", "NS", "PE", "NB");
+    central.addChildren("QC", "ON");
+    west.addChildren("MB", "SK", "AB", "BC");
+
+    return canada;
+  }
+
+  private static ITreeNode buildTreeCanada4() {
+    TreeNodeFactory treeNodeFactory = new CustomTreeNodeFactory();
     SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
     SimpleTreeNode east = canada.addChild("East");
     SimpleTreeNode central = canada.addChild("Central");
