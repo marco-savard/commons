@@ -1,5 +1,9 @@
 package com.marcosavard.commons.util.collection;
 
+import com.marcosavard.commons.util.tree.SimpleTreeNode;
+import com.marcosavard.commons.util.tree.SwingTreeNodeFactory;
+import com.marcosavard.commons.util.tree.TreeNodeFactory;
+
 import java.lang.reflect.Field;
 
 public class ReflectionTreeBuilder {
@@ -16,7 +20,8 @@ public class ReflectionTreeBuilder {
   }
 
   public SimpleTreeNode build() {
-    SimpleTreeNode root = SimpleTreeNode.createRoot(fieldName);
+    TreeNodeFactory treeNodeFactory = new SwingTreeNodeFactory();
+    SimpleTreeNode root = treeNodeFactory.createRoot(fieldName);
 
     try {
       Field field = claz.getDeclaredField(fieldName);
