@@ -8,7 +8,7 @@ import java.util.List;
 public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     private T data;
     private CustomTreeNode<T> parent = null;
-    private List<CustomTreeNode<T>> children = new LinkedList<>();
+    private List<ITreeNode<T>> children = new LinkedList<>();
 
     CustomTreeNode(CustomTreeNode<T> parent, T data) {
         this.parent = parent;
@@ -30,7 +30,12 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     }
 
     @Override
-    public TreeNode getChildAt(int childIndex) {
+    public boolean equals(Object that) {
+        return ITreeNode.equals(this, that);
+    }
+
+    @Override
+    public ITreeNode getChildAt(int childIndex) {
         return children.get(childIndex);
     }
 
@@ -62,5 +67,23 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     @Override
     public Enumeration<? extends TreeNode> children() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return toShortString();
+    }
+
+    public String toShortString() {
+        return getUserObject().toString();
+    }
+
+    public String toLongString() {
+        return ITreeNode.toLongString(data, children);
+    }
+
+    @Override
+    public Object getUserObject() {
+        return data;
     }
 }

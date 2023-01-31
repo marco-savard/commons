@@ -1,16 +1,16 @@
 package com.marcosavard.commons.util.tree;
 
+import com.sun.source.tree.Tree;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Vector;
 
 class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<T> {
 
-  SwingTreeNode(T data) {
+  private SwingTreeNode(T data) {
     super(data);
   }
 
@@ -34,53 +34,13 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<
 
   @Override
   public boolean equals(Object that) {
-    boolean equal = false;
-
-    if (that instanceof TreeNode) {
-      TreeNode treeNode = (TreeNode)that;
-      equal = equals(this, treeNode);
-    }
-
-    return equal;
-  }
-
-  public static boolean equals(TreeNode node1, TreeNode node2) {
-    boolean equal = false;
-
-    if (node1 instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode treeNode1 = (DefaultMutableTreeNode)node1;
-      if (node2 instanceof DefaultMutableTreeNode) {
-        DefaultMutableTreeNode treeNode2 = (DefaultMutableTreeNode)node2;
-        Object data1 = treeNode1.getUserObject();
-        Object data2 = treeNode2.getUserObject();
-
-        if (Objects.equals(data1, data2)) {
-          int n = treeNode1.getChildCount();
-          equal = (n == treeNode2.getChildCount());
-
-          if (equal) {
-            for (int i=0; i<n; i++) {
-              equal &= equals(treeNode1.getChildAt(i), treeNode2.getChildAt(i));
-            }
-          }
-        }
-      }
-    }
-
-    return equal;
+    return ITreeNode.equals(this, that);
   }
 
   public SwingTreeNode[] getPath() {
-    List<TreeNode> pathToRoot = new ArrayList<>();
-    TreeNode ancestor = this;
-
-    do {
-      pathToRoot.add(ancestor);
-      ancestor = ancestor.getParent();
-    } while (ancestor != null);
-
-    Collections.reverse(pathToRoot);
-    return pathToRoot.toArray(new SwingTreeNode[0]);
+    List<TreeNode> pathToRoot = ITreeNode.getPath(this);
+    SwingTreeNode[] path = pathToRoot.toArray(new SwingTreeNode[0]);
+    return path;
   }
 
   public SwingTreeNode getRoot() {
@@ -116,74 +76,30 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<
     return toShortString();
   }
 
-  public static String toString(TreeNode node) {
-    String nodeData = node.toString();
-    List<TreeNode> children = getChildren(node);
-    List<String> childrenData = toString(children);
-    return nodeData + (childrenData.isEmpty() ? "" : childrenData);
-  }
-
-  public static List<String> toString(List<TreeNode> children) {
-    List<String> data = new ArrayList<>();
-
-    for (TreeNode node : children) {
-      data.add(toString(node));
-    }
-
-    return data;
-  }
-
-  public static List<TreeNode> getChildren(TreeNode node) {
-    List<TreeNode> children = new ArrayList<>();
-    int n = node.getChildCount();
-
-    for (int i=0; i<n; i++) {
-      TreeNode child = node.getChildAt(i);
-      children.add(child);
-    }
-
-    return children;
-  }
-
-
   public String toShortString() {
-    return this.userObject.toString();
+    return userObject.toString();
   }
 
   public String toLongString() {
-    List<String> items = new ArrayList<>();
+    return ITreeNode.toLongString(this, children);
+  }
 
-    for (TreeNode child : children) {
-      if (child instanceof DefaultMutableTreeNode) {
-        DefaultMutableTreeNode mutableTreeNode = (DefaultMutableTreeNode)child;
-        String data = String.valueOf(mutableTreeNode.getUserObject());
-        items.add(data);
-      }
+  public String toLongStringOld() {
+    List<ITreeNode<T>> childList = toList(children);
+    return ITreeNode.toLongString(userObject, childList);
+  }
+
+  private List<ITreeNode<T>> toList(Vector<TreeNode> items) {
+    List<ITreeNode<T>> list = new ArrayList<>();
+    for (TreeNode item : items) {
+      list.add((ITreeNode<T>)item);
     }
 
-    return this.userObject.toString() + " [" + String.join(", ", items) + "]";
+    return list;
   }
 
   public String toNestedString() {
-    String nodeData = this.userObject.toString();
-    boolean hasChild = (children != null) && ! children.isEmpty();
-    String childrenData = hasChild ? " " + toNestedString(children) : "";
-    return nodeData + childrenData;
+    return ITreeNode.toNestedString(userObject, children);
   }
-
-  public String toNestedString(Vector<TreeNode> nodes) {
-    List<String> items = new ArrayList<>();
-
-    for (TreeNode node : nodes) {
-      if (node instanceof SwingTreeNode<?>) {
-        SwingTreeNode<?> sn = (SwingTreeNode<?>)node;
-        String s = sn.toNestedString();
-        items.add(s);
-      }
-    }
-
-    return "[" + String.join(", ", items) + "]";
-  }
-
 
 }

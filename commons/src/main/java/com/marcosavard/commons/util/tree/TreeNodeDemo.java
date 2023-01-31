@@ -20,14 +20,14 @@ public class TreeNodeDemo {
     compareTree(canada2, canada3);
     compareTree(canada3, canada4);
 
-    printTree(canada2);
-    buildTreeWithErrors(); // error
+    //printTree(canada2);
+    //buildTreeWithErrors(); // error
   }
 
   private static void compareTree(TreeNode node1, TreeNode node2) {
     boolean equal = node2.equals(node1);
-    System.out.println("  node1 : " + SwingTreeNode.toString(node1));
-    System.out.println("  node2 : " + SwingTreeNode.toString(node2));
+    System.out.println("  node1 : " + ITreeNode.toString(node1));
+    System.out.println("  node2 : " + ITreeNode.toString(node2));
     System.out.println("Trees are equal : " + equal);
   }
 
@@ -120,13 +120,13 @@ public class TreeNodeDemo {
     canada.add(east);
     canada.add(central);
     canada.add(west);
-    System.out.println("tree : " + SwingTreeNode.toString(canada));
+    System.out.println("tree : " + ITreeNode.toString(canada));
 
     canada.add(east); // add twice, do not complain
-    System.out.println("tree : " + SwingTreeNode.toString(canada));
+    System.out.println("tree : " + ITreeNode.toString(canada));
 
     west.add(east); // add node under child, do not complain
-    System.out.println("tree : " + SwingTreeNode.toString(canada));
+    System.out.println("tree : " + ITreeNode.toString(canada));
 
     // east.add(canada); // recursion : compiles, but fails at runtime
 
