@@ -81,7 +81,7 @@ public class TreeNodeDemo {
   }
 
   private static ITreeNode buildTreeCanada3() {
-    TreeNodeFactory treeNodeFactory = new SwingTreeNodeFactory();
+    TreeNodeFactory treeNodeFactory = new TreeNodeFactory.SwingTreeNodeFactory<>();
     SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
     SimpleTreeNode east = canada.addChild("East");
     SimpleTreeNode central = canada.addChild("Central");
@@ -96,7 +96,7 @@ public class TreeNodeDemo {
   }
 
   private static ITreeNode buildTreeCanada4() {
-    TreeNodeFactory treeNodeFactory = new CustomTreeNodeFactory();
+    TreeNodeFactory treeNodeFactory = new TreeNodeFactory.CustomTreeNodeFactory();
     SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
     SimpleTreeNode east = canada.addChild("East");
     SimpleTreeNode central = canada.addChild("Central");

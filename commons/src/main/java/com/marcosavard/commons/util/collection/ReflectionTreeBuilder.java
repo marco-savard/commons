@@ -1,7 +1,6 @@
 package com.marcosavard.commons.util.collection;
 
 import com.marcosavard.commons.util.tree.SimpleTreeNode;
-import com.marcosavard.commons.util.tree.SwingTreeNodeFactory;
 import com.marcosavard.commons.util.tree.TreeNodeFactory;
 
 import java.lang.reflect.Field;
@@ -20,7 +19,7 @@ public class ReflectionTreeBuilder {
   }
 
   public SimpleTreeNode build() {
-    TreeNodeFactory treeNodeFactory = new SwingTreeNodeFactory();
+    TreeNodeFactory treeNodeFactory = new TreeNodeFactory.SwingTreeNodeFactory();
     SimpleTreeNode root = treeNodeFactory.createRoot(fieldName);
 
     try {
