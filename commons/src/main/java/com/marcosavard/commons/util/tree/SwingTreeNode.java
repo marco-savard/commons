@@ -1,7 +1,5 @@
 package com.marcosavard.commons.util.tree;
 
-import com.sun.source.tree.Tree;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;

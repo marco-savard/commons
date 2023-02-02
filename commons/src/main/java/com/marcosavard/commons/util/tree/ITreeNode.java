@@ -8,8 +8,6 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
 
     public Object getUserObject();
 
-    public TreeNode getChildAt(int idx);
-
     ITreeNode addChild(T childData);
 
     void addChildren(T... childData);
@@ -17,8 +15,8 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
     static <T> boolean equals(ITreeNode<T> treeNode1, Object that) {
         boolean equal = false;
 
-        if (that instanceof TreeNode) {
-            TreeNode treeNode2 = (TreeNode)that;
+        if (that instanceof ITreeNode) {
+            ITreeNode treeNode2 = (ITreeNode)that;
             Object data1 = treeNode1.getUserObject();
             Object data2 = getUserObject(treeNode2);
 
@@ -36,46 +34,9 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
         return equal;
     }
 
-    static Object getUserObject(TreeNode treeNode) {
-        Object userObject;
-
-        if (treeNode instanceof ITreeNode) {
-            ITreeNode node = (ITreeNode)treeNode;
-            userObject = node.getUserObject();
-        } else if (treeNode instanceof DefaultMutableTreeNode) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)treeNode;
-            userObject = node.getUserObject();
-        } else {
-            userObject = null;
-        }
-
+    static Object getUserObject(ITreeNode treeNode) {
+        Object userObject = treeNode.getUserObject();
         return userObject;
-    }
-
-    public static boolean equalsOld(TreeNode node1, TreeNode node2) {
-        boolean equal = false;
-
-        if (node1 instanceof DefaultMutableTreeNode) {
-            DefaultMutableTreeNode treeNode1 = (DefaultMutableTreeNode)node1;
-            if (node2 instanceof DefaultMutableTreeNode) {
-                DefaultMutableTreeNode treeNode2 = (DefaultMutableTreeNode)node2;
-                Object data1 = treeNode1.getUserObject();
-                Object data2 = treeNode2.getUserObject();
-
-                if (Objects.equals(data1, data2)) {
-                    int n = treeNode1.getChildCount();
-                    equal = (n == treeNode2.getChildCount());
-
-                    if (equal) {
-                        for (int i=0; i<n; i++) {
-                           // equal &= equals(treeNode1.getChildAt(i), treeNode2.getChildAt(i));
-                        }
-                    }
-                }
-            }
-        }
-
-        return equal;
     }
 
     public static String toString(TreeNode node) {
