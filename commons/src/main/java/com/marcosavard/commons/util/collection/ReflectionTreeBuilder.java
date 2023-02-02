@@ -19,8 +19,7 @@ public class ReflectionTreeBuilder {
   }
 
   public ITreeNode build() {
-    TreeNodeFactory treeNodeFactory = new TreeNodeFactory.SwingTreeNodeFactory();
-    ITreeNode root = treeNodeFactory.createRoot(fieldName);
+    ITreeNode root = TreeNodeFactory.SWING.createRoot(fieldName);
 
     try {
       Field field = claz.getDeclaredField(fieldName);

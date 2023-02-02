@@ -17,13 +17,14 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode<T> {
     return treeNode;
   }
 
- // @Override
+  @Override
   public ITreeNode addChild(T childData) {
     SwingTreeNode child = new SwingTreeNode(childData);
     this.add(child);
     return child;
   }
 
+  @Override
   public void addChildren(T... children) {
     for (T child : children) {
       addChild(child);
@@ -60,10 +61,6 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode<T> {
     }
   }
 
-  public void setUserData(T data) {
-    super.setUserObject((T)data);
-  }
-
   @Override
   public void setUserObject(Object object) {
     super.setUserObject((T)object);
@@ -80,20 +77,6 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode<T> {
 
   public String toLongString() {
     return ITreeNode.toLongString(this, children);
-  }
-
-  public String toLongStringOld() {
-    List<ITreeNode<T>> childList = toList(children);
-    return ITreeNode.toLongString(userObject, childList);
-  }
-
-  private List<ITreeNode<T>> toList(Vector<TreeNode> items) {
-    List<ITreeNode<T>> list = new ArrayList<>();
-    for (TreeNode item : items) {
-      list.add((ITreeNode<T>)item);
-    }
-
-    return list;
   }
 
   public String toNestedString() {

@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CustomTreeNode<T> implements ITreeNode<T>  {
+class CustomTreeNode<T> implements ITreeNode<T>  {
     private T data;
     private CustomTreeNode<T> parent = null;
     private List<ITreeNode<T>> children = new LinkedList<>();

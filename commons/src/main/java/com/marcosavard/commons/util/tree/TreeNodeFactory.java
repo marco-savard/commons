@@ -1,9 +1,12 @@
 package com.marcosavard.commons.util.tree;
 
 public abstract class TreeNodeFactory<T> {
+    public static final TreeNodeFactory SWING = new SwingTreeNodeFactory();
+    public static final TreeNodeFactory CUSTOM = new CustomTreeNodeFactory();
+
     public abstract ITreeNode<T> createRoot(T data);
 
-    public static class SwingTreeNodeFactory<T> extends TreeNodeFactory<T> {
+    private static class SwingTreeNodeFactory<T> extends TreeNodeFactory<T> {
 
         @Override
         public ITreeNode<T> createRoot(T data) {
@@ -12,7 +15,7 @@ public abstract class TreeNodeFactory<T> {
         }
     }
 
-    public static class CustomTreeNodeFactory<T> extends TreeNodeFactory<T> {
+    private static class CustomTreeNodeFactory<T> extends TreeNodeFactory<T> {
         @Override
         public ITreeNode<T> createRoot(T data) {
             ITreeNode<T> root = new CustomTreeNode(null, data);
