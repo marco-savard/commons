@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
+public class CustomTreeNode<T> implements ITreeNode<T>  {
     private T data;
     private CustomTreeNode<T> parent = null;
     private List<ITreeNode<T>> children = new LinkedList<>();
@@ -16,7 +16,7 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     }
 
     @Override
-    public SimpleTreeNode addChild(T childData) {
+    public ITreeNode addChild(T childData) {
         CustomTreeNode<T> childNode = new CustomTreeNode<T>(this, childData);
         this.children.add(childNode);
         return childNode;

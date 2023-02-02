@@ -1,6 +1,6 @@
 package com.marcosavard.commons.util.collection;
 
-import com.marcosavard.commons.util.tree.SimpleTreeNode;
+import com.marcosavard.commons.util.tree.ITreeNode;
 import com.marcosavard.commons.util.tree.TreeNodeFactory;
 
 import java.lang.reflect.Field;
@@ -18,9 +18,9 @@ public class ReflectionTreeBuilder {
     this.fieldName = fieldName;
   }
 
-  public SimpleTreeNode build() {
+  public ITreeNode build() {
     TreeNodeFactory treeNodeFactory = new TreeNodeFactory.SwingTreeNodeFactory();
-    SimpleTreeNode root = treeNodeFactory.createRoot(fieldName);
+    ITreeNode root = treeNodeFactory.createRoot(fieldName);
 
     try {
       Field field = claz.getDeclaredField(fieldName);
@@ -36,15 +36,15 @@ public class ReflectionTreeBuilder {
     return root;
   }
 
-  private void buildChildren(SimpleTreeNode root, Object[] children) throws IllegalAccessException {
+  private void buildChildren(ITreeNode root, Object[] children) throws IllegalAccessException {
     for (Object childValue : children) {
       buildChild(root, childValue);
     }
   }
 
-  private void buildChild(SimpleTreeNode root, Object childValue) throws IllegalAccessException {
+  private void buildChild(ITreeNode root, Object childValue) throws IllegalAccessException {
     Field field = findFieldByValue(childValue);
-    SimpleTreeNode child = root.addChild(field.getName());
+    ITreeNode child = root.addChild(field.getName());
 
     if (childValue instanceof String[]) {
       addLeaves(child, (String[]) childValue);
@@ -53,7 +53,7 @@ public class ReflectionTreeBuilder {
     }
   }
 
-  private void addLeaves(SimpleTreeNode node, String[] leaves) {
+  private void addLeaves(ITreeNode node, String[] leaves) {
     for (String leaf : leaves) {
       node.addChild(leaf);
     }

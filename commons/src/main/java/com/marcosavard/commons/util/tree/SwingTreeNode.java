@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<T> {
+class SwingTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode<T> {
 
   private SwingTreeNode(T data) {
     super(data);
@@ -19,8 +19,8 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements SimpleTreeNode<
     return treeNode;
   }
 
-  @Override
-  public SimpleTreeNode addChild(T childData) {
+ // @Override
+  public ITreeNode addChild(T childData) {
     SwingTreeNode child = new SwingTreeNode(childData);
     this.add(child);
     return child;

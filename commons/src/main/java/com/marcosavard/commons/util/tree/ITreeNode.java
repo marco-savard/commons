@@ -6,11 +6,13 @@ import java.util.*;
 
 public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
 
-
-
     public Object getUserObject();
 
     public TreeNode getChildAt(int idx);
+
+    ITreeNode addChild(T childData);
+
+    void addChildren(T... childData);
 
     static <T> boolean equals(ITreeNode<T> treeNode1, Object that) {
         boolean equal = false;

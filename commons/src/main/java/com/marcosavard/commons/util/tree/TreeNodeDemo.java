@@ -68,9 +68,9 @@ public class TreeNodeDemo {
 
   private static ITreeNode buildTreeCanada2() {
     SwingTreeNode<String> canada = SwingTreeNode.createRoot("Canada");
-    SimpleTreeNode east = canada.addChild("East");
-    SimpleTreeNode central = canada.addChild("Central");
-    SimpleTreeNode west = canada.addChild("West");
+    ITreeNode east = canada.addChild("East");
+    ITreeNode central = canada.addChild("Central");
+    ITreeNode west = canada.addChild("West");
 
     // add leaves
     east.addChildren("NL", "NS", "PE", "NB");
@@ -82,10 +82,10 @@ public class TreeNodeDemo {
 
   private static ITreeNode buildTreeCanada3() {
     TreeNodeFactory treeNodeFactory = new TreeNodeFactory.SwingTreeNodeFactory<>();
-    SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
-    SimpleTreeNode east = canada.addChild("East");
-    SimpleTreeNode central = canada.addChild("Central");
-    SimpleTreeNode west = canada.addChild("West");
+    ITreeNode<String> canada = treeNodeFactory.createRoot("Canada");
+    ITreeNode east = canada.addChild("East");
+    ITreeNode central = canada.addChild("Central");
+    ITreeNode west = canada.addChild("West");
 
     // add leaves
     east.addChildren("NL", "NS", "PE", "NB");
@@ -97,10 +97,10 @@ public class TreeNodeDemo {
 
   private static ITreeNode buildTreeCanada4() {
     TreeNodeFactory treeNodeFactory = new TreeNodeFactory.CustomTreeNodeFactory();
-    SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
-    SimpleTreeNode east = canada.addChild("East");
-    SimpleTreeNode central = canada.addChild("Central");
-    SimpleTreeNode west = canada.addChild("West");
+    ITreeNode<String> canada = treeNodeFactory.createRoot("Canada");
+    ITreeNode east = canada.addChild("East");
+    ITreeNode central = canada.addChild("Central");
+    ITreeNode west = canada.addChild("West");
 
     // add leaves
     east.addChildren("NL", "NS", "PE", "NB");
@@ -156,36 +156,36 @@ public class TreeNodeDemo {
 
   private static SwingTreeNode buildTreeUsa() {
     SwingTreeNode usa = SwingTreeNode.createRoot("USA");
-    SimpleTreeNode northeast = usa.addChild("Northeast");
-    SimpleTreeNode midwest = usa.addChild("Midwest");
-    SimpleTreeNode south = usa.addChild("South");
-    SimpleTreeNode west = usa.addChild("West");
+    ITreeNode northeast = usa.addChild("Northeast");
+    ITreeNode midwest = usa.addChild("Midwest");
+    ITreeNode south = usa.addChild("South");
+    ITreeNode west = usa.addChild("West");
 
-    SimpleTreeNode newEngland = northeast.addChild("newEngland");
+    ITreeNode newEngland = northeast.addChild("newEngland");
     newEngland.addChildren("MA", "CT", "RI", "ME", "VT", "NH");
 
-    SimpleTreeNode midAtlantic = northeast.addChild("midAtlantic");
+    ITreeNode midAtlantic = northeast.addChild("midAtlantic");
     midAtlantic.addChildren("NY", "NJ", "PE");
 
-    SimpleTreeNode eastNorthCentral = midwest.addChild("eastNorthCentral");
+    ITreeNode eastNorthCentral = midwest.addChild("eastNorthCentral");
     eastNorthCentral.addChildren("IL", "IN", "MI", "OH", "WI");
 
-    SimpleTreeNode westNorthCentral = midwest.addChild("westNorthCentral");
+    ITreeNode westNorthCentral = midwest.addChild("westNorthCentral");
     westNorthCentral.addChildren("IO", "KS", "MN", "NE", "ND", "SD");
 
-    SimpleTreeNode southAtlantic = south.addChild("southAtlantic");
+    ITreeNode southAtlantic = south.addChild("southAtlantic");
     southAtlantic.addChildren("DE", "MD", "VI", "WV", "NC", "SC", "GE", "FL");
 
-    SimpleTreeNode eastSouthCentral = south.addChild("eastSouthCentral");
+    ITreeNode eastSouthCentral = south.addChild("eastSouthCentral");
     eastSouthCentral.addChildren("AL", "KE", "MS", "TS");
 
-    SimpleTreeNode westSouthCentral = south.addChild("westSouthCentral");
+    ITreeNode westSouthCentral = south.addChild("westSouthCentral");
     westSouthCentral.addChildren("AR", "LA", "OK", "TX");
 
-    SimpleTreeNode mountain = west.addChild("mountain");
+    ITreeNode mountain = west.addChild("mountain");
     mountain.addChildren("AZ", "NM", "NV", "UT", "CO", "ID", "WY", "MT");
 
-    SimpleTreeNode pacific = west.addChild("pacific");
+    ITreeNode pacific = west.addChild("pacific");
     pacific.addChildren("CA", "OR", "WA", "AK", "HW");
 
     return usa;
