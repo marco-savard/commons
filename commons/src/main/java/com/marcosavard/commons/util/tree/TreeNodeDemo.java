@@ -7,6 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.io.StringWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TreeNodeDemo {
 
@@ -20,15 +22,16 @@ public class TreeNodeDemo {
     compareTree(canada2, canada3);
     compareTree(canada3, canada4);
 
-    printTree(canada2);
-    buildTreeWithErrors(); // error
+    printTreeProperties(canada2);
+    //buildTreeWithErrors(); // error
   }
 
   private static void compareTree(TreeNode node1, TreeNode node2) {
     boolean equal = node2.equals(node1);
-    System.out.println("  node1 : " + SwingTreeNode.toString(node1));
-    System.out.println("  node2 : " + SwingTreeNode.toString(node2));
+    System.out.println("  node1 : " + ITreeNode.toString(node1));
+    System.out.println("  node2 : " + ITreeNode.toString(node2));
     System.out.println("Trees are equal : " + equal);
+    System.out.println();
   }
 
   private static TreeNode buildTreeCanada1() {
@@ -67,10 +70,10 @@ public class TreeNodeDemo {
   }
 
   private static ITreeNode buildTreeCanada2() {
-    SwingTreeNode<String> canada = SwingTreeNode.createRoot("Canada");
-    SimpleTreeNode east = canada.addChild("East");
-    SimpleTreeNode central = canada.addChild("Central");
-    SimpleTreeNode west = canada.addChild("West");
+    ITreeNode<String> canada = SwingTreeNode.createRoot("Canada");
+    ITreeNode east = canada.addChild("East");
+    ITreeNode central = canada.addChild("Central");
+    ITreeNode west = canada.addChild("West");
 
     // add leaves
     east.addChildren("NL", "NS", "PE", "NB");
@@ -81,11 +84,10 @@ public class TreeNodeDemo {
   }
 
   private static ITreeNode buildTreeCanada3() {
-    TreeNodeFactory treeNodeFactory = new SwingTreeNodeFactory();
-    SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
-    SimpleTreeNode east = canada.addChild("East");
-    SimpleTreeNode central = canada.addChild("Central");
-    SimpleTreeNode west = canada.addChild("West");
+    ITreeNode<String> canada = TreeNodeFactory.SWING.createRoot("Canada");
+    ITreeNode east = canada.addChild("East");
+    ITreeNode central = canada.addChild("Central");
+    ITreeNode west = canada.addChild("West");
 
     // add leaves
     east.addChildren("NL", "NS", "PE", "NB");
@@ -96,11 +98,10 @@ public class TreeNodeDemo {
   }
 
   private static ITreeNode buildTreeCanada4() {
-    TreeNodeFactory treeNodeFactory = new CustomTreeNodeFactory();
-    SimpleTreeNode<String> canada = treeNodeFactory.createRoot("Canada");
-    SimpleTreeNode east = canada.addChild("East");
-    SimpleTreeNode central = canada.addChild("Central");
-    SimpleTreeNode west = canada.addChild("West");
+    ITreeNode<String> canada = TreeNodeFactory.CUSTOM.createRoot("Canada");
+    ITreeNode east = canada.addChild("East");
+    ITreeNode central = canada.addChild("Central");
+    ITreeNode west = canada.addChild("West");
 
     // add leaves
     east.addChildren("NL", "NS", "PE", "NB");
@@ -120,22 +121,28 @@ public class TreeNodeDemo {
     canada.add(east);
     canada.add(central);
     canada.add(west);
-    System.out.println("tree : " + SwingTreeNode.toString(canada));
+    System.out.println("tree : " + ITreeNode.toString(canada));
 
     canada.add(east); // add twice, do not complain
-    System.out.println("tree : " + SwingTreeNode.toString(canada));
+    System.out.println("tree : " + ITreeNode.toString(canada));
 
     west.add(east); // add node under child, do not complain
-    System.out.println("tree : " + SwingTreeNode.toString(canada));
+    System.out.println("tree : " + ITreeNode.toString(canada));
 
     // east.add(canada); // recursion : compiles, but fails at runtime
 
     return canada;
   }
 
-  private static void printTree(TreeNode root) {
-    System.out.println(root.toString() + " is leaf : " + root.isLeaf());
-    System.out.println(root.toString() + " has " + root.getChildCount() + " children");
+  private static void printTreeProperties(TreeNode root) {
+    Map<String, Object> properties = new LinkedHashMap<>();
+    properties.put("isRoot", TreeNodeUtil.isRoot(root));
+    properties.put("isLeaf", root.isLeaf());
+    properties.put("childCount", root.getChildCount());
+    properties.put("root", TreeNodeUtil.getRoot(root));
+
+    //treeDepth()
+    Console.println("{0} {1}", root, properties);
   }
 
   public static void mainOld(String[] args) {
@@ -156,36 +163,36 @@ public class TreeNodeDemo {
 
   private static SwingTreeNode buildTreeUsa() {
     SwingTreeNode usa = SwingTreeNode.createRoot("USA");
-    SimpleTreeNode northeast = usa.addChild("Northeast");
-    SimpleTreeNode midwest = usa.addChild("Midwest");
-    SimpleTreeNode south = usa.addChild("South");
-    SimpleTreeNode west = usa.addChild("West");
+    ITreeNode northeast = usa.addChild("Northeast");
+    ITreeNode midwest = usa.addChild("Midwest");
+    ITreeNode south = usa.addChild("South");
+    ITreeNode west = usa.addChild("West");
 
-    SimpleTreeNode newEngland = northeast.addChild("newEngland");
+    ITreeNode newEngland = northeast.addChild("newEngland");
     newEngland.addChildren("MA", "CT", "RI", "ME", "VT", "NH");
 
-    SimpleTreeNode midAtlantic = northeast.addChild("midAtlantic");
+    ITreeNode midAtlantic = northeast.addChild("midAtlantic");
     midAtlantic.addChildren("NY", "NJ", "PE");
 
-    SimpleTreeNode eastNorthCentral = midwest.addChild("eastNorthCentral");
+    ITreeNode eastNorthCentral = midwest.addChild("eastNorthCentral");
     eastNorthCentral.addChildren("IL", "IN", "MI", "OH", "WI");
 
-    SimpleTreeNode westNorthCentral = midwest.addChild("westNorthCentral");
+    ITreeNode westNorthCentral = midwest.addChild("westNorthCentral");
     westNorthCentral.addChildren("IO", "KS", "MN", "NE", "ND", "SD");
 
-    SimpleTreeNode southAtlantic = south.addChild("southAtlantic");
+    ITreeNode southAtlantic = south.addChild("southAtlantic");
     southAtlantic.addChildren("DE", "MD", "VI", "WV", "NC", "SC", "GE", "FL");
 
-    SimpleTreeNode eastSouthCentral = south.addChild("eastSouthCentral");
+    ITreeNode eastSouthCentral = south.addChild("eastSouthCentral");
     eastSouthCentral.addChildren("AL", "KE", "MS", "TS");
 
-    SimpleTreeNode westSouthCentral = south.addChild("westSouthCentral");
+    ITreeNode westSouthCentral = south.addChild("westSouthCentral");
     westSouthCentral.addChildren("AR", "LA", "OK", "TX");
 
-    SimpleTreeNode mountain = west.addChild("mountain");
+    ITreeNode mountain = west.addChild("mountain");
     mountain.addChildren("AZ", "NM", "NV", "UT", "CO", "ID", "WY", "MT");
 
-    SimpleTreeNode pacific = west.addChild("pacific");
+    ITreeNode pacific = west.addChild("pacific");
     pacific.addChildren("CA", "OR", "WA", "AK", "HW");
 
     return usa;

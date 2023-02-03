@@ -5,10 +5,10 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
+class CustomTreeNode<T> implements ITreeNode<T>  {
     private T data;
     private CustomTreeNode<T> parent = null;
-    private List<CustomTreeNode<T>> children = new LinkedList<>();
+    private List<ITreeNode<T>> children = new LinkedList<>();
 
     CustomTreeNode(CustomTreeNode<T> parent, T data) {
         this.parent = parent;
@@ -16,7 +16,7 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     }
 
     @Override
-    public SimpleTreeNode addChild(T childData) {
+    public ITreeNode addChild(T childData) {
         CustomTreeNode<T> childNode = new CustomTreeNode<T>(this, childData);
         this.children.add(childNode);
         return childNode;
@@ -30,7 +30,12 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     }
 
     @Override
-    public TreeNode getChildAt(int childIndex) {
+    public boolean equals(Object that) {
+        return ITreeNode.equals(this, that);
+    }
+
+    @Override
+    public ITreeNode getChildAt(int childIndex) {
         return children.get(childIndex);
     }
 
@@ -50,6 +55,11 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     }
 
     @Override
+    public Object getUserObject() {
+        return data;
+    }
+
+    @Override
     public boolean getAllowsChildren() {
         return true;
     }
@@ -63,4 +73,19 @@ public class CustomTreeNode<T> implements SimpleTreeNode<T>  {
     public Enumeration<? extends TreeNode> children() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return toShortString();
+    }
+
+    public String toShortString() {
+        return getUserObject().toString();
+    }
+
+    public String toLongString() {
+        return ITreeNode.toLongString(data, children);
+    }
+
+
 }
