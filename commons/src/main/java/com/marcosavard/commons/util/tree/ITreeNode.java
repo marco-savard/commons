@@ -50,7 +50,7 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
 
     public static String toString(TreeNode node) {
         String nodeData = node.toString();
-        List<TreeNode> children = getChildren(node);
+        List<TreeNode> children = TreeNodeUtil.getChildren(node);
         List<String> childrenData = toString(children);
         return nodeData + (childrenData.isEmpty() ? "" : childrenData);
     }
@@ -93,32 +93,6 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
 
         return userObject.toString() + " [" + String.join(", ", items) + "]";
     }
-
-    public static List<TreeNode> getChildren(TreeNode node) {
-        List<TreeNode> children = new ArrayList<>();
-        int n = node.getChildCount();
-
-        for (int i=0; i<n; i++) {
-            TreeNode child = node.getChildAt(i);
-            children.add(child);
-        }
-
-        return children;
-    }
-
-    public static List<TreeNode> getPath(ITreeNode node) {
-        List<TreeNode> pathToRoot = new ArrayList<>();
-        TreeNode ancestor = node;
-
-        do {
-            pathToRoot.add(ancestor);
-            ancestor = ancestor.getParent();
-        } while (ancestor != null);
-
-        Collections.reverse(pathToRoot);
-        return pathToRoot;
-    }
-
 
 
     static String toNestedString(Object userObject, Vector<TreeNode> children) {

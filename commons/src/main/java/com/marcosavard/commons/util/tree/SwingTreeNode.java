@@ -36,14 +36,8 @@ class SwingTreeNode<T> extends DefaultMutableTreeNode implements ITreeNode<T> {
     return ITreeNode.equals(this, that);
   }
 
-  public SwingTreeNode[] getPath() {
-    List<TreeNode> pathToRoot = ITreeNode.getPath(this);
-    SwingTreeNode[] path = pathToRoot.toArray(new SwingTreeNode[0]);
-    return path;
-  }
-
   public SwingTreeNode getRoot() {
-    return getPath()[0];
+    return (SwingTreeNode)TreeNodeUtil.getRoot(this);
   }
 
   @Override

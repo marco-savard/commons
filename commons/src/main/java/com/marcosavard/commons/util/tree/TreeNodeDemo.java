@@ -9,7 +9,6 @@ import javax.swing.tree.TreeNode;
 import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class TreeNodeDemo {
 
@@ -137,9 +136,12 @@ public class TreeNodeDemo {
 
   private static void printTreeProperties(TreeNode root) {
     Map<String, Object> properties = new LinkedHashMap<>();
-    properties.put("isRoot", root.getParent() == null);
+    properties.put("isRoot", TreeNodeUtil.isRoot(root));
     properties.put("isLeaf", root.isLeaf());
     properties.put("childCount", root.getChildCount());
+    properties.put("root", TreeNodeUtil.getRoot(root));
+
+    //treeDepth()
     Console.println("{0} {1}", root, properties);
   }
 
