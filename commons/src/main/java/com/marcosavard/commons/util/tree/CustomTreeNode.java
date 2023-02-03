@@ -55,6 +55,11 @@ class CustomTreeNode<T> implements ITreeNode<T>  {
     }
 
     @Override
+    public Object getUserObject() {
+        return data;
+    }
+
+    @Override
     public boolean getAllowsChildren() {
         return true;
     }
@@ -82,8 +87,5 @@ class CustomTreeNode<T> implements ITreeNode<T>  {
         return ITreeNode.toLongString(data, children);
     }
 
-    @Override
-    public Object getUserObject() {
-        return data;
-    }
+
 }

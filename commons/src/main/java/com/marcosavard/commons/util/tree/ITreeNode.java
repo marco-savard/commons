@@ -15,8 +15,8 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
     static <T> boolean equals(ITreeNode<T> treeNode1, Object that) {
         boolean equal = false;
 
-        if (that instanceof ITreeNode) {
-            ITreeNode treeNode2 = (ITreeNode)that;
+        if (that instanceof TreeNode) {
+            TreeNode treeNode2 = (TreeNode)that;
             Object data1 = treeNode1.getUserObject();
             Object data2 = getUserObject(treeNode2);
 
@@ -34,8 +34,17 @@ public interface ITreeNode<T> extends javax.swing.tree.TreeNode {
         return equal;
     }
 
-    static Object getUserObject(ITreeNode treeNode) {
-        Object userObject = treeNode.getUserObject();
+    static Object getUserObject(TreeNode treeNode) {
+        Object userObject;
+
+        if (treeNode instanceof ITreeNode) {
+            userObject = ((ITreeNode)treeNode).getUserObject();
+        } else if (treeNode instanceof DefaultMutableTreeNode) {
+            userObject = ((DefaultMutableTreeNode)treeNode).getUserObject();
+        } else {
+            userObject = null;
+        }
+
         return userObject;
     }
 

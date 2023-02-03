@@ -7,6 +7,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.io.StringWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TreeNodeDemo {
 
@@ -20,7 +23,7 @@ public class TreeNodeDemo {
     compareTree(canada2, canada3);
     compareTree(canada3, canada4);
 
-    //printTree(canada2);
+    printTreeProperties(canada2);
     //buildTreeWithErrors(); // error
   }
 
@@ -29,6 +32,7 @@ public class TreeNodeDemo {
     System.out.println("  node1 : " + ITreeNode.toString(node1));
     System.out.println("  node2 : " + ITreeNode.toString(node2));
     System.out.println("Trees are equal : " + equal);
+    System.out.println();
   }
 
   private static TreeNode buildTreeCanada1() {
@@ -131,9 +135,12 @@ public class TreeNodeDemo {
     return canada;
   }
 
-  private static void printTree(TreeNode root) {
-    System.out.println(root.toString() + " is leaf : " + root.isLeaf());
-    System.out.println(root.toString() + " has " + root.getChildCount() + " children");
+  private static void printTreeProperties(TreeNode root) {
+    Map<String, Object> properties = new LinkedHashMap<>();
+    properties.put("isRoot", root.getParent() == null);
+    properties.put("isLeaf", root.isLeaf());
+    properties.put("childCount", root.getChildCount());
+    Console.println("{0} {1}", root, properties);
   }
 
   public static void mainOld(String[] args) {
