@@ -41,6 +41,4 @@ public class FactorialDemo {
 
     return prob;
   }
-
-
 }

@@ -34,6 +34,4 @@ public class Factorial {
     BigInteger factorial = Range.of(delta - 1).addTo(this.n - delta + 1).product();
     return factorial;
   }
-
-
 }
