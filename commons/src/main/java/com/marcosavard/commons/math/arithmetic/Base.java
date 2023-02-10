@@ -44,6 +44,4 @@ public class Base {
     String joined = String.join(", ", Arrays.toString(result));
     return joined;
   }
-
-
 }

@@ -18,17 +18,16 @@ public class BaseDemo {
     for (int year = 1896; year <= 2020; year++) {
       long[] encoded = leapBase.encode(year);
 
-
       boolean leap = (encoded[2] == 0) && (encoded[1] != 0 || encoded[0] == 0);
 
       if (leap) {
-        String msg = MessageFormat.format("  {0} is leap : {1}, encoded = {2}", year, leap,
-            Base.toString(encoded));
+        String msg =
+            MessageFormat.format(
+                "  {0} is leap : {1}, encoded = {2}", year, leap, Base.toString(encoded));
 
         System.out.println(msg);
       }
     }
-
   }
 
   private static void testEncodeLength(int inches) {
@@ -36,8 +35,9 @@ public class BaseDemo {
     Base usLength = Base.of(1760, 3, 12);
     long[] encoded = usLength.encode(inches);
 
-    String msg = MessageFormat.format("{0} inches encoded yard-feet-inch {1}", inches,
-        Base.toString(encoded));
+    String msg =
+        MessageFormat.format(
+            "{0} inches encoded yard-feet-inch {1}", inches, Base.toString(encoded));
     System.out.println(msg);
   }
 
@@ -66,5 +66,4 @@ public class BaseDemo {
     String msg = MessageFormat.format("{0} days encoded in {1}", days, Base.toString(encoded));
     System.out.println(msg);
   }
-
 }
