@@ -58,13 +58,14 @@ public class PseudoRandomDemo {
 
     @Override
     public String toString() {
-      String msg = MessageFormat.format("[q1: {0}, q2:{1}, q3:{2}, q4:{3}]", //
-          Percent.of(quadrants[0], total), //
-          Percent.of(quadrants[1], total), //
-          Percent.of(quadrants[2], total), //
-          Percent.of(quadrants[3], total));
+      String msg =
+          MessageFormat.format(
+              "[q1: {0}, q2:{1}, q3:{2}, q4:{3}]", //
+              Percent.of(quadrants[0], total), //
+              Percent.of(quadrants[1], total), //
+              Percent.of(quadrants[2], total), //
+              Percent.of(quadrants[3], total));
       return msg;
     }
-
   }
 }

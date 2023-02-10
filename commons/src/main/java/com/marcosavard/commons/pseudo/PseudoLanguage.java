@@ -1,9 +1,10 @@
 package com.marcosavard.commons.pseudo;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 import com.marcosavard.commons.text.SyllableSplitter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PseudoLanguage {
   private static final String VOYELS = "aeiouy";
@@ -55,7 +56,6 @@ public class PseudoLanguage {
 
     return this;
   }
-
 
   public PseudoLanguage withTerminaisons(String... terminaisons) {
     for (String terminaison : terminaisons) {
@@ -150,8 +150,6 @@ public class PseudoLanguage {
     return splitWords;
   }
 
-
-
   private String translateWord(String word) {
     PseudoRandom r = new PseudoRandom(word.hashCode());
     SyllableSplitter splitter = new SyllableSplitter();
@@ -177,7 +175,6 @@ public class PseudoLanguage {
     } else {
       translatedWord = translateSyllable(word, r);
     }
-
 
     return translatedWord;
   }
@@ -226,7 +223,4 @@ public class PseudoLanguage {
 
     return translatedSyllable;
   }
-
-
-
 }
