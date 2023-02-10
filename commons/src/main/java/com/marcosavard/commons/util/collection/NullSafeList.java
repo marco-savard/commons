@@ -6,11 +6,14 @@ public class NullSafeList<T> extends ArrayList<T> {
 
   @Override
   public boolean add(T element) {
-    boolean added = false;
+    boolean added = (element != null);
 
-    if (element != null) {
+    if (added && element instanceof CharSequence cs) {
+      added = ! cs.isEmpty();
+    }
+
+    if (added) {
       super.add(element);
-      added = true;
     }
 
     return added;
