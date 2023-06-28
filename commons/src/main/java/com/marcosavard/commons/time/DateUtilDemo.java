@@ -6,12 +6,16 @@ import java.time.Month;
 import java.util.Date;
 
 public class DateUtilDemo {
+  private static final LocalDate GIVEN_DATE = LocalDate.of(2019, 1, 15);
 
   public static void main(String[] args) {
+    //conversions
+    convertToLocalDate(DateUtil.toDate(GIVEN_DATE));
+
+
     printLeapYears(1880, 1920);
     printMonth(2019, Month.JANUARY);
     listDatesInMonth(2019, Month.JANUARY);
-    convertToLocalDate(DateUtil.toDate(LocalDate.of(2019, 1, 15)));
   }
 
   private static void printLeapYears(int startYear, int endYear) {
