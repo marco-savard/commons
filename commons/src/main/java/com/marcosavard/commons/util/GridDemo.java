@@ -3,6 +3,7 @@ package com.marcosavard.commons.util;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.Range;
+import com.marcosavard.commons.util.collection.ListUtil;
 
 import java.util.List;
 
