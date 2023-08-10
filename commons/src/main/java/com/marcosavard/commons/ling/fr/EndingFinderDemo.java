@@ -1,15 +1,15 @@
 package com.marcosavard.commons.ling.fr;
 
+import com.marcosavard.commons.ling.processing.Noun;
+import com.marcosavard.commons.ling.processing.NounReader;
+import com.marcosavard.commons.math.arithmetic.Percent;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import com.marcosavard.commons.ling.processing.Noun;
-import com.marcosavard.commons.ling.processing.NounReader;
-import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class EndingFinderDemo {
 
@@ -129,7 +129,6 @@ public class EndingFinderDemo {
       removeWordsWithSuffix(allNouns, finder, wordsE, "afe", false);
       removeWordsWithSuffix(allNouns, finder, wordsE, "fe", true);
 
-
       // ge
       removeWordsWithSuffix(allNouns, finder, wordsE, "ange", true);
       removeWordsWithSuffix(allNouns, finder, wordsE, "inge", true);
@@ -155,7 +154,6 @@ public class EndingFinderDemo {
       removeWordsWithSuffix(allNouns, finder, wordsE, "ghe", true);
       removeWordsWithSuffix(allNouns, finder, wordsE, "rrhe", true);
 
-
       // ie
       removeWordsWithSuffix(allNouns, finder, wordsE, "rie", false);
       removeWordsWithSuffix(allNouns, finder, wordsE, "gie", false);
@@ -177,8 +175,6 @@ public class EndingFinderDemo {
       removeWordsWithSuffix(allNouns, finder, wordsE, "vie", false);
       removeWordsWithSuffix(allNouns, finder, wordsE, "fie", true); // selfie
       removeWordsWithSuffix(allNouns, finder, wordsE, "kie", false);
-
-
 
       // ke
       removeWordsWithSuffix(allNouns, finder, wordsE, "ake", true);
@@ -242,7 +238,6 @@ public class EndingFinderDemo {
       removeWordsWithSuffix(allNouns, finder, wordsE, "îme", false);
       removeWordsWithSuffix(allNouns, finder, wordsE, "âme", false);
       removeWordsWithSuffix(allNouns, finder, wordsE, "me", false);
-
 
       // ne
       removeWordsWithSuffix(allNouns, finder, wordsE, "cne", false);
@@ -360,7 +355,6 @@ public class EndingFinderDemo {
       removeWordsWithSuffix(allNouns, finder, wordsE, "cte", true);
       removeWordsWithSuffix(allNouns, finder, wordsE, "te", false);
 
-
       // ue
       removeWordsWithSuffix(allNouns, finder, wordsE, "oue", false);
       removeWordsWithSuffix(allNouns, finder, wordsE, "logue", false);
@@ -418,24 +412,34 @@ public class EndingFinderDemo {
     }
   }
 
-
-  private static void removeWordsWithPrefix(Map<String, Noun> nouns, EndingFinder finder,
-      List<String> words, String prefix, boolean expected) {
+  private static void removeWordsWithPrefix(
+      Map<String, Noun> nouns,
+      EndingFinder finder,
+      List<String> words,
+      String prefix,
+      boolean expected) {
     List<String> wordsWithPrefix = finder.getWordsWithPrefix(nouns, prefix);
     computeGenders(nouns, words, wordsWithPrefix, prefix, expected);
     words.removeAll(wordsWithPrefix);
   }
 
-
-  private static void removeWordsWithSuffix(Map<String, Noun> nouns, EndingFinder finder,
-      List<String> words, String suffix, boolean expected) {
+  private static void removeWordsWithSuffix(
+      Map<String, Noun> nouns,
+      EndingFinder finder,
+      List<String> words,
+      String suffix,
+      boolean expected) {
     List<String> wordsWithSuffix = finder.getWordsEndingIn(nouns, suffix);
     computeGenders(nouns, words, wordsWithSuffix, suffix, expected);
     words.removeAll(wordsWithSuffix);
   }
 
-  private static void computeGenders(Map<String, Noun> nouns, List<String> remainingWords,
-      List<String> wordsWithSuffix, String suffix, boolean expected) {
+  private static void computeGenders(
+      Map<String, Noun> nouns,
+      List<String> remainingWords,
+      List<String> wordsWithSuffix,
+      String suffix,
+      boolean expected) {
     int nbMasculine = 0, total = wordsWithSuffix.size();
     List<String> exceptions = new ArrayList<String>();
 
@@ -456,8 +460,9 @@ public class EndingFinderDemo {
     Percent percent = Percent.of(nbMasculine, total);
     Collections.sort(exceptions);
 
-    String msg = MessageFormat.format("{0} words in -{1} : {2} masculine, ({3})", total, suffix,
-        nbMasculine, percent);
+    String msg =
+        MessageFormat.format(
+            "{0} words in -{1} : {2} masculine, ({3})", total, suffix, nbMasculine, percent);
     System.out.println(msg);
     System.out.println("  " + exceptions);
   }
@@ -480,7 +485,5 @@ public class EndingFinderDemo {
       String msg = MessageFormat.format("  -{0} : {1}", ending, nb);
       System.out.println(msg);
     }
-
   }
-
 }
