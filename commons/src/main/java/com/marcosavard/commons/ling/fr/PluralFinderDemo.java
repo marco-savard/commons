@@ -1,15 +1,15 @@
 package com.marcosavard.commons.ling.fr;
 
+import com.marcosavard.commons.ling.processing.Noun;
+import com.marcosavard.commons.ling.processing.NounReader;
+import com.marcosavard.commons.math.arithmetic.Percent;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import com.marcosavard.commons.ling.processing.Noun;
-import com.marcosavard.commons.ling.processing.NounReader;
-import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class PluralFinderDemo {
 
@@ -26,8 +26,14 @@ public class PluralFinderDemo {
     NounReader reader = NounReader.of(NounReader.class, "nouns.txt");
     Map<String, Noun> nouns = reader.read(nb);
     int singulars = 0, pluralsFound = 0;
-    int endingAil = 0, endingAl = 0, endingAu = 0, endingEu = 0, endingOu = 0, endingUm = 0,
-        endingUs = 0, endingOthers = 0;
+    int endingAil = 0,
+        endingAl = 0,
+        endingAu = 0,
+        endingEu = 0,
+        endingOu = 0,
+        endingUm = 0,
+        endingUs = 0,
+        endingOthers = 0;
 
     PluralFinder finder = new PluralFinder();
     List<String> exceptions = new ArrayList<String>();
@@ -62,7 +68,6 @@ public class PluralFinderDemo {
             endingUs++;
           } else {
             endingOthers++;
-
           }
         }
       }
@@ -70,8 +75,9 @@ public class PluralFinderDemo {
 
     double pluralNotFound = singulars - pluralsFound;
     Percent percent = Percent.of(pluralNotFound, singulars);
-    String msg = MessageFormat.format("{0} words : {1} plurals not found ({2})", singulars,
-        pluralNotFound, percent);
+    String msg =
+        MessageFormat.format(
+            "{0} words : {1} plurals not found ({2})", singulars, pluralNotFound, percent);
     System.out.println(msg);
 
     Collections.sort(exceptions);
@@ -101,7 +107,5 @@ public class PluralFinderDemo {
 
     msg = MessageFormat.format("  termine en -autres: {0}", endingOthers);
     System.out.println(msg);
-
   }
-
 }
