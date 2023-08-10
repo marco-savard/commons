@@ -1,7 +1,7 @@
 package com.marcosavard.commons.phy;
 
 import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.text.MessageFormat;
 
@@ -26,7 +26,9 @@ public class AtmosphericPressureTest {
     AtmosphericPressure p1 = AtmosphericPressure.atAltitude(meters);
     double differenceMb = p0.toMb() - p1.toMb();
 
-    String msg = MessageFormat.format("Difference of pressure at {0} meters of altitude : {1} mb", //
+    String msg =
+        MessageFormat.format(
+            "Difference of pressure at {0} meters of altitude : {1} mb", //
             meters, String.format("%.2f", differenceMb));
     System.out.println(msg);
     System.out.println("  Sea level : " + p0);
@@ -52,5 +54,4 @@ public class AtmosphericPressureTest {
     double expected = 1034;
     Assert.assertEquals(expected, elevation, 1);
   }
-
 }

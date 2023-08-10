@@ -3,7 +3,7 @@ package com.marcosavard.commons.geog;
 import com.marcosavard.commons.ling.Language;
 import com.marcosavard.commons.text.encoding.AccentCoding;
 import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Locale;
 
