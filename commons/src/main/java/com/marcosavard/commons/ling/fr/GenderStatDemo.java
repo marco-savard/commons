@@ -1,5 +1,9 @@
 package com.marcosavard.commons.ling.fr;
 
+import com.marcosavard.commons.ling.processing.Noun;
+import com.marcosavard.commons.ling.processing.NounReader;
+import com.marcosavard.commons.math.arithmetic.Percent;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -7,9 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import com.marcosavard.commons.ling.processing.Noun;
-import com.marcosavard.commons.ling.processing.NounReader;
-import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class GenderStatDemo {
 
@@ -41,8 +42,9 @@ public class GenderStatDemo {
     for (String suffix : list) {
       GenderStat stat = statBySuffix.get(suffix);
       Percent percent = Percent.of(stat.nbMasculine, stat.total);
-      String msg = MessageFormat.format("{0} : masc = {1} on {2} ({3})", suffix, stat.nbMasculine,
-          stat.total, percent);
+      String msg =
+          MessageFormat.format(
+              "{0} : masc = {1} on {2} ({3})", suffix, stat.nbMasculine, stat.total, percent);
       System.out.println(msg);
     }
   }
@@ -61,5 +63,4 @@ public class GenderStatDemo {
       return comparison;
     }
   }
-
 }
