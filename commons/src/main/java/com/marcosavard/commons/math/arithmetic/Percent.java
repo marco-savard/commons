@@ -23,5 +23,4 @@ public class Percent {
     String msg = MessageFormat.format("{0}%", text);
     return msg;
   }
-
 }
