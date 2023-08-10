@@ -8,7 +8,8 @@ public class NullSafeList<T> extends ArrayList<T> {
   public boolean add(T element) {
     boolean added = (element != null);
 
-    if (added && element instanceof CharSequence cs) {
+    if (added && element instanceof CharSequence) {
+      CharSequence cs = (CharSequence)element;
       added = ! cs.isEmpty();
     }
 

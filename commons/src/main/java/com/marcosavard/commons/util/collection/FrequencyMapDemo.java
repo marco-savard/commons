@@ -12,9 +12,10 @@ public class FrequencyMapDemo {
           + "taking all things into consideration, I could hardly blame Jupiter for his opinion\r\n"
           + "respecting it.";
 
-  public static void main(String[] args) {
+
     FrequencyMap<Character> map = new FrequencyMap<>();
 
+    /*
     for (int i = 0; i < TEXT.length(); i++) {
       char ch = TEXT.charAt(i);
       if (Character.isLetter(ch)) {
@@ -23,5 +24,6 @@ public class FrequencyMapDemo {
     }
 
     System.out.println(map);
-  }
+         */
+
 }
