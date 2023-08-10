@@ -2,7 +2,7 @@ package com.marcosavard.commons.astro.time;
 
 import com.marcosavard.commons.debug.StopWatch;
 import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
