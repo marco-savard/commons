@@ -51,6 +51,7 @@ public class RealTime {
           done = elapsedTime >= maxDurationMillis;
           iteration++;
         } catch (InterruptedException e) {
+          e.printStackTrace();
           done = true;
         }
       } while (!done);
@@ -62,7 +63,12 @@ public class RealTime {
         try {
           task.run();
         } catch (RuntimeException e) {
-          e.printStackTrace();
+          //if critical error
+          if (e.getCause() instanceof InterruptedException ie) {
+            throw ie;
+          } else {
+            e.printStackTrace();
+          }
         }
       }
 

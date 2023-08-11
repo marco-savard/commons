@@ -5,10 +5,10 @@ import com.marcosavard.commons.math.arithmetic.Percent;
 
 import java.text.MessageFormat;
 
-public class Ariane4Test {
+public class Ariane5Test {
 
   public static void main(String[] args) {
-    RealTime.Loop realTimeLoop = RealTime.Loop.of(2).withMaxDuration(7);
+    RealTime.Loop realTimeLoop = RealTime.Loop.of(2).withMaxDuration(40);
     realTimeLoop.addTask(new LocationCalculatorTask(realTimeLoop));
     realTimeLoop.addTask(new ReferencialSystemTask(realTimeLoop));
     realTimeLoop.addSummaryTask(new PrintStatTask(realTimeLoop));
@@ -16,6 +16,7 @@ public class Ariane4Test {
   }
 
   private static class LocationCalculatorTask extends RealTime.Task {
+    private static final double G = 9.81;
 
     public LocationCalculatorTask(RealTime.Loop loop) {
       super(loop);
@@ -25,7 +26,7 @@ public class Ariane4Test {
     public void run() {
       // compute h
       double elapsedTimeSec = loop.getElapsedTime() / 1000.0;
-      double a = 9.8;
+      double a = 0.7 * G;
       double h = 0.5 * a * elapsedTimeSec * elapsedTimeSec;
 
       // print message
@@ -45,15 +46,20 @@ public class Ariane4Test {
 
     @Override
     public void run() {
-      double value = (5.5 * loop.getElapsedTime());
+      double value = (0.9 * loop.getElapsedTime());
       short[] bh = new short[4];
-      String sr;
+      String sr = null;
 
       try {
         sr = calculator1.calculate(value, bh);
       } catch (RuntimeException ex) {
-        System.out.println("SR1 Failed, use SR2");
-        sr = calculator2.calculate(value, bh);
+        try {
+          System.out.println("SR1 Failed, fall back to SR2");
+          sr = calculator2.calculate(value, bh);
+        } catch (RuntimeException ex2) {
+          InterruptedException ie = new InterruptedException("S1 and S2 failed");
+          throw new RuntimeException(ie);
+        }
       }
 
       String pat = "  ..[{0}] value={1} bh={2}; a={3}, b={4} c={5}";
@@ -80,7 +86,8 @@ public class Ariane4Test {
     private static final String SR = "SR2";
 
     public String calculate(double value, short[] bho) {
-      bho[0] = Maths.toShort(value);
+      // bho[0] = (short) value;
+      bho[0] = Maths.toShort(value); // FIX
       double a = (bho[0] / 10_000.0);
       double b = Math.exp(a);
       bho[1] = (short) (a * 100);
