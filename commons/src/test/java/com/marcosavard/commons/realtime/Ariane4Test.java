@@ -66,15 +66,12 @@ public class Ariane4Test {
     private static final String SR = "SR1";
 
     public String calculate(double value, short[] bho) {
-      short bh = (short) value;
-      double a = (bh / 10_000.0);
+      bho[0] = (short) value;
+      double a = (bho[0] / 10_000.0);
       double b = Math.exp(a);
-      double c = (int) (100 / (int) b) / 100.0;
-
-      bho[0] = bh;
       bho[1] = (short) (a * 100);
       bho[2] = (short) (b * 100);
-      bho[3] = (short) (c * 100);
+      bho[3] = (short) (10 / (short) b);
       return SR;
     }
   }
@@ -83,15 +80,12 @@ public class Ariane4Test {
     private static final String SR = "SR2";
 
     public String calculate(double value, short[] bho) {
-      short bh = Maths.toShort(value);
-      double a = (bh / 10_000.0);
+      bho[0] = Maths.toShort(value);
+      double a = (bho[0] / 10_000.0);
       double b = Math.exp(a);
-      double c = (int) (100 / (int) b) / 100.0;
-
-      bho[0] = bh;
       bho[1] = (short) (a * 100);
       bho[2] = (short) (b * 100);
-      bho[3] = (short) (c * 100);
+      bho[3] = (short) (10 / (short) b);
       return SR;
     }
   }
