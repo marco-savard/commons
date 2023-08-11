@@ -1,5 +1,8 @@
 package com.marcosavard.commons.realtime;
 
+import com.marcosavard.commons.math.Maths;
+import com.marcosavard.commons.math.arithmetic.Percent;
+
 import java.text.MessageFormat;
 
 public class Ariane4Test {
@@ -33,6 +36,8 @@ public class Ariane4Test {
   }
 
   private static class ReferencialSystemTask extends RealTime.Task {
+    private ReferencialSystemCalculator1 calculator1 = new ReferencialSystemCalculator1();
+    private ReferencialSystemCalculator2 calculator2 = new ReferencialSystemCalculator2();
 
     public ReferencialSystemTask(RealTime.Loop loop) {
       super(loop);
@@ -40,25 +45,54 @@ public class Ariane4Test {
 
     @Override
     public void run() {
-      // make an exception
-      double value = (6.5 * loop.getElapsedTime());
-      short bh = toShort2(value);
-      double bhe = 10 / (short) Math.exp(bh / 1000L);
+      double value = (5.5 * loop.getElapsedTime());
+      short[] bh = new short[4];
+      String sr;
 
-      // print message
-      String pat = "  ..bh={0}; bhe={1}";
-      String msg = MessageFormat.format(pat, bh, bhe);
+      try {
+        sr = calculator1.calculate(value, bh);
+      } catch (RuntimeException ex) {
+        System.out.println("SR1 Failed, use SR2");
+        sr = calculator2.calculate(value, bh);
+      }
+
+      String pat = "  ..[{0}] value={1} bh={2}; a={3}, b={4} c={5}";
+      String msg = MessageFormat.format(pat, sr, value, bh[0], bh[1], bh[2], bh[3]);
       System.out.println(msg);
     }
+  }
 
-    private short toShort1(double value) {
-      return (short) value;
+  private static class ReferencialSystemCalculator1 {
+    private static final String SR = "SR1";
+
+    public String calculate(double value, short[] bho) {
+      short bh = (short) value;
+      double a = (bh / 10_000.0);
+      double b = Math.exp(a);
+      double c = (int) (100 / (int) b) / 100.0;
+
+      bho[0] = bh;
+      bho[1] = (short) (a * 100);
+      bho[2] = (short) (b * 100);
+      bho[3] = (short) (c * 100);
+      return SR;
     }
+  }
 
-    private short toShort2(double value) {
-      short safeValue = (short) Math.min(value, Short.MAX_VALUE);
-      safeValue = (short) Math.max(safeValue, Short.MIN_VALUE);
-      return safeValue;
+  private static class ReferencialSystemCalculator2 {
+    private static final String SR = "SR2";
+
+    public String calculate(double value, short[] bho) {
+      short bh = Maths.toShort(value);
+      double a = (bh / 10_000.0);
+      double b = Math.exp(a);
+      double c = (int) (100 / (int) b) / 100.0;
+
+      bho[0] = bh;
+      bho[1] = (short) (a * 100);
+      bho[2] = (short) (b * 100);
+      bho[3] = (short) (c * 100);
+      return SR;
     }
   }
 
@@ -69,14 +103,18 @@ public class Ariane4Test {
 
     @Override
     public void run() {
-      String patt = "=== END OF ITERATION {0} simulationTime:{1} ms; waitTime={2} ms ===";
+      String patt = "=== END OF ITERATION {0} simulationTime:{1} ms; {2} processing, {3} idle ===";
       int i = loop.getIteration();
+      double period = loop.getPeriod();
+      long startIteration = (long) ((i - 1) * period);
+      long expectedElapsedTime = (long) (i * period);
       long elapsedTime = loop.getElapsedTime();
-      long expectedElapsedTime = (long) (i * loop.getPeriod());
-      String elapsedTimeStr = Long.toString(elapsedTime);
       String expectedElapsedTimeStr = Long.toString(expectedElapsedTime);
-      long waitTime = expectedElapsedTime - elapsedTime;
-      String msg = MessageFormat.format(patt, i, elapsedTimeStr, waitTime);
+
+      long processTime = elapsedTime - startIteration;
+      String processingPct = Percent.of(processTime, period).withPrecision(1).toString();
+      String idlePct = Percent.of(period - processTime, period).withPrecision(1).toString();
+      String msg = MessageFormat.format(patt, i, expectedElapsedTimeStr, processingPct, idlePct);
       System.out.println(msg);
     }
   }

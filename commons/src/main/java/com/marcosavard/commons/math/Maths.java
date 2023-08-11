@@ -75,4 +75,10 @@ public class Maths {
     double ranged = min + ((value - min) % span + span) % span;
     return ranged;
   }
+
+  public static short toShort(double value) {
+    short safeValue = (short) Math.min(value, Short.MAX_VALUE);
+    safeValue = (short) Math.max(safeValue, Short.MIN_VALUE);
+    return safeValue;
+  }
 }
