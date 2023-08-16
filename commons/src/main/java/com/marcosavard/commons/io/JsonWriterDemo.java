@@ -1,8 +1,9 @@
 package com.marcosavard.commons.io;
 
+import com.marcosavard.commons.util.collection.NestedMap;
+
 import java.io.IOException;
 import java.io.StringWriter;
-import com.marcosavard.commons.util.collection.NestedMap;
 
 public class JsonWriterDemo {
 
@@ -28,5 +29,4 @@ public class JsonWriterDemo {
       e.printStackTrace();
     }
   }
-
 }

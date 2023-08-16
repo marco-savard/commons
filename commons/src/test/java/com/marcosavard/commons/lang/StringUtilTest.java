@@ -2,7 +2,7 @@ package com.marcosavard.commons.lang;
 
 import com.marcosavard.commons.text.encoding.AccentCoding;
 import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class StringUtilTest {
   private static final char eacute = '\u00e9';
@@ -12,7 +12,6 @@ public class StringUtilTest {
   public void testCamelToUnderscore() {
     Assert.assertEquals("PHONE_QUALIFIER", StringUtil.camelToUnderscore("phoneQualifier"));
   }
-
 
   @Test
   public void testCapitalize() {

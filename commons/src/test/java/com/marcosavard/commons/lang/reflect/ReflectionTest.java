@@ -2,7 +2,7 @@ package com.marcosavard.commons.lang.reflect;
 
 import com.marcosavard.commons.debug.Console;
 import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.awt.*;
 import java.io.File;

@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 
 public class Percent {
   private double value;
+  private int precision = 2; // 2 digits after point, by default
 
   public static Percent of(double numerator, double denominator) {
     return of(numerator / denominator);
@@ -17,11 +18,16 @@ public class Percent {
     this.value = value;
   }
 
+  public Percent withPrecision(int precision) {
+    this.precision = precision;
+    return this;
+  }
+
   @Override
   public String toString() {
-    String text = String.format("%.2f", value * 100);
+    String pattern = "%." + precision + "f";
+    String text = String.format(pattern, value * 100);
     String msg = MessageFormat.format("{0}%", text);
     return msg;
   }
-
 }

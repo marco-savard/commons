@@ -1,14 +1,15 @@
 package com.marcosavard.commons.ling.fr;
 
+import com.marcosavard.commons.ling.processing.Noun;
+import com.marcosavard.commons.ling.processing.NounReader;
+import com.marcosavard.commons.math.arithmetic.Percent;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import com.marcosavard.commons.ling.processing.Noun;
-import com.marcosavard.commons.ling.processing.NounReader;
-import com.marcosavard.commons.math.arithmetic.Percent;
 
 public class GenderFinderDemo {
 
@@ -17,8 +18,6 @@ public class GenderFinderDemo {
     EndingFinder finder = new EndingFinder();
     List<String> wordsE = finder.getWordsEndingIn(allNouns, "e");
     findGender(allNouns, wordsE);
-
-
   }
 
   private static Map<String, Noun> loadDictionary() {
@@ -65,13 +64,13 @@ public class GenderFinderDemo {
     }
 
     Percent percent = Percent.of(nbSuccess, total);
-    String msg = MessageFormat.format("{0} words : {1} not found, {2} correctly found", total,
-        (total - nbSuccess), percent);
+    String msg =
+        MessageFormat.format(
+            "{0} words : {1} not found, {2} correctly found", total, (total - nbSuccess), percent);
     System.out.println(msg);
 
     Collections.sort(exceptions);
     msg = MessageFormat.format("{0} exceptions : {1}", exceptions.size(), exceptions);
     System.out.println(msg);
   }
-
 }

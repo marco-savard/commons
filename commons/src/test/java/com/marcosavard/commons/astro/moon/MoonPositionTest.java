@@ -1,7 +1,7 @@
 package com.marcosavard.commons.astro.moon;
 
 import junit.framework.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +19,6 @@ public class MoonPositionTest {
     double moonAge = MoonPosition.at(moment).getMoonAge();
     Assert.assertEquals(0, moonAge, 1.0);
   }
-
 
   // https://mooncalendar.astro-seek.com/moon-phases-calendar-january-2020
   @Test
