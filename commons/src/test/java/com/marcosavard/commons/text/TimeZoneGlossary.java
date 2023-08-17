@@ -71,8 +71,7 @@ public class TimeZoneGlossary {
         Map<Locale, String> displayNames = map.get(key);
         String displayName = displayNames.get(Locale.ENGLISH);
         String locDisplayName = displayNames.get(locale);
-        boolean translated =
-            !((locale.equals(Locale.ENGLISH)) || displayName.equals(locDisplayName));
+        boolean translated = locale.equals(Locale.ENGLISH) || ! displayName.equals(locDisplayName);
 
         if (locDisplayName.startsWith("Punta")) {
           int i = 0;
