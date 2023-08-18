@@ -28,6 +28,16 @@ public class TimeZoneGlossary {
   }
 
   public String getTimeWord(Locale locale) {
+    Glossary glossary = loadGlossary(locale);
+    return glossary.getTimeWord();
+  }
+
+  public String getStandardTimeWord(Locale locale) {
+    Glossary glossary = loadGlossary(locale);
+    return glossary.getStandardTimeWord();
+  }
+
+  private Glossary loadGlossary(Locale locale) {
     Glossary glossary = localeGlossaries.get(locale);
 
     if (glossary == null) {
@@ -35,13 +45,23 @@ public class TimeZoneGlossary {
       localeGlossaries.put(locale, glossary);
     }
 
-    return glossary.getTimeWord();
+    return glossary;
   }
 
   private static class Glossary {
     private static final List<String> UNIVERSALS =
         List.of("Antarctica", "Etc", "UCT", "UTC", "Universal", "Zulu");
-    private String timeWord;
+    private static final List<String> STANDART_TIMES =
+        List.of(
+            "America/Chicago",
+            "America/Denver",
+            "America/Los_Angeles",
+            "America/New_York",
+            "Asia/Tokyo",
+            "Europe/Paris");
+    private static final String ASIA = "Asia";
+
+    private String standardTimeWord, timeWord;
 
     Glossary(Locale locale) {
       DateFormatSymbols symbols = new DateFormatSymbols(Locale.ENGLISH);
@@ -50,6 +70,7 @@ public class TimeZoneGlossary {
       String[][] locZoneStrings = locSymbols.getZoneStrings();
       Map<String, Map<Locale, String>> map = new TreeMap<>();
 
+      // save en display names
       for (int i = 0; i < zoneStrings.length; i++) {
         String code = zoneStrings[i][0];
         String displayName = zoneStrings[i][1];
@@ -58,6 +79,7 @@ public class TimeZoneGlossary {
         map.put(code, displayNames);
       }
 
+      // save locale display names
       for (int i = 0; i < locZoneStrings.length; i++) {
         String code = locZoneStrings[i][0];
         String displayName = locZoneStrings[i][1];
@@ -66,32 +88,38 @@ public class TimeZoneGlossary {
       }
 
       List<String> locDisplayNames = new ArrayList<>();
+      List<String> locDisplayNamesForStandart = new ArrayList<>();
 
       for (String key : map.keySet()) {
         Map<Locale, String> displayNames = map.get(key);
         String displayName = displayNames.get(Locale.ENGLISH);
         String locDisplayName = displayNames.get(locale);
-        boolean translated = locale.equals(Locale.ENGLISH) || ! displayName.equals(locDisplayName);
-
-        if (locDisplayName.startsWith("Punta")) {
-          int i = 0;
-        }
+        boolean translated = locale.equals(Locale.ENGLISH) || !displayName.equals(locDisplayName);
 
         if (locDisplayName != null) {
           if (!UNIVERSALS.stream().filter(s -> key.startsWith(s)).findAny().isPresent()) {
             if (translated) {
               locDisplayNames.add(locDisplayName);
 
-              if (!locDisplayName.toLowerCase().contains("heure")) {
-                String value = map.get(key).toString();
-                String text = String.join(" : ", key, value);
-                // Console.println(text);
+              if (STANDART_TIMES.contains(key)) {
+                locDisplayNamesForStandart.add(locDisplayName);
               }
+
+              String value = map.get(key).toString();
+              String text = String.join(" : ", key, value);
+              // Console.println(text);
             }
           }
         }
       }
 
+      standardTimeWord = findLongestSubstring(locDisplayNamesForStandart);
+      timeWord = findLongestSubstring(locDisplayNames);
+
+      // Console.println(standardTimeWord);
+    }
+
+    private String findLongestSubstring(List<String> locDisplayNames) {
       Set<String> commons = new HashSet<>();
       String previous = locDisplayNames.get(0).toLowerCase();
       commons.add(previous);
@@ -112,7 +140,21 @@ public class TimeZoneGlossary {
       }
 
       String longest = commons.stream().max(Comparator.comparingInt(String::length)).get();
-      timeWord = longest;
+      longest = removeIsolatedLetters(longest);
+      return longest;
+    }
+
+    private String removeIsolatedLetters(String longest) {
+      List<String> words = new ArrayList<>();
+      String[] parts = longest.split("\\s+");
+
+      for (String part : parts) {
+        if (part.length() > 1) {
+          words.add(part);
+        }
+      }
+
+      return String.join(" ", words);
     }
 
     private static Set<String> findCommonSubstrings(String s, String t) {
@@ -141,6 +183,10 @@ public class TimeZoneGlossary {
 
     public String getTimeWord() {
       return timeWord;
+    }
+
+    public String getStandardTimeWord() {
+      return standardTimeWord;
     }
   }
 }
