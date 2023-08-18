@@ -27,6 +27,11 @@ public class TimeZoneGlossary {
     return singleInstance;
   }
 
+  public String getAfricaWord(Locale locale) {
+    Glossary glossary = loadGlossary(locale);
+    return glossary.getAfricaWord();
+  }
+
   public String getTimeWord(Locale locale) {
     Glossary glossary = loadGlossary(locale);
     return glossary.getTimeWord();
@@ -51,6 +56,18 @@ public class TimeZoneGlossary {
   private static class Glossary {
     private static final List<String> UNIVERSALS =
         List.of("Antarctica", "Etc", "UCT", "UTC", "Universal", "Zulu");
+    private static final List<String> TIME_TIMEZONES =
+        List.of(
+            "America/Chicago",
+            "America/Denver",
+            "America/Los_Angeles",
+            "America/New_York",
+            "Asia/Tokyo",
+            "Africa/Johannesburg",
+            "Europe/Paris",
+            "Europe/London");
+    private static final List<String> AFRICA_TIMEZONES =
+        List.of("Africa/Johannesburg", "Africa/Lagos", "Africa/Nairobi", "Africa/Harare ");
     private static final List<String> STANDART_TIMES =
         List.of(
             "America/Chicago",
@@ -59,9 +76,9 @@ public class TimeZoneGlossary {
             "America/New_York",
             "Asia/Tokyo",
             "Europe/Paris");
-    private static final String ASIA = "Asia";
+    // private static final String ASIA = "Asia";
 
-    private String standardTimeWord, timeWord;
+    private String africaWord, standardTimeWord, timeWord;
 
     Glossary(Locale locale) {
       DateFormatSymbols symbols = new DateFormatSymbols(Locale.ENGLISH);
@@ -88,7 +105,9 @@ public class TimeZoneGlossary {
       }
 
       List<String> locDisplayNames = new ArrayList<>();
-      List<String> locDisplayNamesForStandart = new ArrayList<>();
+      WordFinder timeFinder = new WordFinder(TIME_TIMEZONES);
+      WordFinder standardTimeFinder = new WordFinder(STANDART_TIMES);
+      WordFinder africaFinder = new WordFinder(AFRICA_TIMEZONES);
 
       for (String key : map.keySet()) {
         Map<Locale, String> displayNames = map.get(key);
@@ -101,9 +120,9 @@ public class TimeZoneGlossary {
             if (translated) {
               locDisplayNames.add(locDisplayName);
 
-              if (STANDART_TIMES.contains(key)) {
-                locDisplayNamesForStandart.add(locDisplayName);
-              }
+              timeFinder.examine(key, locDisplayName);
+              standardTimeFinder.examine(key, locDisplayName);
+              africaFinder.examine(key, locDisplayName);
 
               String value = map.get(key).toString();
               String text = String.join(" : ", key, value);
@@ -113,72 +132,10 @@ public class TimeZoneGlossary {
         }
       }
 
-      standardTimeWord = findLongestSubstring(locDisplayNamesForStandart);
-      timeWord = findLongestSubstring(locDisplayNames);
-
+      standardTimeWord = standardTimeFinder.getFoundWord();
+      timeWord = timeFinder.getFoundWord();
+      africaWord = africaFinder.getFoundWord();
       // Console.println(standardTimeWord);
-    }
-
-    private String findLongestSubstring(List<String> locDisplayNames) {
-      Set<String> commons = new HashSet<>();
-      String previous = locDisplayNames.get(0).toLowerCase();
-      commons.add(previous);
-
-      for (String locDisplayName : locDisplayNames) {
-        Set<String> newCommons = new HashSet<>();
-        // Console.println(locDisplayName);
-
-        for (String common : commons) {
-          Set<String> substrings = findCommonSubstrings(common, locDisplayName.toLowerCase());
-          for (String substring : substrings) {
-            if (!newCommons.contains(substring)) {
-              newCommons.add(substring);
-            }
-          }
-        }
-        commons = newCommons;
-      }
-
-      String longest = commons.stream().max(Comparator.comparingInt(String::length)).get();
-      longest = removeIsolatedLetters(longest);
-      return longest;
-    }
-
-    private String removeIsolatedLetters(String longest) {
-      List<String> words = new ArrayList<>();
-      String[] parts = longest.split("\\s+");
-
-      for (String part : parts) {
-        if (part.length() > 1) {
-          words.add(part);
-        }
-      }
-
-      return String.join(" ", words);
-    }
-
-    private static Set<String> findCommonSubstrings(String s, String t) {
-      int[][] table = new int[s.length()][t.length()];
-      int length = 0;
-      Set<String> result = new HashSet<>();
-
-      for (int i = 0; i < s.length(); i++) {
-        for (int j = 0; j < t.length(); j++) {
-          if (s.charAt(i) != t.charAt(j)) {
-            continue;
-          }
-
-          table[i][j] = (i == 0 || j == 0) ? 1 : 1 + table[i - 1][j - 1];
-          length = table[i][j];
-          String substring = s.substring(i - length + 1, i + 1).trim();
-
-          if (substring.length() > 1 && !result.contains(substring)) {
-            result.add(substring);
-          }
-        }
-      }
-
-      return result;
     }
 
     public String getTimeWord() {
@@ -187,6 +144,91 @@ public class TimeZoneGlossary {
 
     public String getStandardTimeWord() {
       return standardTimeWord;
+    }
+
+    public String getAfricaWord() {
+      return africaWord;
+    }
+
+    private static class WordFinder {
+      private List<String> timezones;
+      private List<String> displayNames = new ArrayList<>();
+
+      public WordFinder(List<String> timezones) {
+        this.timezones = timezones;
+      }
+
+      public void examine(String key, String locDisplayName) {
+        if (timezones.contains(key)) {
+          displayNames.add(locDisplayName);
+        }
+      }
+
+      public String getFoundWord() {
+        return findLongestSubstring(displayNames);
+      }
+
+      private String findLongestSubstring(List<String> locDisplayNames) {
+        Set<String> commons = new HashSet<>();
+        String previous = locDisplayNames.get(0).toLowerCase();
+        commons.add(previous);
+
+        for (String locDisplayName : locDisplayNames) {
+          Set<String> newCommons = new HashSet<>();
+          // Console.println(locDisplayName);
+
+          for (String common : commons) {
+            Set<String> substrings = findCommonSubstrings(common, locDisplayName.toLowerCase());
+            for (String substring : substrings) {
+              if (!newCommons.contains(substring)) {
+                newCommons.add(substring);
+              }
+            }
+          }
+          commons = newCommons;
+        }
+
+        String longest = commons.stream().max(Comparator.comparingInt(String::length)).get();
+        longest = removeIsolatedLetters(longest);
+        return longest;
+      }
+
+      private static Set<String> findCommonSubstrings(String s, String t) {
+        int[][] table = new int[s.length()][t.length()];
+        int length = 0;
+        Set<String> result = new HashSet<>();
+
+        for (int i = 0; i < s.length(); i++) {
+          for (int j = 0; j < t.length(); j++) {
+            if (s.charAt(i) != t.charAt(j)) {
+              continue;
+            }
+
+            table[i][j] = (i == 0 || j == 0) ? 1 : 1 + table[i - 1][j - 1];
+            length = table[i][j];
+            String substring = s.substring(i - length + 1, i + 1).trim();
+
+            if (substring.length() > 1 && !result.contains(substring)) {
+              result.add(substring);
+            }
+          }
+        }
+
+        return result;
+      }
+
+      private String removeIsolatedLetters(String longest) {
+        List<String> words = new ArrayList<>();
+        String[] parts = longest.split("\\s+");
+
+        for (String part : parts) {
+          if (part.length() > 1) {
+            words.add(part);
+          }
+        }
+
+        return String.join(" ", words);
+      }
     }
   }
 }

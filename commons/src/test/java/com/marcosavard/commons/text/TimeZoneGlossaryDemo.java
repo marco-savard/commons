@@ -24,8 +24,9 @@ public class TimeZoneGlossaryDemo {
     for (Locale locale : locales) {
       String time = glossary.getTimeWord(locale);
       String stdTime = glossary.getStandardTimeWord(locale);
+      String africa = glossary.getAfricaWord(locale);
       String language = locale.getDisplayLanguage();
-      String msg = String.join(" : ", language, time, stdTime);
+      String msg = String.join(" : ", language, time, stdTime, africa);
       Console.println("  " + msg);
     }
   }
