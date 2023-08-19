@@ -1,5 +1,7 @@
 package com.marcosavard.commons.text;
 
+import com.marcosavard.commons.debug.Console;
+
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +32,11 @@ public class TimeZoneGlossary {
   public String getAfricaWord(Locale locale) {
     Glossary glossary = loadGlossary(locale);
     return glossary.getAfricaWord();
+  }
+
+  public String getEastWord(Locale locale) {
+    Glossary glossary = loadGlossary(locale);
+    return glossary.getEastWord();
   }
 
   public String getTimeWord(Locale locale) {
@@ -68,6 +75,9 @@ public class TimeZoneGlossary {
             "Europe/London");
     private static final List<String> AFRICA_TIMEZONES =
         List.of("Africa/Johannesburg", "Africa/Lagos", "Africa/Nairobi", "Africa/Harare ");
+
+    private static final List<String> EAST_TIMEZONES =
+        List.of("Africa/Djibouti", "America/New_York", "Australia/Sydney", "Europe/Athens");
     private static final List<String> STANDART_TIMES =
         List.of(
             "America/Chicago",
@@ -78,7 +88,7 @@ public class TimeZoneGlossary {
             "Europe/Paris");
     // private static final String ASIA = "Asia";
 
-    private String africaWord, standardTimeWord, timeWord;
+    private String standardTimeWord, timeWord, africaWord, eastWord;
 
     Glossary(Locale locale) {
       DateFormatSymbols symbols = new DateFormatSymbols(Locale.ENGLISH);
@@ -107,6 +117,7 @@ public class TimeZoneGlossary {
       List<String> locDisplayNames = new ArrayList<>();
       WordFinder timeFinder = new WordFinder(TIME_TIMEZONES);
       WordFinder standardTimeFinder = new WordFinder(STANDART_TIMES);
+      WordFinder eastFinder = new WordFinder(EAST_TIMEZONES);
       WordFinder africaFinder = new WordFinder(AFRICA_TIMEZONES);
 
       for (String key : map.keySet()) {
@@ -122,11 +133,12 @@ public class TimeZoneGlossary {
 
               timeFinder.examine(key, locDisplayName);
               standardTimeFinder.examine(key, locDisplayName);
+              eastFinder.examine(key, locDisplayName);
               africaFinder.examine(key, locDisplayName);
 
               String value = map.get(key).toString();
               String text = String.join(" : ", key, value);
-              // Console.println(text);
+              Console.println(text);
             }
           }
         }
@@ -134,7 +146,11 @@ public class TimeZoneGlossary {
 
       standardTimeWord = standardTimeFinder.getFoundWord();
       timeWord = timeFinder.getFoundWord();
+      africaFinder.filter(standardTimeWord);
+      eastFinder.filter(standardTimeWord);
+
       africaWord = africaFinder.getFoundWord();
+      eastWord = eastFinder.getFoundWord();
       // Console.println(standardTimeWord);
     }
 
@@ -150,9 +166,14 @@ public class TimeZoneGlossary {
       return africaWord;
     }
 
+    public String getEastWord() {
+      return eastWord;
+    }
+
     private static class WordFinder {
       private List<String> timezones;
       private List<String> displayNames = new ArrayList<>();
+      private List<String> wordsToIgnore = new ArrayList<>();
 
       public WordFinder(List<String> timezones) {
         this.timezones = timezones;
@@ -161,6 +182,14 @@ public class TimeZoneGlossary {
       public void examine(String key, String locDisplayName) {
         if (timezones.contains(key)) {
           displayNames.add(locDisplayName);
+        }
+      }
+
+      public void filter(String words) {
+        String[] parts = words.split("\\s+");
+
+        for (String part : parts) {
+          wordsToIgnore.add(part);
         }
       }
 
@@ -174,8 +203,12 @@ public class TimeZoneGlossary {
         commons.add(previous);
 
         for (String locDisplayName : locDisplayNames) {
+          locDisplayName = locDisplayName.toLowerCase();
           Set<String> newCommons = new HashSet<>();
-          // Console.println(locDisplayName);
+
+          for (String word : wordsToIgnore) {
+            locDisplayName = locDisplayName.replace(word, "").trim();
+          }
 
           for (String common : commons) {
             Set<String> substrings = findCommonSubstrings(common, locDisplayName.toLowerCase());
@@ -219,6 +252,8 @@ public class TimeZoneGlossary {
 
       private String removeIsolatedLetters(String longest) {
         List<String> words = new ArrayList<>();
+        longest = longest.replace('’', ' ');
+        longest = longest.replace('-', ' ');
         String[] parts = longest.split("\\s+");
 
         for (String part : parts) {
