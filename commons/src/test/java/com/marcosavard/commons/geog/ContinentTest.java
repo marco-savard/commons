@@ -1,7 +1,7 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.ling.Language;
-import com.marcosavard.commons.text.encoding.AccentCoding;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -12,6 +12,7 @@ public class ContinentTest {
   @Test
   public void testAfricaName() {
     System.out.println();
+
     testAfricaName("Afrique", Locale.FRENCH);
     testAfricaName("Africa", Locale.ITALIAN);
     testAfricaName("África", Language.SPANISH.toLocale());
@@ -26,10 +27,10 @@ public class ContinentTest {
     testAfricaName("Afrika", Language.NORVEGIAN.toLocale());
     testAfricaName("Afríka", Language.ICELANDIC.toLocale());
 
-    // testAfricaName("Afryka", POLISH); //Afryki R.
+    testAfricaName("Afryka", Language.POLISH.toLocale()); // Afryki R.
     testAfricaName("Afrika", Language.CZECK.toLocale());
     testAfricaName("Afrika", Language.SLOVAK.toLocale());
-    // testAfricaName("Áfrika", SLOVENE); //Afriška R.
+    testAfricaName("Áfrika", Locale.forLanguageTag("sl")); // Afriška R.
     testAfricaName("Afrika", Language.CROATIAN.toLocale());
     testAfricaName("Afrika", Locale.forLanguageTag("sr-Latn-RS"));
 
@@ -37,7 +38,7 @@ public class ContinentTest {
     testAfricaName("Afrikka", Language.FINNISH.toLocale());
     testAfricaName("Afrika", Language.HUNGARIAN.toLocale());
     testAfricaName("Afrika", Language.TURKISH.toLocale());
-    // testAfricaName("Afrika", Language.AZERBAIJANI.toLocale());
+    testAfricaName("Afrika", Language.AZERBAIJANI.toLocale());
 
     testAfricaName("Afrika", Language.AFRIKANER.toLocale());
     testAfricaName("Africa", Language.LATIN.toLocale());
@@ -64,7 +65,7 @@ public class ContinentTest {
     testAmericaName("Ameryka", Language.POLISH.toLocale());
     testAmericaName("Amerika", Language.CZECK.toLocale());
     testAmericaName("Amerika", Language.SLOVAK.toLocale());
-    // testAmericaName(" Amêrika", SLOVENIAN);
+    testAmericaName("Amêrika", Language.SLOVENIAN.toLocale());
     testAmericaName("Amèrika", Language.CROATIAN.toLocale());
     testAmericaName("Amèrika", Locale.forLanguageTag("sr-Latn-RS"));
 
@@ -76,7 +77,7 @@ public class ContinentTest {
 
     testAmericaName("Amerika", Language.AFRIKANER.toLocale());
     testAmericaName("America", Language.LATIN.toLocale());
-    // testAmericaName("Ameriko", ESPERANTO);
+    testAmericaName("Ameriko", Language.ESPERANTO.toLocale());
   }
 
   @Test
@@ -147,33 +148,25 @@ public class ContinentTest {
 
   private void testAfricaName(String expected, Locale language) {
     String display = Continent.AFRICA.getDisplayName(language);
-    String encoded = AccentCoding.toAscii(display);
-    String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
-    System.out.println(language.getDisplayLanguage() + " : " + result);
+    Console.println(language.getDisplayLanguage() + " : " + display);
     Assert.assertEquals(expected, display);
   }
 
   private void testAmericaName(String expected, Locale language) {
     String display = Continent.AMERICA.getDisplayName(language);
-    String encoded = AccentCoding.toAscii(display);
-    String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
-    System.out.println(language.getDisplayLanguage() + " : " + result);
+    Console.println(language.getDisplayLanguage() + " : " + display);
     Assert.assertEquals(expected, display);
   }
 
   private void testAsiaName(String expected, Locale language) {
     String display = Continent.ASIA.getDisplayName(language);
-    String encoded = AccentCoding.toAscii(display);
-    String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
-    System.out.println(language.getDisplayLanguage() + " : " + result);
+    Console.println(language.getDisplayLanguage() + " : " + display);
     Assert.assertEquals(expected, display);
   }
 
   private void testEuropeName(String expected, Locale language) {
     String display = Continent.EUROPE.getDisplayName(language);
-    String encoded = AccentCoding.toAscii(display);
-    String result = expected.endsWith(display) ? encoded : encoded + " (" + expected + ")";
-    System.out.println(language.getDisplayLanguage() + " : " + result);
+    Console.println(language.getDisplayLanguage() + " : " + display);
     Assert.assertEquals(expected, display);
   }
 }
