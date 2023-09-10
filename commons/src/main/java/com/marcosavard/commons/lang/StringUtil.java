@@ -58,7 +58,7 @@ public class StringUtil {
       char ch = camel.charAt(i);
       boolean lowercase = Character.isLowerCase(ch);
       underscore +=
-              lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
+          lowercase ? String.valueOf(ch) : "_" + String.valueOf(Character.toLowerCase(ch));
     }
 
     return underscore.toUpperCase();
@@ -426,12 +426,13 @@ public class StringUtil {
    * @return stripped text
    */
   public static String stripAccents(CharSequence original) {
-    return translate(original, DIACRITICALS, ASCII);
+    original = translate(original, "ł", "l");
+    String stripped = Normalizer.normalize(NullSafe.of(original), Normalizer.Form.NFD);
+    return stripped.replaceAll("[^\\p{ASCII}]", "");
   }
 
   public static String stripAccentsOld(CharSequence original) {
-    String stripped = Normalizer.normalize(NullSafe.of(original), Normalizer.Form.NFD);
-    return stripped.replaceAll("[^\\p{ASCII}]", "");
+    return translate(original, DIACRITICALS, ASCII);
   }
 
   public static List<String> stripAccents(List<String> original) {
@@ -527,14 +528,13 @@ public class StringUtil {
     return String.valueOf(array);
   }
 
-
   public static String trimDoubleBlanks(CharSequence original) {
     original = NullSafe.of(original);
     return original.toString().replace(" +", " ");
   }
 
   public static CharSequence trimLeft(CharSequence original) {
-     return trimLeft(original, ' ');
+    return trimLeft(original, ' ');
   }
 
   public static CharSequence trimLeft(CharSequence original, char charToTrim) {
@@ -550,13 +550,12 @@ public class StringUtil {
   }
 
   public static CharSequence trimRight(CharSequence original, char charToTrim) {
-    int i = original.length()-1;
+    int i = original.length() - 1;
     while (i >= 0 && (original.charAt(i) == charToTrim)) {
       i--;
     }
-    return original.subSequence(0, i+1);
+    return original.subSequence(0, i + 1);
   }
-
 
   /**
    * Truncate source at a given length
@@ -586,7 +585,6 @@ public class StringUtil {
     camel = camel.replace(" ", "");
     return uncapitalize(camel);
   }
-
 
   public static CharSequence unquote(CharSequence original) {
     return unquote(original, '\"');
