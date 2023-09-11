@@ -62,35 +62,32 @@ public class CurrencyNameDemo {
     for (Locale locale : locales) {
       Console.println(locale.getLanguage().toUpperCase());
 
-      // printEuropean(locale);
+      printEuropean(locale);
       // printAsian(locale);
       // printAmerican(locale);
       // printOceania(locale);
-      printAfrican(locale);
+      // printAfrican(locale);
 
-      /*
-            printAustralian(locale);
-            printCanadian(locale);
-
-
-
-
-            //  printSouthKorean(locale);
-            //  printNorthKorean(locale);
-      */
       Console.println();
     }
   }
 
   private static void printEuropean(Locale locale) {
+
+
+    Console.println(getIrish(locale));
+
+    /*
     Console.println(getPortuguese(locale));
     Console.println(getSpanish(locale));
     Console.println(getItalian(locale));
+    Console.println(getMaltese(locale));
     Console.println(getFrench(locale));
 
     Console.println(getDutch(locale));
     Console.println(getGerman(locale));
     Console.println(getBelgian(locale));
+    Console.println(getLuxembourgian(locale));
     Console.println(getSwiss(locale));
     Console.println(getAustrian(locale));
 
@@ -110,17 +107,22 @@ public class CurrencyNameDemo {
     Console.println(getHungarian(locale));
     Console.println(getRomanian(locale));
 
+    Console.println(getSlovene(locale));
     Console.println(getCroatian(locale));
     Console.println(getSerbian(locale));
+    Console.println(getMacedonian(locale));
     Console.println(getBulgarian(locale));
     Console.println(getAlbanian(locale));
     Console.println(getGreek(locale));
+    Console.println(getCypriot(locale));
 
     Console.println(getBielorussian(locale));
     Console.println(getUkranian(locale));
     Console.println(getRussian(locale));
     Console.println(getGeorgian(locale));
     Console.println(getArmenian(locale));
+
+     */
   }
 
   private static void printAsian(Locale locale) {
@@ -147,17 +149,33 @@ public class CurrencyNameDemo {
   }
 
   private static void printAmerican(Locale locale) {
-    Console.println(getCanadian(locale));
-    Console.println(getMexican(locale));
+    // Console.println(getCanadian(locale));
+    // Console.println(getMexican(locale));
 
-    Console.println(getColombian(locale));
-    Console.println(getVenezualian(locale));
-    Console.println(getPeruvian(locale));
-    Console.println(getBolivian(locale));
-    Console.println(getChilian(locale));
-    Console.println(getArgentine(locale));
-    Console.println(getUruguayan(locale));
-    Console.println(getBrazilian(locale));
+    // Console.println(getBelizean(locale));
+    // Console.println(getGuatemalan(locale));
+    //   Console.println(getSalvadoran(locale));
+    //   Console.println(getHonduran(locale));
+    //    Console.println(getCostaRican(locale));
+    //  Console.println(getPanamanian(locale));
+
+    Console.println(getCuban(locale));
+    Console.println(getHaitian(locale));
+    Console.println(getDominican(locale));
+    Console.println(getJamaican(locale));
+    Console.println(getBermudian(locale));
+    Console.println(getBahamian(locale));
+    Console.println(getBarbadian(locale));
+    Console.println(getAntillean(locale));
+
+    // Console.println(getColombian(locale));
+    // Console.println(getVenezualian(locale));
+    // Console.println(getPeruvian(locale));
+    // Console.println(getBolivian(locale));
+    // Console.println(getChilian(locale));
+    // Console.println(getArgentine(locale));
+    // Console.println(getUruguayan(locale));
+    // Console.println(getBrazilian(locale));
   }
 
   private static void printOceania(Locale locale) {
@@ -166,10 +184,27 @@ public class CurrencyNameDemo {
   }
 
   private static void printAfrican(Locale locale) {
-    Console.println(getEgyptian(locale));
-    Console.println(getTunisian(locale));
-    Console.println(getAlgerian(locale));
-    Console.println(getMoroccan(locale));
+    // Console.println(getEgyptian(locale));
+    // Console.println(getTunisian(locale));
+    // Console.println(getAlgerian(locale));
+    // Console.println(getMoroccan(locale));
+
+    Console.println(getAngolan(locale));
+
+    Console.println(getNigerian(locale));
+    Console.println(getGuinean(locale));
+
+    Console.println(getCongolese(locale));
+    Console.println(getRwandan(locale));
+    Console.println(getBurundian(locale));
+    Console.println(getSouthAfrican(locale));
+    Console.println(getZimbabwean(locale));
+    Console.println(getTanzanian(locale));
+    Console.println(getKenyan(locale));
+    Console.println(getSomalian(locale));
+    Console.println(getDjiboutian(locale));
+    Console.println(getEthiopian(locale));
+    Console.println(getMalagasy(locale));
   }
 
   private static String findDollar(Locale locale) {
@@ -580,6 +615,65 @@ public class CurrencyNameDemo {
     // return Locale.forLanguageTag("el").getDisplayLanguage(locale);
   }
 
+  private static String getCypriot(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String esp = findCurrency(currencies, "CYP").getDisplayName(locale).toLowerCase();
+    String pound = findPound(locale);
+    String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
+    return remaining;
+  }
+
+  private static String getIrish(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String esp = findCurrency(currencies, "IEP").getDisplayName(locale).toLowerCase();
+    String pound = findPound(locale);
+    String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
+    return remaining;
+  }
+
+  private static String getLuxembourgian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String esp = findCurrency(currencies, "LUF").getDisplayName(locale).toLowerCase();
+    String pound = findFranc(locale);
+    String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
+    return remaining;
+  }
+
+  private static String getMaltese(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String esp = findCurrency(currencies, "MTL").getDisplayName(locale).toLowerCase();
+    String result = replaceFirstIgnoreAccents(esp, "lir", "").trim();
+    result = WordUtil.removeShortWords(result, 2);
+    return result;
+  }
+
+  private static String getSlovene(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String esp = findCurrency(currencies, "SIT").getDisplayName(locale).toLowerCase();
+    String result = replaceFirstIgnoreAccents(esp, "tolar", "").trim();
+    result = replaceFirstIgnoreAccents(result, "tallero", "").trim();
+    result = replaceFirstIgnoreAccents(result, "bons", "").trim();
+    result = WordUtil.removeShortWords(result, 2);
+    return result;
+  }
+
+  private static String getMacedonian(Locale locale) {
+    String language = locale.getLanguage();
+    String result;
+
+    if (List.of("ro").contains(language)) {
+      result = getMacedonian(Locale.ENGLISH);
+    } else {
+      List<Currency> currencies = getAvailableCurrencies();
+      result = findCurrency(currencies, "MKD").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "denar", "").trim();
+      result = replaceFirstIgnoreAccents(result, "dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+    }
+
+    return result;
+  }
+
   private static String getBielorussian(Locale locale) {
     List<Currency> currencies = getAvailableCurrencies();
     String nlg = findCurrency(currencies, "BYN").getDisplayName(locale).toLowerCase();
@@ -881,6 +975,119 @@ public class CurrencyNameDemo {
     return result;
   }
 
+  private static String getCuban(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "CUP").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+    return result;
+  }
+
+  private static String getHaitian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "HTG").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "gourde", "").trim();
+    return result;
+  }
+
+  private static String getDominican(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "DOP").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+    return result;
+  }
+
+  private static String getJamaican(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String aud = findCurrency(currencies, "JMD").getDisplayName(locale).toLowerCase();
+    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+    String remaining = extractDelta(aud, cad);
+    return remaining;
+  }
+
+  private static String getAntillean(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "ANG").getDisplayName(locale).toLowerCase();
+    String florin = findFlorin(locale);
+    result = replaceFirstIgnoreAccents(result, florin, "").trim();
+    return result;
+  }
+
+  private static String getArubian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "AWG").getDisplayName(locale).toLowerCase();
+    String florin = findFlorin(locale);
+    result = replaceFirstIgnoreAccents(result, florin, "").trim();
+    return result;
+  }
+
+  private static String getBermudian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String aud = findCurrency(currencies, "BMD").getDisplayName(locale).toLowerCase();
+    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+    String remaining = extractDelta(aud, cad);
+    return remaining;
+  }
+
+  private static String getBahamian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String aud = findCurrency(currencies, "BSD").getDisplayName(locale).toLowerCase();
+    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+    String remaining = extractDelta(aud, cad);
+    return remaining;
+  }
+
+  private static String getBarbadian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String aud = findCurrency(currencies, "BBD").getDisplayName(locale).toLowerCase();
+    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+    String remaining = extractDelta(aud, cad);
+    return remaining;
+  }
+
+  private static String getBelizean(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String aud = findCurrency(currencies, "BZD").getDisplayName(locale).toLowerCase();
+    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+    String remaining = extractDelta(aud, cad);
+    return remaining;
+  }
+
+  private static String getGuatemalan(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "GTQ").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "quetzal", "").trim();
+    return result;
+  }
+
+  private static String getCostaRican(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "CRC").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "colon", "").trim();
+    return result;
+  }
+
+  private static String getHonduran(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "HNL").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "lempira", "").trim();
+    return result;
+  }
+
+  private static String getSalvadoran(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "SVC").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "colon", "").trim();
+    result = replaceFirstIgnoreAccents(result, "colom", "").trim();
+    return result;
+  }
+
+  private static String getPanamanian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "PAB").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "balboa", "").trim();
+    return result;
+  }
+
   private static String getColombian(Locale locale) {
     List<Currency> currencies = getAvailableCurrencies();
     String result = findCurrency(currencies, "COP").getDisplayName(locale).toLowerCase();
@@ -1008,6 +1215,179 @@ public class CurrencyNameDemo {
     List<Currency> currencies = getAvailableCurrencies();
     String result = findCurrency(currencies, "MAD").getDisplayName(locale).toLowerCase();
     result = replaceFirstIgnoreAccents(result, "dirham", "").trim();
+    return result;
+  }
+
+  private static String getGuinean(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "GNF").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getNigerian(Locale locale) {
+    String language = locale.getLanguage();
+    String result;
+
+    if (List.of("es").contains(language)) {
+      result = getNigerian(Language.PORTUGUESE.toLocale());
+    } else {
+      List<Currency> currencies = getAvailableCurrencies();
+      result = findCurrency(currencies, "NGN").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "naira", "").trim();
+    }
+
+    return result;
+  }
+
+  private static String getCongolese(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "CDF").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getRwandan(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "RWF").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getBurundian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "BIF").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getAngolan(Locale locale) {
+    String language = locale.getLanguage();
+    String result;
+
+    if (List.of("es").contains(language)) {
+      result = getAngolan(Language.PORTUGUESE.toLocale());
+    } else {
+      List<Currency> currencies = getAvailableCurrencies();
+      result = findCurrency(currencies, "AOA").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "kwanza", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+    }
+
+    return result;
+  }
+
+  private static String getSouthAfrican(Locale locale) {
+    String language = locale.getLanguage();
+    String result;
+
+    if (List.of("es").contains(language)) {
+      result = getSouthAfrican(Language.ITALIAN.toLocale());
+    } else {
+      List<Currency> currencies = getAvailableCurrencies();
+      result = findCurrency(currencies, "ZAR").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "rand", "").trim();
+    }
+
+    return result;
+  }
+
+  private static String getZimbabwean(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "ZWD").getDisplayName(locale).toLowerCase();
+    String dollar = findDollar(locale);
+    result = replaceFirstIgnoreAccents(result, dollar, "");
+    result = result.replace('(', ' ');
+    result = result.replace('–', ' ');
+    result = result.replace(')', ' ');
+    result = result.replaceAll("\\d", "").trim();
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getKenyan(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "KES").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
+    result = replaceFirstIgnoreAccents(result, "siling", "").trim();
+    result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
+    result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
+    result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
+    result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getTanzanian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "TZS").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
+    result = replaceFirstIgnoreAccents(result, "siling", "").trim();
+    result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
+    result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
+    result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
+    result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getSomalian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "SOS").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
+    result = replaceFirstIgnoreAccents(result, "siling", "").trim();
+    result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
+    result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
+    result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
+    result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getDjiboutian(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "DJF").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
+    return result;
+  }
+
+  private static String getEthiopian(Locale locale) {
+    String language = locale.getLanguage();
+    String result;
+
+    if (List.of("es").contains(language)) {
+      result = getEthiopian(Language.ITALIAN.toLocale());
+    } else {
+      List<Currency> currencies = getAvailableCurrencies();
+      result = findCurrency(currencies, "ETB").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "birr", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+    }
+
+    return result;
+  }
+
+  private static String getMalagasy(Locale locale) {
+    List<Currency> currencies = getAvailableCurrencies();
+    String result = findCurrency(currencies, "MGF").getDisplayName(locale).toLowerCase();
+    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+    result = result.replace('-', ' ');
+    result = WordUtil.removeShortWords(result, 3);
     return result;
   }
 
