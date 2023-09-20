@@ -7,8 +7,10 @@ import com.marcosavard.commons.ling.Language;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CurrencyNameDemo {
@@ -62,7 +64,9 @@ public class CurrencyNameDemo {
     for (Locale locale : locales) {
       Console.println(locale.getLanguage().toUpperCase());
 
-      printEuropean(locale);
+      printAll(locale);
+      printOther(locale);
+      // printEuropean(locale);
       // printAsian(locale);
       // printAmerican(locale);
       // printOceania(locale);
@@ -72,10 +76,208 @@ public class CurrencyNameDemo {
     }
   }
 
+  private static void printOther(Locale locale) {
+    String country = "LR";
+    String countryName = "?";
+    AdjectiveFinder finder = new NamibianFinder();
+    String result = finder.getAdjective(locale);
+    Console.println("{0} {1} : {2}", country, countryName, finder.getAdjective(locale));
+  }
+
+  private static void printAll(Locale locale) {
+    String[] countries = Locale.getISOCountries();
+    List<Locale> locales = List.of(Locale.getAvailableLocales());
+
+    for (String country : countries) {
+      Locale cl =
+          locales.stream().filter(l -> l.getCountry().equals(country)).findFirst().orElse(null);
+      if (cl != null) {
+        String countryName = cl.getDisplayCountry(locale);
+        String adjective = getAdjective(country, locale);
+        boolean printable = false; // (adjective == null);
+
+        if (printable) {
+          Console.println("{0} {1} : {2}", country, countryName, getAdjective(country, locale));
+        }
+      }
+    }
+  }
+
+  private static String getAdjective(String country, Locale locale) {
+
+    Map<String, AdjectiveFinder> finderByCountry = new HashMap<>();
+    finderByCountry.put("AD", new AndorranFinder());
+    finderByCountry.put("AF", new AfghaniFinder());
+    finderByCountry.put("AL", new AlbanianFinder());
+    finderByCountry.put("AM", new ArmenianFinder());
+    finderByCountry.put("AO", new AngolanFinder());
+    finderByCountry.put("AR", new ArgentineFinder());
+    finderByCountry.put("AT", new AustrianFinder());
+    finderByCountry.put("AU", new AustralianFinder());
+    finderByCountry.put("AW", new ArubianFinder());
+    finderByCountry.put("AZ", new AzeriFinder());
+
+    finderByCountry.put("BB", new BarbadianFinder());
+    finderByCountry.put("BD", new BangladeshiFinder());
+    finderByCountry.put("BE", new BelgianFinder());
+    finderByCountry.put("BG", new BulgarianFinder());
+    // BHD (dinar bahreïni) : [ar_BH]
+    finderByCountry.put("BI", new BurundianFinder());
+    finderByCountry.put("BM", new BermudianFinder());
+    finderByCountry.put("BO", new BolivianFinder());
+    finderByCountry.put("BR", new BrazilianFinder());
+    finderByCountry.put("BS", new BahamianFinder());
+    // BTN (ngultrum bouthanais) : [dz_BT, dz_BT_#Tibt]
+    finderByCountry.put("BY", new BielorussianFinder());
+    // BWP (pula botswanais) : [en_BW]
+    finderByCountry.put("BZ", new BelizeanFinder());
+
+    finderByCountry.put("CA", new CanadianFinder());
+    finderByCountry.put("CD", new CongoleseFinder());
+    finderByCountry.put("CH", new SwissFinder());
+    finderByCountry.put("CL", new ChilianFinder());
+    finderByCountry.put("CN", new ChineseFinder());
+    finderByCountry.put("CO", new ColombianFinder());
+    finderByCountry.put("CR", new CostaRicanFinder());
+    finderByCountry.put("CU", new CubanFinder());
+    // CVE (escudo capverdien) : [kea_CV, kea_CV_#Latn, pt_CV]
+    finderByCountry.put("CY", new CypriotFinder());
+    finderByCountry.put("CZ", new CzechFinder());
+
+    finderByCountry.put("DE", new GermanFinder());
+    finderByCountry.put("DJ", new DjiboutianFinder());
+    finderByCountry.put("DK", new DanishFinder());
+    finderByCountry.put("DM", new DominicanFinder());
+    finderByCountry.put("DZ", new AlgerianFinder());
+
+    finderByCountry.put("EE", new EstonianFinder());
+    finderByCountry.put("EG", new EgyptianFinder());
+    finderByCountry.put("ER", new EritreanFinder());
+    finderByCountry.put("ES", new SpanishFinder());
+    finderByCountry.put("ET", new EthiopianFinder());
+
+    finderByCountry.put("FI", new FinnishFinder());
+    // FJD (dollar fidjien) : [en_FJ]
+    finderByCountry.put("FR", new FrenchFinder());
+
+    finderByCountry.put("GE", new GeorgianFinder());
+    // GHS (cédi ghanéen) : [ff_GH_#Latn, ak_GH_#Latn, ha_GH, ak_GH, en_GH, ff_GH_#Adlm,
+    // ee_GH_#Latn, ee_GH]
+    // GMD (dalasi gambien) : [ff_GM_#Latn, ff_GM_#Adlm, en_GM]
+    // GNF (franc guinéen) : [ff_GN, ff_GN_#Latn, ff_GN_#Adlm, fr_GN]
+    finderByCountry.put("GP", new GuatemalanFinder());
+    finderByCountry.put("GR", new GreekFinder());
+    finderByCountry.put("GT", new GuatemalanFinder());
+
+    finderByCountry.put("HN", new HondurianFinder());
+    finderByCountry.put("HR", new CroatianFinder());
+    finderByCountry.put("HT", new HaitianFinder());
+    finderByCountry.put("HU", new HungarianFinder());
+
+    finderByCountry.put("ID", new IndonesianFinder());
+    finderByCountry.put("IE", new IrishFinder());
+    finderByCountry.put("IN", new IndianFinder());
+    finderByCountry.put("IQ", new IraqiFinder());
+    finderByCountry.put("IR", new IranianFinder());
+    finderByCountry.put("IS", new IcelandicFinder());
+    finderByCountry.put("IT", new ItalianFinder());
+
+    finderByCountry.put("JM", new JamaicanFinder());
+    finderByCountry.put("JO", new JordanianFinder());
+    finderByCountry.put("JP", new JaponeseFinder());
+
+    finderByCountry.put("KE", new KenyanFinder());
+    finderByCountry.put("KG", new KyrgystaniFinder());
+    finderByCountry.put("KH", new CambodianFinder());
+    finderByCountry.put("KP", new NorthKoreanFinder());
+    finderByCountry.put("KR", new SouthKoreanFinder());
+    finderByCountry.put("KW", new KuwaitiFinder());
+    finderByCountry.put("KZ", new KazakhstaniFinder());
+
+    finderByCountry.put("LA", new LaotianFinder());
+    finderByCountry.put("LB", new LibaneseFinder());
+    finderByCountry.put("LK", new SriLankanFinder());
+    finderByCountry.put("LR", new LiberianFinder());
+    // LSL (loti lesothan) : [en_LS]
+    finderByCountry.put("LT", new LithuanianFinder());
+    finderByCountry.put("LU", new LuxembourgianFinder());
+    finderByCountry.put("LV", new LatvianFinder());
+    finderByCountry.put("LY", new LibyanFinder());
+
+    finderByCountry.put("MA", new MoroccanFinder());
+    finderByCountry.put("MD", new MoldovanFinder());
+    finderByCountry.put("MG", new MalagasyFinder());
+    finderByCountry.put("MK", new MacedonianFinder());
+    finderByCountry.put("MM", new MyanmarFinder());
+    finderByCountry.put("MN", new MongolianFinder());
+    // MOP (pataca macanaise) : [pt_MO, zh_MO, zh_MO_#Hant, en_MO, zh_MO_#Hans]
+    // MRU (ouguiya mauritanien) : [ff_MR_#Latn, ar_MR, ff_MR_#Adlm, fr_MR]
+    finderByCountry.put("MT", new MalteseFinder());
+    // MWK (kwacha malawite) : [en_MW]
+    finderByCountry.put("MX", new MexicanFinder());
+    finderByCountry.put("MY", new MalaisianFinder());
+
+    finderByCountry.put("NA", new NamibianFinder());
+    finderByCountry.put("NG", new NigerianFinder());
+    finderByCountry.put("NI", new NicaraguanFinder());
+    finderByCountry.put("NL", new DutchFinder());
+    finderByCountry.put("NO", new NorvegianFinder());
+    finderByCountry.put("NP", new NepaleseFinder());
+    finderByCountry.put("NZ", new NewZelanderFinder());
+
+    // OMR (riyal omanais) : [ar_OM]
+
+    finderByCountry.put("PA", new PanamanianFinder());
+    finderByCountry.put("PE", new PeruvianFinder());
+    finderByCountry.put("PH", new PhilipinoFinder());
+    finderByCountry.put("PK", new PakistaniFinder());
+    finderByCountry.put("PL", new PolishFinder());
+    finderByCountry.put("PT", new PortugueseFinder());
+    // PYG (guaraní paraguayen) : [es_PY]
+
+    finderByCountry.put("RO", new RomanianFinder());
+    finderByCountry.put("RS", new SerbianFinder());
+    finderByCountry.put("RU", new RussianFinder());
+    finderByCountry.put("RW", new RwandanFinder());
+
+    finderByCountry.put("SA", new SaudiFinder());
+    finderByCountry.put("SE", new SwedishFinder());
+    finderByCountry.put("SI", new SloveneFinder());
+    finderByCountry.put("SK", new SlovakFinder());
+    finderByCountry.put("SO", new SomalianFinder());
+    // SRD (dollar surinamais) : [nl_SR]
+    finderByCountry.put("SY", new SyrianFinder());
+    // SZL (lilangeni swazi) : [en_SZ]
+
+    finderByCountry.put("TH", new ThaiFinder());
+    finderByCountry.put("TJ", new Tajikistani());
+    finderByCountry.put("TM", new TurkemnistaniFinder());
+    finderByCountry.put("TN", new TunisianFinder());
+    // TOP (pa’anga tongan) : [to_TO_#Latn, to_TO, en_TO]
+    finderByCountry.put("TR", new TurkishFinder());
+    // TWD (nouveau dollar taïwanais) : [zh_TW, zh_TW_#Hant]
+    finderByCountry.put("TZ", new TanzanianFinder());
+
+    finderByCountry.put("UK", new UkranianFinder());
+    finderByCountry.put("UY", new UruguayanFinder());
+    finderByCountry.put("UZ", new UzbekiFinder());
+
+    finderByCountry.put("VE", new VenezualianFinder());
+    finderByCountry.put("VN", new VietnameseFinder());
+    // VUV (vatu vanuatuan) : [fr_VU, en_VU]
+
+    finderByCountry.put("YE", new YemeniFinder());
+    finderByCountry.put("ZA", new SouthAfricanFinder());
+    // ZMW (kwacha zambien) : [en_ZM, bem_ZM_#Latn, bem_ZM]
+    finderByCountry.put("ZW", new ZimbabweanFinder());
+
+    AdjectiveFinder finder = finderByCountry.get(country);
+    String result = (finder == null) ? null : finder.getAdjective(locale);
+
+    return result;
+  }
+
   private static void printEuropean(Locale locale) {
-
-
-    Console.println(getIrish(locale));
 
     /*
     Console.println(getPortuguese(locale));
@@ -121,31 +323,46 @@ public class CurrencyNameDemo {
     Console.println(getRussian(locale));
     Console.println(getGeorgian(locale));
     Console.println(getArmenian(locale));
+    */
 
-     */
   }
 
   private static void printAsian(Locale locale) {
     // Console.println(getTurkish(locale));
     // Console.println(getAzerbaijani(locale));
-    //  Console.println(getIranian(locale));
+    // Console.println(getLibanese(locale));
+    // Console.println(getSyrian(locale));
+    // Console.println(getJordanian(locale));
+    // Console.println(getIraqi(locale));
+    // Console.println(getKuwaiti(locale));
+    // Console.println(getSaudi(locale));
+    //    /Console.println(getYemeni(locale));
 
+    //  Console.println(getIranian(locale));
     // Console.println(getPakistani(locale));
-    // Console.println(getIndian(locale));
+    //  Console.println(getAfghani(locale));
+    // Console.println(getKazakhstani(locale));
+    // Console.println(getUzbeki(locale));
+    //  Console.println(getTurkmenistani(locale));
+    //  Console.println(getTajikistani(locale));
+    //  Console.println(getKyrgystani(locale));
+
+    //   Console.println(getIndian(locale));
+    //   Console.println(getSriLankan(locale));
     // Console.println(getBangladeshi(locale));
 
-    Console.println(getMyanmar(locale));
-    Console.println(getThai(locale));
-    Console.println(getCambodian(locale));
-    Console.println(getLaotian(locale));
-    Console.println(getVietnamese(locale));
+    // Console.println(getMyanmar(locale));
+    //  Console.println(getThai(locale));
+    //  Console.println(getCambodian(locale));
+    //  Console.println(getLaotian(locale));
+    //   Console.println(getVietnamese(locale));
 
-    Console.println(getChinese(locale));
-    Console.println(getNorthKorean(locale));
-    Console.println(getSouthKorean(locale));
-    Console.println(getJaponese(locale));
-    Console.println(getPhilipino(locale));
-    Console.println(getIndonesian(locale));
+    //  Console.println(getChinese(locale));
+    //   Console.println(getNorthKorean(locale));
+    //   Console.println(getSouthKorean(locale));
+    // Console.println(getJaponese(locale));
+    // Console.println(getPhilipino(locale));
+    // Console.println(getIndonesian(locale));
   }
 
   private static void printAmerican(Locale locale) {
@@ -159,14 +376,14 @@ public class CurrencyNameDemo {
     //    Console.println(getCostaRican(locale));
     //  Console.println(getPanamanian(locale));
 
-    Console.println(getCuban(locale));
-    Console.println(getHaitian(locale));
-    Console.println(getDominican(locale));
-    Console.println(getJamaican(locale));
-    Console.println(getBermudian(locale));
-    Console.println(getBahamian(locale));
-    Console.println(getBarbadian(locale));
-    Console.println(getAntillean(locale));
+    //  Console.println(getCuban(locale));
+    // Console.println(getHaitian(locale));
+    // Console.println(getDominican(locale));
+    // Console.println(getJamaican(locale));
+    // Console.println(getBermudian(locale));
+    // Console.println(getBahamian(locale));
+    // Console.println(getBarbadian(locale));
+    // Console.println(getAntillean(locale));
 
     // Console.println(getColombian(locale));
     // Console.println(getVenezualian(locale));
@@ -179,8 +396,8 @@ public class CurrencyNameDemo {
   }
 
   private static void printOceania(Locale locale) {
-    Console.println(getAustralian(locale));
-    Console.println(getNewZelander(locale));
+    // Console.println(getAustralian(locale));
+    // Console.println(getNewZelander(locale));
   }
 
   private static void printAfrican(Locale locale) {
@@ -189,6 +406,7 @@ public class CurrencyNameDemo {
     // Console.println(getAlgerian(locale));
     // Console.println(getMoroccan(locale));
 
+    /*
     Console.println(getAngolan(locale));
 
     Console.println(getNigerian(locale));
@@ -205,6 +423,8 @@ public class CurrencyNameDemo {
     Console.println(getDjiboutian(locale));
     Console.println(getEthiopian(locale));
     Console.println(getMalagasy(locale));
+
+     */
   }
 
   private static String findDollar(Locale locale) {
@@ -315,1080 +535,1598 @@ public class CurrencyNameDemo {
   }
 
   // EUROPE
-  private static String getPortugueseOld(Locale locale) {
-    return Locale.forLanguageTag("pt").getDisplayLanguage(locale);
-  }
+  // NIO (córdoba oro nicaraguayen) : [es_NI]
+  private static class NicaraguanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "NIO").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "cordob", "").trim();
+      result = replaceFirstIgnoreAccents(result, "or", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
 
-  private static String getPortuguese(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "PTE").getDisplayName(locale).toLowerCase();
-    String pesata = findEscudo(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
-    return remaining;
-  }
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.ITALIAN.toLocale());
+      } else if (oneOf(locale, "ro")) {
+        result = getAdjective(Language.ENGLISH.toLocale());
+      }
 
-  private static String getSpanishOld(Locale locale) {
-    return Locale.forLanguageTag("es").getDisplayLanguage(locale);
-  }
-
-  private static String getSpanish(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "ESP").getDisplayName(locale).toLowerCase();
-    String pesata = findPeseta(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
-    return remaining;
-  }
-
-  private static String getFrenchOld(Locale locale) {
-    return Locale.forLanguageTag("fr").getDisplayLanguage(locale);
-  }
-
-  private static String getFrench(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "FRF").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "MGF").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getItalianOld(Locale locale) {
-    return Locale.forLanguageTag("it").getDisplayLanguage(locale);
-  }
-
-  private static String getItalian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "ITL").getDisplayName(locale).toLowerCase();
-    String pesata = findLira(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
-    return remaining;
-  }
-
-  private static String getDutch(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "NLG").getDisplayName(locale).toLowerCase();
-    String florin = findFlorin(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    return remaining;
-  }
-
-  private static String getDutchOld(Locale locale) {
-    return Locale.forLanguageTag("nl").getDisplayLanguage(locale);
-  }
-
-  private static String getGerman(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String dem = findCurrency(currencies, "DEM").getDisplayName(locale).toLowerCase();
-    String mark = findMark(locale);
-    String remaining = dem.replaceFirst(mark, "").trim();
-    return remaining;
-  }
-
-  private static String getBelgian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "BEF").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "LUF").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getSwiss(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String chf = findCurrency(currencies, "CHF").getDisplayName(locale).toLowerCase();
-    String franc = locale.getLanguage().equals("de") ? findFranken(locale) : findFranc(locale);
-    String remaining = chf.replaceFirst(franc, "").trim();
-    return remaining;
-  }
-
-  private static String getAustrian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "ATS").getDisplayName(locale).toLowerCase();
-    String pesata = findSchilling(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
-    return remaining;
-  }
-
-  private static String getDanish(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "DKK").getDisplayName(locale).toLowerCase();
-    String florin = findKrones(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    return remaining;
-  }
-
-  private static String getIcelandic(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "ISK").getDisplayName(locale).toLowerCase();
-    String remaining = nlg.replaceFirst(findKrones(locale), "").trim();
-    remaining = replaceFirstIgnoreAccents(remaining, findKrona(locale), "").trim();
-    return remaining;
-  }
-
-  private static String getNorvegian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "NOK").getDisplayName(locale).toLowerCase();
-    String florin = findKrones(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    return remaining;
-  }
-
-  private static String getSwedish(Locale locale) {
-    String language = locale.getLanguage();
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "SEK").getDisplayName(locale).toLowerCase();
-    String krone;
-
-    if (language.equals("en")) {
-      krone = "krona";
-    } else {
-      krone = findKrones(locale);
+      return result;
     }
-    String remaining = nlg.replaceFirst(krone, "").trim();
-    return remaining;
   }
 
-  private static String getFinnish(Locale locale) {
-    String language = locale.getLanguage();
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "FIM").getDisplayName(locale).toLowerCase();
-    String mark;
-
-    if (List.of("en", "it", "nl").contains(language)) {
-      mark = "markka";
-    } else if (language.equals("pt")) {
-      mark = "marca";
-    } else {
-      mark = findMark(locale);
+  private static class NepaleseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "NPR").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "roupi", "").trim();
+      result = replaceFirstIgnoreAccents(result, "roep", "").trim();
+      result = replaceFirstIgnoreAccents(result, "rup", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
     }
-    String remaining = nlg.replaceFirst(mark, "").trim();
-    return remaining;
   }
 
-  private static String getEstonian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "EEK").getDisplayName(locale).toLowerCase();
-    String florin = findKrones(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    remaining = remaining.replaceFirst("kroon", "").trim();
-    return remaining;
+  private static class MalaisianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "MYR").getDisplayName(locale).toLowerCase();
+      String result = replaceFirstIgnoreAccents(esp, "ringgit", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.ITALIAN.toLocale());
+      }
+
+      return result;
+    }
   }
 
-  private static String getLatvian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "LVL").getDisplayName(locale).toLowerCase();
-    String florin = "lats";
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    return remaining;
+  private static class MongolianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "MNT").getDisplayName(locale).toLowerCase();
+      String result = replaceFirstIgnoreAccents(esp, "tugrik", "").trim();
+      result = replaceFirstIgnoreAccents(result, "togrog", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.PORTUGUESE.toLocale());
+      }
+
+      return result;
+    }
   }
 
-  private static String getLithuanian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "LTL").getDisplayName(locale).toLowerCase();
-    String florin = findLitas(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    return remaining;
+  private static class MoldovanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "MDL").getDisplayName(locale).toLowerCase();
+      String result = replaceFirstIgnoreAccents(esp, "leu", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
   }
 
-  private static String getPolish(Locale locale) {
-    String language = locale.getLanguage();
-    String polish;
+  private static class LibyanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "LYD").getDisplayName(locale).toLowerCase();
+      String result = replaceFirstIgnoreAccents(esp, "dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
 
-    if (List.of("es", "ro").contains(language)) {
-      polish = Locale.forLanguageTag("pl").getDisplayLanguage(locale);
-    } else {
+  private static class NamibianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "NAD").getDisplayName(locale).toLowerCase();
+      String dollar = findDollar(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, dollar, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class LiberianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "LRD").getDisplayName(locale).toLowerCase();
+      String dollar = findDollar(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, dollar, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class PortugueseFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "PTE").getDisplayName(locale).toLowerCase();
+      String pesata = findEscudo(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class SpanishFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "ESP").getDisplayName(locale).toLowerCase();
+      String pesata = findPeseta(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class AndorranFinder extends AdjectiveFinder {
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "ADP").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("peseta", "").trim();
+      return result;
+    }
+  }
+
+  private static class FrenchFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "FRF").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "MGF").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class ItalianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String itl = findCurrency(currencies, "ITL").getDisplayName(locale).toLowerCase();
+      String lira = findLira(locale);
+      String remaining = replaceFirstIgnoreAccents(itl, lira, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class DutchFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "NLG").getDisplayName(locale).toLowerCase();
+      String florin = findFlorin(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class GermanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String dem = findCurrency(currencies, "DEM").getDisplayName(locale).toLowerCase();
+      String mark = findMark(locale);
+      String remaining = dem.replaceFirst(mark, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class BelgianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "BEF").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "LUF").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class SwissFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String chf = findCurrency(currencies, "CHF").getDisplayName(locale).toLowerCase();
+      String franc = locale.getLanguage().equals("de") ? findFranken(locale) : findFranc(locale);
+      String remaining = chf.replaceFirst(franc, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class AustrianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "ATS").getDisplayName(locale).toLowerCase();
+      String pesata = findSchilling(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, pesata, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class AustralianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "CAD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class DanishFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "DKK").getDisplayName(locale).toLowerCase();
+      String florin = findKrones(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class IcelandicFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "ISK").getDisplayName(locale).toLowerCase();
+      String remaining = nlg.replaceFirst(findKrones(locale), "").trim();
+      remaining = replaceFirstIgnoreAccents(remaining, findKrona(locale), "").trim();
+      return remaining;
+    }
+  }
+
+  private static class NorvegianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "NOK").getDisplayName(locale).toLowerCase();
+      String florin = findKrones(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class SwedishFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      String language = locale.getLanguage();
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "SEK").getDisplayName(locale).toLowerCase();
+      String krone = language.equals("en") ? "krona" : findKrones(locale);
+      String remaining = nlg.replaceFirst(krone, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class FinnishFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      String language = locale.getLanguage();
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "FIM").getDisplayName(locale).toLowerCase();
+      String mark;
+
+      if (List.of("en", "it", "nl").contains(language)) {
+        mark = "markka";
+      } else if (language.equals("pt")) {
+        mark = "marca";
+      } else {
+        mark = findMark(locale);
+      }
+      String remaining = nlg.replaceFirst(mark, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class EstonianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "EEK").getDisplayName(locale).toLowerCase();
+      String florin = findKrones(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      remaining = remaining.replaceFirst("kroon", "").trim();
+      return remaining;
+    }
+  }
+
+  private static class LatvianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "LVL").getDisplayName(locale).toLowerCase();
+      String florin = "lats";
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class LithuanianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "LTL").getDisplayName(locale).toLowerCase();
+      String florin = findLitas(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class PolishFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
       String esp = findCurrency(currencies, "PLN").getDisplayName(locale).toLowerCase();
       String zloty = findZloty(locale);
-      polish = replaceFirstIgnoreAccents(esp, zloty, "").trim();
+      String polish = replaceFirstIgnoreAccents(esp, zloty, "").trim();
+
+      if (oneOf(locale, "es", "ro")) {
+        polish = Locale.forLanguageTag("pl").getDisplayLanguage(locale);
+      }
+
+      return polish;
     }
-
-    return polish;
   }
 
-  private static String getCzech(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "CZK").getDisplayName(locale).toLowerCase();
-    String florin = findKrones(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    remaining = remaining.replaceFirst("koruna", "").trim();
-    return remaining;
-  }
+  private static class CzechFinder extends AdjectiveFinder {
 
-  private static String getSlovak(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "SKK").getDisplayName(locale).toLowerCase();
-    String florin = findKrones(locale);
-    String remaining = nlg.replaceFirst(florin, "").trim();
-    remaining = remaining.replaceFirst("koruna", "").trim();
-    return remaining;
-  }
-
-  private static String getHungarian(Locale locale) {
-    String language = locale.getLanguage();
-    String hungarian;
-
-    if (List.of("ro").contains(language)) {
-      hungarian = Locale.forLanguageTag("hu").getDisplayLanguage(locale);
-    } else {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      hungarian = findCurrency(currencies, "HUF").getDisplayName(locale).toLowerCase();
+      String nlg = findCurrency(currencies, "CZK").getDisplayName(locale).toLowerCase();
+      String florin = findKrones(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      remaining = remaining.replaceFirst("koruna", "").trim();
+      return remaining;
+    }
+  }
+
+  private static class SlovakFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "SKK").getDisplayName(locale).toLowerCase();
+      String florin = findKrones(locale);
+      String remaining = nlg.replaceFirst(florin, "").trim();
+      remaining = remaining.replaceFirst("koruna", "").trim();
+      return remaining;
+    }
+  }
+
+  private static class HungarianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String hungarian = findCurrency(currencies, "HUF").getDisplayName(locale).toLowerCase();
       for (String replaced : List.of("forint", "fiorino", "florim")) {
         hungarian = hungarian.replaceFirst(replaced, "").trim();
       }
+
+      if (oneOf(locale, "ro")) {
+        hungarian = Locale.forLanguageTag("hu").getDisplayLanguage(locale);
+      }
+
+      hungarian = WordUtil.removeShortWords(hungarian, 2);
+      return hungarian;
     }
-
-    hungarian = WordUtil.removeShortWords(hungarian, 2);
-    return hungarian;
   }
 
-  private static String getRomanian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "RON").getDisplayName(locale).toLowerCase();
-    String result = nlg.replaceFirst("leu", "").trim();
-    return result;
+  private static class RomanianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "RON").getDisplayName(locale).toLowerCase();
+      String result = nlg.replaceFirst("leu", "").trim();
+      return result;
+    }
   }
 
-  private static String getCroatian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es", "ro").contains(language)) {
-      result = Locale.forLanguageTag("hr").getDisplayLanguage(locale);
-    } else {
+  private static class CroatianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
       String nlg = findCurrency(currencies, "HRK").getDisplayName(locale).toLowerCase();
-      result = nlg.replaceFirst("kuna", "").trim();
+      String result = nlg.replaceFirst("kuna", "").trim();
+
+      if (oneOf(locale, "es", "ro")) {
+        result = Locale.forLanguageTag("hr").getDisplayLanguage(locale);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getSerbian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "RSD").getDisplayName(locale).toLowerCase();
-    String result = nlg.replaceFirst("dinar", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-
-    return result;
+  private static class SerbianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String nlg = findCurrency(currencies, "RSD").getDisplayName(locale).toLowerCase();
+      String result = nlg.replaceFirst("dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
   }
 
-  private static String getBulgarian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("ro").contains(language)) {
-      result = Locale.forLanguageTag("bg").getDisplayLanguage(locale);
-    } else {
+  private static class BulgarianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
       String nlg = findCurrency(currencies, "BGN").getDisplayName(locale).toLowerCase();
-      result = nlg.replaceFirst("lev", "").trim();
+      String result = nlg.replaceFirst("lev", "").trim();
       result = result.replaceFirst("lew", "").trim();
       result = WordUtil.removeShortWords(result, 2);
-    }
 
-    return result;
+      if (oneOf(locale, "ro")) {
+        result = Locale.forLanguageTag("bg").getDisplayLanguage(locale);
+      }
+
+      return result;
+    }
   }
 
-  private static String getAlbanian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es", "ro").contains(language)) {
-      result = Locale.forLanguageTag("sq").getDisplayLanguage(locale);
-    } else {
+  private static class AlbanianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
       String nlg = findCurrency(currencies, "ALL").getDisplayName(locale).toLowerCase();
-      result = nlg.replaceFirst("lek", "").trim();
+      String result = nlg.replaceFirst("lek", "").trim();
       result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "es", "ro")) {
+        result = Locale.forLanguageTag("sq").getDisplayLanguage(locale);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getGreek(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "GRD").getDisplayName(locale).toLowerCase();
-    String result = nlg.replaceFirst("drachm", "").trim();
-    result = result.replaceFirst("dracm", "").trim();
-    result = result.replaceFirst("drahm", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-    // return Locale.forLanguageTag("el").getDisplayLanguage(locale);
-  }
-
-  private static String getCypriot(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "CYP").getDisplayName(locale).toLowerCase();
-    String pound = findPound(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
-    return remaining;
-  }
-
-  private static String getIrish(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "IEP").getDisplayName(locale).toLowerCase();
-    String pound = findPound(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
-    return remaining;
-  }
-
-  private static String getLuxembourgian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "LUF").getDisplayName(locale).toLowerCase();
-    String pound = findFranc(locale);
-    String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
-    return remaining;
-  }
-
-  private static String getMaltese(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "MTL").getDisplayName(locale).toLowerCase();
-    String result = replaceFirstIgnoreAccents(esp, "lir", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getSlovene(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String esp = findCurrency(currencies, "SIT").getDisplayName(locale).toLowerCase();
-    String result = replaceFirstIgnoreAccents(esp, "tolar", "").trim();
-    result = replaceFirstIgnoreAccents(result, "tallero", "").trim();
-    result = replaceFirstIgnoreAccents(result, "bons", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getMacedonian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("ro").contains(language)) {
-      result = getMacedonian(Locale.ENGLISH);
-    } else {
+  private static class GreekFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "MKD").getDisplayName(locale).toLowerCase();
+      String nlg = findCurrency(currencies, "GRD").getDisplayName(locale).toLowerCase();
+      String result = nlg.replaceFirst("drachm", "").trim();
+      result = result.replaceFirst("dracm", "").trim();
+      result = result.replaceFirst("drahm", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class CypriotFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "CYP").getDisplayName(locale).toLowerCase();
+      String pound = findPound(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class IrishFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "IEP").getDisplayName(locale).toLowerCase();
+      String pound = findPound(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class LuxembourgianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "LUF").getDisplayName(locale).toLowerCase();
+      String pound = findFranc(locale);
+      String remaining = replaceFirstIgnoreAccents(esp, pound, "").trim();
+      return remaining;
+    }
+  }
+
+  private static class MalteseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "MTL").getDisplayName(locale).toLowerCase();
+      String result = replaceFirstIgnoreAccents(esp, "lir", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class SloveneFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String esp = findCurrency(currencies, "SIT").getDisplayName(locale).toLowerCase();
+      String result = replaceFirstIgnoreAccents(esp, "tolar", "").trim();
+      result = replaceFirstIgnoreAccents(result, "tallero", "").trim();
+      result = replaceFirstIgnoreAccents(result, "bons", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class MacedonianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "MKD").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "denar", "").trim();
       result = replaceFirstIgnoreAccents(result, "dinar", "").trim();
       result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "ro")) {
+        result = getAdjective(Locale.ENGLISH);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getBielorussian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "BYN").getDisplayName(locale).toLowerCase();
-    String result = nlg.replaceFirst(findRubles(locale), "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getUkranian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es", "ro").contains(language)) {
-      result = Locale.forLanguageTag("uk").getDisplayLanguage(locale);
-    } else {
+  private static class BielorussianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "UAH").getDisplayName(locale).toLowerCase();
+      String nlg = findCurrency(currencies, "BYN").getDisplayName(locale).toLowerCase();
+      String result = nlg.replaceFirst(findRubles(locale), "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class UkranianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "UAH").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("hryvnia", "").trim();
       result = result.replaceFirst("hrywnja", "").trim();
       result = result.replaceFirst("grivn", "").trim();
       result = WordUtil.removeShortWords(result, 3);
+
+      if (oneOf(locale, "es", "ro")) {
+        result = Locale.forLanguageTag("uk").getDisplayLanguage(locale);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getRussian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String nlg = findCurrency(currencies, "RUB").getDisplayName(locale).toLowerCase();
-    String result = nlg.replaceFirst(findRubles(locale), "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getGeorgian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("ka").getDisplayLanguage(locale);
-    } else {
+  private static class RussianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "GEL").getDisplayName(locale).toLowerCase();
-      result = result.replaceFirst("lari", "").trim();
+      String nlg = findCurrency(currencies, "RUB").getDisplayName(locale).toLowerCase();
+      String result = nlg.replaceFirst(findRubles(locale), "").trim();
       result = WordUtil.removeShortWords(result, 2);
+      return result;
     }
-
-    return result;
   }
 
-  private static String getArmenian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
+  private static class GeorgianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      String language = locale.getLanguage();
+      String result;
 
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("hy").getDisplayLanguage(locale);
-    } else {
+      if (List.of("es").contains(language)) {
+        result = Locale.forLanguageTag("ka").getDisplayLanguage(locale);
+      } else {
+        List<Currency> currencies = getAvailableCurrencies();
+        result = findCurrency(currencies, "GEL").getDisplayName(locale).toLowerCase();
+        result = result.replaceFirst("lari", "").trim();
+        result = WordUtil.removeShortWords(result, 2);
+      }
+
+      return result;
+    }
+  }
+
+  private static class ArmenianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "AMD").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "AMD").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("dram", "").trim();
       result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("hy").getDisplayLanguage(locale);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getTurkish(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "TRY").getDisplayName(locale).toLowerCase();
-    result = result.replaceFirst("lir", "").trim();
-    result = result.replaceFirst("livr", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-    //  return Locale.forLanguageTag("tr").getDisplayLanguage(locale);
-  }
-
-  private static String getAzerbaijani(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "AZN").getDisplayName(locale).toLowerCase();
-    result = result.replaceFirst("manat", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getIranian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "IRR").getDisplayName(locale).toLowerCase();
-    result = result.replaceFirst("rial", "").trim();
-    result = result.replaceFirst("riyal", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getPakistani(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "PKR").getDisplayName(locale).toLowerCase();
-    result = result.replaceFirst("roep", "").trim();
-    result = result.replaceFirst("rup", "").trim();
-    result = result.replaceFirst("roup", "").trim();
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getIndian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "INR").getDisplayName(locale).toLowerCase();
-    result = result.replaceFirst("roep", "").trim();
-    result = result.replaceFirst("rup", "").trim();
-    result = result.replaceFirst("roup", "").trim();
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getBangladeshi(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("bn").getDisplayLanguage(locale);
-    } else {
+  private static class TurkishFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "BDT").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "TRY").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("lir", "").trim();
+      result = result.replaceFirst("livr", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class AzeriFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "AZN").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("manat", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class LibaneseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "LBP").getDisplayName(locale).toLowerCase();
+      String pound = findPound(locale);
+      result = result.replaceFirst(pound, "").trim();
+      result = result.replaceFirst("lira", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class SyrianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "SYP").getDisplayName(locale).toLowerCase();
+      String pound = findPound(locale);
+      result = result.replaceFirst(pound, "").trim();
+      result = result.replaceFirst("lira", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class JordanianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "JOD").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class IraqiFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "IQD").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class KuwaitiFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "KWD").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class SaudiFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "SAR").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("riyal", "").trim();
+      result = result.replaceFirst("rial", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class YemeniFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "YER").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("riyal", "").trim();
+      result = result.replaceFirst("rial", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class IranianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "IRR").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("rial", "").trim();
+      result = result.replaceFirst("riyal", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class PakistaniFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "PKR").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("roep", "").trim();
+      result = result.replaceFirst("rup", "").trim();
+      result = result.replaceFirst("roup", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class AfghaniFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "AFN").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("afghani", "").trim();
+      result = result.replaceFirst("afgani", "").trim();
+      result = result.replaceFirst("afgane", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "it")) {
+        result = getAdjective(Language.SPANISH.toLocale());
+      }
+
+      return result;
+    }
+  }
+
+  private static class KazakhstaniFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "KZT").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("tenge", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class UzbekiFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "UZS").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("sum", "").trim();
+      result = result.replaceFirst("som", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Locale.ITALIAN);
+      }
+
+      return result;
+    }
+  }
+
+  private static class TurkemnistaniFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "TMM").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("manat", "").trim();
+      result = removeYears(result);
+
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class Tajikistani extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "TJS").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("somoni", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class KyrgystaniFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "KGS").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("som", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Locale.ITALIAN);
+      }
+
+      return result;
+    }
+  }
+
+  private static class IndianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "INR").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("roep", "").trim();
+      result = result.replaceFirst("rup", "").trim();
+      result = result.replaceFirst("roup", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class SriLankanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "LKR").getDisplayName(locale).toLowerCase();
+      result = result.replaceFirst("roep", "").trim();
+      result = result.replaceFirst("rup", "").trim();
+      result = result.replaceFirst("roup", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class BangladeshiFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "BDT").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("taka", "").trim();
       result = WordUtil.removeShortWords(result, 3);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("bn").getDisplayLanguage(locale);
+      }
+
+      return result;
+    }
   }
 
-  private static String getMyanmar(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("my").getDisplayLanguage(locale);
-    } else {
+  private static class MyanmarFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "MMK").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "MMK").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("kyat", "").trim();
       result = result.replaceFirst("quiate", "").trim();
       result = WordUtil.removeShortWords(result, 2);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("my").getDisplayLanguage(locale);
+      }
+
+      return result;
+    }
   }
 
-  private static String getChinese(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es", "de").contains(language)) {
-      result = Locale.forLanguageTag("zh").getDisplayLanguage(locale);
-    } else {
+  private static class ChineseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "CNY").getDisplayName(locale).toLowerCase();
-      result = result.replaceFirst("yuan", "").trim();
-      result = result.replaceFirst("renminbi", "").trim();
-      result = WordUtil.removeShortWords(result, 2);
-    }
+      String str = findCurrency(currencies, "CNY").getDisplayName(locale).toLowerCase();
+      str = str.replaceFirst("yuan", "").trim();
+      str = str.replaceFirst("renminbi", "").trim();
+      str = WordUtil.removeShortWords(str, 2);
 
-    return result;
+      if (oneOf(locale, "es", "de")) {
+        str = Locale.forLanguageTag("zh").getDisplayLanguage(locale);
+      }
+
+      return str;
+    }
   }
 
-  private static String getThai(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("th").getDisplayLanguage(locale);
-    } else {
+  private static class ThaiFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
       String nlg = findCurrency(currencies, "THB").getDisplayName(locale).toLowerCase();
-      result = nlg.replaceFirst("baht", "").trim();
-    }
+      String result = nlg.replaceFirst("baht", "").trim();
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("th").getDisplayLanguage(locale);
+      }
+
+      return result;
+    }
   }
 
-  private static String getCambodian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = "camboyano"; // Locale.forLanguageTag("km").getDisplayLanguage(locale); // ?
-    } else {
+  private static class CambodianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "KHR").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "KHR").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("riel", "").trim();
       result = WordUtil.removeShortWords(result, 3);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = "camboyano";
+      }
+
+      return result;
+    }
   }
 
-  private static String getLaotian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("lo").getDisplayLanguage(locale);
-    } else {
+  private static class LaotianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "LAK").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "LAK").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("kip", "").trim();
       result = WordUtil.removeShortWords(result, 3);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("lo").getDisplayLanguage(locale);
+      }
+
+      return result;
+    }
   }
 
-  private static String getVietnamese(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("vi").getDisplayLanguage(locale);
-    } else {
+  private static class VietnameseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "VND").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "VND").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "dong", "").trim();
       result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("vi").getDisplayLanguage(locale);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getNorthKorean(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String kpw = extractName(findCurrency(currencies, "KPW"), locale, "won");
-    return kpw;
-  }
-
-  private static String getSouthKorean(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String krw = extractName(findCurrency(currencies, "KRW"), locale, "won");
-    return krw;
-  }
-
-  private static String getKorean(Locale locale) {
-    return Locale.forLanguageTag("ko").getDisplayLanguage(locale);
-  }
-
-  private static String getJaponese(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = Locale.forLanguageTag("ja").getDisplayLanguage(locale);
-    } else {
+  private static class NorthKoreanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "JPY").getDisplayName(locale).toLowerCase();
+      String kpw = extractName(findCurrency(currencies, "KPW"), locale, "won");
+      return kpw;
+    }
+  }
+
+  private static class SouthKoreanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String krw = extractName(findCurrency(currencies, "KRW"), locale, "won");
+      return krw;
+    }
+  }
+
+  private static class KoreanFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      return Locale.forLanguageTag("ko").getDisplayLanguage(locale);
+    }
+  }
+
+  private static class JaponeseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "JPY").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("yen", "").trim();
       result = result.replaceFirst("iene", "").trim();
       result = WordUtil.removeShortWords(result, 2);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = Locale.forLanguageTag("ja").getDisplayLanguage(locale);
+      }
+
+      return result;
+    }
   }
 
-  private static String getPhilipino(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("").contains(language)) {
-      result = Locale.forLanguageTag("fil").getDisplayLanguage(locale);
-    } else {
+  private static class PhilipinoFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "PHP").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "PHP").getDisplayName(locale).toLowerCase();
       result = result.replaceFirst("peso", "").trim();
       result = result.replaceFirst("piso", "").trim();
       result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "")) {
+        result = Locale.forLanguageTag("fil").getDisplayLanguage(locale);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getIndonesian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "IDR").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "roupi", "").trim();
-    result = replaceFirstIgnoreAccents(result, "rupi", "").trim();
-    result = replaceFirstIgnoreAccents(result, "roepia", "").trim();
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getCanadian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "CAD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getMexican(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "MXN").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getCuban(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "CUP").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getHaitian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "HTG").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "gourde", "").trim();
-    return result;
-  }
-
-  private static String getDominican(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "DOP").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getJamaican(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "JMD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getAntillean(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "ANG").getDisplayName(locale).toLowerCase();
-    String florin = findFlorin(locale);
-    result = replaceFirstIgnoreAccents(result, florin, "").trim();
-    return result;
-  }
-
-  private static String getArubian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "AWG").getDisplayName(locale).toLowerCase();
-    String florin = findFlorin(locale);
-    result = replaceFirstIgnoreAccents(result, florin, "").trim();
-    return result;
-  }
-
-  private static String getBermudian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "BMD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getBahamian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "BSD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getBarbadian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "BBD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getBelizean(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "BZD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    return remaining;
-  }
-
-  private static String getGuatemalan(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "GTQ").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "quetzal", "").trim();
-    return result;
-  }
-
-  private static String getCostaRican(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "CRC").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "colon", "").trim();
-    return result;
-  }
-
-  private static String getHonduran(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "HNL").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "lempira", "").trim();
-    return result;
-  }
-
-  private static String getSalvadoran(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "SVC").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "colon", "").trim();
-    result = replaceFirstIgnoreAccents(result, "colom", "").trim();
-    return result;
-  }
-
-  private static String getPanamanian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "PAB").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "balboa", "").trim();
-    return result;
-  }
-
-  private static String getColombian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "COP").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getVenezualian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("ro").contains(language)) {
-      result = getVenezualian(Locale.ENGLISH);
-    } else {
+  private static class IndonesianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "VES").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "IDR").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "roupi", "").trim();
+      result = replaceFirstIgnoreAccents(result, "rupi", "").trim();
+      result = replaceFirstIgnoreAccents(result, "roepia", "").trim();
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class CanadianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "CAD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class MexicanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "MXN").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class CubanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "CUP").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class HaitianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "HTG").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "gourde", "").trim();
+      return result;
+    }
+  }
+
+  private static class DominicanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "DOP").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class JamaicanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "JMD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class AntillanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "ANG").getDisplayName(locale).toLowerCase();
+      String florin = findFlorin(locale);
+      result = replaceFirstIgnoreAccents(result, florin, "").trim();
+      return result;
+    }
+  }
+
+  private static class ArubianFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "AWG").getDisplayName(locale).toLowerCase();
+      String florin = findFlorin(locale);
+      result = replaceFirstIgnoreAccents(result, florin, "").trim();
+      return result;
+    }
+  }
+
+  private static class BermudianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "BMD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class BahamianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "BSD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class BarbadianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "BBD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class BelizeanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "BZD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "AUD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      return remaining;
+    }
+  }
+
+  private static class GuatemalanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "GTQ").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "quetzal", "").trim();
+      return result;
+    }
+  }
+
+  private static class CostaRicanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "CRC").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "colon", "").trim();
+      return result;
+    }
+  }
+
+  private static class HondurianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "HNL").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "lempira", "").trim();
+      return result;
+    }
+  }
+
+  private static class SalvadoranFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "SVC").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "colon", "").trim();
+      result = replaceFirstIgnoreAccents(result, "colom", "").trim();
+      return result;
+    }
+  }
+
+  private static class PanamanianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "PAB").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "balboa", "").trim();
+      return result;
+    }
+  }
+
+  private static class ColombianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "COP").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class VenezualianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "VES").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "bolivar", "").trim();
-    }
 
-    return result;
+      if (oneOf(locale, "ro")) {
+        result = getAdjective(Locale.ENGLISH);
+      }
+
+      return result;
+    }
   }
 
-  private static String getPeruvian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("ro").contains(language)) {
-      result = getPeruvian(Locale.ENGLISH);
-    } else {
+  private static class PeruvianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "PEN").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "PEN").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "sol", "").trim();
       result = replaceFirstIgnoreAccents(result, "novo", "").trim();
-    }
 
-    return result;
+      if (oneOf(locale, "ro")) {
+        result = getAdjective(Locale.ENGLISH);
+      }
+
+      return result;
+    }
   }
 
-  private static String getBolivian(Locale locale) {
-    String language = locale.getLanguage();
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "BOB").getDisplayName(locale).toLowerCase();
-
-    if (List.of("es", "it").contains(language)) {
-      result = result.trim();
-    } else if (List.of("ro").contains(language)) {
-      result = getBolivian(Locale.ENGLISH);
-    } else {
+  private static class BolivianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      String language = locale.getLanguage();
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "BOB").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "boliviano", "").trim();
       result = WordUtil.removeShortWords(result, 2);
+
+      if (oneOf(locale, "es", "it")) {
+        result = result.trim();
+      } else if (oneOf(locale, "ro")) {
+        result = getAdjective(Locale.ENGLISH);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getChilian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "CLP").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getArgentine(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "ARS").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getUruguayan(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "UYU").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "peso", "").trim();
-    return result;
-  }
-
-  private static String getBrazilian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("ro").contains(language)) {
-      result = getBrazilian(Locale.ENGLISH);
-    } else {
+  private static class ChilianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "BRL").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "CLP").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class ArgentineFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "ARS").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class UruguayanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "UYU").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "peso", "").trim();
+      return result;
+    }
+  }
+
+  private static class BrazilianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "BRL").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "real", "").trim();
+
+      if (oneOf(locale, "ro")) {
+        result = getAdjective(Locale.ENGLISH);
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static void printItalian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "ITL").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "MTL").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    Console.println(remaining);
-  }
-
-  private static String getEgyptian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "EGP").getDisplayName(locale).toLowerCase();
-    String currency = findPound(locale);
-    result = replaceFirstIgnoreAccents(result, currency, "").trim();
-    return result;
-  }
-
-  private static String getTunisian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "TND").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "dinar", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getAlgerian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "DZD").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "dinar", "").trim();
-    result = WordUtil.removeShortWords(result, 2);
-    return result;
-  }
-
-  private static String getMoroccan(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "MAD").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "dirham", "").trim();
-    return result;
-  }
-
-  private static String getGuinean(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "GNF").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getNigerian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = getNigerian(Language.PORTUGUESE.toLocale());
-    } else {
+  private static class EgyptianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "NGN").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "EGP").getDisplayName(locale).toLowerCase();
+      String currency = findPound(locale);
+      result = replaceFirstIgnoreAccents(result, currency, "").trim();
+      return result;
+    }
+  }
+
+  private static class TunisianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "TND").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class AlgerianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "DZD").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "dinar", "").trim();
+      result = WordUtil.removeShortWords(result, 2);
+      return result;
+    }
+  }
+
+  private static class MoroccanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "MAD").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "dirham", "").trim();
+      return result;
+    }
+  }
+
+  private static class GuineanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "GNF").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class NigerianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "NGN").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "naira", "").trim();
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.PORTUGUESE.toLocale());
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getCongolese(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "CDF").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getRwandan(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "RWF").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getBurundian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "BIF").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getAngolan(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = getAngolan(Language.PORTUGUESE.toLocale());
-    } else {
+  private static class CongoleseFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "AOA").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "CDF").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class RwandanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "RWF").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class BurundianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "BIF").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class AngolanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "AOA").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "kwanza", "").trim();
       result = result.replace('-', ' ');
       result = WordUtil.removeShortWords(result, 3);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.PORTUGUESE.toLocale());
+      }
+
+      return result;
+    }
   }
 
-  private static String getSouthAfrican(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = getSouthAfrican(Language.ITALIAN.toLocale());
-    } else {
+  private static class SouthAfricanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "ZAR").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "ZAR").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "rand", "").trim();
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.ITALIAN.toLocale());
+      }
+
+      return result;
     }
-
-    return result;
   }
 
-  private static String getZimbabwean(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "ZWD").getDisplayName(locale).toLowerCase();
-    String dollar = findDollar(locale);
-    result = replaceFirstIgnoreAccents(result, dollar, "");
-    result = result.replace('(', ' ');
-    result = result.replace('–', ' ');
-    result = result.replace(')', ' ');
-    result = result.replaceAll("\\d", "").trim();
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getKenyan(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "KES").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
-    result = replaceFirstIgnoreAccents(result, "siling", "").trim();
-    result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
-    result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
-    result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
-    result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getTanzanian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "TZS").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
-    result = replaceFirstIgnoreAccents(result, "siling", "").trim();
-    result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
-    result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
-    result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
-    result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getSomalian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "SOS").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
-    result = replaceFirstIgnoreAccents(result, "siling", "").trim();
-    result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
-    result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
-    result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
-    result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getDjiboutian(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "DJF").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
-  }
-
-  private static String getEthiopian(Locale locale) {
-    String language = locale.getLanguage();
-    String result;
-
-    if (List.of("es").contains(language)) {
-      result = getEthiopian(Language.ITALIAN.toLocale());
-    } else {
+  private static class ZimbabweanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      result = findCurrency(currencies, "ETB").getDisplayName(locale).toLowerCase();
+      String result = findCurrency(currencies, "ZWD").getDisplayName(locale).toLowerCase();
+      String dollar = findDollar(locale);
+      result = replaceFirstIgnoreAccents(result, dollar, "");
+      result = removeYears(result);
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class KenyanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "KES").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
+      result = replaceFirstIgnoreAccents(result, "siling", "").trim();
+      result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
+      result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
+      result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
+      result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class TanzanianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "TZS").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
+      result = replaceFirstIgnoreAccents(result, "siling", "").trim();
+      result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
+      result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
+      result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
+      result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class SomalianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "SOS").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "shilling", "").trim();
+      result = replaceFirstIgnoreAccents(result, "siling", "").trim();
+      result = replaceFirstIgnoreAccents(result, "xelim", "").trim();
+      result = replaceFirstIgnoreAccents(result, "chelin", "").trim();
+      result = replaceFirstIgnoreAccents(result, "scellino", "").trim();
+      result = replaceFirstIgnoreAccents(result, "schilling", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class DjiboutianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "DJF").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
+  }
+
+  private static class EritreanFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "ERN").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "nafka", "").trim();
+      result = replaceFirstIgnoreAccents(result, "nakfa", "").trim();
+
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.ITALIAN.toLocale());
+      }
+      return result;
+    }
+  }
+  // ERN (nafka érythréen) : [ti_ER, ar_ER, en_ER]
+
+  private static class EthiopianFinder extends AdjectiveFinder {
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "ETB").getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "birr", "").trim();
       result = result.replace('-', ' ');
       result = WordUtil.removeShortWords(result, 3);
-    }
 
-    return result;
+      if (oneOf(locale, "es")) {
+        result = getAdjective(Language.ITALIAN.toLocale());
+      }
+
+      return result;
+    }
   }
 
-  private static String getMalagasy(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String result = findCurrency(currencies, "MGF").getDisplayName(locale).toLowerCase();
-    result = replaceFirstIgnoreAccents(result, "fran", "").trim();
-    result = result.replace('-', ' ');
-    result = WordUtil.removeShortWords(result, 3);
-    return result;
+  private static class MalagasyFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "MGF").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "fran", "").trim();
+      result = result.replace('-', ' ');
+      result = WordUtil.removeShortWords(result, 3);
+      return result;
+    }
   }
 
   private static String getAustralian(Locale locale) {
@@ -1399,13 +2137,17 @@ public class CurrencyNameDemo {
     return remaining;
   }
 
-  private static String getNewZelander(Locale locale) {
-    List<Currency> currencies = getAvailableCurrencies();
-    String aud = findCurrency(currencies, "NZD").getDisplayName(locale).toLowerCase();
-    String cad = findCurrency(currencies, "CAD").getDisplayName(locale).toLowerCase();
-    String remaining = extractDelta(aud, cad);
-    remaining = remaining.replace("-", "").trim();
-    return remaining;
+  private static class NewZelanderFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String aud = findCurrency(currencies, "NZD").getDisplayName(locale).toLowerCase();
+      String cad = findCurrency(currencies, "CAD").getDisplayName(locale).toLowerCase();
+      String remaining = extractDelta(aud, cad);
+      remaining = remaining.replace("-", "").trim();
+      return remaining;
+    }
   }
 
   private static String findSchilling(Locale locale) {
@@ -1472,6 +2214,19 @@ public class CurrencyNameDemo {
     return zloty;
   }
 
+  private static String removeYears(String result) {
+    result = result.replace('(', ' ');
+    result = result.replace('–', ' ');
+    result = result.replace(')', ' ');
+    result = result.replaceAll("\\d", "").trim();
+    return result;
+  }
+
+  private static boolean oneOf(Locale locale, String... languages) {
+    String language = locale.getLanguage();
+    return List.of(languages).contains(language);
+  }
+
   private static String extractDelta(String original, String delta) {
     String dollar = WordUtil.findLonguestCommonWord(original, delta).trim();
     String remaining = WordUtil.removeSubstring(original, dollar).trim().toLowerCase();
@@ -1505,5 +2260,9 @@ public class CurrencyNameDemo {
     }
 
     return original;
+  }
+
+  private abstract static class AdjectiveFinder {
+    public abstract String getAdjective(Locale locale);
   }
 }

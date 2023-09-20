@@ -19,7 +19,7 @@ public class CurrencyZoneDemo {
             .collect(Collectors.toList());
 
     Map<Currency, List<Locale>> currencyZones = CurrencyZone.getZones();
-    Locale locale = Language.DUTCH.toLocale();
+    Locale locale = Language.FRENCH.toLocale();
     Console.println(locale.getLanguage());
 
     for (Currency currency : currencies) {
