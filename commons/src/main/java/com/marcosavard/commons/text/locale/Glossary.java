@@ -27,6 +27,7 @@ public class Glossary {
     this.language = locale;
     addWeekDays(locale);
     addMonthNames(locale);
+    addScripts(locale);
     addEuropeanLanguageNames(locale);
     addEuropeanCountryNames(locale);
     addCurrencyNames(locale);
@@ -55,40 +56,42 @@ public class Glossary {
     return words;
   }
 
-  /*
-  private void addCountryNames(Locale displayLocale) {
-  	String[] countries = Locale.getISOCountries();
-  	List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
+  private void addMonthNames(Locale locale) {
+    DateFormatSymbols symbols = new DateFormatSymbols(locale);
+    String[] months = symbols.getMonths();
 
-  	for (String country : countries) {
-  		List<Locale> locales = allLocales.stream().filter(l -> country.equals(l.getCountry())).collect(Collectors.toList());
-  		for (Locale locale : locales) {
-  			String countryName = locale.getDisplayCountry(displayLocale);
-  			addToGlossary(countryName, Category.COUNTRY);
-  		}
-  	}
-  }*/
+    for (String month : months) {
+      if (!month.isEmpty()) {
+        addToGlossary(month, Category.MONTH);
+      }
+    }
+  }
 
-  private void addEuropeanCountryNames(Locale displayLocale) {
-    List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
-    List<String> countries = Arrays.asList(Locale.getISOCountries());
-    Currency euro = Currency.getInstance("EUR");
+  private void addWeekDays(Locale locale) {
+    DateFormatSymbols symbols = new DateFormatSymbols(locale);
+    String[] weekdays = symbols.getWeekdays();
 
-    List<Locale> euroLocales =
-        allLocales.stream()
-            .filter(l -> countries.contains(l.getCountry()))
-            .filter(l -> euro.equals(Currency.getInstance(l)))
-            .collect(Collectors.toList());
+    for (String weekday : weekdays) {
+      if (!weekday.isEmpty()) {
+        addToGlossary(weekday, Category.WEEK_DAY);
+      }
+    }
+  }
 
-    List<String> europeanCountries = new UniqueList<>();
+  private void addScripts(Locale displayLocale) {
+    Locale[] locales = Locale.getAvailableLocales();
+    List<String> scripts = new ArrayList<>();
 
-    for (Locale locale : euroLocales) {
-      String languageName = locale.getDisplayCountry(displayLocale);
-      europeanCountries.add(languageName);
+    for (Locale locale : locales) {
+      String script = locale.getDisplayScript(displayLocale);
+
+      if (!script.isEmpty() && !scripts.contains(script)) {
+        scripts.add(script);
+      }
     }
 
-    for (String country : europeanCountries) {
-      addToGlossary(country, Category.EUROPEAN_COUNTRY);
+    for (String script : scripts) {
+      addToGlossary(script, Category.SCRIPT);
     }
   }
 
@@ -115,6 +118,43 @@ public class Glossary {
     }
   }
 
+  private void addEuropeanCountryNames(Locale displayLocale) {
+    List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
+    List<String> countries = Arrays.asList(Locale.getISOCountries());
+    Currency euro = Currency.getInstance("EUR");
+
+    List<Locale> euroLocales =
+        allLocales.stream()
+            .filter(l -> countries.contains(l.getCountry()))
+            .filter(l -> euro.equals(Currency.getInstance(l)))
+            .collect(Collectors.toList());
+
+    List<String> europeanCountries = new UniqueList<>();
+
+    for (Locale locale : euroLocales) {
+      String languageName = locale.getDisplayCountry(displayLocale);
+      europeanCountries.add(languageName);
+    }
+
+    for (String country : europeanCountries) {
+      addToGlossary(country, Category.EUROPEAN_COUNTRY);
+    }
+  }
+
+  /*
+  private void addCountryNames(Locale displayLocale) {
+  	String[] countries = Locale.getISOCountries();
+  	List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
+
+  	for (String country : countries) {
+  		List<Locale> locales = allLocales.stream().filter(l -> country.equals(l.getCountry())).collect(Collectors.toList());
+  		for (Locale locale : locales) {
+  			String countryName = locale.getDisplayCountry(displayLocale);
+  			addToGlossary(countryName, Category.COUNTRY);
+  		}
+  	}
+  }*/
+
   private void addRegionalLanguageNames(Locale displayLocale) {
     // add national languages
     List<Locale> allLocales = Arrays.asList(Locale.getAvailableLocales());
@@ -136,7 +176,6 @@ public class Glossary {
         if (!nationalLanguages.contains(languageName)) {
           String script = locale.getDisplayScript(displayLocale);
           addToGlossary(languageName, Category.REGIONAL_LANGUAGE);
-          addToGlossary(script, Category.SCRIPT);
         }
       }
     }
@@ -189,28 +228,6 @@ public class Glossary {
   private static boolean isAcronym(String word) {
     boolean acronym = word.equals(word.toUpperCase());
     return acronym;
-  }
-
-  private void addMonthNames(Locale locale) {
-    DateFormatSymbols symbols = new DateFormatSymbols(locale);
-    String[] months = symbols.getMonths();
-
-    for (String month : months) {
-      if (!month.isEmpty()) {
-        addToGlossary(month, Category.MONTH);
-      }
-    }
-  }
-
-  private void addWeekDays(Locale locale) {
-    DateFormatSymbols symbols = new DateFormatSymbols(locale);
-    String[] weekdays = symbols.getWeekdays();
-
-    for (String weekday : weekdays) {
-      if (!weekday.isEmpty()) {
-        addToGlossary(weekday, Category.WEEK_DAY);
-      }
-    }
   }
 
   public void printStats(Locale locale) {

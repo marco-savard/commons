@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class TimeZoneGlossaryDemo {
   private static final List<String> codes =
-      List.of("pt" /*"en", "de", "fr", "it", "es", "pt", "ro", "nl", "sv"*/);
+      List.of("en" /*, "de", "fr", "it", "es", "pt", "ro", "nl", "sv"*/);
 
   public static void main(String[] args) {
     TimeZoneGlossary glossary = TimeZoneGlossary.getInstance();

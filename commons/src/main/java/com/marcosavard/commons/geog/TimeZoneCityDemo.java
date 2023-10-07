@@ -1,21 +1,21 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.geog.TimeZoneCity.Continent;
+import com.marcosavard.commons.ling.Language;
+
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.marcosavard.commons.debug.Console;
-import com.marcosavard.commons.geog.TimeZoneCity.Continent;
-
 public class TimeZoneCityDemo {
 
   public static void main(String[] args) {
-    Locale fr = Locale.FRENCH;
+    Locale fr = Language.SWEDISH.toLocale();
     printTimeZones(fr);
 
     // listAll();
-
 
   }
 
@@ -29,8 +29,6 @@ public class TimeZoneCityDemo {
       String longName = timezone.getDisplayName(daylight, TimeZone.LONG, displayLocale);
       Console.println("id={0} short={1} long={2}", timezoneId, shortName, longName);
     }
-
-
   }
 
   private static void listAll() {
@@ -53,5 +51,4 @@ public class TimeZoneCityDemo {
       }
     }
   }
-
 }
