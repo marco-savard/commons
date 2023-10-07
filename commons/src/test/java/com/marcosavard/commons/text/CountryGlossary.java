@@ -14,6 +14,8 @@ public class CountryGlossary {
   private static final List<String> north_codes = List.of("ko_KP", "mk_MK");
   private static final List<String> south_codes = List.of("ko_KR", "en_SS" /*, "en_ZA"*/);
 
+  private static final List<String> korea_codes = List.of("ko_KP", "ko_KR");
+
   private Map<Locale, Glossary> countryGlossaries = new HashMap<>();
 
   public static CountryGlossary getInstance() {
@@ -26,9 +28,19 @@ public class CountryGlossary {
 
   private CountryGlossary() {}
 
-  public String getAfricaWord(Locale locale) {
+  public String getCommonWord(Locale locale) {
     Glossary glossary = loadGlossary(locale);
-    return glossary.getAfricaWord();
+    return glossary.getCommonWord();
+  }
+
+  public String getNorthWord(Locale locale) {
+    Glossary glossary = loadGlossary(locale);
+    return glossary.getNorthWord();
+  }
+
+  public String getSouthWord(Locale locale) {
+    Glossary glossary = loadGlossary(locale);
+    return glossary.getSouthWord();
   }
 
   private Glossary loadGlossary(Locale locale) {
@@ -43,36 +55,51 @@ public class CountryGlossary {
   }
 
   private static class Glossary extends AbstractGlossary {
+    private String common, north, south;
+
     public Glossary(Locale displayLocale) {
       Locale[] locales = Locale.getAvailableLocales();
-      List<String> northCountries = new ArrayList<>();
-      List<String> southCountries = new ArrayList<>();
+      List<String> koreaCountries = new ArrayList<>();
+
+      WordFinder commonWordFinder = new WordFinder(north_codes, south_codes);
+      WordFinder northWordFinder = new WordFinder(north_codes);
+      WordFinder southWordFinder = new WordFinder(south_codes);
 
       for (Locale locale : locales) {
-        if (north_codes.contains(locale.toString())) {
-          String country = locale.getDisplayCountry(displayLocale);
-          northCountries.add(country);
-          Console.println("{0} {1}", locale, locale.getDisplayCountry(displayLocale));
-        } else if (south_codes.contains(locale.toString())) {
-          String country = locale.getDisplayCountry(displayLocale);
-          southCountries.add(country);
-          Console.println("{0} {1}", locale, locale.getDisplayCountry(displayLocale));
+        String country = locale.getDisplayCountry(displayLocale);
+        Console.println(locale + " : " + country);
+
+        if (koreaCountries.contains(locale.toString())) {
+          koreaCountries.add(country);
+          Console.println(country);
         }
+
+        commonWordFinder.examine(locale.toString(), country);
+        northWordFinder.examine(locale.toString(), country);
+        southWordFinder.examine(locale.toString(), country);
       }
 
-      String north = super.findLongestSubstring(northCountries);
-      String south = super.findLongestSubstring(southCountries);
+      common = commonWordFinder.findLongestCommonWord();
+      northWordFinder.addWordToIgnore(common);
+      southWordFinder.addWordToIgnore(common);
+      north = northWordFinder.findLongestCommonWord();
+      south = southWordFinder.findLongestCommonWord();
 
+      Console.println(displayLocale.getDisplayLanguage());
       Console.println(north);
       Console.println(south);
     }
 
-    private String findCommonSubstring(List<String> countries) {
-      return "";
+    public String getCommonWord() {
+      return common;
     }
 
-    public String getAfricaWord() {
-      return "";
+    public String getNorthWord() {
+      return north;
+    }
+
+    public String getSouthWord() {
+      return south;
     }
   }
 }

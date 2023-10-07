@@ -20,7 +20,71 @@ public enum Continent {
 
   private static final Locale ANTARCTICA_LOCALE = new Locale("en", "AQ");
   private static final Locale INDONESIA_LOCALE = new Locale("in", "ID");
+  private static final List<String> AFRICA_COUNTRIES =
+      List.of(
+          "AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ", "EG", "EH",
+          "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LY", "MA", "MG", "ML", "MR",
+          "MU", "MW", "MZ", "NA", "NE", "NG", "RE", "RW", "SC", "SD", "SL", "SN", "SO", "SS", "ST",
+          "SZ", "TD", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM", "ZW");
+  private static final List<String> AMERICA_COUNTRIES =
+      List.of(
+          "AG", "AI", "AR", "AS", "AW", "BB", "BL", "BM", "BO", "BQ", "BR", "BS", "BZ", "CA", "CL",
+          "CO", "CR", "CU", "CW", "DM", "DO", "EC", "FK", "GD", "GL", "GP", "GT", "GU", "GY", "HN",
+          "HT", "JM", "KN", "KY", "LC", "LR", "LS", "MF", "MH", "MQ", "MS", "MX", "NI", "PA", "PE",
+          "PM", "PR", "PY", "SH", "SR", "SV", "SX", "TC", "TT", "UM", "US", "UY", "VC", "VE", "VG",
+          "VI");
+  private static final List<String> ASIA_COUNTRIES =
+      List.of(
+          "AE", "AF", "AZ", "BD", "BH", "BN", "BT", "CN", "HK", "ID", "IL", "IN", "IO", "IQ", "IR",
+          "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ", "LA", "LB", "LK", "MM", "MN", "MO", "MY",
+          "NP", "OM", "PG", "PH", "PK", "PS", "QA", "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR",
+          "TW", "UZ", "VN", "YE");
+
+  private static final List<String> AUSTRALIA_COUNTRIES =
+      List.of(
+          "AU", "CC", "CK", "CX", "FJ", "FM", "GF", "KI", "MP", "NC", "NF", "NR", "NU", "NZ", "PF",
+          "PN", "PW", "SB", "TK", "TO", "TV", "VU", "WF", "WS");
+  private static final List<String> EUROPE_COUNTRIES =
+      List.of(
+          "AD", "AL", "AM", "AT", "AX", "BA", "BE", "BG", "BY", "CH", "CY", "CZ", "DE", "DK", "EE",
+          "ES", "FI", "FO", "FR", "GB", "GE", "GG", "GI", "GR", "HR", "HU", "IE", "IM", "IS", "IT",
+          "JE", "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO",
+          "RS", "RU", "SE", "SI", "SJ", "SK", "SM", "UA", "VA");
+
   private static Map<Continent, List<TimeZone>> timezonesByContinent;
+  private static Map<Continent, List<String>> countriesByContinent;
+
+  public static Continent ofCountry(String country) {
+    Continent foundContinent = null;
+
+    for (Continent continent : Continent.values()) {
+      if (continent.getCountries().contains(country)) {
+        foundContinent = continent;
+        break;
+      }
+    }
+
+    return foundContinent;
+  }
+
+  public List<String> getCountries() {
+    if (countriesByContinent == null) {
+      countriesByContinent = createCountriesByContinent();
+    }
+
+    return countriesByContinent.get(this);
+  }
+
+  private static Map<Continent, List<String>> createCountriesByContinent() {
+    Map<Continent, List<String>> countriesByContinent = new HashMap<>();
+    countriesByContinent.put(Continent.AFRICA, AFRICA_COUNTRIES);
+    countriesByContinent.put(Continent.AMERICA, AMERICA_COUNTRIES);
+    countriesByContinent.put(Continent.ANTARCTICA, List.of());
+    countriesByContinent.put(Continent.AUSTRALIA, AUSTRALIA_COUNTRIES);
+    countriesByContinent.put(Continent.ASIA, ASIA_COUNTRIES);
+    countriesByContinent.put(Continent.EUROPE, EUROPE_COUNTRIES);
+    return countriesByContinent;
+  }
 
   public TimeZone[] getTimeZones() {
     init();

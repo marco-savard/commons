@@ -39,9 +39,10 @@ public class CurrencyGlossaryDemo {
         Locale countryLocale = findCountryLocale(allLocales, country);
 
         if (countryLocale != null) {
+          String countryName = countryLocale.getDisplayCountry(locale);
           String word = glossary.getAdjective(country, locale);
           if (word != null) {
-            Console.println(word);
+            Console.println("{0} : {1}", countryName, word);
           }
         }
       }
@@ -52,10 +53,7 @@ public class CurrencyGlossaryDemo {
 
   private static Locale findCountryLocale(List<Locale> allLocales, String country) {
     Locale countryLocale =
-            allLocales.stream()
-                    .filter(l -> l.getCountry().equals(country))
-                    .findFirst()
-                    .orElse(null);
+        allLocales.stream().filter(l -> l.getCountry().equals(country)).findFirst().orElse(null);
     return countryLocale;
   }
 }

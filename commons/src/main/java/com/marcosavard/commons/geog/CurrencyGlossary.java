@@ -168,6 +168,7 @@ public class CurrencyGlossary {
     finderByCountry.put("FJ", new FijianFinder());
     finderByCountry.put("FR", new FrenchFinder());
 
+    finderByCountry.put("GB", new BritishFinder());
     finderByCountry.put("GE", new GeorgianFinder());
     finderByCountry.put("GH", new LesothanFinder());
     finderByCountry.put("GM", new GambianFinder());
@@ -894,6 +895,15 @@ public class CurrencyGlossary {
       String cad = findCurrency(currencies, "MGF").getDisplayName(locale).toLowerCase();
       String remaining = extractDelta(aud, cad);
       return remaining;
+    }
+  }
+
+  private static class BritishFinder extends AdjectiveFinder {
+    private CountryGlossary countryGlossary = new CountryGlossary();
+
+    @Override
+    public String getAdjective(Locale locale) {
+      return countryGlossary.getBritishWord(locale);
     }
   }
 

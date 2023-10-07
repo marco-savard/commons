@@ -1,13 +1,18 @@
 package com.marcosavard.commons.geog;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Currency;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Country {
   private static Map<String, Country> loadedCountries;
   private String code;
   private Locale countryLocale;
   private Currency currency;
-  
+
   private List<Locale> languageLocales;
 
   public static List<Country> getCountries(String[] isoCountries) {
@@ -74,11 +79,22 @@ public class Country {
     return foundLocales;
   }
 
-  private Country(String code, Locale countryLocale, List<Locale> languageLocales, Currency currency) {
+  private Country(
+      String code, Locale countryLocale, List<Locale> languageLocales, Currency currency) {
     this.code = code;
     this.countryLocale = countryLocale;
     this.languageLocales = languageLocales;
     this.currency = currency;
+  }
+
+  public static Locale localeOf(String country) {
+    Locale locale =
+        List.of(Locale.getAvailableLocales()).stream()
+            .filter(l -> country.equals(l.getCountry()))
+            .findFirst()
+            .orElse(null);
+
+    return locale;
   }
 
   @Override
@@ -122,13 +138,10 @@ public class Country {
     List<String> nameList = new ArrayList<>();
     for (Locale languageLocale : languageLocales) {
       String languageName = languageLocale.getDisplayLanguage(displayLocale);
-      String scriptName = getScriptName(languageLocale, displayLocale);
 
-      if (!scriptName.isEmpty()) {
-        languageName += " (" + scriptName + ")";
+      if (! nameList.contains(languageName)) {
+        nameList.add(languageName);
       }
-
-      nameList.add(languageName);
     }
 
     String concatenation = String.join(", ", nameList);
@@ -158,9 +171,4 @@ public class Country {
 
     return scriptName;
   }
-
-
-
 }
-
-
