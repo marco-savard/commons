@@ -6,6 +6,16 @@ import java.util.Locale;
 
 public class CountryGlossary extends Glossary {
 
+  public String getAmericanWord(Locale display) {
+    String samoa = Country.localeOf("WS").getDisplayCountry(display).toLowerCase();
+    String americanSamoa = Country.localeOf("AS").getDisplayCountry(display).toLowerCase();
+    String american = americanSamoa.replace(samoa, "");
+    american = WordUtil.removeShortWords(american, 2);
+    american = toSingular(american, display);
+    american = toMasculine(american, display);
+    return american;
+  }
+
   // british IO  VG
   public String getBritishWord(Locale display) {
     Locale locale1 = Country.localeOf("VG");

@@ -22,8 +22,8 @@ public class CountryGlossaryDemo {
   public static void main(String[] args) {
     for (Locale display : locales) {
       CountryGlossary countryGlossary = new CountryGlossary();
-      String british = countryGlossary.getBritishWord(display);
-      Console.println(display.getLanguage() + " : " + british);
+      String word = countryGlossary.getAmericanWord(display);
+      Console.println(display.getLanguage() + " : " + word);
     }
   }
 }

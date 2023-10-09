@@ -170,7 +170,7 @@ public class CurrencyGlossary {
 
     finderByCountry.put("GB", new BritishFinder());
     finderByCountry.put("GE", new GeorgianFinder());
-    finderByCountry.put("GH", new LesothanFinder());
+    finderByCountry.put("GH", new GhanaianFinder());
     finderByCountry.put("GM", new GambianFinder());
     finderByCountry.put("GN", new GuineanFinder());
     finderByCountry.put("GR", new GreekFinder());
@@ -267,6 +267,7 @@ public class CurrencyGlossary {
     finderByCountry.put("TZ", new TanzanianFinder());
 
     finderByCountry.put("UK", new UkranianFinder());
+    finderByCountry.put("US", new AmericanFinder());
     finderByCountry.put("UY", new UruguayanFinder());
     finderByCountry.put("UZ", new UzbekiFinder());
 
@@ -940,6 +941,17 @@ public class CurrencyGlossary {
         result = getAdjective(Language.PORTUGUESE.toLocale()); // Ganes?
       }
 
+      return result;
+    }
+  }
+
+  private static class GhanaianFinder extends AdjectiveFinder {
+
+    @Override
+    public String getAdjective(Locale locale) {
+      List<Currency> currencies = getAvailableCurrencies();
+      String result = findCurrency(currencies, "GHS").getDisplayName(locale).toLowerCase();
+      result = replaceFirstIgnoreAccents(result, "cedi", "").trim();
       return result;
     }
   }
@@ -1990,6 +2002,15 @@ public class CurrencyGlossary {
       result = result.replace('-', ' ');
       result = WordUtil.removeShortWords(result, 3);
       return result;
+    }
+  }
+
+  private static class AmericanFinder extends AdjectiveFinder {
+    private CountryGlossary countryGlossary = new CountryGlossary();
+
+    @Override
+    public String getAdjective(Locale locale) {
+      return countryGlossary.getAmericanWord(locale);
     }
   }
 

@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.ling.Language;
 import com.marcosavard.commons.text.DisplayText;
 
 import java.text.MessageFormat;
@@ -10,9 +11,25 @@ import java.util.Locale;
 
 public class CountryDemo {
 
+  private static final Locale[] locales =
+          new Locale[] {
+                  Locale.FRENCH,
+                  Locale.ENGLISH,
+                  Locale.GERMAN,
+                  Locale.ITALIAN,
+                  Language.SPANISH.toLocale(),
+                  Language.PORTUGUESE.toLocale(),
+                  Language.ROMANIAN.toLocale(),
+                  Language.DUTCH.toLocale(),
+                  Language.SWEDISH.toLocale()
+          };
+
   public static void main(String[] args) {
-    Locale french = Locale.FRENCH;
-    displayCountriesByContinent(french);
+   for (Locale locale : locales) {
+     displayCountriesByContinent(locale);
+   }
+   Console.println();
+
     // displayCountryInfo(Country.of("US"), french);
     // displayAllCountries(french);
 

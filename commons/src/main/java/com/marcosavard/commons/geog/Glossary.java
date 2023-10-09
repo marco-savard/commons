@@ -71,6 +71,8 @@ public abstract class Glossary {
 
     if (locale.getLanguage().equals("es")) {
       masculine = toMasculineSpanish(word);
+    } else if (locale.getLanguage().equals("fr")) {
+      masculine = toMasculineFrench(word);
     } else if (locale.getLanguage().equals("pt")) {
       masculine = toMasculinePortuguese(word);
     }
@@ -95,6 +97,18 @@ public abstract class Glossary {
 
     if (word.endsWith("a")) {
       singular = word.substring(0, word.length() - 1) + "o";
+    } else {
+      singular = word;
+    }
+
+    return singular;
+  }
+
+  private String toMasculineFrench(String word) {
+    String singular;
+
+    if (word.endsWith("aine")) {
+      singular = word.substring(0, word.length() - 1);
     } else {
       singular = word;
     }
