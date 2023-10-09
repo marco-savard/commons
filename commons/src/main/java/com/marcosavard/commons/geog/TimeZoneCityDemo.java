@@ -11,9 +11,26 @@ import java.util.TimeZone;
 
 public class TimeZoneCityDemo {
 
+  private static final Locale[] locales =
+      new Locale[] {
+        Locale.FRENCH,
+        Locale.ENGLISH,
+        Locale.GERMAN,
+        Locale.ITALIAN,
+        Language.SPANISH.toLocale(),
+        Language.PORTUGUESE.toLocale(),
+        Language.ROMANIAN.toLocale(),
+        Language.DUTCH.toLocale(),
+        Language.SWEDISH.toLocale()
+      };
+
   public static void main(String[] args) {
-    Locale fr = Language.SWEDISH.toLocale();
-    printTimeZones(fr);
+    Locale fr = Language.FRENCH.toLocale();
+
+    for (Locale locale : locales) {
+      printTimeZones(locale);
+      Console.println();
+    }
 
     // listAll();
 
