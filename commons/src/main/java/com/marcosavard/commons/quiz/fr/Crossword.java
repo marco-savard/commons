@@ -1,0 +1,251 @@
+package com.marcosavard.commons.quiz.fr;
+
+import com.marcosavard.commons.debug.Console;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Crossword {
+  private static final char EMPTY = '.';
+
+  private static final char BLOCK = '#';
+
+  private char[][] grid;
+
+  public static Crossword of(int rows, int cols) {
+    Crossword crossword = new Crossword(rows, cols);
+    return crossword;
+  }
+
+  private Crossword(int rows, int cols) {
+    grid = new char[rows][cols];
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        grid[i][j] = EMPTY; // Initialize all cells with empty spaces
+      }
+    }
+  }
+
+  public void fill(List<String> words) {
+    List<List<String>> partitions = partitionByLength(words);
+
+    for (List<String> partition : partitions) {
+      int wordsPlaced = fillPartition(partition, 0);
+
+      if (wordsPlaced == 0) {
+        fillPartition(partition, 1);
+      }
+    }
+  }
+
+  private static List<List<String>> partitionByLength(List<String> words) {
+    List<List<String>> partitions = new ArrayList<>();
+    int maxLength = words.get(0).length();
+
+    for (int i = maxLength; i >= 1; i--) {
+      List<String> partition = new ArrayList<>();
+      partitions.add(partition);
+    }
+
+    for (String word : words) {
+      int len = word.length();
+      int idx = maxLength - len;
+      partitions.get(idx).add(word);
+    }
+
+    return partitions;
+  }
+
+  public int fillPartition(List<String> words, int orientation) {
+    int rows = grid.length;
+    int cols = grid[0].length;
+    int minScore = 0;
+    int wordsPlaced = 0;
+    List<String> pickedWords = new ArrayList<>();
+
+    // Place the words
+     do {
+         wordsPlaced = 0;
+
+    for (String word : words) {
+
+      boolean horizontal = ((wordsPlaced + orientation) % 2) == 0;
+      int placed;
+
+      if (horizontal) {
+        placed = placeHorizontal(rows, cols, word, minScore);
+        wordsPlaced += placed;
+      } else {
+        placed = placeVertical(rows, cols, word, minScore);
+        wordsPlaced += placed;
+      }
+
+      if (placed > 0) {
+        pickedWords.add(word);
+      }
+
+      minScore = (wordsPlaced < 2) ? 0 : 1;
+    }
+
+    words.removeAll(pickedWords);
+    //orientation++;
+      } while (!words.isEmpty() && (wordsPlaced > 0));
+
+    return wordsPlaced;
+  }
+
+  private int placeHorizontal(int rows, int cols, String word, int minScore) {
+    int placed = 0;
+    int dx = 0, dy = 1;
+    int wordLength = word.length();
+    int maxScore = -1;
+    int maxI = 0, maxJ = 0;
+
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j <= cols - wordLength; j++) {
+        int score = computeScore(i, j, word, dx, dy);
+
+        if (score > maxScore) {
+          maxScore = score;
+          maxI = i;
+          maxJ = j;
+        }
+      }
+    }
+
+    if (maxScore >= minScore) {
+      placeWord(maxI, maxJ, word, dx, dy);
+      placed = 1;
+    }
+
+    return placed;
+  }
+
+  private int placeVertical(int rows, int cols, String word, int minScore) {
+    int placed = 0;
+    int wordLength = word.length();
+    int dx = 1, dy = 0;
+    int maxScore = -1;
+    int placedI = 0, placedJ = 0;
+
+    for (int i = 0; i <= rows - wordLength; i++) {
+      for (int j = 0; j < cols; j++) {
+        int score = computeScore(i, j, word, dx, dy);
+
+        if (score > maxScore) {
+          maxScore = score;
+          placedI = i;
+          placedJ = j;
+        }
+      }
+
+      if (maxScore >= minScore) {
+        placeWord(placedI, placedJ, word, dx, dy);
+        placed = 1;
+      }
+    }
+
+    return placed;
+  }
+
+  private int computeScore(int row, int col, String word, int dx, int dy) {
+    int len = word.length();
+    boolean tooWide = row + len * dx > grid.length;
+    boolean tooHigh = col + len * dy > grid[0].length;
+    int score = 0;
+
+    if (tooWide || tooHigh) {
+      return -1; // Word goes beyond the crossword boundaries
+    }
+
+    for (int i = 0; i < len; i++) {
+      int r = row + i * dx;
+      int c = col + i * dy;
+      char cell = grid[r][c];
+
+      if (cell != EMPTY && cell != word.charAt(i)) {
+        return -1; // Word intersects with existing letters
+      } else if (cell == EMPTY) {
+        int r0 = (dx == 0) ? r - 1 : r;
+        int c0 = (dy == 0) ? c - 1 : c;
+        int r2 = (dx == 0) ? r + 1 : r;
+        int c2 = (dy == 0) ? c + 1 : c;
+        char ch0 = ((r0 < 0) || (c0 < 0)) ? EMPTY : grid[r0][c0];
+        char ch2 = ((r2 >= grid.length) || (c2 >= grid[0].length)) ? EMPTY : grid[r2][c2];
+
+        if ((ch0 != EMPTY) && (ch0 != BLOCK)) {
+          return -1;
+        }
+
+        if ((ch2 != EMPTY) && (ch2 != BLOCK)) {
+          return -1;
+        }
+      } else if (cell == word.charAt(i)) {
+        score++;
+      }
+    }
+
+    int x = row + -1 * dx;
+    int y = col + -1 * dy;
+    boolean outside = (x < 0) || (y < 0);
+    char previousCell = outside ? EMPTY : grid[x][y];
+
+    if ((previousCell != EMPTY) && (previousCell != BLOCK)) {
+      return -1;
+    }
+
+    x = row + len * dx;
+    y = col + len * dy;
+    outside = (x >= grid.length) || (y >= grid[0].length);
+    char nextCell = outside ? EMPTY : grid[x][y];
+
+    if ((nextCell != EMPTY) && (nextCell != BLOCK)) {
+      return -1;
+    }
+
+    return score;
+  }
+
+  public void placeWord(int row, int col, String word, int dx, int dy) {
+    int rowBefore = row - 1;
+    int colBefore = col - 1;
+    int rowAfter = (row + word.length() * dx);
+    int colAfter = (col + word.length() * dy);
+    boolean starting = (rowBefore < 0);
+    starting = starting || (colBefore < 0);
+    boolean ending = (rowAfter == grid.length);
+    ending = ending || (colAfter == grid[0].length);
+
+    // word = starting ? word : BLOCK + word;
+    // word = ending ? word : word + BLOCK;
+
+    int wordLength = word.length();
+
+    for (int i = -1; i <= wordLength; i++) {
+      int r = row + i * dx;
+      int c = col + i * dy;
+
+      if ((i == -1) && (r >= 0) && (c >= 0)) {
+        grid[r][c] = BLOCK;
+      }
+
+      if ((i >= 0) && (i < wordLength)) {
+        grid[r][c] = word.charAt(i);
+      }
+
+      if ((i == wordLength) && (r < grid.length) && (c < grid[0].length)) {
+        grid[r][c] = BLOCK;
+      }
+    }
+  }
+
+  public void print() {
+    int rows = grid.length;
+    int cols = grid[0].length;
+
+    for (int i = 0; i < rows; i++) {
+      String row = String.valueOf(grid[i]);
+      Console.println(row);
+    }
+  }
+}
