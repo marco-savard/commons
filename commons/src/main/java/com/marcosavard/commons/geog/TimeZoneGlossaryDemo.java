@@ -24,7 +24,7 @@ public class TimeZoneGlossaryDemo {
     TimeZoneGlossary glossary = new TimeZoneGlossary();
 
     for (Locale locale : locales) {
-      String word = glossary.getIndianOceanWord(locale);
+      String word = glossary.getWestWord(locale);
       Console.println("{0} : {1}", locale.getLanguage(), word);
     }
   }

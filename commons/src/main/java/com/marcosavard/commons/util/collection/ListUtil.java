@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ListUtil {
+
+  // Sort the words in descending order of length
+  public static void sortDescending(List<String> list) {
+    list.sort(Comparator.comparingInt(String::length).reversed());
+  }
 
   public static <T> void ensureSize(List<T> list, int size) {
     // Prevent excessive copying while we're adding

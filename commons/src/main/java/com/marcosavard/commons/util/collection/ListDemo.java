@@ -25,6 +25,7 @@ public class ListDemo {
     listSortedCountries2(array);
   }
 
+
   private static void convertArrayToList(Locale[] array) {
     List<Locale> locales = new ArrayList<>();
 

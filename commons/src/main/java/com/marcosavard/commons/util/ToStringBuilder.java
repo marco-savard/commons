@@ -22,8 +22,12 @@ public class ToStringBuilder {
 
   public static String build(Object object) {
     boolean toStringPermitted = isToStringSafe(object) || isToStringDefined(object);
-    String str = toStringPermitted ? object.toString() : relectiveToString(object);
+    String str = toStringPermitted ? toString(object) : relectiveToString(object);
     return str;
+  }
+
+  private static String toString(Object object) {
+    return (object == null) ? "null" : object.toString();
   }
 
   private static boolean isToStringSafe(Object object) {
@@ -32,13 +36,14 @@ public class ToStringBuilder {
     return toStringSafe;
   }
 
+  // FIXME object is null?
   private static boolean isToStringDefined(Object object) {
-    Class claz = object.getClass();
+    Class claz = (object == null) ? null : object.getClass();
     boolean toStringDefined;
 
     try {
-      Method method = claz.getDeclaredMethod("toString", null);
-      toStringDefined = true;
+      Method method = (claz == null) ? null : claz.getDeclaredMethod("toString", null);
+      toStringDefined = (method != null);
     } catch (NoSuchMethodException | SecurityException e) {
       toStringDefined = false;
     }
@@ -82,13 +87,17 @@ public class ToStringBuilder {
     PropertyDescriptor[] descriptorArray;
 
     try {
-      BeanInfo beanInfo = Introspector.getBeanInfo(object.getClass());
-      descriptorArray = beanInfo.getPropertyDescriptors();
+      Class claz = (object == null) ? null : object.getClass();
+      BeanInfo beanInfo = (claz == null) ? null : Introspector.getBeanInfo(claz);
+      descriptorArray = (beanInfo == null) ? null : beanInfo.getPropertyDescriptors();
     } catch (IntrospectionException e) {
       descriptorArray = null;
     }
 
-    List<PropertyDescriptor> descriptors = new ArrayList<>(Arrays.asList(descriptorArray));
+    List<PropertyDescriptor> descriptors =
+        (descriptorArray == null)
+            ? new ArrayList<>()
+            : new ArrayList<>(Arrays.asList(descriptorArray));
     return descriptors;
   }
 }

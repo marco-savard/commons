@@ -1,5 +1,7 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.lang.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +9,41 @@ import java.util.Locale;
 import java.util.Set;
 
 public abstract class Glossary {
+
+  public List<String> removeCommon(String first, String second) {
+    List<String> removed = new ArrayList<>();
+    List<String> items = List.of(first.split("\\s+"));
+    List<String> common = findCommon(first, second);
+
+    for (String item : items) {
+      if (!common.contains(item)) {
+        removed.add(item);
+      }
+    }
+
+    return removed;
+  }
+
+  protected String replaceFirstIgnoreAccents(String original, String replaced, String replacement) {
+    String asciiOrignal = StringUtil.stripAccents(original);
+    String asciiReplaced = StringUtil.stripAccents(replaced);
+    int idx = asciiOrignal.indexOf(asciiReplaced);
+
+    if (idx != -1) {
+      StringBuilder builder = new StringBuilder();
+      builder.append(original, 0, idx);
+      builder.append(replacement);
+      builder.append(original, idx + replaced.length(), original.length());
+      original = builder.toString();
+    }
+
+    return original;
+  }
+
+  protected static boolean oneOf(Locale locale, String... languages) {
+    String language = locale.getLanguage();
+    return List.of(languages).contains(language);
+  }
 
   protected List<String> findCommon(String first, String second) {
     List<String> list1 = List.of(first.split("\\s+"));

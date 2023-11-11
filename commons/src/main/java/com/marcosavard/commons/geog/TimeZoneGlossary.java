@@ -1,11 +1,13 @@
 package com.marcosavard.commons.geog;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TimeZoneGlossary {
+public class TimeZoneGlossary extends Glossary {
+
   public String getStandardWord(Locale locale) {
     boolean daylight = false;
     String timeWord = getTimeWord(locale);
@@ -42,7 +44,7 @@ public class TimeZoneGlossary {
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
     Locale locale1 = Country.localeOf("MX");
     String mexico = locale1.getDisplayCountry(locale).toLowerCase();
-    String mexican = CurrencyGlossary.of(locale).getAdjective("MX", locale);
+    String[] mexican = CurrencyGlossary.of(locale).getAdjective("MX", locale);
     word = word.replace('-', ' ');
     word = word.replace(',', ' ');
     word = word.replace('(', ' ');
@@ -50,7 +52,7 @@ public class TimeZoneGlossary {
     word = word.replace(getStandardWord(locale), "");
     word = word.replace(getTimeWord(locale), "");
     word = word.replace(mexico, "");
-    word = word.replace(mexican, "");
+    word = word.replace(mexican[0], "");
     word = word.replace("zone", "");
     word = removeShortWords(word, 5).trim();
     return word;
@@ -80,6 +82,116 @@ public class TimeZoneGlossary {
     word = word.replace("dell", "");
     word = removeShortWords(word, 4).trim();
     return word;
+  }
+
+  public String getAfricaWord(Locale locale) {
+    boolean daylight = false;
+    TimeZone timezone1 = TimeZone.getTimeZone("Africa/Djibouti");
+    TimeZone timezone2 = TimeZone.getTimeZone("Africa/Brazzaville");
+    String eastern = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    String western = timezone2.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    eastern = eastern.replace(getTimeWord(locale), "");
+    eastern = eastern.replace(getStandardWord(locale), "");
+    western = western.replace(getTimeWord(locale), "");
+    western = western.replace(getStandardWord(locale), "");
+    eastern = eastern.replace('-', ' ');
+    western = western.replace('-', ' ');
+    String word = findCommonWords(eastern, western);
+    word = removeShortWords(word, 4).trim();
+    return word;
+  }
+
+  public String getEastWord(Locale locale) {
+    if (oneOf(locale, "it", "ro")) {
+      return getEastWord(Locale.FRENCH);
+    } else if (oneOf(locale, "es")) {
+      return "este";
+    } else if (oneOf(locale, "pt")) {
+      return "leste";
+    } else {
+      boolean daylight = false;
+      TimeZone timezone = TimeZone.getTimeZone("Africa/Djibouti"); // east africa
+      String eastern = timezone.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+      eastern = eastern.replace('’', ' ');
+      eastern = eastern.replace('-', ' ');
+      eastern = eastern.replace(getTimeWord(locale), "");
+      eastern = eastern.replace(getStandardWord(locale), "").trim();
+
+      String african = getAfricanWord(locale);
+      String africa = Continent.AFRICA.getDisplayName(locale).toLowerCase();
+      String east = eastern.replace(african, "").trim();
+      east = east.replace(africa, "").trim();
+      east = WordUtil.removeShortWords(east, 3).trim();
+      return east;
+    }
+  }
+
+  public String getWestWord(Locale locale) {
+    if (oneOf(locale, "it")) {
+      return "ovest";
+    } else if (oneOf(locale, "es", "pt")) {
+      return "oeste";
+    } else if (oneOf(locale, "ro")) {
+      return "vest";
+    } else {
+      boolean daylight = false;
+      TimeZone timezone = TimeZone.getTimeZone("Africa/Brazzaville"); // west africa
+      String westAfrica = timezone.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+      westAfrica = westAfrica.replace('’', ' ');
+      westAfrica = westAfrica.replace('-', ' ');
+      westAfrica = westAfrica.replace(getTimeWord(locale), "");
+      westAfrica = westAfrica.replace(getStandardWord(locale), "").trim();
+
+      String african = getAfricanWord(locale);
+      String africa = Continent.AFRICA.getDisplayName(locale).toLowerCase();
+      String west = westAfrica.replace(african, "").trim();
+      west = west.replace(africa, "").trim();
+      west = WordUtil.removeShortWords(west, 3).trim();
+      return west;
+    }
+  }
+
+  public String getEastearnWordOld(Locale locale) {
+    boolean daylight = false;
+    TimeZone timezone1 = TimeZone.getTimeZone("Australia/Sydney"); // eastern australia
+    String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    String[] australian = CurrencyGlossary.of(locale).getAdjective("AU", locale);
+    australian[0] = australian[0].substring(0, australian[0].length() - 1);
+    Locale locale1 = Country.localeOf("AU");
+    String australia = locale1.getDisplayCountry(locale).toLowerCase().substring(0, 8);
+    word = word.replace(australian[0], " ");
+    word = word.replace(australia, " ");
+    word = word.replace(getStandardWord(locale), "");
+    word = word.replace(getTimeWord(locale), "");
+    word = word.replace('’', ' ');
+    word = word.replace('-', ' ');
+    word = removeShortWords(word, 3).trim();
+    return word;
+  }
+
+  private String getAfricanWord(Locale locale) {
+    CountryGlossary countryGlossary = new CountryGlossary();
+    String[] southAfrican = CurrencyGlossary.of(locale).getAdjective("ZA", locale);
+    southAfrican[0] = southAfrican[0].replace('-', ' ');
+    String south = countryGlossary.getSouthWord(locale);
+    String african = super.replaceFirstIgnoreAccents(southAfrican[0], south, "").trim();
+
+    if (oneOf(locale, "es")) {
+      String southFr = countryGlossary.getSouthWord(Locale.FRENCH);
+      african = super.replaceFirstIgnoreAccents(african, southFr, "").trim();
+    } else if (oneOf(locale, "de")) {
+      if (african.endsWith("er")) {
+        african = african.substring(0, african.length() - 2);
+      }
+    }
+
+    african = WordUtil.removeShortWords(african, 3).trim();
+    return african;
+  }
+
+  private String getLongest(List<String> strings) {
+    String longest = strings.stream().max(Comparator.comparingInt(String::length)).get();
+    return longest;
   }
 
   public String getCentralWord(Locale locale) {
