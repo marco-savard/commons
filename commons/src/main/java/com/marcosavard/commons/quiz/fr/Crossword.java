@@ -3,6 +3,7 @@ package com.marcosavard.commons.quiz.fr;
 import com.marcosavard.commons.debug.Console;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Crossword {
@@ -11,6 +12,11 @@ public class Crossword {
   private static final char BLOCK = '#';
 
   private char[][] grid;
+
+  private int wordCount = 0;
+
+  private List<Entry> horizontalEntries = new ArrayList<>();
+  private List<Entry> verticalEntries = new ArrayList<>();
 
   public static Crossword of(int rows, int cols) {
     Crossword crossword = new Crossword(rows, cols);
@@ -26,77 +32,94 @@ public class Crossword {
     }
   }
 
-  public void fill(List<String> words) {
-    List<List<String>> partitions = partitionByLength(words);
+  public void fill(List<Question> questions) {
+    wordCount = 0;
+    List<List<Question>> partitions = partitionByLength(questions);
 
-    for (List<String> partition : partitions) {
+    for (List<Question> partition : partitions) {
       int wordsPlaced = fillPartition(partition, 0);
 
       if (wordsPlaced == 0) {
-        fillPartition(partition, 1);
+        // fillPartition(partition, 1);
       }
     }
   }
 
-  private static List<List<String>> partitionByLength(List<String> words) {
-    List<List<String>> partitions = new ArrayList<>();
-    int maxLength = words.get(0).length();
+  private static List<List<Question>> partitionByLength(List<Question> questions) {
+    List<List<Question>> partitions = new ArrayList<>();
+    int maxLength = questions.get(0).getWord().length();
 
     for (int i = maxLength; i >= 1; i--) {
-      List<String> partition = new ArrayList<>();
+      List<Question> partition = new ArrayList<>();
       partitions.add(partition);
     }
 
-    for (String word : words) {
-      int len = word.length();
+    for (Question question : questions) {
+      int len = question.getWord().length();
       int idx = maxLength - len;
-      partitions.get(idx).add(word);
+      partitions.get(idx).add(question);
     }
 
     return partitions;
   }
 
-  public int fillPartition(List<String> words, int orientation) {
+  public int fillPartition(List<Question> questions, int orientation) {
     int rows = grid.length;
     int cols = grid[0].length;
     int minScore = 0;
     int wordsPlaced = 0;
-    List<String> pickedWords = new ArrayList<>();
+    List<Question> pickedWords = new ArrayList<>();
+    int i = 0;
 
     // Place the words
-     do {
-         wordsPlaced = 0;
+    do {
+      wordsPlaced = 0;
 
-    for (String word : words) {
+      for (Question question : questions) {
+        String word = question.getWord();
 
-      boolean horizontal = ((wordsPlaced + orientation) % 2) == 0;
-      int placed;
+        if (word.equals("armenien")) {
+          int jj = 0;
+        }
 
-      if (horizontal) {
-        placed = placeHorizontal(rows, cols, word, minScore);
-        wordsPlaced += placed;
-      } else {
-        placed = placeVertical(rows, cols, word, minScore);
-        wordsPlaced += placed;
+        boolean alreadyPicked =
+            pickedWords.stream().filter(w -> w.getWord().equals(word)).findAny().orElse(null)
+                != null;
+
+        if (!alreadyPicked) {
+          boolean horizontal = (wordCount % 2) == 0; // ((wordsPlaced + orientation) % 2) == 0;
+          int placed;
+
+          if (horizontal) {
+            placed = placeHorizontal(rows, cols, question, word, minScore);
+            wordsPlaced += placed;
+
+          } else {
+            placed = placeVertical(rows, cols, question, word, minScore);
+            wordsPlaced += placed;
+          }
+
+          if (placed > 0) {
+            wordCount++;
+            pickedWords.add(question);
+            print();
+          }
+
+          minScore = (wordsPlaced < 2) ? 0 : 1;
+        }
       }
 
-      if (placed > 0) {
-        pickedWords.add(word);
-      }
-
-      minScore = (wordsPlaced < 2) ? 0 : 1;
-    }
-
-    words.removeAll(pickedWords);
-    //orientation++;
-      } while (!words.isEmpty() && (wordsPlaced > 0));
+      questions.removeAll(pickedWords);
+      // orientation++;
+    } while (!questions.isEmpty() && (wordsPlaced > 0));
 
     return wordsPlaced;
   }
 
-  private int placeHorizontal(int rows, int cols, String word, int minScore) {
+  private int placeHorizontal(int rows, int cols, Question question, String word, int minScore) {
     int placed = 0;
     int dx = 0, dy = 1;
+
     int wordLength = word.length();
     int maxScore = -1;
     int maxI = 0, maxJ = 0;
@@ -114,14 +137,14 @@ public class Crossword {
     }
 
     if (maxScore >= minScore) {
-      placeWord(maxI, maxJ, word, dx, dy);
+      placeWord(maxI, maxJ, question, word, dx, dy);
       placed = 1;
     }
 
     return placed;
   }
 
-  private int placeVertical(int rows, int cols, String word, int minScore) {
+  private int placeVertical(int rows, int cols, Question question, String word, int minScore) {
     int placed = 0;
     int wordLength = word.length();
     int dx = 1, dy = 0;
@@ -138,11 +161,11 @@ public class Crossword {
           placedJ = j;
         }
       }
+    }
 
-      if (maxScore >= minScore) {
-        placeWord(placedI, placedJ, word, dx, dy);
-        placed = 1;
-      }
+    if (maxScore >= minScore) {
+      placeWord(placedI, placedJ, question, word, dx, dy);
+      placed = 1;
     }
 
     return placed;
@@ -206,7 +229,7 @@ public class Crossword {
     return score;
   }
 
-  public void placeWord(int row, int col, String word, int dx, int dy) {
+  public void placeWord(int row, int col, Question question, String word, int dx, int dy) {
     int rowBefore = row - 1;
     int colBefore = col - 1;
     int rowAfter = (row + word.length() * dx);
@@ -237,6 +260,19 @@ public class Crossword {
         grid[r][c] = BLOCK;
       }
     }
+
+    saveEntry(row, col, question, dx, dy);
+  }
+
+  private void saveEntry(int row, int col, Question question, int dx, int dy) {
+
+    if (dy > 0) {
+      Entry entry = new Entry(question, row, col);
+      horizontalEntries.add(entry);
+    } else if (dx > 0) {
+      Entry entry = new Entry(question, col, row);
+      verticalEntries.add(entry);
+    }
   }
 
   public void print() {
@@ -246,6 +282,62 @@ public class Crossword {
     for (int i = 0; i < rows; i++) {
       String row = String.valueOf(grid[i]);
       Console.println(row);
+    }
+    Console.println();
+    printHorizontalHints();
+    printVerticalHints();
+  }
+
+  private void printHorizontalHints() {
+    Console.println("Horizontal");
+    int rows = grid.length;
+
+    for (int i = 0; i < rows; i++) {
+      printHintsAtPos(horizontalEntries, i);
+    }
+
+    Console.println();
+  }
+
+  private void printVerticalHints() {
+    Console.println("Vertical");
+    int cols = grid[0].length;
+
+    for (int i = 0; i < cols; i++) {
+      printHintsAtPos(verticalEntries, i);
+    }
+
+    Console.println();
+  }
+
+  private void printHintsAtPos(List<Entry> entries, int pos) {
+    List<Entry> filtered =
+        entries.stream()
+            .filter(e -> e.pos == pos)
+            .sorted(Comparator.comparing(e -> e.order))
+            .toList();
+
+    if (!filtered.isEmpty()) {
+      Console.print(Integer.toString(pos + 1) + " ");
+
+      for (int i = 0; i < filtered.size(); i++) {
+        Question question = filtered.get(i).question;
+        Console.print(question.getHint() + "; ");
+      }
+
+      Console.println();
+    }
+  }
+
+  private static class Entry {
+    Question question;
+    int pos;
+    int order;
+
+    public Entry(Question question, int pos, int order) {
+      this.question = question;
+      this.pos = pos;
+      this.order = order;
     }
   }
 }

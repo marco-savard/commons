@@ -1,6 +1,5 @@
 package com.marcosavard.commons.geog;
 
-import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Language;
 import com.marcosavard.commons.util.collection.FrequencyMap;
 
@@ -68,15 +67,16 @@ public class CurrencyGlossary {
     return mostFrequent;
   }
 
-  public String getAdjective(String country, Locale locale) {
+  public String[] getAdjective(String country, Locale locale) {
     if (finderByCountry == null) {
       finderByCountry = createFinderByCountry();
     }
 
     AdjectiveFinder finder = finderByCountry.get(country);
     String word = (finder == null) ? null : finder.getAdjective(locale);
-    word = toMasculine(word, locale);
-    return word;
+    String masculine = toMasculine(word, locale);
+    String feminine = toFeminine(word, locale);
+    return new String[] {masculine, feminine};
   }
 
   private String toMasculine(String word, Locale locale) {
@@ -89,26 +89,70 @@ public class CurrencyGlossary {
     return masculine;
   }
 
+  private String toFeminine(String word, Locale locale) {
+    String feminine = word;
+
+    if (locale.getLanguage().equals("fr")) {
+      feminine = toFeminineFrench(word);
+    }
+
+    return feminine;
+  }
+
   private String toMasculineFrench(String word) {
     String masculine = word;
 
-    if ((word != null) && word.endsWith("cque")) {
+    if (word == null) {
+      masculine = null;
+    } else if (word.equals("grecque")) {
       masculine = word.substring(0, word.length() - 3);
-    } else if ((word != null) && word.endsWith("rque")) {
+    } else if (word.endsWith("rque")) {
       masculine = word.substring(0, word.length() - 3) + "c";
-    } else if ((word != null) && word.endsWith("nne")) {
+    } else if (word.endsWith("nne")) {
       masculine = word.substring(0, word.length() - 2);
-    } else if ((word != null) && word.endsWith("aise")) {
+    } else if (word.endsWith("aise")) {
       masculine = word.substring(0, word.length() - 1);
-    } else if ((word != null) && word.endsWith("oise")) {
+    } else if (word.endsWith("oise")) {
       masculine = word.substring(0, word.length() - 1);
-    } else if ((word != null) && word.endsWith("ane")) {
+    } else if (word.endsWith("ane")) {
       masculine = word.substring(0, word.length() - 1);
-    } else if ((word != null) && word.endsWith("ole")) {
+    } else if (word.endsWith("ole")) {
       masculine = word.substring(0, word.length() - 1);
     }
 
     return masculine;
+  }
+
+  private String toFeminineFrench(String word) {
+    String feminine = word;
+
+    if (word == null) {
+      feminine = null;
+    } else if (word.equals("grec")) {
+      feminine = "grecque";
+    } else if (word.endsWith("ain")) {
+      feminine = word + "e";
+    } else if (word.endsWith("and")) {
+      feminine = word + "e";
+    } else if (word.endsWith("ais")) {
+      feminine = word + "e";
+    } else if (word.endsWith("ois")) {
+      feminine = word + "e";
+    } else if (word.endsWith("an")) {
+      feminine = word + "e";
+    } else if (word.endsWith("en")) {
+      feminine = word + "ne";
+    } else if (word.endsWith("in")) {
+      feminine = word + "e";
+    } else if (word.endsWith("ol")) {
+      feminine = word + "e";
+    } else if (word.endsWith("on")) {
+      feminine = word + "ne";
+    } else if (word.endsWith("i")) {
+      feminine = word + "e";
+    }
+
+    return feminine;
   }
 
   private Map<String, AdjectiveFinder> createFinderByCountry() {
@@ -2314,33 +2358,11 @@ public class CurrencyGlossary {
     return commonWords;
   }
 
-  private static String replaceFirstIgnoreAccents(
-      String original, String replaced, String replacement) {
-    String asciiOrignal = StringUtil.stripAccents(original);
-    String asciiReplaced = StringUtil.stripAccents(replaced);
-    int idx = asciiOrignal.indexOf(asciiReplaced);
-
-    if (idx != -1) {
-      StringBuilder builder = new StringBuilder();
-      builder.append(original, 0, idx);
-      builder.append(replacement);
-      builder.append(original, idx + replaced.length(), original.length());
-      original = builder.toString();
-    }
-
-    return original;
-  }
-
   private static Currency findCurrency(List<Currency> currencies, String code) {
     return currencies.stream().filter(c -> c.getCurrencyCode().equals(code)).findAny().orElse(null);
   }
 
-  private static boolean oneOf(Locale locale, String... languages) {
-    String language = locale.getLanguage();
-    return List.of(languages).contains(language);
-  }
-
-  private abstract static class AdjectiveFinder {
+  private abstract static class AdjectiveFinder extends Glossary {
     public abstract String getAdjective(Locale locale);
   }
 }

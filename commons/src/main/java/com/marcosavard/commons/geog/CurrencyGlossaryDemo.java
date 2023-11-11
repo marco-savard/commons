@@ -1,7 +1,6 @@
 package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.debug.Console;
-import com.marcosavard.commons.ling.Language;
 
 import java.util.List;
 import java.util.Locale;
@@ -13,14 +12,14 @@ public class CurrencyGlossaryDemo {
     Locale[] locales =
         new Locale[] {
           Locale.FRENCH,
-          Locale.ENGLISH,
-          Locale.GERMAN,
-          Locale.ITALIAN,
-          Language.SPANISH.toLocale(),
-          Language.PORTUGUESE.toLocale(),
-          Language.ROMANIAN.toLocale(),
-          Language.DUTCH.toLocale(),
-          Language.SWEDISH.toLocale()
+          //   Locale.ENGLISH,
+          //     Locale.GERMAN,
+          //    Locale.ITALIAN,
+          //    Language.SPANISH.toLocale(),
+          //   Language.PORTUGUESE.toLocale(),
+          //      Language.ROMANIAN.toLocale(),
+          // Language.DUTCH.toLocale(),
+          //    Language.SWEDISH.toLocale()
         };
 
     String[] countries = Locale.getISOCountries();
@@ -40,9 +39,9 @@ public class CurrencyGlossaryDemo {
 
         if (countryLocale != null) {
           String countryName = countryLocale.getDisplayCountry(locale);
-          String word = glossary.getAdjective(country, locale);
-          if (word != null) {
-            Console.println("{0} : {1}", countryName, word);
+          String[] words = glossary.getAdjective(country, locale);
+          if (words[0] != null) {
+            Console.println("{0} : {1},{2}", countryName, words[0], words[1]);
           }
         }
       }

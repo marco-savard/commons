@@ -1,8 +1,6 @@
 package com.marcosavard.commons.quiz.fr;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Locale;
 
 public class CrosswordGenerator {
   private static final char EMPTY = '.';
@@ -11,17 +9,14 @@ public class CrosswordGenerator {
 
   public static void main(String[] args) {
     int rows = 8; // Number of rows for the crossword
-    int cols = 10; // Number of columns for the crossword
-    List<String> words =
-        Arrays.asList(
-            "espagne", "irlande", "italie", "russie", "canada", "france", "grece", "euro", "irak",
-            "usa", "ene", "sos", "ono", "ese", "no", "so", "ag");
+    int cols = 32; // Number of columns for the crossword
 
-    // Sort the words in descending order of length
-    words.sort(Comparator.comparingInt(String::length).reversed());
+    QuestionList questionList = new QuestionList();
+    Locale display = Locale.FRENCH;
+    questionList.generateQuestions(display, 9);
 
     Crossword crossword = Crossword.of(rows, cols);
-    crossword.fill(words);
+    crossword.fill(questionList.getQuestions());
     crossword.print();
   }
 }
