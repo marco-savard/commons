@@ -36,9 +36,9 @@ public class Question {
 
       Question foundQuestion =
           questions.stream().filter(q -> word.equals(q.getWord())).findFirst().orElse(null);
-      if (foundQuestion == null) {
-        questions.add(question);
-      }
+      // if (foundQuestion == null) {
+      questions.add(question);
+      // }
     }
 
     for (int i = maxLength; i > 1; i--) {

@@ -887,7 +887,8 @@ public class CurrencyGlossary {
     @Override
     public String getAdjective(Locale locale) {
       List<Currency> currencies = getAvailableCurrencies();
-      String result = findCurrency(currencies, "ETB").getDisplayName(locale).toLowerCase();
+      Currency foundCurrency = findCurrency(currencies, "ETB");
+      String result = foundCurrency.getDisplayName(locale).toLowerCase();
       result = replaceFirstIgnoreAccents(result, "birr", "").trim();
       result = result.replace('-', ' ');
       result = WordUtil.removeShortWords(result, 3);

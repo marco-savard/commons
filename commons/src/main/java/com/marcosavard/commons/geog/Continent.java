@@ -23,16 +23,15 @@ public enum Continent {
   private static final List<String> AFRICA_COUNTRIES =
       List.of(
           "AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ", "EG", "EH",
-          "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LY", "MA", "MG", "ML", "MR",
-          "MU", "MW", "MZ", "NA", "NE", "NG", "RE", "RW", "SC", "SD", "SL", "SN", "SO", "SS", "ST",
-          "SZ", "TD", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM", "ZW");
+          "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LS", "LY", "MA", "MG", "ML",
+          "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE", "RW", "SC", "SD", "SL", "SN", "SO", "SS",
+          "ST", "SZ", "TD", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM", "ZW");
   private static final List<String> AMERICA_COUNTRIES =
       List.of(
           "AG", "AI", "AR", "AS", "AW", "BB", "BL", "BM", "BO", "BQ", "BR", "BS", "BZ", "CA", "CL",
           "CO", "CR", "CU", "CW", "DM", "DO", "EC", "FK", "GD", "GL", "GP", "GT", "GU", "GY", "HN",
-          "HT", "JM", "KN", "KY", "LC", "LR", "LS", "MF", "MH", "MQ", "MS", "MX", "NI", "PA", "PE",
-          "PM", "PR", "PY", "SH", "SR", "SV", "SX", "TC", "TT", "UM", "US", "UY", "VC", "VE", "VG",
-          "VI");
+          "HT", "JM", "KN", "KY", "LC", "LR", "MF", "MH", "MQ", "MS", "MX", "NI", "PA", "PE", "PM",
+          "PR", "PY", "SH", "SR", "SV", "SX", "TC", "TT", "UM", "US", "UY", "VC", "VE", "VG", "VI");
   private static final List<String> ASIA_COUNTRIES =
       List.of(
           "AE", "AF", "AZ", "BD", "BH", "BN", "BT", "CN", "HK", "ID", "IL", "IN", "IO", "IQ", "IR",

@@ -1,12 +1,28 @@
 package com.marcosavard.commons.math.arithmetic;
 
+import com.marcosavard.commons.debug.Console;
+
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class PseudoRandomDemo {
 
   public static void main(String[] args) {
-    printPseudoRandomDistribution();
-    printSquaredPseudoRandomDistribution();
+    printPseudoRandomShuffle();
+    // printPseudoRandomDistribution();
+    // printSquaredPseudoRandomDistribution();
+  }
+
+  private static void printPseudoRandomShuffle() {
+    List<Character> letters = IntStream.rangeClosed('A', 'Z').mapToObj(var -> (char) var).toList();
+    Console.println(letters);
+
+    for (int i=0; i<5; i++) {
+      PseudoRandom pr = new PseudoRandom(i);
+      List<Character> shuffled = pr.shuffle(letters);
+      Console.println(shuffled);
+    }
   }
 
   private static void printPseudoRandomDistribution() {
