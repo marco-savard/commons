@@ -17,11 +17,17 @@ public enum ZodiacSign {
   AQUARIUS,
   PISCES;
 
+  private static final int ARIES_SYMBOL = 0x2648;
+
   public String getDisplayName(Locale locale) {
     Class claz = ZodiacSign.class;
     String basename = claz.getName().replace('.', '/');
     ResourceBundle bundle = ResourceBundle.getBundle(basename, locale);
     String displayName = bundle.getString(this.name());
     return displayName;
+  }
+
+  public char getSymbol() {
+    return (char) (this.ordinal() + ARIES_SYMBOL);
   }
 }

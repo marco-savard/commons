@@ -9,7 +9,8 @@ public class ZodiacSignDemo {
     Locale display = Locale.FRENCH;
 
     for (ZodiacSign sign : ZodiacSign.values()) {
-      Console.println(sign.getDisplayName(display));
+      String name = sign.getDisplayName(display);
+      Console.println("{0} : {1}", name, sign.getSymbol());
     }
   }
 }
