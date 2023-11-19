@@ -1,7 +1,10 @@
 package com.marcosavard.commons.quiz.fr;
 
+import com.marcosavard.commons.astro.planet.Planet;
 import com.marcosavard.commons.astro.zodiac.ZodiacSign;
 import com.marcosavard.commons.chem.ChemicalElement;
+import com.marcosavard.commons.game.chess.Chess;
+import com.marcosavard.commons.game.sport.Sport;
 import com.marcosavard.commons.geog.CardinalPoint;
 import com.marcosavard.commons.geog.Continent;
 import com.marcosavard.commons.geog.Country;
@@ -38,6 +41,7 @@ public class QuestionList {
   public void generateQuestions(Locale display, int seed) {
 
     // antiquite
+
     generateGreekLetter(display);
     generateGreekGods(display);
     generateRomanGod(display);
@@ -45,10 +49,11 @@ public class QuestionList {
     generateRomanEmpireCountries(display);
     generateRomanceLanguages(display);
     generateZodiacSigns(display);
+    generateChessPieces(display);
     generateGuessRomanNumerals(display);
 
-    /*
     // europe
+
     generateItMeals(display);
     generateFrMeals(display);
     generateChMeals(display);
@@ -60,9 +65,25 @@ public class QuestionList {
     generateGuessCurrencyByCountry(Continent.EUROPE, display);
     generateGuessCurrencyCodeByName(Continent.EUROPE, display);
     generateGuessDomainByCountryName(Continent.EUROPE, display);
-     */
+    generateSports(Continent.EUROPE, display);
 
-    /*
+
+    // america
+
+    generateMxMeals(display);
+    generateUsMeals(display);
+    generateUsClothes(display);
+    generateGuessCountryByLanguage(Continent.AMERICA, display);
+    generateGuessLanguageByCountry(Continent.AMERICA, display);
+    generateGuessCountryByInhabitant(Continent.AMERICA, display);
+    generateGuessInhabitantByCountry(Continent.AMERICA, display);
+    generateGuessCountryByCurrency(Continent.AMERICA, display);
+    generateGuessCurrencyByCountry(Continent.AMERICA, display);
+    generateGuessCurrencyCodeByName(Continent.AMERICA, display);
+    generateGuessDomainByCountryName(Continent.AMERICA, display);
+    generateSports(Continent.AMERICA, display);
+
+
         //asia
         generateAsianClothes(display);
         generateJpMeals(display);
@@ -74,36 +95,20 @@ public class QuestionList {
         generateGuessCurrencyByCountry(Continent.ASIA, display);
         generateGuessCurrencyCodeByName(Continent.ASIA, display);
         generateGuessDomainByCountryName(Continent.ASIA, display);
-    */
+        generateSports(Continent.ASIA, display);
 
-    // america
-    /*
-        generateMxMeals(display);
-        generateUsMeals(display);
-        generateUsClothes(display);
-        generateGuessCountryByLanguage(Continent.AMERICA, display);
-        generateGuessLanguageByCountry(Continent.AMERICA, display);
-        generateGuessCountryByInhabitant(Continent.AMERICA, display);
-        generateGuessInhabitantByCountry(Continent.AMERICA, display);
-        generateGuessCountryByCurrency(Continent.AMERICA, display);
-        generateGuessCurrencyByCountry(Continent.AMERICA, display);
-        generateGuessCurrencyCodeByName(Continent.AMERICA, display);
-        generateGuessDomainByCountryName(Continent.AMERICA, display);
-    */
 
-    /*
-        // science et techno
-        generatePlanet(display);
-        generateDwarfPlanet(display);
-        generateGuessMetal(display);
-        generateGuessMetalByName(display);
-        generateGuessEnumColorProperty(display);
-        generateGuessEnumFileAttribute(display);
-        generateGuessEnumFileOperation(display);
-        generateGuessEnumWindowOperation(display);
-        generateGuessChemicalElement(display);
-        generateGuessDomainByCountryName(Continent.EUROPE, display);
-    */
+    // science et techno
+    generatePlanet(display);
+    generateGuessMetal(display);
+    generateGuessMetalByName(display);
+    generateGuessEnumColorProperty(display);
+    generateGuessEnumFileAttribute(display);
+    generateGuessEnumFileOperation(display);
+    generateGuessEnumWindowOperation(display);
+    generateGuessChemicalElement(display);
+    generateGuessDomainByCountryName(Continent.EUROPE, display);
+
     // general
     generateGuessEnumYesNo(display);
     generateGuessEnumDirection(display);
@@ -195,6 +200,14 @@ public class QuestionList {
     }
   }
 
+  private void generateChessPieces(Locale display) {
+    String hint = "Aux échecs";
+
+    for (Chess sign : Chess.values()) {
+      addQuestion(hint, sign.getDisplayName(display), display);
+    }
+  }
+
   private void generateRomanceLanguages(Locale display) {
     String hint = "Langue issue du latin";
     List<Locale> allLocales = List.of(Locale.getAvailableLocales());
@@ -202,9 +215,6 @@ public class QuestionList {
 
     List<String> romanceLanguages =
         List.of("an", "ca", "co", "es", "fr", "gl", "it", "oc", "pt", "rm", "ro", "sc");
-    //  List<Locale> languages =
-    //     allLocales.stream().filter(l -> romanceLanguages.contains(l.getLanguage())).toList();
-
     List<String> languages =
         allLanguages.stream().filter(l -> romanceLanguages.contains(l)).toList();
 
@@ -216,41 +226,43 @@ public class QuestionList {
   }
 
   private void generatePlanet(Locale display) {
-    char MERCURY = '\u263F', VENUS = '\u2640', EARTH = '\u2641', MARS = '\u2642';
-    char SATURN = '\u2644', NEPTUNE = '\u2646';
+    for (Planet planet : Planet.values()) {
+      Planet.Category category = planet.getCategory();
+      String hint;
 
-    for (char ch = MERCURY; ch <= NEPTUNE; ch++) {
-      String name = Character.getName(ch);
-      name = (ch == VENUS) ? "VENUS" : name;
-      name = (ch == MARS) ? "MARS" : name;
-
-      if (isFrench(display)) {
-        name = (ch == MERCURY) ? "MERCURE" : name;
-        name = (ch == EARTH) ? "TERRE" : name;
-        name = (ch == SATURN) ? "SATURNE" : name;
+      if (category == Planet.Category.OFFICIAL) {
+        hint = "Planete";
+      } else {
+        hint = "Corps celeste";
       }
 
-      addQuestion("Planete", name, display);
+      addQuestion(hint, planet.getDisplayName(display), display);
     }
   }
 
-  private void generateDwarfPlanet(Locale display) {
-    char PLUTO = '\u2647', CERES = '\u26b3', PALLAS = '\u26b4';
-    char JUNO = '\u26b5', VESTA = '\u26b6', CHIRON = '\u26b7';
-    char[] dwartPlanets = new char[] {PLUTO, CERES, PALLAS, JUNO, VESTA, CHIRON};
+  private void generateSports(Continent continent, Locale display) {
+    List<String> continentCountries = continent.getCountries();
+    List<Locale> allLocales = List.of(Locale.getAvailableLocales());
 
-    for (char ch : dwartPlanets) {
-      String name = Character.getName(ch);
+    for (Sport sport : Sport.values()) {
+      List<String> countries = sport.getCountries();
 
-      if (isFrench(display)) {
-        name = (ch == PLUTO) ? "PLUTON" : name;
+      for (String country : countries) {
+        if (continentCountries.contains(country)) {
+          List<Locale> locales =
+              allLocales.stream().filter(l -> country.equals(l.getCountry())).toList();
+          for (Locale locale : locales) {
+            String hint =
+                MessageFormat.format(
+                    "Populaire dans ce pays : {0}", locale.getDisplayCountry(display));
+            addQuestion(hint, sport.getDisplayName(display), display);
+          }
+        }
       }
-
-      addQuestion("Astre du systeme solaire", name, display);
     }
   }
 
-  private void generateSports(Locale display) {
+  private void generateSportsOld(Locale display) {
     String hint = "Sport";
 
     addQuestion(hint, getName(0x26bd, "S"), display); // soccer
