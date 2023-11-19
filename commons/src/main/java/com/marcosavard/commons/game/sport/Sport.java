@@ -37,8 +37,8 @@ public enum Sport {
     return displayName;
   }
 
-  public int getSymbol() {
-    return symbol;
+  public String getSymbol() {
+    return Character.toString(symbol);
   }
 
   public List<String> getCountries() {

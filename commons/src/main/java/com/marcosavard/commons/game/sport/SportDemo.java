@@ -4,15 +4,15 @@ import com.marcosavard.commons.debug.Console;
 
 import java.util.Locale;
 
+// https://www.fileformat.info/info/unicode/category/So/list.htm
 public class SportDemo {
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
 
     for (Sport sport : Sport.values()) {
       String name = sport.getDisplayName(display);
-      String symbol = Character.toString(sport.getSymbol());
       String countries = String.join(",", sport.getCountries());
-      Console.println("{0} ({1}): {2}", name, symbol, countries);
+      Console.println("{0} ({1}): {2}", name, sport.getSymbol(), countries);
     }
   }
 }

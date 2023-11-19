@@ -47,7 +47,7 @@ public enum Planet {
     return displayName;
   }
 
-  public int getSymbol() {
-    return symbol;
+  public String getSymbol() {
+    return Character.toString(symbol);
   }
 }

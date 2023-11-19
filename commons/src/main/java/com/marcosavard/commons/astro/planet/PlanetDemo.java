@@ -10,8 +10,7 @@ public class PlanetDemo {
 
     for (Planet planet : Planet.values()) {
       String name = planet.getDisplayName(display);
-      String symbol = Character.toString(planet.getSymbol());
-      Console.println("{0} : {1}", name, symbol);
+      Console.println("{0} : {1}", name, planet.getSymbol());
     }
   }
 }
