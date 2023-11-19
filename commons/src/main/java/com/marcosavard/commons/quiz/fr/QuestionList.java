@@ -9,6 +9,7 @@ import com.marcosavard.commons.geog.CardinalPoint;
 import com.marcosavard.commons.geog.Continent;
 import com.marcosavard.commons.geog.Country;
 import com.marcosavard.commons.geog.CurrencyGlossary;
+import com.marcosavard.commons.geog.us.State;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 import com.marcosavard.commons.math.arithmetic.RomanNumeral;
@@ -53,26 +54,26 @@ public class QuestionList {
     generateGuessRomanNumerals(display);
 
     // europe
-
-    generateItMeals(display);
-    generateFrMeals(display);
-    generateChMeals(display);
-    generateGuessCountryByLanguage(Continent.EUROPE, display);
-    generateGuessLanguageByCountry(Continent.EUROPE, display);
-    generateGuessCountryByInhabitant(Continent.EUROPE, display);
-    generateGuessInhabitantByCountry(Continent.EUROPE, display);
-    generateGuessCountryByCurrency(Continent.EUROPE, display);
-    generateGuessCurrencyByCountry(Continent.EUROPE, display);
-    generateGuessCurrencyCodeByName(Continent.EUROPE, display);
-    generateGuessDomainByCountryName(Continent.EUROPE, display);
-    generateSports(Continent.EUROPE, display);
-
-
+    /*
+        generateItMeals(display);
+        generateFrMeals(display);
+        generateChMeals(display);
+        generateGuessCountryByLanguage(Continent.EUROPE, display);
+        generateGuessLanguageByCountry(Continent.EUROPE, display);
+        generateGuessCountryByInhabitant(Continent.EUROPE, display);
+        generateGuessInhabitantByCountry(Continent.EUROPE, display);
+        generateGuessCountryByCurrency(Continent.EUROPE, display);
+        generateGuessCurrencyByCountry(Continent.EUROPE, display);
+        generateGuessCurrencyCodeByName(Continent.EUROPE, display);
+        generateGuessDomainByCountryName(Continent.EUROPE, display);
+        generateSports(Continent.EUROPE, display);
+    */
     // america
 
     generateMxMeals(display);
     generateUsMeals(display);
     generateUsClothes(display);
+    generateUsState(display);
     generateGuessCountryByLanguage(Continent.AMERICA, display);
     generateGuessLanguageByCountry(Continent.AMERICA, display);
     generateGuessCountryByInhabitant(Continent.AMERICA, display);
@@ -82,9 +83,8 @@ public class QuestionList {
     generateGuessCurrencyCodeByName(Continent.AMERICA, display);
     generateGuessDomainByCountryName(Continent.AMERICA, display);
     generateSports(Continent.AMERICA, display);
-
-
-        //asia
+    /*
+        // asia
         generateAsianClothes(display);
         generateJpMeals(display);
         generateGuessCountryByLanguage(Continent.ASIA, display);
@@ -97,18 +97,17 @@ public class QuestionList {
         generateGuessDomainByCountryName(Continent.ASIA, display);
         generateSports(Continent.ASIA, display);
 
-
-    // science et techno
-    generatePlanet(display);
-    generateGuessMetal(display);
-    generateGuessMetalByName(display);
-    generateGuessEnumColorProperty(display);
-    generateGuessEnumFileAttribute(display);
-    generateGuessEnumFileOperation(display);
-    generateGuessEnumWindowOperation(display);
-    generateGuessChemicalElement(display);
-    generateGuessDomainByCountryName(Continent.EUROPE, display);
-
+        // science et techno
+        generatePlanet(display);
+        generateGuessMetal(display);
+        generateGuessMetalByName(display);
+        generateGuessEnumColorProperty(display);
+        generateGuessEnumFileAttribute(display);
+        generateGuessEnumFileOperation(display);
+        generateGuessEnumWindowOperation(display);
+        generateGuessChemicalElement(display);
+        generateGuessDomainByCountryName(Continent.EUROPE, display);
+    */
     // general
     generateGuessEnumYesNo(display);
     generateGuessEnumDirection(display);
@@ -237,6 +236,27 @@ public class QuestionList {
       }
 
       addQuestion(hint, planet.getDisplayName(display), display);
+    }
+  }
+
+  private void generateUsState(Locale display) {
+    for (State state : State.values()) {
+      String name = state.getDisplayName(display);
+
+      if (!name.contains(" ") && !name.contains("-")) {
+        State.Category category = state.getCategory();
+        String hint;
+
+        if (category == State.Category.STATE) {
+          hint = "Etat americain";
+        } else if (category == State.Category.DISTRICT) {
+          hint = "District americain";
+        } else {
+          hint = "Territoire americain";
+        }
+
+        addQuestion(hint, name, display);
+      }
     }
   }
 
