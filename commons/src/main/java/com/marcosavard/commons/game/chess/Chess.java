@@ -21,7 +21,7 @@ public enum Chess {
     return displayName;
   }
 
-  public char getSymbol() {
-    return (char) (this.ordinal() + KING_SYMBOL);
+  public String getSymbol() {
+    return Character.toString(this.ordinal() + KING_SYMBOL);
   }
 }
