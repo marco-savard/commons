@@ -14,7 +14,7 @@ public class CrosswordGenerator {
     QuestionList questionList = new QuestionList();
     Locale display = Locale.FRENCH;
     int level = 1; // facile
-    questionList.generateQuestions(display, 7);
+    questionList.generateQuestions(display, 4);
 
     Crossword crossword = Crossword.of(rows, cols);
     crossword.fill(questionList.getQuestions());

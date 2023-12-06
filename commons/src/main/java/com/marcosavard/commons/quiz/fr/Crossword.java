@@ -13,6 +13,8 @@ public class Crossword {
 
   private char[][] grid;
 
+  private static final int MINIMAL_COUNT = 5;
+
   private int wordCount = 0;
 
   private List<Entry> horizontalEntries = new ArrayList<>();
@@ -35,12 +37,15 @@ public class Crossword {
   public void fill(List<Question> questions) {
     wordCount = 0;
     List<List<Question>> partitions = partitionByLength(questions);
+    List<Question> pickedQuestions = new ArrayList<>();
 
     for (List<Question> partition : partitions) {
-      int wordsPlaced = fillPartition(partition, 0);
+      if (partition.size() >= MINIMAL_COUNT) {
+        int wordsPlaced = fillPartition(pickedQuestions, partition, 0);
 
-      if (wordsPlaced == 0) {
-        // fillPartition(partition, 1);
+        if (wordsPlaced == 0) {
+          // fillPartition(partition, 1);
+        }
       }
     }
   }
@@ -63,12 +68,12 @@ public class Crossword {
     return partitions;
   }
 
-  public int fillPartition(List<Question> questions, int orientation) {
+  public int fillPartition(
+      List<Question> pickedQuestions, List<Question> questions, int orientation) {
     int rows = grid.length;
     int cols = grid[0].length;
     int minScore = 0;
     int wordsPlaced = 0;
-    List<Question> pickedWords = new ArrayList<>();
     int i = 0;
 
     // Place the words
@@ -78,12 +83,11 @@ public class Crossword {
       for (Question question : questions) {
         String word = question.getWord();
 
-        if (word.equals("armenien")) {
-          int jj = 0;
-        }
-
         boolean alreadyPicked =
-            pickedWords.stream().filter(w -> w.getWord().equals(word)).findAny().orElse(null)
+            pickedQuestions.stream()
+                    .filter(q -> isPicked(q, question))
+                    .findAny()
+                    .orElse(null)
                 != null;
 
         if (!alreadyPicked) {
@@ -101,19 +105,23 @@ public class Crossword {
 
           if (placed > 0) {
             wordCount++;
-            pickedWords.add(question);
+            pickedQuestions.add(question);
             print();
           }
 
           minScore = (wordsPlaced < 2) ? 0 : 1;
         }
       }
-
-      questions.removeAll(pickedWords);
       // orientation++;
     } while (!questions.isEmpty() && (wordsPlaced > 0));
 
     return wordsPlaced;
+  }
+
+  private boolean isPicked(Question pickedQuestion, Question question) {
+    boolean picked = pickedQuestion.getWord().equals(question.getWord());
+    picked = picked ||  pickedQuestion.getHint().equals(question.getHint());
+    return picked;
   }
 
   private int placeHorizontal(int rows, int cols, Question question, String word, int minScore) {
