@@ -37,6 +37,7 @@ public class TimeZoneCityDemo {
   }
 
   private static void printTimeZones(Locale displayLocale) {
+    Console.println(displayLocale.getDisplayLanguage(displayLocale));
     String[] ids = TimeZone.getAvailableIDs();
     boolean daylight = false;
 

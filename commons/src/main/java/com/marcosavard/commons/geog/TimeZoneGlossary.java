@@ -1,5 +1,8 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.lang.StringUtil;
+import com.marcosavard.commons.ling.Language;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +10,102 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class TimeZoneGlossary extends Glossary {
+
+  public String getHawaii(Locale locale) {
+    String word = extractFromTimezone(locale, "HST");
+    word = getWordStarting(word, "ha");
+    return word;
+  }
+
+  public String getNewfoundland(Locale locale) {
+    String word = extractFromTimezone(locale, "Canada/Newfoundland");
+    word = getWordStarting(word, "ne", "te", "nov");
+    return word;
+  }
+
+  public String getAmazonia(Locale locale) {
+    String word = extractFromTimezone(locale, "America/Manaus");
+    word = getWordStarting(word, "am");
+    return word;
+  }
+
+  public String getIndochina(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Bangkok");
+    word = getWordStarting(word, "in");
+    return word;
+  }
+
+  public String getAzores(Locale locale) {
+    String word = extractFromTimezone(locale, "Atlantic/Azores");
+    word = getWordStarting(word, "a");
+    return word;
+  }
+
+  public String getMoscow(Locale locale) {
+    String word = extractFromTimezone(locale, "Europe/Moscow");
+    word = getWordStarting(word, "m");
+    return word;
+  }
+
+  public String getVolgograd(Locale locale) {
+    String word = extractFromTimezone(locale, "Europe/Volgograd");
+    word = getWordStarting(word, "vo", "wo");
+    return word;
+  }
+
+  public String getIrkutsk(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Irkutsk");
+    word = getWordStarting(word, "i");
+    return word;
+  }
+
+  public String getYakutsk(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Yakutsk");
+    word = getWordStarting(word, "ia", "ja", "ya");
+    return word;
+  }
+
+  public String getKrasnoyarsk(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Krasnoyarsk");
+    word = getWordStarting(word, "k");
+    return word;
+  }
+
+  public String getOmsk(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Omsk");
+    word = getWordStarting(word, "om");
+    return word;
+  }
+
+  public String getNovosibirsk(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Novosibirsk");
+    word = getWordStarting(word, "nov", "now");
+    return word;
+  }
+
+  public String getSakhalin(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Sakhalin");
+    word = getWordStarting(word, "sa");
+    return word;
+  }
+
+  public String getYekaterinburg(Locale locale) {
+    String word = extractFromTimezone(locale, "Asia/Yekaterinburg");
+    word = getWordStarting(word, "ec", "ek", "ye", "je");
+    return word;
+  }
+
+  private String extractFromTimezone(Locale locale, String tzId) {
+    TimeZone timezone = TimeZone.getTimeZone(tzId);
+    boolean daylight = false;
+    String word = timezone.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    word = word.replace('-', ' ');
+    word = word.replace(',', ' ');
+    word = word.replace('’', ' ');
+    word = word.replace('\'', ' ');
+
+    return word;
+  }
 
   public String getStandardWord(Locale locale) {
     boolean daylight = false;
@@ -38,11 +137,107 @@ public class TimeZoneGlossary extends Glossary {
     return timeWord;
   }
 
+  public String getIslandsWord(Locale locale) {
+    String zoneId = "Pacific/Majuro";
+    TimeZone timezone = TimeZone.getTimeZone(zoneId);
+    boolean daylight = false;
+    String word = timezone.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    word = word.replace(getTimeWord(locale), "");
+    word = word.replace("marshall", "");
+    word = word.replace("delle", "");
+    word = word.replace('-', ' ');
+    word = removeShortWords(word, 4).trim();
+
+    if (oneOf(locale, "nl")) {
+      word = word.replace("se", "");
+    } else if (oneOf(locale, "sv")) {
+      word = word.replace("nas", "");
+    } else if (oneOf(locale, "ro")) {
+      word = word.replace("lor", "");
+    }
+
+    return word;
+  }
+
+  public String getIslandWord(Locale locale) {
+    String zoneId, remove;
+
+    if (oneOf(locale, "pt", "ro")) {
+      zoneId = "Indian/Christmas";
+    } else if (oneOf(locale, "sv")) {
+      zoneId = "Pacific/Norfolk";
+    } else {
+      zoneId = "Pacific/Wake";
+    }
+
+    TimeZone timezone = TimeZone.getTimeZone(zoneId);
+    boolean daylight = false;
+    String word = timezone.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    word = word.replace(getStandardWord(locale), "");
+    word = word.replace(getTimeWord(locale), "");
+    word = word.replace("christmas", "");
+    word = word.replace("norfolk", "");
+    word = word.replace("wake", "");
+    word = word.replace("dell", "");
+    word = word.replace("din", "");
+    word = word.replace('-', ' ');
+    word = word.replace('’', ' ');
+    word = word.replace(',', ' ');
+    word = removeShortWords(word, 3).trim();
+
+    if (oneOf(locale, "nl")) {
+      word = word.replace("se", "");
+    } else if (oneOf(locale, "sv")) {
+      word = word.replace("ns", "");
+    }
+
+    return word;
+  }
+
+  public String getRockiesWord(Locale locale) {
+    if (oneOf(locale, "pt")) {
+      return getRockiesWord(Language.SPANISH.toLocale());
+    } else if (oneOf(locale, "ro")) {
+      return getRockiesWord(Locale.ITALIAN);
+    } else if (oneOf(locale, "en", "nl")) {
+      return getRockiesWord(Locale.GERMAN);
+    } else {
+      String word = extractFromTimezone(locale, "America/Denver");
+      word = getWordStarting(word, "ro", "kl");
+      return word;
+    }
+  }
+
   public String getPacificWord(Locale locale) {
     boolean daylight = false;
     TimeZone timezone1 = TimeZone.getTimeZone("Mexico/BajaSur");
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
-    Locale locale1 = Country.localeOf("MX");
+    word = word.replace('-', ' ');
+    word = word.replace(',', ' ');
+    word = word.replace('(', ' ');
+    word = word.replace(')', ' ');
+    word = word.replace(getStandardWord(locale), "");
+    word = word.replace(getTimeWord(locale), "");
+    word = word.replace("zone", "");
+    String mexico = extractName(word, "me");
+    word = word.replace(mexico, "");
+    word = removeShortWords(word, 4).trim();
+    return word;
+  }
+
+  private String extractName(String str, String start) {
+    str = str.toLowerCase();
+    List<String> words = List.of(str.split("\\s+"));
+    words = words.stream().filter(s -> StringUtil.stripAccents(s).startsWith(start)).toList();
+    String name = String.join(" ", words).toLowerCase();
+    return name;
+  }
+
+  public String getPacificWordOld(Locale locale) {
+    boolean daylight = false;
+    TimeZone timezone1 = TimeZone.getTimeZone("Mexico/BajaSur");
+    String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
+    Locale locale1 = Country.localesOf("MX").get(0);
     String mexico = locale1.getDisplayCountry(locale).toLowerCase();
     String[] mexican = CurrencyGlossary.of(locale).getAdjective("MX", locale);
     word = word.replace('-', ' ');
@@ -82,6 +277,29 @@ public class TimeZoneGlossary extends Glossary {
     word = word.replace("dell", "");
     word = removeShortWords(word, 4).trim();
     return word;
+  }
+
+  public String getOceanWord(Locale locale) {
+    String indianOcean = getIndianOceanWord(locale);
+    String word = getWordStarting(indianOcean, "o");
+    return word;
+  }
+
+  private String getWordStarting(String text, String... prefixes) {
+    List<String> words = List.of(text.split("\\s+"));
+    words = words.stream().filter(s -> startsWith(s, prefixes)).toList();
+    String word = String.join(" ", words).toLowerCase();
+    return word;
+  }
+
+  private boolean startsWith(String text, String... prefixes) {
+    boolean startsWith = false;
+
+    for (String prefix : prefixes) {
+      startsWith = startsWith || text.startsWith(prefix);
+    }
+
+    return startsWith;
   }
 
   public String getAfricaWord(Locale locale) {
@@ -157,7 +375,7 @@ public class TimeZoneGlossary extends Glossary {
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
     String[] australian = CurrencyGlossary.of(locale).getAdjective("AU", locale);
     australian[0] = australian[0].substring(0, australian[0].length() - 1);
-    Locale locale1 = Country.localeOf("AU");
+    Locale locale1 = Country.localesOf("AU").get(0);
     String australia = locale1.getDisplayCountry(locale).toLowerCase().substring(0, 8);
     word = word.replace(australian[0], " ");
     word = word.replace(australia, " ");
@@ -198,7 +416,7 @@ public class TimeZoneGlossary extends Glossary {
     boolean daylight = false;
     TimeZone timezone1 = TimeZone.getTimeZone("Australia/Darwin");
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
-    Locale locale1 = Country.localeOf("AU");
+    Locale locale1 = Country.localesOf("AU").get(0);
     String australia = locale1.getDisplayCountry(locale).toLowerCase().substring(0, 8);
 
     word = word.replace(australia, " ");
