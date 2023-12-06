@@ -2,6 +2,7 @@ package com.marcosavard.commons.quiz.fr;
 
 import com.marcosavard.commons.astro.planet.Planet;
 import com.marcosavard.commons.astro.zodiac.ZodiacSign;
+import com.marcosavard.commons.astro.zodiac.phonetic.PhoneticLetter;
 import com.marcosavard.commons.chem.ChemicalElement;
 import com.marcosavard.commons.game.chess.Chess;
 import com.marcosavard.commons.game.sport.Sport;
@@ -9,6 +10,8 @@ import com.marcosavard.commons.geog.CardinalPoint;
 import com.marcosavard.commons.geog.Continent;
 import com.marcosavard.commons.geog.Country;
 import com.marcosavard.commons.geog.CurrencyGlossary;
+import com.marcosavard.commons.geog.TimeZoneGlossary;
+import com.marcosavard.commons.geog.ca.CanadianProvince;
 import com.marcosavard.commons.geog.us.State;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
@@ -24,6 +27,7 @@ import com.marcosavard.commons.ui.WindowOperation;
 import com.marcosavard.commons.ui.color.ColorName;
 
 import java.awt.*;
+import java.lang.reflect.Method;
 import java.text.DateFormatSymbols;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
@@ -38,11 +42,12 @@ import java.util.Locale;
 
 public class QuestionList {
   private List<Question> questions = new ArrayList<>();
+  private TimeZoneGlossary timeZoneGlossary = new TimeZoneGlossary();
 
   public void generateQuestions(Locale display, int seed) {
 
     // antiquite
-
+    PseudoRandom pr = new PseudoRandom(seed);
     generateGreekLetter(display);
     generateGreekGods(display);
     generateRomanGod(display);
@@ -51,67 +56,49 @@ public class QuestionList {
     generateRomanceLanguages(display);
     generateZodiacSigns(display);
     generateChessPieces(display);
+    generatePhoneticLetter(display);
     generateGuessRomanNumerals(display);
 
     // europe
-    /*
-        generateItMeals(display);
-        generateFrMeals(display);
-        generateChMeals(display);
-        generateGuessCountryByLanguage(Continent.EUROPE, display);
-        generateGuessLanguageByCountry(Continent.EUROPE, display);
-        generateGuessCountryByInhabitant(Continent.EUROPE, display);
-        generateGuessInhabitantByCountry(Continent.EUROPE, display);
-        generateGuessCountryByCurrency(Continent.EUROPE, display);
-        generateGuessCurrencyByCountry(Continent.EUROPE, display);
-        generateGuessCurrencyCodeByName(Continent.EUROPE, display);
-        generateGuessDomainByCountryName(Continent.EUROPE, display);
-        generateSports(Continent.EUROPE, display);
-    */
+    generateEuropeQuestions(display);
+    generateSports(Continent.EUROPE, display);
+    generateGeographyQuestions(Continent.EUROPE, display, pr, 100);
+
     // america
-
-    generateMxMeals(display);
-    generateUsMeals(display);
-    generateUsClothes(display);
-    generateUsState(display);
-    generateGuessCountryByLanguage(Continent.AMERICA, display);
-    generateGuessLanguageByCountry(Continent.AMERICA, display);
-    generateGuessCountryByInhabitant(Continent.AMERICA, display);
-    generateGuessInhabitantByCountry(Continent.AMERICA, display);
-    generateGuessCountryByCurrency(Continent.AMERICA, display);
-    generateGuessCurrencyByCountry(Continent.AMERICA, display);
-    generateGuessCurrencyCodeByName(Continent.AMERICA, display);
-    generateGuessDomainByCountryName(Continent.AMERICA, display);
+    generateAmericaQuestions(display);
     generateSports(Continent.AMERICA, display);
-    /*
-        // asia
-        generateAsianClothes(display);
-        generateJpMeals(display);
-        generateGuessCountryByLanguage(Continent.ASIA, display);
-        generateGuessLanguageByCountry(Continent.ASIA, display);
-        generateGuessCountryByInhabitant(Continent.ASIA, display);
-        generateGuessInhabitantByCountry(Continent.ASIA, display);
-        generateGuessCountryByCurrency(Continent.ASIA, display);
-        generateGuessCurrencyByCountry(Continent.ASIA, display);
-        generateGuessCurrencyCodeByName(Continent.ASIA, display);
-        generateGuessDomainByCountryName(Continent.ASIA, display);
-        generateSports(Continent.ASIA, display);
+    generateUsState(display);
+    generateCanadianProvinces(display);
+    generateGeographyQuestions(Continent.AMERICA, display, pr, 50);
 
-        // science et techno
-        generatePlanet(display);
-        generateGuessMetal(display);
-        generateGuessMetalByName(display);
-        generateGuessEnumColorProperty(display);
-        generateGuessEnumFileAttribute(display);
-        generateGuessEnumFileOperation(display);
-        generateGuessEnumWindowOperation(display);
-        generateGuessChemicalElement(display);
-        generateGuessDomainByCountryName(Continent.EUROPE, display);
-    */
+    // asia
+    generateAsiaQuestions(display);
+    generateSports(Continent.ASIA, display);
+    // generateGeographyQuestions(Continent.ASIA, display, pr);
+
+    // africa
+    // generateGeographyQuestions(Continent.AFRICA, display, pr);
+
+    // oceanie
+    // generateGeographyQuestions(Continent.AUSTRALIA, display, pr);
+
+    // science et techno
+    generateGuessEnumColorProperty(display);
+    generateGuessEnumFileAttribute(display);
+    generateGuessEnumFileOperation(display);
+    generateGuessEnumWindowOperation(display);
+    generatePlanet(display);
+    generateMathFunctions(display);
+    generateGuessMetal(display);
+    generateGuessMetalByName(display);
+    generateGuessChemicalElement(display);
+
     // general
     generateGuessEnumYesNo(display);
+    generateGuessColor(display);
     generateGuessEnumDirection(display);
     generateGuessEnumCollection(display);
+
     generateGuessCardinalPointAbbreviation(display);
     generateGuessCardinalPoint(display);
     generateGuessWeekDay(display);
@@ -119,18 +106,96 @@ public class QuestionList {
     generateGuessDateAbbreviation(display);
     generateGuessMonth(display);
     generateGuessMonthAbbreviation(display);
-    generateGuessColor(display);
 
-    //  generateSports(display);
-    //  generateRailTransportation(display);
-    //  generateRoadTransportation(display);
-    //   generateWaterTransportation(display);
+    generateSports(display);
+    generateRailTransportation(display);
+    generateRoadTransportation(display);
+    generateWaterTransportation(display);
+    generateScriptByLanguage(display);
 
     // generateTimeZoneCodeByName(display);
-    // script, font
+    // FontDemo
 
-    PseudoRandom pr = new PseudoRandom(seed);
     questions = Question.shuffle(questions, pr);
+  }
+
+  private void generateGeographyQuestions(
+      Continent continent, Locale display, PseudoRandom pr, int maximum) {
+    List<Question> questions = new ArrayList<>();
+    questions.addAll(generateGuessCountryByLanguage(continent, display));
+    questions.addAll(generateGuessLanguageByCountry(continent, display));
+    questions.addAll(generateGuessCountryByInhabitant(continent, display));
+    questions.addAll(generateGuessInhabitantByCountry(continent, display));
+    questions.addAll(generateGuessCountryByCurrency(continent, display));
+    questions.addAll(generateGuessCurrencyByCountry(continent, display));
+    questions.addAll(generateGuessCurrencyCodeByName(continent, display));
+    questions.addAll(generateGuessDomainByCountryName(continent, display));
+    List<Question> shuffled = pr.shuffle(questions);
+    int nb = Math.min(shuffled.size(), maximum);
+
+    for (int i = 0; i < nb; i++) {
+      Question question = shuffled.get(i);
+      addQuestion(question.getHint(), question.getWord());
+    }
+  }
+
+  private void generatePhoneticLetter(Locale display) {
+    for (PhoneticLetter letter : PhoneticLetter.values()) {
+      int rank = 1 + letter.ordinal();
+      String hint = rank + "e lettre en alphabet phonetique";
+      String word = letter.name().toLowerCase();
+      addQuestion(hint, word);
+    }
+  }
+
+  private void generateScriptByLanguage(Locale display) {
+    List<Script> allScripts = Script.getAllScripts();
+    for (Script script : allScripts) {
+      List<String> languages = script.getLanguages();
+      if (languages.size() < 15) {
+        String scriptName = script.getDisplayName(display);
+        for (String language : languages) {
+          String languageName = Locale.forLanguageTag(language).getDisplayName(display);
+
+          if (languageName.equals(scriptName)) {
+            addQuestion("Cette langue a sa propre ecriture", languageName);
+          } else {
+            String hint = MessageFormat.format("le {0} utilise cette ecriture", languageName);
+            addQuestion(hint, scriptName);
+          }
+        }
+      }
+    }
+  }
+
+  private void generateAsiaQuestions(Locale display) {
+    generateAsianClothes(display);
+    generateJpMeals(display);
+    addQuestion("Region d'Asie", Country.localesOf("MO").get(0).getDisplayName(display));
+    addQuestion("Region d'Asie", timeZoneGlossary.getIndochina(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getIrkutsk(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getKrasnoyarsk(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getNovosibirsk(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getSakhalin(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getOmsk(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getYakutsk(display));
+    addQuestion("Ville de Siberie", timeZoneGlossary.getYekaterinburg(display));
+  }
+
+  private void generateEuropeQuestions(Locale display) {
+    generateItMeals(display);
+    generateFrMeals(display);
+    generateChMeals(display);
+    addQuestion("Ville de Russie", timeZoneGlossary.getMoscow(display));
+    addQuestion("Ville de Russie", timeZoneGlossary.getVolgograd(display));
+  }
+
+  private void generateAmericaQuestions(Locale display) {
+    generateMxMeals(display);
+    generateUsMeals(display);
+    generateUsClothes(display);
+    addQuestion("Montagnes d'Amerique", timeZoneGlossary.getRockiesWord(display));
+    addQuestion("Foret d'Amerique du Sud", timeZoneGlossary.getAmazonia(display));
   }
 
   private void generateGreekLetter(Locale display) {
@@ -164,7 +229,7 @@ public class QuestionList {
         name = (god == PLUTO) ? "PLUTON" : name;
       }
 
-      addQuestion("Dieu romain", name, display);
+      addQuestion("Dieu romain", name);
     }
   }
 
@@ -174,7 +239,7 @@ public class QuestionList {
 
     for (Script script : scripts) {
       String name = script.getDisplayName(display);
-      addQuestion(hint, name, display);
+      addQuestion(hint, name);
     }
   }
 
@@ -187,7 +252,7 @@ public class QuestionList {
 
     for (Locale country : countries) {
       String name = country.getDisplayCountry(display);
-      addQuestion(hint, name, display);
+      addQuestion(hint, name);
     }
   }
 
@@ -195,7 +260,7 @@ public class QuestionList {
     String hint = "Signe du Zodiac";
 
     for (ZodiacSign sign : ZodiacSign.values()) {
-      addQuestion(hint, sign.getDisplayName(display), display);
+      addQuestion(hint, sign.getDisplayName(display));
     }
   }
 
@@ -203,7 +268,7 @@ public class QuestionList {
     String hint = "Aux échecs";
 
     for (Chess sign : Chess.values()) {
-      addQuestion(hint, sign.getDisplayName(display), display);
+      addQuestion(hint, sign.getDisplayName(display));
     }
   }
 
@@ -220,7 +285,28 @@ public class QuestionList {
     for (String language : languages) {
       Locale locale = Locale.forLanguageTag(language);
       String name = locale.getDisplayLanguage(display);
-      addQuestion(hint, name, display);
+      addQuestion(hint, name);
+    }
+  }
+
+  private void generateMathFunctions(Locale display) {
+    Method[] methods = Math.class.getDeclaredMethods();
+    List<String> functions = new ArrayList<>();
+    String hint = "Fonction mathematique";
+
+    for (Method method : methods) {
+      String name = method.getName();
+      boolean hasDigit = name.matches(".*\\d.*");
+      boolean allLowercase = name.toLowerCase().equals(name);
+      boolean unary = (method.getParameterCount() == 1);
+
+      if (unary && allLowercase && !hasDigit && !functions.contains(name)) {
+        functions.add(name);
+      }
+    }
+
+    for (String function : functions) {
+      addQuestion(hint, function);
     }
   }
 
@@ -235,29 +321,59 @@ public class QuestionList {
         hint = "Corps celeste";
       }
 
-      addQuestion(hint, planet.getDisplayName(display), display);
+      addQuestion(hint, planet.getDisplayName(display));
+    }
+  }
+
+  private void generateCanadianProvinces(Locale display) {
+    String hint = "Province canadienne";
+
+    for (CanadianProvince province : CanadianProvince.values()) {
+      String name = province.getDisplayName(display);
+
+      if (!name.contains(" ") && !name.contains("-")) {
+        addQuestion(hint, name);
+      }
     }
   }
 
   private void generateUsState(Locale display) {
     for (State state : State.values()) {
       String name = state.getDisplayName(display);
+      State.Category category = state.getCategory();
+      State.Region region = state.getRegion();
+      String hint;
 
-      if (!name.contains(" ") && !name.contains("-")) {
-        State.Category category = state.getCategory();
-        String hint;
-
-        if (category == State.Category.STATE) {
-          hint = "Etat americain";
-        } else if (category == State.Category.DISTRICT) {
-          hint = "District americain";
+      if (category == State.Category.STATE) {
+        if (region == State.Region.MIDWEST) {
+          hint = "Etat americain du Midwest";
+        } else if (region == State.Region.EAST_COAST) {
+          hint = "Etat americain de la cote est";
+        } else if (region == State.Region.SOUTH) {
+          hint = "Etat americain du sud";
+        } else if (region == State.Region.SOUTH_WEST) {
+          hint = "Etat americain du sud-ouest";
+        } else if (region == State.Region.NORTH_WEST) {
+          hint = "Etat americain du nord-ouest";
+        } else if (region == State.Region.PACIFIC) {
+          hint = "Etat americain du Pacifique";
         } else {
-          hint = "Territoire americain";
+          hint = "Etat americain";
         }
-
-        addQuestion(hint, name, display);
+      } else if (category == State.Category.DISTRICT) {
+        hint = "District americain";
+      } else {
+        hint = "Territoire americain";
       }
+
+      addQuestion(hint, name);
     }
+  }
+
+  private void generateSports(Locale display) {
+    generateSports(Continent.AMERICA, display);
+    generateSports(Continent.ASIA, display);
+    generateSports(Continent.EUROPE, display);
   }
 
   private void generateSports(Continent continent, Locale display) {
@@ -272,121 +388,104 @@ public class QuestionList {
           List<Locale> locales =
               allLocales.stream().filter(l -> country.equals(l.getCountry())).toList();
           for (Locale locale : locales) {
+            String countryName = locale.getDisplayCountry(display);
+            String article = findDeterminant(country, countryName);
             String hint =
                 MessageFormat.format(
-                    "Populaire dans ce pays : {0}", locale.getDisplayCountry(display));
-            addQuestion(hint, sport.getDisplayName(display), display);
+                    "Sport populaire {0} {1}", article, locale.getDisplayCountry(display));
+            addQuestion(hint, sport.getDisplayName(display));
           }
         }
       }
     }
   }
 
-  private void generateSportsOld(Locale display) {
-    String hint = "Sport";
-
-    addQuestion(hint, getName(0x26bd, "S"), display); // soccer
-    addQuestion(hint, getName(0x1f3be, "T"), display); // tennis
-    addQuestion(hint, getName(0x1f93e, "H"), display); // handball de
-    addQuestion(hint, getName(0x1f3c9, "R"), display); // rugby
-
-    addQuestion(hint, getName(0x26be, "B"), display); // baseball usa
-    addQuestion(hint, getName(0x1f94e, "S"), display); // softball usa
-    addQuestion(hint, getName(0x1f3c8, "F"), display); // football usa
-    addQuestion(hint, getName(0x1f3c0, "B"), display); // basketball usa
-    addQuestion(hint, getName(0x1f3d2, "H"), display); // canada finlande
-    addQuestion(hint, getName(0x1f94c, "C"), display); // curling canada uk
-
-    addQuestion(hint, getName(0x1f3f8, "B"), display); // badmington
-    addQuestion(hint, getName(0x1f3d0, "V"), display); // volleyball
-  }
-
   private void generateUsMeals(Locale display) {
     String hint = "On en mange aux USA";
-    addQuestion(hint, getName(0x1f354, "H"), display); // hamburger
-    addQuestion(hint, getName(0x1f37f, "P"), display); // popcorn
-    addQuestion(hint, getName(0x1f96f, "B"), display); // bagel
-    addQuestion(hint, getName(0x1f95e, "P"), display); // pancakes
-    addQuestion(hint, getName(0x1f96a, "S"), display); // sandwich
+    addQuestion(hint, getName(0x1f354, "H")); // hamburger
+    addQuestion(hint, getName(0x1f37f, "P")); // popcorn
+    addQuestion(hint, getName(0x1f96f, "B")); // bagel
+    addQuestion(hint, getName(0x1f95e, "P")); // pancakes
+    addQuestion(hint, getName(0x1f96a, "S")); // sandwich
 
     String hotdog = Character.getName(0x1f32d).replace(" ", "").toLowerCase();
-    addQuestion(hint, hotdog, display);
+    addQuestion(hint, hotdog);
   }
 
   private void generateMxMeals(Locale display) {
     String hint = "On en mange au Mexique";
-    addQuestion(hint, getName(0x1f32e, "T"), display); // taco
-    addQuestion(hint, getName(0x1f32f, "B"), display); // burrito
-    addQuestion(hint, getName(0x1fad4, "T"), display); // tamale
+    addQuestion(hint, getName(0x1f32e, "T")); // taco
+    addQuestion(hint, getName(0x1f32f, "B")); // burrito
+    addQuestion(hint, getName(0x1fad4, "T")); // tamale
   }
 
   private void generateItMeals(Locale display) {
     String hint = "On en mange en Italie";
 
-    addQuestion(hint, getName(0x1f35d, "S"), display); // spaghetti
-    addQuestion(hint, getName(0x1f355, "P"), display); // pizza
+    addQuestion(hint, getName(0x1f35d, "S")); // spaghetti
+    addQuestion(hint, getName(0x1f355, "P")); // pizza
   }
 
   private void generateJpMeals(Locale display) {
     String hint = "On en mange au Japon";
-    addQuestion(hint, getName(0x1f363, "S"), display); // sushi
+    addQuestion(hint, getName(0x1f363, "S")); // sushi
   }
 
   private void generateFrMeals(Locale display) {
     String hint = "On en mange en France";
-    addQuestion(hint, getName(0x1f950, "C"), display); // croissant
-    addQuestion(hint, getName(0x1f956, "BA"), display); // baguette
+    addQuestion(hint, getName(0x1f950, "C")); // croissant
+    addQuestion(hint, getName(0x1f956, "BA")); // baguette
   }
 
   private void generateChMeals(Locale display) {
     String hint = "On en mange en Suisse";
-    addQuestion(hint, getName(0x1fad5, "F"), display); // fondue
+    addQuestion(hint, getName(0x1fad5, "F")); // fondue
   }
 
   private void generateRailTransportation(Locale display) {
     String hint = "Circule sur rail";
-    addQuestion(hint, getName(0x1f686, "T"), display); // train
-    addQuestion(hint, getName(0x1f687, "M"), display); // metro
-    addQuestion(hint, getName(0x1f68a, "T"), display); // tram
-    addQuestion(hint, getName(0x1f69d, "M"), display); // monorail
+    addQuestion(hint, getName(0x1f686, "T")); // train
+    addQuestion(hint, getName(0x1f687, "M")); // metro
+    addQuestion(hint, getName(0x1f68a, "T")); // tram
+    addQuestion(hint, getName(0x1f69d, "M")); // monorail
   }
 
   private void generateRoadTransportation(Locale display) {
     String hint = "Circule sur la route";
-    addQuestion(hint, getName(0x1f68c, "B"), display); // bus
-    addQuestion(hint, getName(0x1f68e, "T"), display); // trolleybus
-    addQuestion(hint, getName(0x1f690, "M"), display); // minibus
-    addQuestion(hint, getName(0x1f691, "A"), display); // ambulance
-    addQuestion(hint, getName(0x1f695, "T"), display); // taxi
-    addQuestion(hint, getName(0x1f697, "A"), display); // automobile
-    addQuestion(hint, getName(0x1f6f4, "S"), display); // scooter
+    addQuestion(hint, getName(0x1f68c, "B")); // bus
+    addQuestion(hint, getName(0x1f68e, "T")); // trolleybus
+    addQuestion(hint, getName(0x1f690, "M")); // minibus
+    addQuestion(hint, getName(0x1f691, "A")); // ambulance
+    addQuestion(hint, getName(0x1f695, "T")); // taxi
+    addQuestion(hint, getName(0x1f697, "A")); // automobile
+    addQuestion(hint, getName(0x1f6f4, "S")); // scooter
   }
 
   private void generateWaterTransportation(Locale display) {
     String hint = "Flotte sur l'eau";
-    addQuestion(hint, getName(0x1f6f6, "C"), display); // canoe
-    addQuestion(hint, getName(0x26f4, "F"), display); // ferry
+    addQuestion(hint, getName(0x1f6f6, "C")); // canoe
+    addQuestion(hint, getName(0x26f4, "F")); // ferry
   }
 
   private void generateAsianClothes(Locale display) {
     String hint = "Les orientales en portent";
-    addQuestion(hint, getName(0x1f97b, "S"), display); // sari
-    addQuestion(hint, getName(0x1f458, "K"), display); // kimono
+    addQuestion(hint, getName(0x1f97b, "S")); // sari
+    addQuestion(hint, getName(0x1f458, "K")); // kimono
   }
 
   private void generateUsClothes(Locale display) {
     String hint = "Les Americains en portent";
-    addQuestion(hint, getName(0x1fa73, "S"), display); // shorts
-    addQuestion(hint, getName(0x1f456, "J"), display); // jeans
+    addQuestion(hint, getName(0x1fa73, "S")); // shorts
+    addQuestion(hint, getName(0x1f456, "J")); // jeans
   }
 
   private void generateGreekGods(Locale display) {
     String hint = "Dieu grec";
-    addQuestion(hint, getName(0x2be1, "H"), display); // hades
-    addQuestion(hint, getName(0x2be2, "Z"), display); // zeus
-    addQuestion(hint, getName(0x2be3, "K"), display); // kronos
-    addQuestion(hint, getName(0x2be4, "A"), display); // appolon
-    addQuestion(hint, getName(0x2be7, "P"), display); // poseidon
+    addQuestion(hint, getName(0x2be1, "H")); // hades
+    addQuestion(hint, getName(0x2be2, "Z")); // zeus
+    addQuestion(hint, getName(0x2be3, "K")); // kronos
+    addQuestion(hint, getName(0x2be4, "A")); // appolon
+    addQuestion(hint, getName(0x2be7, "P")); // poseidon
   }
 
   // ref https://www.fileformat.info/info/unicode/category/So/list.htm
@@ -417,10 +516,12 @@ public class QuestionList {
   U+1F459	BIKINI
    */
 
-  private void addQuestion(String hint, String name, Locale display) {
-    name = name.toLowerCase();
-    Question q = new Question(name, hint);
-    questions.add(q);
+  private void addQuestion(String hint, String name) {
+    if (!name.contains(" ") && !name.contains("-")) {
+      name = name.toLowerCase();
+      Question q = new Question(name, hint);
+      questions.add(q);
+    }
   }
 
   private boolean isFrench(Locale display) {
@@ -536,15 +637,19 @@ public class QuestionList {
       String symbol = element.toString();
 
       if (symbol.length() >= 2) {
+        String name = element.getDisplayName(display);
+        Question q1 = new Question(symbol, name);
+        questions.add(q1);
+
         ChemicalElement.Category category = element.getCategory();
         Question q = null;
 
         if (category.equals(ChemicalElement.Category.NOBLE_GAS)) {
-          q = new Question(symbol, "Gaz noble");
+          q = new Question(name, "Gaz noble");
         } else if (category.equals(ChemicalElement.Category.ALKALI)) {
-          q = new Question(symbol, "Alcalin");
+          q = new Question(name, "Alcalin");
         } else if (category.equals(ChemicalElement.Category.METAL)) {
-          q = new Question(symbol, "Métal");
+          q = new Question(name, "Métal");
         }
 
         if (q != null) {
@@ -616,49 +721,54 @@ public class QuestionList {
   }
 
   private void generateGuessEnumFileAttribute(Locale display) {
+    String hint = "Attribut d'un fichier";
+
     for (FileAttribute item : FileAttribute.values()) {
-      Question q = new Question(item.getDisplayName(display), "Attribut d'un fichier");
-      questions.add(q);
+      addQuestion(hint, item.getDisplayName(display));
     }
   }
 
   private void generateGuessEnumFileOperation(Locale display) {
+    String hint = "Operation sur un fichier informatique";
+
     for (FileOperation item : FileOperation.values()) {
-      Question q =
-          new Question(item.getDisplayName(display), "Operation sur un fichier informatique");
-      questions.add(q);
+      addQuestion(hint, item.getDisplayName(display));
     }
   }
 
   private void generateGuessEnumWindowOperation(Locale display) {
+    String hint = "Operation sur une fenetre informatique";
+
     for (WindowOperation item : WindowOperation.values()) {
-      Question q =
-          new Question(item.getDisplayName(display), "Operation sur une fenetre informatique");
-      questions.add(q);
+      addQuestion(hint, item.getDisplayName(display));
     }
   }
 
-  private void generateGuessDomainByCountryName(Continent continent, Locale display) {
+  private List<Question> generateGuessDomainByCountryName(Continent continent, Locale display) {
     List<String> continentCountries = continent.getCountries();
     String[] countries = Locale.getISOCountries();
+    List<Question> questions = new ArrayList<>();
 
     for (String code : countries) {
       if (continentCountries.contains(code)) {
         String countryName = Country.of(code).getDisplayName(display);
         String partitive = findCountryPartitive(code, countryName);
         String hint = MessageFormat.format("Domaine internet {0}{1}", partitive, countryName);
-        Question q = new Question(code, hint);
-        questions.add(q);
+        Question question = new Question(code, hint);
+        questions.add(question);
       }
     }
+
+    return questions;
   }
 
   // le francais y est parle : France
-  private void generateGuessCountryByLanguage(Continent continent, Locale display) {
+  private List<Question> generateGuessCountryByLanguage(Continent continent, Locale display) {
     // languages
     List<String> continentCountries = continent.getCountries();
     List<Locale> allLocales = List.of(Locale.getAvailableLocales());
     String[] languages = Locale.getISOLanguages();
+    List<Question> questions = new ArrayList<>();
 
     for (String language : languages) {
       Locale locale = Locale.forLanguageTag(language);
@@ -691,14 +801,17 @@ public class QuestionList {
         }
       }
     }
+
+    return questions;
   }
 
   // On parle cette langue en France : francais
-  private void generateGuessLanguageByCountry(Continent continent, Locale display) {
+  private List<Question> generateGuessLanguageByCountry(Continent continent, Locale display) {
     // languages
     List<String> continentCountries = continent.getCountries();
     List<Locale> allLocales = List.of(Locale.getAvailableLocales());
     String[] languages = Locale.getISOLanguages();
+    List<Question> questions = new ArrayList<>();
 
     for (String language : languages) {
       Locale locale = Locale.forLanguageTag(language);
@@ -734,13 +847,16 @@ public class QuestionList {
         }
       }
     }
+
+    return questions;
   }
 
   // le Francais y habite : France
-  private void generateGuessCountryByInhabitant(Continent continent, Locale display) {
+  private List<Question> generateGuessCountryByInhabitant(Continent continent, Locale display) {
     List<String> continentCountries = continent.getCountries();
     CurrencyGlossary currencyGlossary = CurrencyGlossary.of(display);
     String[] countries = Locale.getISOCountries();
+    List<Question> questions = new ArrayList<>();
 
     for (String countryCode : countries) {
       if (continentCountries.contains(countryCode)) {
@@ -758,36 +874,42 @@ public class QuestionList {
         }
       }
     }
+
+    return questions;
   }
 
   // il habite en France : Francais
-  private void generateGuessInhabitantByCountry(Continent continent, Locale display) {
+  private List<Question> generateGuessInhabitantByCountry(Continent continent, Locale display) {
     List<String> continentCountries = continent.getCountries();
     CurrencyGlossary currencyGlossary = CurrencyGlossary.of(display);
     String[] countries = Locale.getISOCountries();
+    List<Question> questions = new ArrayList<>();
 
     for (String countryCode : countries) {
       if (continentCountries.contains(countryCode)) {
         String[] adjective = currencyGlossary.getAdjective(countryCode, display);
         if (adjective[0] != null) {
-          String countryName = Country.of(countryCode).getDisplayName(display);
+          String countryName = Country.of(countryCode).getDisplayNameWithArticle(display);
           String article = findCountryArticle(countryCode, countryName.toLowerCase());
 
           if (!StringUtil.isNullOrEmpty(countryName)) {
-            String hint = MessageFormat.format("Il habite {0}{1}", article, countryName);
-            Question q = new Question(StringUtil.capitalize(adjective[0]), hint);
+            String hint = MessageFormat.format("Il habite {0}", countryName);
+            Question q = new Question(adjective[0], hint);
             questions.add(q);
           }
         }
       }
     }
+
+    return questions;
   }
 
   // le rouble y a cours : Russie
-  private void generateGuessCountryByCurrency(Continent continent, Locale display) {
+  private List<Question> generateGuessCountryByCurrency(Continent continent, Locale display) {
     List<String> continentCountries = continent.getCountries();
     CurrencyGlossary currencyGlossary = CurrencyGlossary.of(display);
     Locale[] locales = Locale.getAvailableLocales();
+    List<Question> questions = new ArrayList<>();
 
     for (Locale locale : locales) {
       String countryCode = locale.getCountry();
@@ -826,13 +948,16 @@ public class QuestionList {
         }
       }
     }
+
+    return questions;
   }
 
   // On utilise cette monnaie en Russie : rouble
-  private void generateGuessCurrencyByCountry(Continent continent, Locale display) {
+  private List<Question> generateGuessCurrencyByCountry(Continent continent, Locale display) {
     List<String> continentCountries = continent.getCountries();
     CurrencyGlossary currencyGlossary = CurrencyGlossary.of(display);
     Locale[] locales = Locale.getAvailableLocales();
+    List<Question> questions = new ArrayList<>();
 
     for (Locale locale : locales) {
       String countryCode = locale.getCountry();
@@ -858,6 +983,7 @@ public class QuestionList {
                   String hint =
                       MessageFormat.format(
                           "On utilise cette devise {0} {1}", determinant, countryName);
+
                   Question q = new Question(currencyName, hint);
                   questions.add(q);
                 }
@@ -869,11 +995,14 @@ public class QuestionList {
         }
       }
     }
+
+    return questions;
   }
 
-  private void generateGuessCurrencyCodeByName(Continent continent, Locale display) {
+  private List<Question> generateGuessCurrencyCodeByName(Continent continent, Locale display) {
     List<String> continentCountries = continent.getCountries();
     Locale[] locales = Locale.getAvailableLocales();
+    List<Question> questions = new ArrayList<>();
 
     for (Locale locale : locales) {
       String countryCode = locale.getCountry();
@@ -895,6 +1024,8 @@ public class QuestionList {
         }
       }
     }
+
+    return questions;
   }
 
   private static String findCountryPartitive(String code, String countryName) {
