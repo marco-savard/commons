@@ -1,4 +1,4 @@
-package com.marcosavard.commons.text.phonetic;
+package com.marcosavard.commons.astro.zodiac.phonetic;
 
 public enum PhoneticLetter {
   ALPHA,
