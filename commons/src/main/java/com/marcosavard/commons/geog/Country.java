@@ -1,11 +1,14 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.lang.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class Country {
   private static Map<String, Country> loadedCountries;
@@ -87,14 +90,17 @@ public class Country {
     this.currency = currency;
   }
 
-  public static Locale localeOf(String country) {
-    Locale locale =
+  public static List<Locale> localesOf(String country) {
+    List<Locale> locales =
         List.of(Locale.getAvailableLocales()).stream()
             .filter(l -> country.equals(l.getCountry()))
-            .findFirst()
-            .orElse(null);
+            .collect(Collectors.toList());
+    return locales;
+  }
 
-    return locale;
+  public static Locale localeOf(String country) {
+    List<Locale> locales = localesOf(country);
+    return locales.isEmpty() ? null : locales.get(0);
   }
 
   @Override
@@ -139,7 +145,7 @@ public class Country {
     for (Locale languageLocale : languageLocales) {
       String languageName = languageLocale.getDisplayLanguage(displayLocale);
 
-      if (! nameList.contains(languageName)) {
+      if (!nameList.contains(languageName)) {
         nameList.add(languageName);
       }
     }
@@ -170,5 +176,60 @@ public class Country {
     }
 
     return scriptName;
+  }
+
+  public String getDisplayNameWithArticle(Locale display) {
+    return getDisplayNameWithArticle(display, "");
+  }
+
+  public String getDisplayNameWithArticle(Locale display, String preposition) {
+    Locale locale = Country.localesOf(code).get(0);
+    String countryName = locale.getDisplayCountry(display);
+    char gen = findGrammaticalGender(code, countryName);
+    char num = findGrammaticalNumber(code, countryName);
+    String article = (gen == 'F') ? "la" : (gen == 'M') ? "le" : "";
+    article = (num == 'P') ? "les" : article;
+    article = article.isEmpty() ? preposition : preposition + " " + article;
+
+    String lower = StringUtil.stripAccents(countryName.toLowerCase());
+    char firstLetter = lower.charAt(0);
+    char lastLetter = article.length() == 0 ? ' ' : article.charAt(article.length() - 1);
+    boolean startVowel = "aeiouy".indexOf(firstLetter) >= 0;
+    boolean endVowel = "aeiouy".indexOf(lastLetter) >= 0;
+    article = startVowel && endVowel ? article.substring(0, article.length() - 1) + "\'" : article;
+
+    article = article.equals("de le") ? "du" : article;
+    article = article.equals("de les") ? "des" : article;
+    article = article.equals("à l'") ? "en" : article;
+    article = article.equals("à la") ? "en" : article;
+    article = article.equals("à le") ? "au" : article;
+    article = article.equals("à les") ? "aux" : article;
+
+    lastLetter = article.length() == 0 ? ' ' : article.charAt(article.length() - 1);
+    String withArticle = (lastLetter == '\'') ? article + countryName : article + " " + countryName;
+    return withArticle.trim();
+  }
+
+  private static char findGrammaticalNumber(String code, String countryName) {
+    boolean plural = countryName.endsWith("s");
+    plural = plural || countryName.toLowerCase().contains("îles");
+    plural = List.of("CX", "HN", "LA").contains(code) ? false : plural;
+    char number = plural ? 'P' : 'S';
+    return number;
+  }
+
+  private static char findGrammaticalGender(String code, String countryName) {
+    char number = findGrammaticalNumber(code, countryName);
+    boolean feminine = (number == 'S') ? countryName.endsWith("e") : countryName.endsWith("es");
+    feminine = List.of("BZ", "KH", "MX", "MZ", "ZW").contains(code) ? false : feminine;
+    feminine = List.of("KP", "KR", "MK").contains(code) ? true : feminine;
+    char gender = feminine ? 'F' : 'M';
+    List<String> list;
+    list =
+        List.of(
+            "AD", "AW", "CU", "CW", "DJ", "FJ", "GU", "HT", "JE", //
+            "MC", "MT", "OM", "PM", "PR", "RE", "ST", "SX", "WF", "YT");
+    gender = list.contains(code) ? 'N' : gender;
+    return gender;
   }
 }

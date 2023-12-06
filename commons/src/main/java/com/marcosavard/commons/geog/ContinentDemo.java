@@ -31,10 +31,10 @@ public class ContinentDemo {
     List<String> names = new ArrayList<>();
 
     for (String country : countries) {
-      Locale locale = Country.localeOf(country);
+      Locale locale = Country.localesOf(country).get(0);
       String name = locale.getDisplayCountry(displayLocale);
 
-      if (! names.contains(name)) {
+      if (!names.contains(name)) {
         names.add(name);
       }
     }

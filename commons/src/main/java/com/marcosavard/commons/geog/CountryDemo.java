@@ -12,23 +12,23 @@ import java.util.Locale;
 public class CountryDemo {
 
   private static final Locale[] locales =
-          new Locale[] {
-                  Locale.FRENCH,
-                  Locale.ENGLISH,
-                  Locale.GERMAN,
-                  Locale.ITALIAN,
-                  Language.SPANISH.toLocale(),
-                  Language.PORTUGUESE.toLocale(),
-                  Language.ROMANIAN.toLocale(),
-                  Language.DUTCH.toLocale(),
-                  Language.SWEDISH.toLocale()
-          };
+      new Locale[] {
+        Locale.FRENCH,
+        Locale.ENGLISH,
+        Locale.GERMAN,
+        Locale.ITALIAN,
+        Language.SPANISH.toLocale(),
+        Language.PORTUGUESE.toLocale(),
+        Language.ROMANIAN.toLocale(),
+        Language.DUTCH.toLocale(),
+        Language.SWEDISH.toLocale()
+      };
 
   public static void main(String[] args) {
-   for (Locale locale : locales) {
-     displayCountriesByContinent(locale);
-   }
-   Console.println();
+    for (Locale locale : locales) {
+      displayCountriesByContinent(locale);
+    }
+    Console.println();
 
     // displayCountryInfo(Country.of("US"), french);
     // displayAllCountries(french);
@@ -41,14 +41,21 @@ public class CountryDemo {
 
   private static void displayCountriesByContinent(Locale display) {
     String[] countries = Locale.getISOCountries();
+    String lang = display.getLanguage();
+    Console.println(lang);
 
-    for (String country : countries) {
-      Locale locale = Country.localeOf(country);
+    for (String code : countries) {
+      Country country = Country.of(code);
+      Locale locale = Country.localeOf(code);
+
       if (locale != null) {
-        Continent continent = Continent.ofCountry(country);
-        Console.println("{0} {1} : {2}", country, locale.getDisplayCountry(display), continent);
+        String countryName = country.getDisplayNameWithArticle(display, "à");
+        Continent continent = Continent.ofCountry(code);
+        Console.println("{0} {1} : {2}", country, countryName, continent);
       }
     }
+
+    Console.println();
   }
 
   private static void displayAllCountries(Locale displayLocale) {

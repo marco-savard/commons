@@ -21,9 +21,15 @@ public class CountryGlossaryDemo {
 
   public static void main(String[] args) {
     for (Locale display : locales) {
+      String lang = display.getLanguage();
       CountryGlossary countryGlossary = new CountryGlossary();
       String word = countryGlossary.getNorthWord(display);
-      Console.println(display.getLanguage() + " : " + word);
+      // Console.println(lang + " : " + word);
+
+      String island = countryGlossary.getIslandWord(display);
+      String islands = countryGlossary.getIslandsWord(display);
+      String words = String.join(" ", island, islands);
+      Console.println(lang + " : " + words);
     }
   }
 }
