@@ -9,9 +9,9 @@ import java.util.Locale;
 public class ChemicalElementDemo {
 
   public static void main(String[] args) {
-    listElements();
+    // listElements();
     listElementNames();
-    printPeriodicTable();
+    // printPeriodicTable();
   }
 
   private static void listElementNames() {
