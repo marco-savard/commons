@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.lang.StringUtil;
+import com.marcosavard.commons.text.WordUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;

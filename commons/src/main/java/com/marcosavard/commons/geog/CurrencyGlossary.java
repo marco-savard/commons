@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.ling.Language;
+import com.marcosavard.commons.text.WordUtil;
 import com.marcosavard.commons.util.collection.FrequencyMap;
 
 import java.util.ArrayList;
