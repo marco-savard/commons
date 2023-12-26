@@ -1,4 +1,4 @@
-package com.marcosavard.commons.geog;
+package com.marcosavard.commons.text;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -112,5 +112,9 @@ public class WordUtil {
 
   public static String findLongestWord(List<String> words) {
     return words.stream().max(Comparator.comparingInt(String::length)).orElse("");
+  }
+
+  public static String removeParenthesis(String text) {
+    return text.replaceAll("\\(.*\\)", "");
   }
 }

@@ -2,6 +2,7 @@ package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Language;
+import com.marcosavard.commons.text.WordUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -237,7 +238,7 @@ public class TimeZoneGlossary extends Glossary {
     boolean daylight = false;
     TimeZone timezone1 = TimeZone.getTimeZone("Mexico/BajaSur");
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
-    Locale locale1 = Country.localesOf("MX").get(0);
+    Locale locale1 = CountryOld.localesOf("MX").get(0);
     String mexico = locale1.getDisplayCountry(locale).toLowerCase();
     String[] mexican = CurrencyGlossary.of(locale).getAdjective("MX", locale);
     word = word.replace('-', ' ');
@@ -375,7 +376,7 @@ public class TimeZoneGlossary extends Glossary {
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
     String[] australian = CurrencyGlossary.of(locale).getAdjective("AU", locale);
     australian[0] = australian[0].substring(0, australian[0].length() - 1);
-    Locale locale1 = Country.localesOf("AU").get(0);
+    Locale locale1 = CountryOld.localesOf("AU").get(0);
     String australia = locale1.getDisplayCountry(locale).toLowerCase().substring(0, 8);
     word = word.replace(australian[0], " ");
     word = word.replace(australia, " ");
@@ -416,7 +417,7 @@ public class TimeZoneGlossary extends Glossary {
     boolean daylight = false;
     TimeZone timezone1 = TimeZone.getTimeZone("Australia/Darwin");
     String word = timezone1.getDisplayName(daylight, TimeZone.LONG, locale).toLowerCase();
-    Locale locale1 = Country.localesOf("AU").get(0);
+    Locale locale1 = CountryOld.localesOf("AU").get(0);
     String australia = locale1.getDisplayCountry(locale).toLowerCase().substring(0, 8);
 
     word = word.replace(australia, " ");
