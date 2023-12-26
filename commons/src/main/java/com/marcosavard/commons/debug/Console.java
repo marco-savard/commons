@@ -60,6 +60,11 @@ public class Console {
     getWriter().flush();
   }
 
+  public static void println(int value) {
+    getWriter().println(Integer.toString(value));
+    getWriter().flush();
+  }
+
   public static void println(double value) {
     getWriter().printf("%.4f", value);
     getWriter().println();
