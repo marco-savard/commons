@@ -1,5 +1,7 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.text.WordUtil;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,8 +32,9 @@ public class CountryGlossary extends Glossary {
   }
 
   public String getAmericanWord(Locale display) {
-    String samoa = Country.localesOf("WS").get(0).getDisplayCountry(display).toLowerCase();
-    String americanSamoa = Country.localesOf("AS").get(0).getDisplayCountry(display).toLowerCase();
+    String samoa = CountryOld.localesOf("WS").get(0).getDisplayCountry(display).toLowerCase();
+    String americanSamoa =
+        CountryOld.localesOf("AS").get(0).getDisplayCountry(display).toLowerCase();
     String american = americanSamoa.replace(samoa, "");
     american = WordUtil.removeShortWords(american, 2);
     american = toSingular(american, display);
@@ -41,8 +44,8 @@ public class CountryGlossary extends Glossary {
 
   // british IO  VG
   public String getBritishWord(Locale display) {
-    Locale locale1 = Country.localesOf("VG").get(0);
-    Locale locale2 = Country.localesOf("VI").get(0);
+    Locale locale1 = CountryOld.localesOf("VG").get(0);
+    Locale locale2 = CountryOld.localesOf("VI").get(0);
     String text1 = locale1.getDisplayCountry(display);
     String text2 = locale2.getDisplayCountry(display);
     List<String> common = super.findCommon(text1, text2);
@@ -62,14 +65,14 @@ public class CountryGlossary extends Glossary {
 
   // island CX  NF (IM : no)
   public String getIslandWord(Locale display) {
-    Locale locale1 = Country.localesOf("CX").get(0);
+    Locale locale1 = CountryOld.localesOf("CX").get(0);
     String text1 = locale1.getDisplayCountry(display);
     String island;
 
     if (oneOf(display, "nl")) {
       island = text1.replace("Christmas", "");
     } else {
-      Locale locale2 = Country.localesOf("NF").get(0);
+      Locale locale2 = CountryOld.localesOf("NF").get(0);
       String text2 = locale2.getDisplayCountry(display);
       List<String> words = super.findCommon(text1, text2);
       island = String.join(" ", words).toLowerCase();
@@ -79,7 +82,7 @@ public class CountryGlossary extends Glossary {
   }
 
   public String getIslandsWord(Locale display) {
-    Locale locale1 = Country.localesOf("CK").get(0);
+    Locale locale1 = CountryOld.localesOf("CK").get(0);
     String text1 = locale1.getDisplayCountry(display).toLowerCase();
     String word = text1.replace("cook", "").trim();
     return word;
@@ -94,12 +97,12 @@ public class CountryGlossary extends Glossary {
   }
 
   private String getNorthKorea(Locale locale) {
-    String southSudan = Country.localesOf("KP").get(0).getDisplayCountry(locale).toLowerCase();
+    String southSudan = CountryOld.localesOf("KP").get(0).getDisplayCountry(locale).toLowerCase();
     return southSudan;
   }
 
   private String getSouthSudan(Locale locale) {
-    String southSudan = Country.localesOf("SS").get(0).getDisplayCountry(locale).toLowerCase();
+    String southSudan = CountryOld.localesOf("SS").get(0).getDisplayCountry(locale).toLowerCase();
     return southSudan;
   }
 
