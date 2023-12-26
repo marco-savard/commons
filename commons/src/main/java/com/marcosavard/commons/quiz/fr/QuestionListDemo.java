@@ -8,8 +8,13 @@ import java.util.Locale;
 public class QuestionListDemo {
 
   public static void main(String[] args) {
-    QuestionList questionList = new QuestionList();
     Locale display = Locale.FRENCH;
+    displayQuestions(display);
+  }
+
+  private static void displayQuestions(Locale display) {
+    QuestionList questionList = new QuestionList();
+
     questionList.generateQuestions(display, 15);
     List<Question> questions = questionList.getQuestions();
     int count = 1;

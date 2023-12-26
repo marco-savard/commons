@@ -8,15 +8,17 @@ import com.marcosavard.commons.game.chess.Chess;
 import com.marcosavard.commons.game.sport.Sport;
 import com.marcosavard.commons.geog.CardinalPoint;
 import com.marcosavard.commons.geog.Continent;
-import com.marcosavard.commons.geog.Country;
+import com.marcosavard.commons.geog.CountryOld;
 import com.marcosavard.commons.geog.CurrencyGlossary;
 import com.marcosavard.commons.geog.TimeZoneGlossary;
 import com.marcosavard.commons.geog.ca.CanadianProvince;
 import com.marcosavard.commons.geog.us.State;
 import com.marcosavard.commons.lang.StringUtil;
+import com.marcosavard.commons.ling.Numeral;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 import com.marcosavard.commons.math.arithmetic.RomanNumeral;
 import com.marcosavard.commons.text.Script;
+import com.marcosavard.commons.time.TimeUnitName;
 import com.marcosavard.commons.ui.Affirmation;
 import com.marcosavard.commons.ui.Collection;
 import com.marcosavard.commons.ui.ColorProperty;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class QuestionList {
   private List<Question> questions = new ArrayList<>();
@@ -62,25 +65,25 @@ public class QuestionList {
     // europe
     generateEuropeQuestions(display);
     generateSports(Continent.EUROPE, display);
-    generateGeographyQuestions(Continent.EUROPE, display, pr, 100);
+    generateGeographyQuestions(Continent.EUROPE, display, pr, 1000);
 
     // america
     generateAmericaQuestions(display);
     generateSports(Continent.AMERICA, display);
     generateUsState(display);
     generateCanadianProvinces(display);
-    generateGeographyQuestions(Continent.AMERICA, display, pr, 50);
+    generateGeographyQuestions(Continent.AMERICA, display, pr, 1000);
 
     // asia
     generateAsiaQuestions(display);
     generateSports(Continent.ASIA, display);
-    // generateGeographyQuestions(Continent.ASIA, display, pr);
+    generateGeographyQuestions(Continent.ASIA, display, pr, 1000);
 
     // africa
-    // generateGeographyQuestions(Continent.AFRICA, display, pr);
+    generateGeographyQuestions(Continent.AFRICA, display, pr, 1000);
 
     // oceanie
-    // generateGeographyQuestions(Continent.AUSTRALIA, display, pr);
+    generateGeographyQuestions(Continent.AUSTRALIA, display, pr, 1000);
 
     // science et techno
     generateGuessEnumColorProperty(display);
@@ -88,10 +91,13 @@ public class QuestionList {
     generateGuessEnumFileOperation(display);
     generateGuessEnumWindowOperation(display);
     generatePlanet(display);
+    generateNumerals(display);
+    generateTimeUnit(display);
     generateMathFunctions(display);
     generateGuessMetal(display);
     generateGuessMetalByName(display);
     generateGuessChemicalElement(display);
+    generateFontName(display);
 
     // general
     generateGuessEnumYesNo(display);
@@ -114,9 +120,39 @@ public class QuestionList {
     generateScriptByLanguage(display);
 
     // generateTimeZoneCodeByName(display);
-    // FontDemo
 
     questions = Question.shuffle(questions, pr);
+  }
+
+  private void generateFontName(Locale display) {
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    Font[] allFonts = ge.getAllFonts();
+    List<String> fonts = new ArrayList<>();
+    String hint = "Police de carateres";
+
+    for (Font font : allFonts) {
+      String fontName = font.getFontName(Locale.FRENCH).toLowerCase();
+
+      if (fontName.contains("gras")) {
+        fontName = fontName.replace("microsoft", "");
+        fontName = fontName.replace("linotype", "");
+        fontName = fontName.replace("italique", "");
+        fontName = fontName.replace("roman", "");
+        fontName = fontName.replace("gras", "");
+        fontName = fontName.replace("sans", "");
+        fontName = fontName.replace("new", "");
+        fontName = fontName.replace("ui", "");
+        fontName = fontName.replace("ms", "").trim();
+
+        if (!fonts.contains(fontName)) {
+          fonts.add(fontName);
+        }
+      }
+    }
+
+    for (String font : fonts) {
+      addQuestion(hint, font);
+    }
   }
 
   private void generateGeographyQuestions(
@@ -171,7 +207,7 @@ public class QuestionList {
   private void generateAsiaQuestions(Locale display) {
     generateAsianClothes(display);
     generateJpMeals(display);
-    addQuestion("Region d'Asie", Country.localesOf("MO").get(0).getDisplayName(display));
+    addQuestion("Region d'Asie", CountryOld.localesOf("MO").get(0).getDisplayName(display));
     addQuestion("Region d'Asie", timeZoneGlossary.getIndochina(display));
     addQuestion("Ville de Siberie", timeZoneGlossary.getIrkutsk(display));
     addQuestion("Ville de Siberie", timeZoneGlossary.getKrasnoyarsk(display));
@@ -287,6 +323,29 @@ public class QuestionList {
       String name = locale.getDisplayLanguage(display);
       addQuestion(hint, name);
     }
+  }
+
+  private void generateNumerals(Locale display) {
+    Numeral numeral = new Numeral();
+
+    for (int i = 1; i <= 100; i++) {
+      String num = numeral.of(i);
+      if (!num.contains(" ") && !num.contains("-")) {
+        int square = i * i;
+        String hint = "Racine carree de " + Integer.toString(square);
+        addQuestion(hint, num);
+      }
+    }
+  }
+
+  private void generateTimeUnit(Locale display) {
+    addQuestion("ns", TimeUnitName.of(TimeUnit.NANOSECONDS).getDisplayName(display));
+    addQuestion("1000 ns", TimeUnitName.of(TimeUnit.MICROSECONDS).getDisplayName(display));
+    addQuestion("dans une seconde", TimeUnitName.of(TimeUnit.MILLISECONDS).getDisplayName(display));
+    addQuestion("dans une minute", TimeUnitName.of(TimeUnit.SECONDS).getDisplayName(display));
+    addQuestion("60 secondes", TimeUnitName.of(TimeUnit.MINUTES).getDisplayName(display));
+    addQuestion("60 minutes", TimeUnitName.of(TimeUnit.HOURS).getDisplayName(display));
+    addQuestion("24 heures", TimeUnitName.of(TimeUnit.DAYS).getDisplayName(display));
   }
 
   private void generateMathFunctions(Locale display) {
@@ -751,7 +810,7 @@ public class QuestionList {
 
     for (String code : countries) {
       if (continentCountries.contains(code)) {
-        String countryName = Country.of(code).getDisplayName(display);
+        String countryName = CountryOld.of(code).getDisplayName(display);
         String partitive = findCountryPartitive(code, countryName);
         String hint = MessageFormat.format("Domaine internet {0}{1}", partitive, countryName);
         Question question = new Question(code, hint);
@@ -787,7 +846,7 @@ public class QuestionList {
 
         for (String code : countries) {
           if (continentCountries.contains(code)) {
-            Country country = Country.of(code);
+            CountryOld country = CountryOld.of(code);
 
             if (country != null) {
               String countryName = country.getDisplayName(display);
@@ -829,7 +888,7 @@ public class QuestionList {
 
         for (String code : countries) {
           if (continentCountries.contains(code)) {
-            Country country = Country.of(code);
+            CountryOld country = CountryOld.of(code);
 
             if (country != null) {
               String countryName = country.getDisplayName(display);
@@ -862,7 +921,7 @@ public class QuestionList {
       if (continentCountries.contains(countryCode)) {
         String[] adjectives = currencyGlossary.getAdjective(countryCode, display);
         if (adjectives[0] != null) {
-          String countryName = Country.of(countryCode).getDisplayName(display);
+          String countryName = CountryOld.of(countryCode).getDisplayName(display);
 
           if (countryName.indexOf(' ') == -1) {
             String adjective = StringUtil.capitalize(adjectives[0]);
@@ -889,7 +948,7 @@ public class QuestionList {
       if (continentCountries.contains(countryCode)) {
         String[] adjective = currencyGlossary.getAdjective(countryCode, display);
         if (adjective[0] != null) {
-          String countryName = Country.of(countryCode).getDisplayNameWithArticle(display);
+          String countryName = CountryOld.of(countryCode).getDisplayNameWithArticle(display);
           String article = findCountryArticle(countryCode, countryName.toLowerCase());
 
           if (!StringUtil.isNullOrEmpty(countryName)) {
@@ -920,11 +979,11 @@ public class QuestionList {
             Currency currency = Currency.getInstance(locale);
 
             if (currency != null) {
-              Country country = Country.of(countryCode);
+              CountryOld country = CountryOld.of(countryCode);
 
               if (country != null) {
 
-                String countryName = Country.of(countryCode).getDisplayName(display);
+                String countryName = CountryOld.of(countryCode).getDisplayName(display);
                 countryName = countryName.replace('-', ' ');
 
                 if (countryName.indexOf(' ') == -1) {
@@ -968,7 +1027,7 @@ public class QuestionList {
             Currency currency = Currency.getInstance(locale);
 
             if (currency != null) {
-              Country country = Country.of(countryCode);
+              CountryOld country = CountryOld.of(countryCode);
 
               if (country != null) {
                 String currencyName = currency.getDisplayName(display);
@@ -977,7 +1036,7 @@ public class QuestionList {
                 currencyName = currencyName.replace(adjectives[0], "").trim();
 
                 if (currencyName.indexOf(' ') == -1) {
-                  String countryName = Country.of(countryCode).getDisplayName(display);
+                  String countryName = CountryOld.of(countryCode).getDisplayName(display);
                   String determinant = findDeterminant(countryCode, countryName);
 
                   String hint =

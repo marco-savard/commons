@@ -31,7 +31,7 @@ public class ContinentDemo {
     List<String> names = new ArrayList<>();
 
     for (String country : countries) {
-      Locale locale = Country.localesOf(country).get(0);
+      Locale locale = CountryOld.localesOf(country).get(0);
       String name = locale.getDisplayCountry(displayLocale);
 
       if (!names.contains(name)) {

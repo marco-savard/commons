@@ -1,6 +1,6 @@
 package com.marcosavard.commons.quiz.fr;
 
-import com.marcosavard.commons.geog.Country;
+import com.marcosavard.commons.geog.CountryOld;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
@@ -77,7 +77,7 @@ public class QuestionDemo {
     String[] countries = Locale.getISOCountries();
 
     for (String code : countries) {
-      String countryName = Country.of(code).getDisplayName(display);
+      String countryName = CountryOld.of(code).getDisplayName(display);
       String partitive = findCountryPartitive(code, countryName);
       String hint = MessageFormat.format("Domaine internet {0}{1}", partitive, countryName);
       Question q = new Question(code, hint);

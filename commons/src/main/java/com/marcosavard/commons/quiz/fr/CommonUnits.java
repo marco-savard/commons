@@ -1,0 +1,31 @@
+package com.marcosavard.commons.quiz.fr;
+
+public enum CommonUnits {
+  mg,
+  cg,
+  g,
+  kg,
+  ml,
+  cl,
+  l,
+  hl,
+  kl,
+  mm,
+  cm,
+  m,
+  km,
+  mN,
+  mJ,
+  J,
+  kJ,
+  mW,
+  W,
+  kW,
+  mV,
+  V,
+  kV,
+  mA,
+  A,
+  Pa,
+  kPa
+}
