@@ -1,9 +1,13 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.lang.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum Country {
@@ -501,6 +505,45 @@ public enum Country {
     return CountryName.of(code, name, display);
   }
 
+  public String getDisplayNameWithArticle(Locale display, String preposition) {
+    String countryName = getDisplayName(display);
+    char number = getCountryName(display).getGrammaticalNumber();
+    char gender = getCountryName(display).getGrammaticalGender();
+
+    Article articles = Article.of(display);
+    String article = articles.getArticle(number, gender, preposition);
+    String lower = StringUtil.stripAccents(countryName.toLowerCase());
+    char firstLetter = lower.charAt(0);
+    char lastLetter = article.length() == 0 ? ' ' : article.charAt(article.length() - 1);
+    boolean startVowel = "aeiou".indexOf(firstLetter) >= 0;
+    boolean endVowel = "aeiou".indexOf(lastLetter) >= 0;
+    boolean vowels = startVowel && endVowel;
+    article = vowels ? article.substring(0, article.length() - 1) + "\'" : article;
+
+    article = article.equals("de le") ? "du" : article;
+    article = article.equals("de les") ? "des" : article;
+    article = article.equals("à l'") ? "en" : article;
+    article = article.equals("à la") ? "en" : article;
+    article = article.equals("à le") ? "au" : article;
+    article = article.equals("à les") ? "aux" : article;
+
+    lastLetter = article.length() == 0 ? ' ' : article.charAt(article.length() - 1);
+    String withArticle = (lastLetter == '\'') ? article + countryName : article + " " + countryName;
+    return withArticle.trim();
+  }
+
+  public List<Locale> getLanguageLocales() {
+    List<String> languages = getLanguages();
+    List<Locale> locales = new ArrayList<>();
+
+    for (String language : languages) {
+      Locale locale = Locale.forLanguageTag(language);
+      locales.add(locale);
+    }
+
+    return locales;
+  }
+
   public static class CountryName {
     private String code, countryName;
 
@@ -520,6 +563,61 @@ public enum Country {
       plural = List.of("CX", "HN", "LA").contains(code) ? false : plural;
       char number = plural ? 'P' : 'S';
       return number;
+    }
+
+    public char getGrammaticalGender() {
+      char number = getGrammaticalNumber();
+      boolean feminine = (number == 'S') ? countryName.endsWith("e") : countryName.endsWith("es");
+      feminine = List.of("BZ", "KH", "MX", "MZ", "ZW").contains(code) ? false : feminine;
+      feminine = List.of("KP", "KR", "MK").contains(code) ? true : feminine;
+      char gender = feminine ? 'F' : 'M';
+      List<String> list;
+      list =
+          List.of(
+              "AD", "AW", "CU", "CW", "DJ", "FJ", "GU", "HT", "JE", //
+              "MC", "MT", "OM", "PM", "PR", "RE", "ST", "SX", "WF", "YT");
+      gender = list.contains(code) ? 'N' : gender;
+      return gender;
+    }
+  }
+
+  private abstract static class Article {
+    private static Map<String, Article> articles = null;
+
+    public static Article of(Locale locale) {
+      String lang = locale.getLanguage();
+      Map<String, Article> articles = getArticles();
+      Article article = articles.containsKey(lang) ? articles.get(lang) : articles.get("en");
+      return article;
+    }
+
+    private static Map<String, Article> getArticles() {
+      if (articles == null) {
+        articles = new HashMap<>();
+        articles.put("fr", new FrArticle());
+        articles.put("en", new EnArticle());
+      }
+
+      return articles;
+    }
+
+    public abstract String getArticle(char number, char gender, String preposition);
+  }
+
+  private static class FrArticle extends Article {
+    public String getArticle(char number, char gender, String preposition) {
+      String article = (gender == 'F') ? "la" : (gender == 'M') ? "le" : "";
+      article = (number == 'P') ? "les" : article;
+      article = article.isEmpty() ? preposition : preposition + " " + article;
+      return article;
+    }
+  }
+
+  private static class EnArticle extends Article {
+    public String getArticle(char number, char gender, String preposition) {
+      String article = "";
+      article = article.isEmpty() ? preposition : preposition + " " + article;
+      return article;
     }
   }
 }

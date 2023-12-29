@@ -22,6 +22,9 @@ public class DistanceDemo {
       ys[i] = y;
     }
 
+    DistanceStrategy strategy1 = new CustomDistanceStrategy();
+    double[] closest = strategy1.findClosest(xs, ys);
+
     Console.println("starting c1");
     double fx = 0, fy = 0;
     double closestDistance = Double.MAX_VALUE;
@@ -75,4 +78,28 @@ public class DistanceDemo {
 
     return sqrtroot;
   }
+
+  private abstract static class DistanceStrategy {
+
+    public double[] findClosest(double[] xs, double[] ys) {
+      double fx = 0, fy = 0;
+      double closestDistance = Double.MAX_VALUE;
+      StopWatch sw1 = new StopWatch();
+      sw1.start();
+      for (int i = 0; i < xs.length; i++) {
+        double x = xs[i];
+        double y = ys[i];
+        double x2 = x * x;
+        double y2 = y * y;
+        double distance = squareRoot(x2 + y2);
+        fx = (distance < closestDistance) ? x : fx;
+        fy = (distance < closestDistance) ? y : fy;
+        closestDistance = (distance < closestDistance) ? distance : closestDistance;
+      }
+
+      return new double[] {fx, fy};
+    }
+  }
+
+  private static class CustomDistanceStrategy extends DistanceStrategy {}
 }
