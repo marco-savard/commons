@@ -9,12 +9,10 @@ public class DateUtilDemo {
   private static final LocalDate GIVEN_DATE = LocalDate.of(2019, 1, 15);
 
   public static void main(String[] args) {
-    //conversions
-    convertToLocalDate(DateUtil.toDate(GIVEN_DATE));
-
-
-    printLeapYears(1880, 1920);
-    printMonth(2019, Month.JANUARY);
+    // conversions
+    // convertToLocalDate(DateUtil.toDate(GIVEN_DATE));
+    // printLeapYears(1880, 1920);
+    // printMonth(2019, Month.JANUARY);
     listDatesInMonth(2019, Month.JANUARY);
   }
 
@@ -55,7 +53,6 @@ public class DateUtilDemo {
     System.out.println();
   }
 
-
   private static void convertToLocalDate(Date original) {
     LocalDate localDate = DateUtil.toLocalDate(original);
     Date converted = DateUtil.toDate(localDate);
@@ -88,5 +85,4 @@ public class DateUtilDemo {
   private static String padLeft(String s, int n) {
     return String.format("%" + n + "s", s);
   }
-
 }

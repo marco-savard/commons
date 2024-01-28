@@ -326,10 +326,10 @@ public class QuestionList {
   }
 
   private void generateNumerals(Locale display) {
-    Numeral numeral = new Numeral();
+    Numeral numeral = Numeral.of(Locale.FRENCH);
 
     for (int i = 1; i <= 100; i++) {
-      String num = numeral.of(i);
+      String num = numeral.getDisplayName(i);
       if (!num.contains(" ") && !num.contains("-")) {
         int square = i * i;
         String hint = "Racine carree de " + Integer.toString(square);
