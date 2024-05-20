@@ -1,6 +1,7 @@
 package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.lang.StringUtil;
+import com.marcosavard.commons.ling.Gender;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -544,8 +545,36 @@ public enum Country {
     return locales;
   }
 
+  public Gender getGender(Locale display) {
+    Gender gender = Gender.NEUTRAL;
+
+    if (Locale.FRENCH.getLanguage().equals(display.getLanguage())) {
+      // gender = getFrGender(display);
+    }
+    return gender;
+  }
+
+  private static final List<String> ISLANDS =
+      List.of( //
+          "AG", "AI", "AW", "BL", "CU", "CW", "CY", //
+          "FJ", "GD", "GG", "GU", "JE", "LC", "MF", "MT", "NR", "NU", "OM", "PM", "PR", "PW", //
+          "RE", "SG", "SH", "SJ", "ST", "SX", "TT", "TW", "VC", "VU", "WF", "YT");
+
+  private static final List<String> LOCALITIES = List.of("AD", "DJ", "GI", "MC", "OM", "PW", "SM");
+
+  public boolean isIsland() {
+    boolean island = ISLANDS.contains(this.code);
+    return island;
+  }
+
+  public boolean isLocality() {
+    boolean locality = LOCALITIES.contains(this.code);
+    return locality;
+  }
+
   public static class CountryName {
     private String code, countryName;
+    private Locale display;
 
     public static CountryName of(String code, String name, Locale display) {
       CountryName countryName = new CountryName(code, name, display);
@@ -555,6 +584,7 @@ public enum Country {
     private CountryName(String code, String countryName, Locale display) {
       this.code = code;
       this.countryName = countryName;
+      this.display = display;
     }
 
     public char getGrammaticalNumber() {
@@ -566,6 +596,18 @@ public enum Country {
     }
 
     public char getGrammaticalGender() {
+      char gender = 'N';
+
+      if (display.getLanguage().equals("fr")) {
+        gender = countryName.endsWith("e") ? 'F' : 'M';
+        gender = List.of("BZ", "CG", "KH", "MX", "MZ").contains(code) ? 'M' : gender;
+        gender = List.of("KP", "KR", "MK").contains(code) ? 'F' : gender;
+      }
+
+      return gender;
+    }
+
+    public char getGrammaticalGenderOld() {
       char number = getGrammaticalNumber();
       boolean feminine = (number == 'S') ? countryName.endsWith("e") : countryName.endsWith("es");
       feminine = List.of("BZ", "KH", "MX", "MZ", "ZW").contains(code) ? false : feminine;

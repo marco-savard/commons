@@ -1,5 +1,8 @@
 package com.marcosavard.commons.time;
 
+import com.marcosavard.commons.astro.AstroMath;
+import com.marcosavard.commons.astro.time.JulianDay;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -7,9 +10,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import com.marcosavard.commons.astro.AstroMath;
-import com.marcosavard.commons.astro.time.JulianDay;
 
 public class Season {
   private static final double JULIAN_ERA = 1_721_141; // JulianDate.of(0, 3, 24);
@@ -20,7 +20,10 @@ public class Season {
   private ZonedDateTime seasonStart;
 
   public enum SeasonOf {
-    SPRING, SUMMER, AUTOMN, WINTER
+    SPRING,
+    SUMMER,
+    AUTOMN,
+    WINTER
   }
 
   public static Season of(SeasonOf seasonOf, int year) {
@@ -53,7 +56,8 @@ public class Season {
     ZonedDateTime startTime = ZonedDateTime.of(localDate, localTime, UTC);
     Season season = new Season(seasonOf, startTime);
     return season;
-  };
+  }
+  ;
 
   private Season(SeasonOf seasonOf, ZonedDateTime seasonStart) {
     this.seasonOf = seasonOf;
@@ -71,7 +75,4 @@ public class Season {
     String msg = MessageFormat.format("{0} {1} (GMT)", seasonOf, formatted);
     return msg;
   }
-
-
-
 }

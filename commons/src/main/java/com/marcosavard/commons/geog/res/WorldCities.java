@@ -1,8 +1,9 @@
 package com.marcosavard.commons.geog.res;
 
-import java.nio.charset.StandardCharsets;
 import com.marcosavard.commons.geog.res.WorldCities.WorldCity;
 import com.marcosavard.commons.io.csv.CsvRows;
+
+import java.nio.charset.StandardCharsets;
 
 public class WorldCities extends CsvRows<WorldCity> {
 
@@ -17,10 +18,7 @@ public class WorldCities extends CsvRows<WorldCity> {
     public String timezoneId;
     public String country;
     public String state;
-    public String latitude;
-    public String longitude;
+    public double latitude;
+    public double longitude;
   }
-
-
-
 }

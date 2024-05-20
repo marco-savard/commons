@@ -54,10 +54,11 @@ public abstract class CsvRows<T> {
 
     try {
       Reader r = new InputStreamReader(input, charset.name());
-      CsvReader cr = CsvReader.of(r) //
-          .withHeader(nbHeaders, delimiter) //
-          .withSeparator(delimiter) //
-          .withCommentCharacter(commentCharacter);
+      CsvReader cr =
+          CsvReader.of(r) //
+              .withHeader(nbHeaders, delimiter) //
+              .withSeparator(delimiter) //
+              .withCommentCharacter(commentCharacter);
       columns = Arrays.asList(cr.readHeaderColumns());
       lines = cr.readAll();
     } catch (UnsupportedEncodingException e) {
@@ -97,18 +98,19 @@ public abstract class CsvRows<T> {
     return row;
   }
 
-
   private void setValues(Class claz, T row, String[] line) {
     Field[] fields = claz.getDeclaredFields();
+
+    if (line.length < fields.length) {
+      throw new RuntimeException("" + row);
+    }
 
     for (int i = 0; i < fields.length; i++) {
       Field field = fields[i];
 
-
       try {
         Class type = field.getType();
-        // type.getMethod(name, parameterTypes)
-        Object value = line[i];
+        Object value = readValue(line[i], type);
         field.set(row, value);
 
       } catch (IllegalArgumentException | IllegalAccessException e) {
@@ -117,8 +119,21 @@ public abstract class CsvRows<T> {
     }
   }
 
+  private Object readValue(String raw, Class type) {
+    Object value;
 
-  public static abstract class CvsRow {
+    if (double.class.equals(type)) {
+      value = Double.valueOf(raw);
+    } else if (int.class.equals(type)) {
+      value = Integer.valueOf(raw);
+    } else {
+      value = raw;
+    }
+
+    return value;
+  }
+
+  public abstract static class CvsRow {
 
     @Override
     public String toString() {
@@ -133,13 +148,10 @@ public abstract class CsvRows<T> {
           str += (i < nb - 1) ? ";" : "";
         }
 
-
       } catch (IllegalArgumentException | IllegalAccessException e) {
         str = "?";
       }
       return str;
     }
-
   }
-
 }

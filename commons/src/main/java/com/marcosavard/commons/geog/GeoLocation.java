@@ -1,21 +1,21 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.math.Maths;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Locale;
-import com.marcosavard.commons.math.Maths;
 
 /**
  * A class that represents geographical coordinates (latitude and longitude). It provides methods to
  * display coordinates in decimal or degrees/minutes/seconds formats. It computes distance to
  * another geographical coordinate. This class is immutable (values are set at construction, and
  * cannot be modified during the lifetime of an instance.
- * 
- * Ref: https://www.movable-type.co.uk/scripts/latlong.html
- * http://www.edwilliams.org/avform.htm#Intermediate
- * 
- * @author Marco
  *
+ * <p>Ref: https://www.movable-type.co.uk/scripts/latlong.html
+ * http://www.edwilliams.org/avform.htm#Intermediate
+ *
+ * @author Marco
  */
 @SuppressWarnings("serial")
 public class GeoLocation implements Serializable {
@@ -23,6 +23,11 @@ public class GeoLocation implements Serializable {
   public static final GeoLocation SOUTH_POLE = GeoLocation.of(-90, 0);
   public static final GeoLocation NULL_ISLAND = GeoLocation.of(0, 0);
   public static final GeoLocation GREENWICH = GeoLocation.of(51.48, 0);
+  public static final String[] ORIENTATION =
+      new String[] {
+        "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW",
+        "NNW", "N"
+      };
 
   private static final char DEGREE = '\u00B0';
   private static final char MINUTE = '\u2032';
@@ -30,16 +35,28 @@ public class GeoLocation implements Serializable {
   private static final double EARTH_RADIUS = 6371.01; // Earth's mean radius in km
   private static final double EPSILON = 0.01;
 
+  public static int bearingToOrientation(double bearing) {
+    return (int) Math.round(bearing / 22.5);
+  }
+
+  public static String bearingToOrientationText(double bearing) {
+    return ORIENTATION[bearingToOrientation(bearing)];
+  }
+
   public enum Format {
-    DECIMAL, DEG_MIN_SEC, DEG_MIN_SEC_HTML
+    DECIMAL,
+    DEG_MIN_SEC,
+    DEG_MIN_SEC_HTML
   };
 
   public enum LatitudeHemisphere {
-    NORTH, SOUTH
+    NORTH,
+    SOUTH
   };
 
   public enum LongitudeHemisphere {
-    EAST, WEST
+    EAST,
+    WEST
   };
 
   private final Latitude latitude;
@@ -50,7 +67,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Get coordinate by decimal latitude and longitude
-   * 
+   *
    * @param latitude
    * @param longitude
    */
@@ -58,8 +75,8 @@ public class GeoLocation implements Serializable {
     return GeoLocation.of(Latitude.of(latitude), Longitude.of(longitude));
   }
 
-  public static GeoLocation of(int deg1, int min1, LatitudeHemisphere lat, int deg2, int min2,
-      LongitudeHemisphere lon) {
+  public static GeoLocation of(
+      int deg1, int min1, LatitudeHemisphere lat, int deg2, int min2, LongitudeHemisphere lon) {
     Latitude latitude = Latitude.of(deg1, min1, lat);
     Longitude longitude = Longitude.of(deg2, min2, lon);
     return of(latitude, longitude);
@@ -95,7 +112,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Return textual display of a coordinate, according a given format
-   * 
+   *
    * @param format one of DECIMAL, DEG_MIN_SEC and DEG_MIN_SEC_HTML
    * @return textual display of a coordinate
    */
@@ -145,8 +162,9 @@ public class GeoLocation implements Serializable {
       GeoLocation otherCoordinate = (GeoLocation) other;
       equal =
           Maths.equal(otherCoordinate.getLatitude().getValue(), getLatitude().getValue(), EPSILON);
-      equal &= Maths.equal(otherCoordinate.getLongitude().getValue(), getLongitude().getValue(),
-          EPSILON);
+      equal &=
+          Maths.equal(
+              otherCoordinate.getLongitude().getValue(), getLongitude().getValue(), EPSILON);
     }
     return equal;
   }
@@ -159,7 +177,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Compute the distance, in kilometers, between that location on the Earth.
-   * 
+   *
    * @param location to which distance is computed
    * @return the distance in kilometers
    */
@@ -169,7 +187,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Compute the distance, in kilometers, between that location.
-   * 
+   *
    * @param location to which distance is computed
    * @param radius of the planet (Earth's radius by default)
    * @return the distance in kilometers
@@ -186,7 +204,7 @@ public class GeoLocation implements Serializable {
 
   /**
    * Compute the angular distance, in radians, between that location.
-   * 
+   *
    * @param location to which distance is computed
    * @return the distance in radians
    */
@@ -237,8 +255,10 @@ public class GeoLocation implements Serializable {
     double x = Math.cos(lat2) * Math.cos(lon2 - lon1);
     double by = Math.cos(lat2) * Math.sin(lon2 - lon1);
 
-    double lat = Math.atan2(Math.sin(lat1) + Math.sin(lat2), //
-        Math.sqrt((Math.cos(lat1) + x) * (Math.cos(lat1) + x) + by * by));
+    double lat =
+        Math.atan2(
+            Math.sin(lat1) + Math.sin(lat2), //
+            Math.sqrt((Math.cos(lat1) + x) * (Math.cos(lat1) + x) + by * by));
     double lon = lon1 + Math.atan2(by, Math.cos(lat1) + x);
 
     double latitude = Math.toDegrees(lat);
@@ -253,8 +273,14 @@ public class GeoLocation implements Serializable {
     double lat2 = Math.toRadians(destination.getLatitude().getValue());
     double lon2 = Math.toRadians(destination.getLongitude().getValue());
 
-    double d = 2 * Math.asin(Math.sqrt(Math.pow((Math.sin((lat1 - lat2) / 2)), 2)
-        + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
+    double d =
+        2
+            * Math.asin(
+                Math.sqrt(
+                    Math.pow((Math.sin((lat1 - lat2) / 2)), 2)
+                        + Math.cos(lat1)
+                            * Math.cos(lat2)
+                            * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
 
     double a = Math.sin((1 - f) * d) / Math.sin(d);
     double b = Math.sin(f * d) / Math.sin(d);
@@ -307,7 +333,6 @@ public class GeoLocation implements Serializable {
     return str;
   }
 
-
   private double toRadians(double degs) {
     double rads = degs * Math.PI / 180.0;
     return rads;
@@ -324,8 +349,8 @@ public class GeoLocation implements Serializable {
       return of(degree, minute, 0.0, hemisphere);
     }
 
-    public static Latitude of(int degree, int minute, double second,
-        LatitudeHemisphere hemisphere) {
+    public static Latitude of(
+        int degree, int minute, double second, LatitudeHemisphere hemisphere) {
       double absDegrees = degree + (minute / 60.0) + (second / 3600.0);
       double sign = hemisphere.equals(LatitudeHemisphere.NORTH) ? 1 : -1;
       return Latitude.of(absDegrees * sign);
@@ -340,8 +365,9 @@ public class GeoLocation implements Serializable {
       double degree = Math.floor(value);
       double minute = Math.floor((value - degree) * 60);
       double second = Math.round(((value - degree) * 60 - minute) * 60);
-      String str = MessageFormat.format("{0}{1} {2}{3} {4}{5}", degree, DEGREE, minute, MINUTE,
-          second, SECOND);
+      String str =
+          MessageFormat.format(
+              "{0}{1} {2}{3} {4}{5}", degree, DEGREE, minute, MINUTE, second, SECOND);
       return str;
     }
 
@@ -361,8 +387,8 @@ public class GeoLocation implements Serializable {
       return Longitude.of(degree, minute, 0, hemisphere);
     }
 
-    public static Longitude of(int degree, int minute, double second,
-        LongitudeHemisphere hemisphere) {
+    public static Longitude of(
+        int degree, int minute, double second, LongitudeHemisphere hemisphere) {
       double absDegrees = degree + (minute / 60.0) + (second / 3600.0);
       double sign = hemisphere.equals(LongitudeHemisphere.EAST) ? 1 : -1;
       return Longitude.of(absDegrees * sign);
@@ -378,8 +404,9 @@ public class GeoLocation implements Serializable {
       double degree = Math.floor(value);
       double minute = Math.floor((value - degree) * 60);
       double second = Math.round(((value - degree) * 60 - minute) * 60);
-      String str = MessageFormat.format("{0}{1} {2}{3} {4}{5}", degree, DEGREE, minute, MINUTE,
-          second, SECOND);
+      String str =
+          MessageFormat.format(
+              "{0}{1} {2}{3} {4}{5}", degree, DEGREE, minute, MINUTE, second, SECOND);
       return str;
     }
 
@@ -387,7 +414,4 @@ public class GeoLocation implements Serializable {
       return this.value;
     }
   }
-
-
-
 }
