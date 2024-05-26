@@ -8,15 +8,18 @@ import com.marcosavard.commons.game.chess.Chess;
 import com.marcosavard.commons.game.sport.Sport;
 import com.marcosavard.commons.geog.CardinalPoint;
 import com.marcosavard.commons.geog.Continent;
+import com.marcosavard.commons.geog.Country;
 import com.marcosavard.commons.geog.CountryOld;
 import com.marcosavard.commons.geog.CurrencyGlossary;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.geog.TimeZoneGlossary;
 import com.marcosavard.commons.geog.ca.CanadianProvince;
 import com.marcosavard.commons.geog.us.State;
+import com.marcosavard.commons.geog.world.WorldCityResource;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Numeral;
+import com.marcosavard.commons.ling.RomanNumeral;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
-import com.marcosavard.commons.math.arithmetic.RomanNumeral;
 import com.marcosavard.commons.text.Script;
 import com.marcosavard.commons.time.TimeUnitName;
 import com.marcosavard.commons.ui.Affirmation;
@@ -26,7 +29,8 @@ import com.marcosavard.commons.ui.Direction;
 import com.marcosavard.commons.ui.FileAttribute;
 import com.marcosavard.commons.ui.FileOperation;
 import com.marcosavard.commons.ui.WindowOperation;
-import com.marcosavard.commons.ui.color.ColorName;
+import com.marcosavard.commons.ui.color.WebColor;
+import com.marcosavard.commons.ui.color.WebSafeColor;
 
 import java.awt.*;
 import java.lang.reflect.Method;
@@ -48,20 +52,20 @@ public class QuestionList {
   private TimeZoneGlossary timeZoneGlossary = new TimeZoneGlossary();
 
   public void generateQuestions(Locale display, int seed) {
+    PseudoRandom pr = new PseudoRandom(seed);
 
     // antiquite
-    PseudoRandom pr = new PseudoRandom(seed);
-    generateGreekLetter(display);
-    generateGreekGods(display);
-    generateRomanGod(display);
-    generateAncientScriptName(display);
-    generateRomanEmpireCountries(display);
-    generateRomanceLanguages(display);
-    generateZodiacSigns(display);
-    generateChessPieces(display);
-    generatePhoneticLetter(display);
-    generateGuessRomanNumerals(display);
-
+    // generateGreekLetter(display);
+    // generateGreekGods(display);
+    // generateRomanGod(display);
+    // generateAncientScriptName(display);
+    // generateRomanEmpireCountries(display);
+    // generateRomanceLanguages(display);
+    // generateZodiacSigns(display);
+    // generateChessPieces(display);
+    // generatePhoneticLetter(display);
+    // generateGuessRomanNumerals(display);
+    /*
     // europe
     generateEuropeQuestions(display);
     generateSports(Continent.EUROPE, display);
@@ -85,43 +89,80 @@ public class QuestionList {
     // oceanie
     generateGeographyQuestions(Continent.AUSTRALIA, display, pr, 1000);
 
-    // science et techno
-    generateGuessEnumColorProperty(display);
-    generateGuessEnumFileAttribute(display);
-    generateGuessEnumFileOperation(display);
-    generateGuessEnumWindowOperation(display);
-    generatePlanet(display);
+    // science
+    */
+    generateMathFunctions(display);
     generateNumerals(display);
     generateTimeUnit(display);
-    generateMathFunctions(display);
+    generateGuessColorBlend(display);
+    generateGuessEnumColorProperty(display);
     generateGuessMetal(display);
     generateGuessMetalByName(display);
     generateGuessChemicalElement(display);
-    generateFontName(display);
+    generatePlanet(display);
 
-    // general
-    generateGuessEnumYesNo(display);
-    generateGuessColor(display);
-    generateGuessEnumDirection(display);
-    generateGuessEnumCollection(display);
+    /*
+        // techno
 
-    generateGuessCardinalPointAbbreviation(display);
-    generateGuessCardinalPoint(display);
-    generateGuessWeekDay(display);
-    generateGuessWeekDayAbbreviation(display);
-    generateGuessDateAbbreviation(display);
-    generateGuessMonth(display);
-    generateGuessMonthAbbreviation(display);
+        generateGuessEnumFileAttribute(display);
+        generateGuessEnumFileOperation(display);
+        generateGuessEnumWindowOperation(display);
+        generateFontName(display);
 
-    generateSports(display);
-    generateRailTransportation(display);
-    generateRoadTransportation(display);
-    generateWaterTransportation(display);
-    generateScriptByLanguage(display);
+        // general
+        generateWorldCities(display);
+        generateGuessEnumYesNo(display);
+        generateGuessEnumDirection(display);
+        generateGuessEnumCollection(display);
 
+        generateGuessCardinalPointAbbreviation(display);
+        generateGuessCardinalPoint(display);
+        generateGuessWeekDay(display);
+        generateGuessWeekDayAbbreviation(display);
+        generateGuessDateAbbreviation(display);
+        generateGuessMonth(display);
+        generateGuessMonthAbbreviation(display);
+
+        generateSports(display);
+        generateRailTransportation(display);
+        generateRoadTransportation(display);
+        generateWaterTransportation(display);
+        generateScriptByLanguage(display);
+    */
     // generateTimeZoneCodeByName(display);
 
     questions = Question.shuffle(questions, pr);
+  }
+
+  private void generateGuessColorBlend(Locale display) {
+    List<Color> namedColors = WebColor.getNamedColors();
+    String pat = "Couleur obtenue en melangent {0} et {1}";
+
+    for (int i = 0; i < namedColors.size(); i++) {
+      for (int j = 0; j < namedColors.size(); j++) {
+        Color c1 = namedColors.get(i);
+        Color c2 = namedColors.get(j);
+        WebSafeColor w1 = WebSafeColor.valueOf(WebColor.toString(c1).toUpperCase());
+        WebSafeColor w2 = WebSafeColor.valueOf(WebColor.toString(c2).toUpperCase());
+
+        if (w1 != null && w2 != null) {
+          Color blend = w1.getColor().blendWith(w2.getColor());
+          WebSafeColor blendColor = WebSafeColor.findClosestColor(blend);
+          boolean valid =
+              (c1.getRGB() != blendColor.getRGB()) && (c2.getRGB() != blendColor.getRGB());
+
+          if (valid) {
+            String n1 = w1.getDisplayName(display);
+            String n2 = w2.getDisplayName(display);
+            n1 = StringUtil.startWithVowel(n1) ? "de l'" + n1 : "du " + n1;
+            n2 = StringUtil.startWithVowel(n2) ? "de l'" + n2 : "du " + n2;
+            String hint = MessageFormat.format(pat, n1, n2);
+            String answer = blendColor.getDisplayName(display);
+            addQuestion(hint, answer);
+          }
+        }
+      }
+    }
   }
 
   private void generateFontName(Locale display) {
@@ -293,10 +334,25 @@ public class QuestionList {
   }
 
   private void generateZodiacSigns(Locale display) {
-    String hint = "Signe du Zodiac";
+    String patt = "Signe du zodiac d''une personne née le {0}";
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", display);
+
+    for (Month month : Month.values()) {
+      int len = month.length(false);
+      for (int day = 1; day <= len; day++) {
+        LocalDate date = LocalDate.of(2000, month, day);
+        String formatted = formatter.format(date);
+        String hint = MessageFormat.format(patt, formatted);
+        ZodiacSign sign = ZodiacSign.of(month, day);
+
+        if (sign != null) {
+          addQuestion(hint, sign.getDisplayName(display));
+        }
+      }
+    }
 
     for (ZodiacSign sign : ZodiacSign.values()) {
-      addQuestion(hint, sign.getDisplayName(display));
+      // addQuestion(hint, sign.getDisplayName(display));
     }
   }
 
@@ -652,19 +708,6 @@ public class QuestionList {
     questions.add(q);
   }
 
-  private void generateGuessColor(Locale display) {
-    List<Color> colors = ColorName.getNamedColors();
-
-    for (Color color : colors) {
-      String name = ColorName.of(color).toString(display).toLowerCase();
-
-      if (name.indexOf(' ') == -1) {
-        Question q = new Question(name, "Couleur");
-        questions.add(q);
-      }
-    }
-  }
-
   private void generateGuessMetal(Locale display) {
     List<String> codes = List.of("XAU", "XAG", "XPD", "XPT");
 
@@ -719,9 +762,11 @@ public class QuestionList {
   }
 
   private void generateGuessRomanNumerals(Locale display) {
+    Numeral numeral = new RomanNumeral();
+
     for (int i = 1; i <= 100; i++) {
       String arabic = Integer.toString(i);
-      String roman = RomanNumeral.of(i).toString();
+      String roman = numeral.getDisplayName(i);
 
       if (roman.length() >= 2) {
         String hint = MessageFormat.format("{0} en chiffre romain", arabic);
@@ -753,6 +798,121 @@ public class QuestionList {
         questions.add(q);
       }
     }
+  }
+
+  private void generateWorldCities(Locale display) {
+    WorldCityResource ressource = new WorldCityResource();
+    List<WorldCityResource.Data> allCities = ressource.getRows();
+
+    for (WorldCityResource.Data city : allCities) {
+      generateWorldCity(display, allCities, city);
+    }
+  }
+
+  private void generateWorldCity(
+      Locale display, List<WorldCityResource.Data> allCities, WorldCityResource.Data fromCity) {
+    for (int i = 0; i < 16; i++) {
+      List<WorldCityResource.Data> cities = findCitiesByDirection(allCities, fromCity, i);
+      WorldCityResource.Data city = findClosestCity(cities, fromCity);
+
+      GeoLocation fromPos = GeoLocation.of(fromCity.latitude, fromCity.longitude);
+      GeoLocation cityPos = city == null ? null : GeoLocation.of(city.latitude, city.longitude);
+      int dist = (int) ((city == null) ? 0 : fromPos.findDistanceFrom(cityPos));
+      int bearing = (int) ((city == null) ? 0 : fromPos.findInitialBearingTo(cityPos));
+
+      if ((city != null) && (dist < 1000)) {
+        generateQuestion(display, dist, bearing, fromCity, city);
+      }
+    }
+  }
+
+  private void generateQuestion(
+      Locale display,
+      int dist,
+      int bearing,
+      WorldCityResource.Data fromCity,
+      WorldCityResource.Data city) {
+    String dir = GeoLocation.bearingToOrientationText(bearing);
+    String patt = "Ville {0} à {1} km au {2} de {3}";
+    String fromCountry = fromCountry(display, city.country);
+    String d = Integer.toString(dist);
+    String hint = MessageFormat.format(patt, fromCountry, d, dir, fromCity.frName);
+    Question q = new Question(city.frName, hint);
+    questions.add(q);
+  }
+
+  private String fromCountry(Locale display, String countryCode) {
+    Country country = Country.of(countryCode);
+    boolean island = country.isIsland();
+    boolean locality = country.isLocality();
+    String countryName = country.getDisplayName(display);
+    char gender = country.getCountryName(display).getGrammaticalGender();
+    char number = country.getCountryName(display).getGrammaticalNumber();
+
+    boolean feminine = (gender == 'F');
+    boolean plural = (number == 'P');
+    boolean startVowel = "aeéiîou".indexOf(Character.toLowerCase(countryName.charAt(0))) != -1;
+    String mot = "de";
+
+    if (island || locality) {
+      mot = startVowel ? "d'" : "de ";
+    } else if (plural) {
+      mot = "des ";
+    } else if (startVowel) {
+      mot = "d'";
+    } else {
+      mot = feminine ? "de " : "du ";
+    }
+
+    return mot + countryName;
+  }
+
+  private static WorldCityResource.Data findClosestCity(
+      List<WorldCityResource.Data> cities, WorldCityResource.Data fromCity) {
+    GeoLocation pos = GeoLocation.of(fromCity.latitude, fromCity.longitude);
+    double closestDistance = Double.MAX_VALUE;
+    WorldCityResource.Data closestCity = null;
+
+    for (WorldCityResource.Data c : cities) {
+      double dist = pos.findDistanceFrom(GeoLocation.of(c.latitude, c.longitude));
+      if (dist > 1.0 && dist < closestDistance) {
+        closestDistance = dist;
+        closestCity = c;
+      }
+    }
+
+    return closestCity;
+  }
+
+  private static List<WorldCityResource.Data> findCitiesByDirection(
+      List<WorldCityResource.Data> cities, WorldCityResource.Data fromCity, int dir) {
+    List<WorldCityResource.Data> foundCities;
+
+    do {
+      foundCities = findCitiesByDirection2(cities, fromCity, dir);
+      dir = ++dir % 16;
+    } while (foundCities.isEmpty());
+
+    return foundCities;
+  }
+
+  private static List<WorldCityResource.Data> findCitiesByDirection2(
+      List<WorldCityResource.Data> cities, WorldCityResource.Data fromCity, int dir) {
+    GeoLocation fromPos = GeoLocation.of(fromCity.latitude, fromCity.longitude);
+    List<WorldCityResource.Data> foundCities = new ArrayList<>();
+
+    for (WorldCityResource.Data c : cities) {
+      GeoLocation pos = GeoLocation.of(c.latitude, c.longitude);
+      double dist = fromPos.findDistanceFrom(pos);
+      double bearing = fromPos.findInitialBearingTo(pos);
+      int d = GeoLocation.bearingToOrientation(bearing);
+
+      if ((dist > 1.0) && (d == dir)) {
+        foundCities.add(c);
+      }
+    }
+
+    return foundCities;
   }
 
   private void generateGuessEnumYesNo(Locale display) {
