@@ -2,6 +2,7 @@ package com.marcosavard.commons.geog;
 
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Gender;
+import com.marcosavard.commons.ling.Language;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -275,6 +276,13 @@ public enum Country {
   GAZA_STRIP("Gaza Strip"),
   HOLY_ROMAN_EMPIRE("Holy Roman Empire"*/
 
+  public enum Style {
+    ALONE,
+    WITH_ARTICLE,
+    GENITIVE,
+    LOCATIVE
+  }
+
   private String code;
 
   private List<Locale> locales;
@@ -322,9 +330,55 @@ public enum Country {
   }
 
   public String getDisplayName(Locale display) {
+    return getDisplayName(display, Style.ALONE);
+  }
+
+  public String getDisplayName(Locale display, Style style) {
     Locale locale = localeOf(code);
     String name = (locale == null) ? toTitleCase(name()) : locale.getDisplayCountry(display);
+
+    if (display.getLanguage().equals(Language.FRENCH.toString())) {
+      return getFrDisplayName(name, style);
+    }
+
     return name;
+  }
+
+  private String getFrDisplayName(String name, Style style) {
+    if (style == Style.WITH_ARTICLE) {
+      name = withFrArticle(name);
+    } else if (style == Style.GENITIVE) {
+      name = "de " + withFrArticle(name);
+      name = name.replace("de les", "des");
+      name = name.replace("de le", "du");
+    } else if (style == Style.LOCATIVE) {
+      name = "à " + withFrArticle(name);
+      name = name.replace("à les", "aux");
+      name = name.replace("à le", "au");
+      name = name.replace("à la", "en");
+      name = name.replace("à l’", "en ");
+    }
+
+    return name;
+  }
+
+  private String withFrArticle(String name) {
+    Locale fr = Language.FRENCH.toLocale();
+    char gender = getCountryName(fr).getGrammaticalGender();
+    char number = getCountryName(fr).getGrammaticalNumber();
+    boolean noArticle = isLocality() || isIsland() || name.toLowerCase(fr).startsWith("saint");
+
+    if (noArticle) {
+      return name;
+    } else if (number == 'P') {
+      return "les " + name;
+    } else if (StringUtil.startWithVowel(name)) {
+      return "l’" + name;
+    } else if (gender == 'F') {
+      return "la " + name;
+    } else {
+      return "le " + name;
+    }
   }
 
   @Override

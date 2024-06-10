@@ -14,73 +14,15 @@ public class CountryDemo {
 
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
-    printOfCountry(display);
-    // printAtCountry(display);
+    printCountryNames(display, Country.Style.LOCATIVE);
     // printCountryCompactInfos(display);
     // printCountryDetailedInfos(display);
     // printCountryNamesWithArticle(display);
   }
 
-  private static void printOfCountry(Locale display) {
+  private static void printCountryNames(Locale display, Country.Style style) {
     for (Country country : Country.values()) {
-      String code = country.getCode();
-      boolean island = country.isIsland();
-      boolean locality = country.isLocality();
-      String countryName = country.getDisplayName(display);
-      char gender = country.getCountryName(display).getGrammaticalGender();
-      char number = country.getCountryName(display).getGrammaticalNumber();
-
-      boolean feminine = (gender == 'F');
-      boolean plural = (number == 'P');
-      boolean startVowel = "aeéiîou".indexOf(Character.toLowerCase(countryName.charAt(0))) != -1;
-      String mot = "?";
-
-      if (island || locality) {
-        mot = startVowel ? "d'" : "de ";
-      } else if (plural) {
-        mot = "des ";
-      } else if (startVowel) {
-        mot = "d'";
-      } else {
-        mot = feminine ? "de " : "du ";
-      }
-
-      Console.println(code + " ville " + mot + countryName);
-    }
-  }
-
-  private static void printAtCountry(Locale display) {
-    for (Country country : Country.values()) {
-      String code = country.getCode();
-      boolean island = country.isIsland();
-      boolean locality = country.isLocality();
-      String countryName = country.getDisplayName(display);
-      char gender = country.getCountryName(display).getGrammaticalGender();
-      char number = country.getCountryName(display).getGrammaticalNumber();
-
-      boolean feminine = (gender == 'F');
-      boolean plural = (number == 'P');
-      boolean startVowel = "aeéiou".indexOf(Character.toLowerCase(countryName.charAt(0))) != -1;
-      String mot = "?";
-
-      if (island || locality) {
-        mot = "à";
-      } else if (feminine || startVowel && !plural) {
-        mot = "en";
-      } else if (!feminine && !plural) {
-        mot = "au";
-      } else if (!feminine && plural) {
-        mot = "aux";
-      }
-
-      Console.println(code + " " + mot + " " + countryName);
-    }
-  }
-
-  private static void printCountryNamesWithArticle(Locale display) {
-    for (Country country : Country.values()) {
-      String preposition = "in";
-      String countryName = country.getDisplayNameWithArticle(display, preposition);
+      String countryName = country.getDisplayName(display, style);
       Console.println(countryName);
     }
   }
