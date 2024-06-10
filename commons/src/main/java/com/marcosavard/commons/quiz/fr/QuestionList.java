@@ -19,6 +19,7 @@ import com.marcosavard.commons.geog.world.WorldCityResource;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Numeral;
 import com.marcosavard.commons.ling.RomanNumeral;
+import com.marcosavard.commons.math.Function;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 import com.marcosavard.commons.text.Script;
 import com.marcosavard.commons.time.TimeUnitName;
@@ -55,22 +56,24 @@ public class QuestionList {
     PseudoRandom pr = new PseudoRandom(seed);
 
     // antiquite
-    // generateGreekLetter(display);
-    // generateGreekGods(display);
-    // generateRomanGod(display);
-    // generateAncientScriptName(display);
-    // generateRomanEmpireCountries(display);
-    // generateRomanceLanguages(display);
-    // generateZodiacSigns(display);
-    // generateChessPieces(display);
-    // generatePhoneticLetter(display);
-    // generateGuessRomanNumerals(display);
     /*
-    // europe
-    generateEuropeQuestions(display);
-    generateSports(Continent.EUROPE, display);
-    generateGeographyQuestions(Continent.EUROPE, display, pr, 1000);
+        generateGreekLetter(display);
+        generateGreekGods(display);
+        generateRomanGod(display);
+        generateAncientScriptName(display);
+        generateRomanEmpireCountries(display);
+        generateRomanceLanguages(display);
+        generateZodiacSigns(display);
+        generateChessPieces(display);
+        generatePhoneticLetter(display);
+        generateGuessRomanNumerals(display);
+    */
 
+    // europe
+    // generateEuropeQuestions(display);
+    // generateSports(Continent.EUROPE, display);
+    // generateGeographyQuestions(Continent.EUROPE, display, pr, 1000);
+    /*
     // america
     generateAmericaQuestions(display);
     generateSports(Continent.AMERICA, display);
@@ -91,26 +94,33 @@ public class QuestionList {
 
     // science
     */
-    generateMathFunctions(display);
-    generateNumerals(display);
-    generateTimeUnit(display);
-    generateGuessColorBlend(display);
-    generateGuessEnumColorProperty(display);
-    generateGuessMetal(display);
-    generateGuessMetalByName(display);
-    generateGuessChemicalElement(display);
-    generatePlanet(display);
-
     /*
-        // techno
+        generateMathFunctions(display);
+        generateTimeUnit(display);
+        generateNumerals(display);
+        generateGuessEnumColorProperty(display);
+        generateGuessColorCategory(display);
+        generateGuessColorBlend(display);
+        generateGuessMetal(display);
+        generateGuessMetalByName(display);
+        generateGuessChemicalElement(display);
+        generatePlanet(display);
 
+        // techno
         generateGuessEnumFileAttribute(display);
         generateGuessEnumFileOperation(display);
         generateGuessEnumWindowOperation(display);
         generateFontName(display);
+    */
+    generateSynonyms(display);
+    generateSynonymCountableNouns(display);
+    generateSynonymAdjectives(display);
 
+    generateWorldCities(display);
+
+    /*
         // general
-        generateWorldCities(display);
+
         generateGuessEnumYesNo(display);
         generateGuessEnumDirection(display);
         generateGuessEnumCollection(display);
@@ -134,9 +144,126 @@ public class QuestionList {
     questions = Question.shuffle(questions, pr);
   }
 
+  private void generateSynonymCountableNouns(Locale display) {
+    List<String> singulars = SynonymName.getNonCountableNouns();
+    List<String> plurals = SynonymName.toPlurals(singulars);
+    List<String> words = new ArrayList<>();
+    words.addAll(singulars);
+    words.addAll(plurals);
+    addSynonymsQuestions(words);
+  }
+
+  private void generateSynonymAdjectives(Locale display) {
+    List<String> masculines = SynonymName.getAdjectives();
+    List<String> feminines = SynonymName.toFeminines(masculines);
+    List<String> masculinePlurals = SynonymName.toPlurals(masculines);
+    List<String> femininePlurals = SynonymName.toPlurals(feminines);
+
+    List<String> words = new ArrayList<>();
+    words.addAll(masculines);
+    words.addAll(masculinePlurals);
+    words.addAll(feminines);
+    words.addAll(femininePlurals);
+    addSynonymsQuestions(words);
+  }
+
+  private void generateSynonyms(Locale display) {
+    List<String> words = new ArrayList<>();
+    words.addAll(SynonymName.getAdverbs());
+    words.addAll(SynonymName.getCountableNouns());
+    addSynonymsQuestions(words);
+  }
+
+  private void addSynonymsQuestions(List<String> words) {
+    int count = words.size();
+
+    for (int i = 0; i < count; i++) {
+      List<String> synonyms = List.of(words.get(i).split(";"));
+      List<String[]> pairs = SynonymName.getPairs(synonyms);
+
+      for (int j = 0; j < pairs.size(); j++) {
+        String[] pair = pairs.get(j);
+        String hint = StringUtil.capitalize(pair[0]);
+        String answer = StringUtil.capitalize(pair[1]);
+        addQuestion(hint, answer);
+      }
+    }
+  }
+
+  private void generateGuessColorCategory(Locale display) {
+    WebSafeColor[] allColors = WebSafeColor.values();
+    List<Color> tints =
+        List.of(Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA);
+
+    for (WebSafeColor color : allColors) {
+      float s = color.getColor().getSaturation();
+
+      if (s < 0.1) {
+        String hint = "Couleur sens teinte";
+        String answer = color.getDisplayName(display);
+        addQuestion(hint, answer);
+      } else if (s >= 0.1 && s < 0.4) {
+        String hint = "Couleur de faible teinte";
+        String answer = color.getDisplayName(display);
+        addQuestion(hint, answer);
+      } else {
+        for (Color tint : tints) {
+          chooseColorByTint(allColors, color, tint, display);
+        }
+      }
+    }
+  }
+
+  private void chooseColorByTint(
+      WebSafeColor[] allColors, WebSafeColor color, Color tint, Locale display) {
+    float hue = WebColor.of(tint).getHue();
+    WebSafeColor closeColor = WebSafeColor.findClosestColor(tint);
+
+    if (color.getRGB() != closeColor.getRGB()) {
+      String n = WebSafeColor.findClosestColor(tint).getDisplayName(display);
+      n = StringUtil.startWithVowel(n) ? "de l'" + n : "du " + n;
+
+      float s = color.getColor().getSaturation();
+      float h = color.getColor().getHue();
+      WebSafeColor.Origin origin = color.getOrigin();
+      String originName = findName(origin);
+
+      if ((Math.abs(hue - h) < 0.2)) {
+        String hint =
+            (originName == null) ? "Couleur proche " + n : originName + " et couleur proche " + n;
+        hint = StringUtil.capitalize(hint);
+        String answer = color.getDisplayName(display);
+        addQuestion(hint, answer);
+      }
+    }
+  }
+
+  private String findName(WebSafeColor.Origin origin) {
+    String name = null;
+
+    if (origin != null) {
+      if (origin == WebSafeColor.Origin.METAL) {
+        name = "métal";
+      } else if (origin == WebSafeColor.Origin.MINERAL) {
+        name = "minéral";
+      } else if (origin == WebSafeColor.Origin.FLORAL) {
+        name = "fleur";
+      } else if (origin == WebSafeColor.Origin.FRUIT) {
+        name = "fruit";
+      } else if (origin == WebSafeColor.Origin.FOOD) {
+        name = "aliment";
+      } else if (origin == WebSafeColor.Origin.DRINK) {
+        name = "liquide";
+      } else if (origin == WebSafeColor.Origin.VEGETAL) {
+        name = "végétal";
+      }
+    }
+    return name;
+  }
+
   private void generateGuessColorBlend(Locale display) {
     List<Color> namedColors = WebColor.getNamedColors();
-    String pat = "Couleur obtenue en melangent {0} et {1}";
+    String pat = "Couleur obtenue en mélangeant {0} et {1}";
 
     for (int i = 0; i < namedColors.size(); i++) {
       for (int j = 0; j < namedColors.size(); j++) {
@@ -388,7 +515,7 @@ public class QuestionList {
       String num = numeral.getDisplayName(i);
       if (!num.contains(" ") && !num.contains("-")) {
         int square = i * i;
-        String hint = "Racine carree de " + Integer.toString(square);
+        String hint = "Racine carrée de " + Integer.toString(square);
         addQuestion(hint, num);
       }
     }
@@ -397,14 +524,24 @@ public class QuestionList {
   private void generateTimeUnit(Locale display) {
     addQuestion("ns", TimeUnitName.of(TimeUnit.NANOSECONDS).getDisplayName(display));
     addQuestion("1000 ns", TimeUnitName.of(TimeUnit.MICROSECONDS).getDisplayName(display));
-    addQuestion("dans une seconde", TimeUnitName.of(TimeUnit.MILLISECONDS).getDisplayName(display));
-    addQuestion("dans une minute", TimeUnitName.of(TimeUnit.SECONDS).getDisplayName(display));
+    addQuestion("Dans une seconde", TimeUnitName.of(TimeUnit.MILLISECONDS).getDisplayName(display));
+    addQuestion("Dans une minute", TimeUnitName.of(TimeUnit.SECONDS).getDisplayName(display));
     addQuestion("60 secondes", TimeUnitName.of(TimeUnit.MINUTES).getDisplayName(display));
     addQuestion("60 minutes", TimeUnitName.of(TimeUnit.HOURS).getDisplayName(display));
     addQuestion("24 heures", TimeUnitName.of(TimeUnit.DAYS).getDisplayName(display));
   }
 
   private void generateMathFunctions(Locale display) {
+    String hint = "Fonction mathématique";
+
+    for (Function f : Function.values()) {
+      String displayName = f.getDisplayName(display);
+      addQuestion(hint, displayName);
+      addQuestion("Fonction " + displayName, f.name().toLowerCase());
+    }
+  }
+
+  private void generateMathFunctionsOld(Locale display) {
     Method[] methods = Math.class.getDeclaredMethods();
     List<String> functions = new ArrayList<>();
     String hint = "Fonction mathematique";
@@ -431,9 +568,9 @@ public class QuestionList {
       String hint;
 
       if (category == Planet.Category.OFFICIAL) {
-        hint = "Planete";
+        hint = "Planète";
       } else {
-        hint = "Corps celeste";
+        hint = "Corps céleste";
       }
 
       addQuestion(hint, planet.getDisplayName(display));
@@ -461,24 +598,24 @@ public class QuestionList {
 
       if (category == State.Category.STATE) {
         if (region == State.Region.MIDWEST) {
-          hint = "Etat americain du Midwest";
+          hint = "Etat américain du Midwest";
         } else if (region == State.Region.EAST_COAST) {
-          hint = "Etat americain de la cote est";
+          hint = "Etat américain de la côte est";
         } else if (region == State.Region.SOUTH) {
-          hint = "Etat americain du sud";
+          hint = "Etat américain du sud";
         } else if (region == State.Region.SOUTH_WEST) {
-          hint = "Etat americain du sud-ouest";
+          hint = "Etat américain du sud-ouest";
         } else if (region == State.Region.NORTH_WEST) {
-          hint = "Etat americain du nord-ouest";
+          hint = "Etat américain du nord-ouest";
         } else if (region == State.Region.PACIFIC) {
-          hint = "Etat americain du Pacifique";
+          hint = "Etat américain du Pacifique";
         } else {
-          hint = "Etat americain";
+          hint = "Etat américain";
         }
       } else if (category == State.Category.DISTRICT) {
-        hint = "District americain";
+        hint = "District américain";
       } else {
-        hint = "Territoire americain";
+        hint = "Territoire américain";
       }
 
       addQuestion(hint, name);
@@ -804,6 +941,68 @@ public class QuestionList {
     WorldCityResource ressource = new WorldCityResource();
     List<WorldCityResource.Data> allCities = ressource.getRows();
 
+    generateWorldCapitals(allCities, display);
+    generateAmericanCapitals(allCities, display);
+    generateWorldCityDistance(allCities, display);
+  }
+
+  private void generateAmericanCapitals(List<WorldCityResource.Data> allCities, Locale display) {
+    List<WorldCityResource.Data> capitals =
+        allCities.stream().filter(c -> "C2".equals(c.capital)).toList();
+
+    for (WorldCityResource.Data capital : capitals) {
+      Country country = Country.of(capital.country);
+      String stateName = null, ofStateName = null;
+
+      if (country == Country.CANADA) {
+        CanadianProvince prov = CanadianProvince.valueOf(capital.region);
+        stateName = prov.getDisplayName(display, CanadianProvince.Style.SIMPLE);
+        ofStateName = prov.getDisplayName(display, CanadianProvince.Style.GENITIVE);
+      } else if (country == Country.USA) {
+        State state = State.valueOf(capital.region);
+        stateName = state.getDisplayName(display, State.Style.SIMPLE);
+        ofStateName = state.getDisplayName(display, State.Style.GENITIVE);
+      }
+
+      if (stateName != null) {
+        if (!capital.frName.contains("-")) {
+          String hint = MessageFormat.format("Capitale {0}", ofStateName);
+          Question q = new Question(capital.frName, hint);
+          questions.add(q);
+        }
+
+        if (!stateName.contains("-")) {
+          String hint = MessageFormat.format("{0} en est la capitale", capital.frName);
+          Question q = new Question(stateName, hint);
+          questions.add(q);
+        }
+      }
+    }
+  }
+
+  private void generateWorldCapitals(List<WorldCityResource.Data> allCities, Locale display) {
+    List<WorldCityResource.Data> capitals =
+        allCities.stream().filter(c -> "C".equals(c.capital)).toList();
+
+    for (WorldCityResource.Data capital : capitals) {
+      Country country = Country.of(capital.country);
+      String countryName = country.getDisplayName(display, Country.Style.GENITIVE);
+      String hint = MessageFormat.format("Capitale {0}", countryName);
+
+      if (!capital.frName.contains("-")) {
+        Question q = new Question(capital.frName, hint);
+        questions.add(q);
+      }
+
+      if (!countryName.contains("-")) {
+        hint = MessageFormat.format("{0} en est la capitale", capital.frName);
+        Question q = new Question(country.getDisplayName(display), hint);
+        questions.add(q);
+      }
+    }
+  }
+
+  private void generateWorldCityDistance(List<WorldCityResource.Data> allCities, Locale display) {
     for (WorldCityResource.Data city : allCities) {
       generateWorldCity(display, allCities, city);
     }
