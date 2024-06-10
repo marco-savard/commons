@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 public class WorldCityResource extends CsvRows<WorldCityResource.Data> {
 
   public WorldCityResource() {
-    super("WorldCity.csv", StandardCharsets.ISO_8859_1);
+    super("WorldCity.csv", StandardCharsets.UTF_8);
     withNbHeaders(1);
     withDelimiter(';');
     withCommentCharacter('#');
@@ -19,6 +19,7 @@ public class WorldCityResource extends CsvRows<WorldCityResource.Data> {
     public String region;
     public double latitude;
     public double longitude;
+    public String capital;
     public String enName;
     public String frName;
   }

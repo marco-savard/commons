@@ -1,17 +1,59 @@
 package com.marcosavard.commons.geog.world;
 
+import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.geog.Country;
 import com.marcosavard.commons.geog.GeoLocation;
+import com.marcosavard.commons.geog.ca.CanadianProvince;
+import com.marcosavard.commons.geog.us.State;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class WorldCityDemo {
 
   public static void main(String[] args) {
+    Locale display = Locale.FRENCH;
     WorldCityResource ressource = new WorldCityResource();
     List<WorldCityResource.Data> allCities = ressource.getRows();
+
+    // demoDistance(allCities);
+    demoCapital(allCities, display);
+  }
+
+  private static void demoCapital(List<WorldCityResource.Data> allCities, Locale display) {
+    List<WorldCityResource.Data> capitals =
+        allCities.stream().filter(c -> "C".equals(c.capital)).toList();
+
+    for (WorldCityResource.Data capital : capitals) {
+      Country country = Country.of(capital.country);
+      String name = country.getDisplayName(display, Country.Style.GENITIVE);
+      String hint = MessageFormat.format("Capitale {0}", name);
+      Console.println(hint + " : " + capital.frName);
+    }
+
+    capitals = allCities.stream().filter(c -> "C2".equals(c.capital)).toList();
+
+    for (WorldCityResource.Data capital : capitals) {
+      Country country = Country.of(capital.country);
+
+      if (country == Country.CANADA) {
+        CanadianProvince prov = CanadianProvince.valueOf(capital.region);
+        String name = prov.getDisplayName(display, CanadianProvince.Style.GENITIVE);
+        String hint = MessageFormat.format("Capitale {0}", name);
+        Console.println(hint + " : " + capital.frName);
+      } else if (country == Country.USA) {
+        State state = State.valueOf(capital.region);
+        String name = state.getDisplayName(display, State.Style.GENITIVE);
+        String hint = MessageFormat.format("Capitale {0}", name);
+        Console.println(hint + " : " + capital.frName);
+      }
+    }
+  }
+
+  private static void demoDistance(List<WorldCityResource.Data> allCities) {
     PseudoRandom pr = new PseudoRandom(3);
 
     for (int i = 0; i < 100; i++) {
