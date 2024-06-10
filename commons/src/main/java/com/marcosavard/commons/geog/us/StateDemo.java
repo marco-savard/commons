@@ -9,7 +9,7 @@ public class StateDemo {
     Locale display = Locale.FRENCH;
 
     for (State state : State.values()) {
-      String name = state.getDisplayName(display);
+      String name = state.getDisplayName(display, State.Style.WITH_ARTICLE);
       Console.println("{0} : {1}", state.name(), name);
     }
   }
