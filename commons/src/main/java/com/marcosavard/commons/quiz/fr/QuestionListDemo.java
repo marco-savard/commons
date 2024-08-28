@@ -14,8 +14,11 @@ public class QuestionListDemo {
 
   private static void displayQuestions(Locale display) {
     QuestionList questionList = new QuestionList();
+    int seed = 15;
+    questionList.generateQuestions(display, seed);
+    // questionList.shuffle(seed);
+    questionList.sort();
 
-    questionList.generateQuestions(display, 15);
     List<Question> questions = questionList.getQuestions();
     int count = 1;
 

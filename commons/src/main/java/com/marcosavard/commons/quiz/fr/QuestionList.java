@@ -21,6 +21,9 @@ import com.marcosavard.commons.ling.Numeral;
 import com.marcosavard.commons.ling.RomanNumeral;
 import com.marcosavard.commons.math.Function;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
+import com.marcosavard.commons.quiz.general.CategoryName;
+import com.marcosavard.commons.quiz.general.Sequence;
+import com.marcosavard.commons.quiz.general.SynonymName;
 import com.marcosavard.commons.text.Script;
 import com.marcosavard.commons.time.TimeUnitName;
 import com.marcosavard.commons.ui.Affirmation;
@@ -55,20 +58,29 @@ public class QuestionList {
   public void generateQuestions(Locale display, int seed) {
     PseudoRandom pr = new PseudoRandom(seed);
 
-    // antiquite
+    // general
     /*
-        generateGreekLetter(display);
-        generateGreekGods(display);
-        generateRomanGod(display);
-        generateAncientScriptName(display);
-        generateRomanEmpireCountries(display);
-        generateRomanceLanguages(display);
-        generateZodiacSigns(display);
-        generateChessPieces(display);
-        generatePhoneticLetter(display);
-        generateGuessRomanNumerals(display);
+        generateSynonyms(display);
+        generateSynonymNonCountableNouns(display);
+        generateSynonymCountableNouns(display);
+        generateSynonymAdjectives(display);
+        generateCategories(display);
+        generateSequences(display);
+        generateGuessEnumYesNo(display);
+            generatePhoneticLetter(display);
     */
+    // antiquite
 
+    generateGreekLetter(display);
+    generateGreekGods(display);
+    generateRomanGod(display);
+    generateAncientScriptName(display);
+    generateRomanEmpireCountries(display);
+    generateRomanceLanguages(display);
+    generateZodiacSigns(display);
+    generateGuessRomanNumerals(pr);
+
+    //
     // europe
     // generateEuropeQuestions(display);
     // generateSports(Continent.EUROPE, display);
@@ -95,57 +107,78 @@ public class QuestionList {
     // science
     */
     /*
-        generateMathFunctions(display);
-        generateTimeUnit(display);
-        generateNumerals(display);
-        generateGuessEnumColorProperty(display);
-        generateGuessColorCategory(display);
-        generateGuessColorBlend(display);
-        generateGuessMetal(display);
-        generateGuessMetalByName(display);
-        generateGuessChemicalElement(display);
-        generatePlanet(display);
+               generateMathFunctions(display);
+               generateTimeUnit(display);
+               generateNumerals(display);
+               generateGuessEnumColorProperty(display);
+               generateGuessColorCategory(display);
+               generateGuessColorBlend(display);
+               generateGuessMetal(display);
+               generateGuessMetalByName(display);
+               generateGuessChemicalElement(display);
+               generatePlanet(display);
 
-        // techno
-        generateGuessEnumFileAttribute(display);
-        generateGuessEnumFileOperation(display);
-        generateGuessEnumWindowOperation(display);
-        generateFontName(display);
+               // techno
+               generateGuessEnumFileAttribute(display);
+               generateGuessEnumFileOperation(display);
+               generateGuessEnumWindowOperation(display);
+               generateFontName(display);
     */
-    generateSynonyms(display);
-    generateSynonymCountableNouns(display);
-    generateSynonymAdjectives(display);
 
-    generateWorldCities(display);
+    // generateAbbreviations(display);
 
     /*
+        generateWorldCities(display);
+
         // general
 
-        generateGuessEnumYesNo(display);
+
         generateGuessEnumDirection(display);
         generateGuessEnumCollection(display);
 
         generateGuessCardinalPointAbbreviation(display);
         generateGuessCardinalPoint(display);
+
+        //time
         generateGuessWeekDay(display);
         generateGuessWeekDayAbbreviation(display);
         generateGuessDateAbbreviation(display);
         generateGuessMonth(display);
         generateGuessMonthAbbreviation(display);
+    */
 
+    /*
+    games
+            generateChessPieces(display);
         generateSports(display);
         generateRailTransportation(display);
         generateRoadTransportation(display);
         generateWaterTransportation(display);
         generateScriptByLanguage(display);
     */
-    // generateTimeZoneCodeByName(display);
 
-    questions = Question.shuffle(questions, pr);
+    // generateTimeZoneCodeByName(display);
+  }
+
+  private void generateSequences(Locale display) {
+    List<String[]> pairs = Sequence.getSequencePairs();
+
+    for (String[] pair : pairs) {
+      addQuestion(pair[0], pair[1]);
+    }
+  }
+
+  private void generateSynonymNonCountableNouns(Locale display) {
+    List<String> singulars = SynonymName.getNonCountableNouns();
+    List<String> plurals = SynonymName.toPlurals(singulars);
+    List<String> words = new ArrayList<>();
+    words.addAll(singulars);
+    words.addAll(plurals);
+    addSynonymsQuestions(words);
   }
 
   private void generateSynonymCountableNouns(Locale display) {
-    List<String> singulars = SynonymName.getNonCountableNouns();
+    List<String> singulars = SynonymName.getCountableNouns();
     List<String> plurals = SynonymName.toPlurals(singulars);
     List<String> words = new ArrayList<>();
     words.addAll(singulars);
@@ -170,7 +203,13 @@ public class QuestionList {
   private void generateSynonyms(Locale display) {
     List<String> words = new ArrayList<>();
     words.addAll(SynonymName.getAdverbs());
-    words.addAll(SynonymName.getCountableNouns());
+    words.addAll(SynonymName.getNonCountableNouns());
+    addSynonymsQuestions(words);
+  }
+
+  private void generateAbbreviations(Locale display) {
+    List<String> words = new ArrayList<>();
+    words.addAll(SynonymName.getAbbreviations());
     addSynonymsQuestions(words);
   }
 
@@ -185,8 +224,20 @@ public class QuestionList {
         String[] pair = pairs.get(j);
         String hint = StringUtil.capitalize(pair[0]);
         String answer = StringUtil.capitalize(pair[1]);
-        addQuestion(hint, answer);
+
+        if (!answer.contains("-") && !answer.contains(" ")) {
+          addQuestion(hint, answer);
+        }
       }
+    }
+  }
+
+  private void generateCategories(Locale display) {
+    List<String[]> categories = CategoryName.getCategories();
+
+    for (int i = 0; i < categories.size(); i++) {
+      String[] words = categories.get(i);
+      addQuestion(StringUtil.capitalize(words[0]), words[1]);
     }
   }
 
@@ -898,19 +949,40 @@ public class QuestionList {
     }
   }
 
-  private void generateGuessRomanNumerals(Locale display) {
+  private void generateGuessRomanNumerals(PseudoRandom pr) {
     Numeral numeral = new RomanNumeral();
 
-    for (int i = 1; i <= 100; i++) {
-      String arabic = Integer.toString(i);
+    for (int i = 2; i <= 250; i++) {
       String roman = numeral.getDisplayName(i);
 
       if (roman.length() >= 2) {
-        String hint = MessageFormat.format("{0} en chiffre romain", arabic);
-        Question q = new Question(roman, hint);
-        questions.add(q);
+        generateGuessRomanNumeral(i, roman);
+
+        if (i < 50) {
+          generateGuessRomanSum(pr, numeral, i, roman);
+        }
       }
     }
+  }
+
+  private void generateGuessRomanSum(PseudoRandom pr, Numeral numeral, int number, String roman) {
+    int a = 1 + pr.nextInt(number - 1);
+    int b = number - a;
+
+    if (a != b) {
+      String romanA = numeral.getDisplayName(a);
+      String romanB = numeral.getDisplayName(b);
+      String hint = MessageFormat.format("{0} et {1}", romanA, romanB);
+      Question q = new Question(roman, hint);
+      questions.add(q);
+    }
+  }
+
+  private void generateGuessRomanNumeral(int number, String roman) {
+    String arabic = Integer.toString(number);
+    String hint = MessageFormat.format("{0} en chiffre romain", arabic);
+    Question q = new Question(roman, hint);
+    questions.add(q);
   }
 
   private void generateGuessCardinalPointAbbreviation(Locale display) {
@@ -1116,7 +1188,7 @@ public class QuestionList {
 
   private void generateGuessEnumYesNo(Locale display) {
     questions.add(new Question(Affirmation.YES.getDisplayName(display), "Affirmation"));
-    questions.add(new Question(Affirmation.NO.getDisplayName(display), "Negation"));
+    questions.add(new Question(Affirmation.NO.getDisplayName(display), "Négation"));
   }
 
   private void generateGuessEnumDirection(Locale display) {
@@ -1553,7 +1625,16 @@ public class QuestionList {
     return words;
   }
 
+  public void shuffle(int seed) {
+    PseudoRandom pr = new PseudoRandom(seed);
+    questions = Question.shuffle(questions, pr);
+  }
+
   public List<Question> getQuestions() {
     return questions;
+  }
+
+  public void sort() {
+    questions = Question.sort(questions);
   }
 }

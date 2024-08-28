@@ -4,11 +4,12 @@ import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Question {
+public class Question implements Comparable<Question> {
 
   private String word;
   private String hint;
@@ -19,8 +20,39 @@ public class Question {
   }
 
   public static List<Question> shuffle(List<Question> allQuestions, PseudoRandom pr) {
+    Map<Integer, List<Question>> questionsByLength = sortByLength(allQuestions);
+    List<Question> shuffledQuestions = new ArrayList<>();
+
+    for (int i = Byte.MAX_VALUE; i > 1; i--) {
+      List<Question> questions = questionsByLength.get(i);
+
+      if (questions != null) {
+        List<Question> shuffled = pr.shuffle(questions);
+        shuffledQuestions.addAll(shuffled);
+      }
+    }
+
+    return shuffledQuestions;
+  }
+
+  public static List<Question> sort(List<Question> allQuestions) {
+    Map<Integer, List<Question>> questionsByLength = sortByLength(allQuestions);
+    List<Question> sortedQuestions = new ArrayList<>();
+
+    for (int i = Byte.MAX_VALUE; i > 1; i--) {
+      List<Question> questions = questionsByLength.get(i);
+
+      if (questions != null) {
+        Collections.sort(questions);
+        sortedQuestions.addAll(questions);
+      }
+    }
+
+    return sortedQuestions;
+  }
+
+  private static Map<Integer, List<Question>> sortByLength(List<Question> allQuestions) {
     Map<Integer, List<Question>> questionsByLength = new HashMap<>();
-    List<Question> schuffledQuestions = new ArrayList<>();
     int maxLength = 0;
 
     for (Question question : allQuestions) {
@@ -34,23 +66,10 @@ public class Question {
         questionsByLength.put(length, questions);
       }
 
-      Question foundQuestion =
-          questions.stream().filter(q -> word.equals(q.getWord())).findFirst().orElse(null);
-      // if (foundQuestion == null) {
       questions.add(question);
-      // }
     }
 
-    for (int i = maxLength; i > 1; i--) {
-      List<Question> questions = questionsByLength.get(i);
-
-      if (questions != null) {
-        List<Question> shuffled = pr.shuffle(questions);
-        schuffledQuestions.addAll(shuffled);
-      }
-    }
-
-    return schuffledQuestions;
+    return questionsByLength;
   }
 
   public String getWord() {
@@ -64,5 +83,10 @@ public class Question {
 
   public String getHint() {
     return hint;
+  }
+
+  @Override
+  public int compareTo(Question other) {
+    return getWord().compareTo(other.getWord());
   }
 }
