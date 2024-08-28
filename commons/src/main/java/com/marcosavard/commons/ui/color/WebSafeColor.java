@@ -1,5 +1,6 @@
 package com.marcosavard.commons.ui.color;
 
+import com.marcosavard.commons.math.RessourceEnum;
 import com.marcosavard.commons.ui.res.ColorNameResource;
 import com.marcosavard.commons.ui.res.UIManagerFacade;
 
@@ -10,60 +11,70 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public enum WebSafeColor {
-  AMBER(0xF0C300),
+public enum WebSafeColor implements RessourceEnum {
+  AMBER(0xF0C300, Origin.MINERAL),
   AZURE(0xF0FFFF),
   BEIGE(0xF5F5DC),
-  BISQUE(0xFFE4C4),
+  BISQUE(0xFFE4C4, Origin.FOOD),
   BLACK(0x000000),
   BLUE(0x0000FF),
-  BRONZE(0x614E1A),
+  BRONZE(0x614E1A, Origin.METAL),
   BROWN(0xA52A2A),
-  CHARTREUSE(0x7FFF00),
-  CHOCOLATE(0xD2691E),
-  COPPER(0xB36700),
-  CORAL(0xFF7F50),
+  CHARTREUSE(0x7FFF00, Origin.DRINK),
+  CHOCOLATE(0xD2691E, Origin.FOOD),
+  COPPER(0xB36700, Origin.METAL),
+  CORAL(0xFF7F50, Origin.ANIMAL),
   CYAN(0x00FFFF),
   DARK_GRAY(Color.DARK_GRAY.getRGB()),
   FLAVE(0xE6E697),
-  FUCHSIA(0xFF00FF),
+  FUCHSIA(0xFF00FF, Origin.VEGETAL),
   GLAUQUE(0x649B88),
-  GOLD(0xFFD700),
+  GOLD(0xFFD700, Origin.METAL),
   GRAY(0x808080),
   GREEN(0x008000),
-  INDIGO(0x4B0082),
-  IVORY(0xFFFFF0),
+  INDIGO(0x4B0082, Origin.VEGETAL),
+  IVORY(0xFFFFF0, Origin.ANIMAL),
   KHAKI(0xF0E68C),
   LIGHT_GRAY(Color.LIGHT_GRAY.getRGB()),
-  LILAC(0xB666D2),
-  LIME(0x00FF00),
+  LILAC(0xB666D2, Origin.FLORAL),
+  LIME(0x00FF00, Origin.FRUIT),
   MAGENTA(0xFF00FF),
-  MARROON(800000),
-  MAUVE(0xD473D4),
+  MARROON(800000, Origin.FRUIT),
+  MAUVE(0xD473D4, Origin.FLORAL),
   NAVY(0x000080),
-  OCRE(0xDFAF2C),
-  OLIVE(0x808000),
-  ORANGE(0xFF8000),
-  PERVENCHE(0xCCCCFF),
+  OCRE(0xDFAF2C, Origin.MINERAL),
+  OLIVE(0x808000, Origin.FRUIT),
+  ORANGE(0xFF8000, Origin.FRUIT),
+  PERVENCHE(0xCCCCFF, Origin.FLORAL),
   PINK(0xFFC0CB),
-
-  PISTACHE(0xBEF574),
-  PLATINUM(0xE5E4E2),
-  PLUM(0xDDA0DD),
+  PISTACHE(0xBEF574, Origin.FRUIT),
+  PLATINUM(0xE5E4E2, Origin.METAL),
+  PLUM(0xDDA0DD, Origin.FRUIT),
   PURPLE(0x800080),
   RED(0xFF0000),
-  RUBIS(0xE0115F),
-  RUST(0x985717),
+  RUBIS(0xE0115F, Origin.MINERAL),
+  RUST(0x985717, Origin.METAL),
   SCARLET(0xED0000),
   SEPIA(0xAE8964),
-  SILVER(0xC0C0C0),
+  SILVER(0xC0C0C0, Origin.METAL),
   TEAL(0x008080),
-  TURQUOISE(0x40E0D0),
+  TURQUOISE(0x40E0D0, Origin.MINERAL),
   VERDET(0x85a585),
-  VIRIDE(0x40826D),
-  VIOLET(0xEE82EE),
+  VIRIDE(0x40826D, Origin.METAL),
+  VIOLET(0xEE82EE, Origin.FLORAL),
   WHITE(0xFFFFFF),
   YELLOW(0xFFFF00);
+
+  public static enum Origin {
+    FLORAL,
+    FRUIT,
+    VEGETAL,
+    ANIMAL,
+    MINERAL,
+    METAL,
+    FOOD,
+    DRINK
+  }
 
   private static Map<Integer, String> keysByColor = null;
 
@@ -73,9 +84,38 @@ public enum WebSafeColor {
 
   private final WebColor color;
 
+  private final Origin origin;
+
   WebSafeColor(int rgb) {
-    color = WebColor.ofRGB(rgb);
+    this(rgb, null);
   }
+
+  WebSafeColor(int rgb, Origin origin) {
+    this.color = WebColor.ofRGB(rgb);
+    this.origin = origin;
+  }
+
+  public Origin getOrigin() {
+    return origin;
+  }
+
+  @Override
+  public String getDisplayName(Locale display) {
+    String name = findColorNameByUiResource(display);
+    name = (name != null) ? name : findMetalColor(display);
+    name = (name != null) ? name : findColorResource(display);
+    name = (name != null) ? name : RessourceEnum.super.getDisplayName(display);
+    return name;
+  }
+
+  /*
+  public String getDisplayName(Locale display) {
+    String name = findColorNameByUiResource(display);
+    name = (name != null) ? name : findMetalColor(display);
+    name = (name != null) ? name : findColorResource(display);
+    name = (name != null) ? name : name().toLowerCase();
+    return name;
+  }*/
 
   public static WebSafeColor findClosestColor(Color thatColor) {
     int closestDistance = Integer.MAX_VALUE;
@@ -91,14 +131,6 @@ public enum WebSafeColor {
     }
 
     return closestColor;
-  }
-
-  public String getDisplayName(Locale display) {
-    String name = findColorNameByUiResource(display);
-    name = (name != null) ? name : findMetalColor(display);
-    name = (name != null) ? name : findColorResource(display);
-    name = (name != null) ? name : name().toLowerCase();
-    return name;
   }
 
   private String findColorResource(Locale display) {

@@ -1,6 +1,7 @@
 package com.marcosavard.commons.ui.color;
 
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
 import java.awt.*;
@@ -11,10 +12,65 @@ import java.util.Locale;
 public class WebSafeColorDemo {
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
-    // printColors(display);
+    printColors(display);
     // blendColor(display);
-    chooseBasicColors(50, display);
+    // chooseBasicColors(50, display);
     // chooseColorHard(50, display);
+    // chooseColorByTint(display);
+    // chooseHuelessColor(display);
+  }
+
+  private static void printColors(Locale display) {
+    List<WebSafeColor> colors = List.of(WebSafeColor.values());
+
+    for (WebSafeColor color : colors) {
+      Console.println(color.getDisplayName(display));
+    }
+  }
+
+  private static void chooseHuelessColor(Locale display) {
+    WebSafeColor[] allColors = WebSafeColor.values();
+
+    for (WebSafeColor color : allColors) {
+      float s = color.getColor().getSaturation();
+
+      if (s < 0.1) {
+        String hint = "couleur sens teinte ";
+        String answer = color.getDisplayName(display);
+        Console.println(hint + " : " + answer);
+      } else if (s >= 0.1 && s < 0.4) {
+        String hint = "couleur de faible teinte ";
+        String answer = color.getDisplayName(display);
+        Console.println(hint + " : " + answer);
+      }
+    }
+  }
+
+  private static void chooseColorByTint(Locale display) {
+    WebSafeColor[] allColors = WebSafeColor.values();
+    List<Color> tints =
+        List.of(Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA);
+
+    for (Color tint : tints) {
+      chooseColorByTint(allColors, tint, display);
+    }
+  }
+
+  private static void chooseColorByTint(WebSafeColor[] allColors, Color tint, Locale display) {
+    float hue = WebColor.of(tint).getHue();
+    String n = WebSafeColor.findClosestColor(tint).getDisplayName(display);
+    n = StringUtil.startWithVowel(n) ? "de l'" + n : "du " + n;
+
+    for (WebSafeColor color : allColors) {
+      float s = color.getColor().getSaturation();
+      float h = color.getColor().getHue();
+
+      if ((s > 0.5) && (Math.abs(hue - h) < 0.2)) {
+        String hint = "couleur proche " + n;
+        String answer = color.getDisplayName(display);
+        Console.println(hint + " : " + answer);
+      }
+    }
   }
 
   private static void chooseBasicColors(int count, Locale display) {
@@ -100,13 +156,5 @@ public class WebSafeColorDemo {
     String blendCode = "0x" + Integer.toHexString(rgb).substring(2).toUpperCase();
     String msg = MessageFormat.format("{0} et {1} donnent {2} ({3})", s1, s2, s3, blendCode);
     Console.println(msg);
-  }
-
-  private static void printColors(Locale display) {
-    List<WebSafeColor> colors = List.of(WebSafeColor.values());
-
-    for (WebSafeColor color : colors) {
-      Console.println(color.getDisplayName(display));
-    }
   }
 }
