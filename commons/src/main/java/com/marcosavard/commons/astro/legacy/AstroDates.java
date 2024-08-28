@@ -92,7 +92,4 @@ public class AstroDates {
   public static Date toDate(LocalDate localDate) {
     return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
   }
-
-
-
 }

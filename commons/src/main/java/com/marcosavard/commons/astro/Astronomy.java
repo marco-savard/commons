@@ -1,7 +1,5 @@
 package com.marcosavard.commons.astro;
 
-import java.time.ZonedDateTime;
-
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.space.SpaceCoordinate.Declination;
 import com.marcosavard.commons.astro.space.SpaceCoordinate.RightAscension;
@@ -9,11 +7,13 @@ import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.Maths;
 
+import java.time.ZonedDateTime;
+
 // Ref: http://www-star.st-and.ac.uk/~fv/webnotes/index.html
 public class Astronomy {
 
-  public static SpaceCoordinate findSpaceLocationOf(SkyPosition position, ZonedDateTime moment,
-                                                    double[] coordinates) {
+  public static SpaceCoordinate findSpaceLocationOf(
+      SkyPosition position, ZonedDateTime moment, double[] coordinates) {
 
     double lat = coordinates[0];
     double lon = coordinates[1];
@@ -43,15 +43,15 @@ public class Astronomy {
   }
 
   /*
-  public static SkyPosition findSkyPositionOf(SpaceCoordinate spaceLocation, ZonedDateTime moment,
-                                              GeoLocation place) {
-    return findSkyPositionOf(spaceLocation, moment, place.toCoordinates());
-  }
-*/
+    public static SkyPosition findSkyPositionOf(SpaceCoordinate spaceLocation, ZonedDateTime moment,
+                                                GeoLocation place) {
+      return findSkyPositionOf(spaceLocation, moment, place.toCoordinates());
+    }
+  */
 
   // compute position in the sky of star, as seen from a given coordinate, at lst
-  public static SkyPosition findSkyPositionOf(SpaceCoordinate spaceLocation, ZonedDateTime moment,
-                                              double[] coordinates) {
+  public static SkyPosition findSkyPositionOf(
+      SpaceCoordinate spaceLocation, ZonedDateTime moment, double[] coordinates) {
     double ra = spaceLocation.getRightAscensionDegree();
     double decl = spaceLocation.getDeclinationDegree();
     double lat = coordinates[0];
@@ -78,7 +78,6 @@ public class Astronomy {
     return position;
   }
 
-
   /*
   // less accurate
   public static SkyPosition findSkyPositionOfOld(SpaceCoordinate spaceLocation, ZonedDateTime moment,
@@ -103,18 +102,15 @@ public class Astronomy {
     return position;
   }*/
 
-  private static SpaceCoordinate findSpaceLocationForZenithOf(GeoLocation coordinate2,
-                                                              ZonedDateTime moment) {
+  private static SpaceCoordinate findSpaceLocationForZenithOf(
+      GeoLocation coordinate2, ZonedDateTime moment) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public static GeoLocation findGeoCoordinateForZenithOf(SpaceCoordinate spaceCoordinate,
-                                                         ZonedDateTime moment) {
+  public static GeoLocation findGeoCoordinateForZenithOf(
+      SpaceCoordinate spaceCoordinate, ZonedDateTime moment) {
     // TODO Auto-generated method stub
     return null;
   }
-
-
-
 }

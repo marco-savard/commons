@@ -44,7 +44,7 @@ public class Crossword {
         int wordsPlaced = fillPartition(pickedQuestions, partition, 0);
 
         if (wordsPlaced == 0) {
-          // fillPartition(partition, 1);
+          fillPartition(pickedQuestions, partition, 1);
         }
       }
     }
@@ -84,10 +84,7 @@ public class Crossword {
         String word = question.getWord();
 
         boolean alreadyPicked =
-            pickedQuestions.stream()
-                    .filter(q -> isPicked(q, question))
-                    .findAny()
-                    .orElse(null)
+            pickedQuestions.stream().filter(q -> isPicked(q, question)).findAny().orElse(null)
                 != null;
 
         if (!alreadyPicked) {
@@ -120,7 +117,7 @@ public class Crossword {
 
   private boolean isPicked(Question pickedQuestion, Question question) {
     boolean picked = pickedQuestion.getWord().equals(question.getWord());
-    picked = picked ||  pickedQuestion.getHint().equals(question.getHint());
+    picked = picked || pickedQuestion.getHint().equals(question.getHint());
     return picked;
   }
 

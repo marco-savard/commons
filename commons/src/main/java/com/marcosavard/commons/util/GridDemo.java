@@ -10,7 +10,7 @@ import java.util.List;
 public class GridDemo {
 
   public static void main(String args[]) {
-    List<Integer> days = Range.of(30).addTo(1);
+    List<Integer> days = Range.of(30).addTo(1).toList();
     List<String> items = ListUtil.toStrings(days);
     List<String> lines = Grid.of(7, items).toLines(StringUtil.Alignment.RIGHT);
 
