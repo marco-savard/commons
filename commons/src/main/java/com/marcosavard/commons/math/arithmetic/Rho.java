@@ -12,7 +12,7 @@ public class Rho {
   int[] dimensions;
 
   public static Rho of(Range range, int... dim) {
-    return new Rho(range, dim);
+    return new Rho(range.toList(), dim);
   }
 
   public static Rho of(List<Integer> list, int... dim) {

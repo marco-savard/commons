@@ -23,5 +23,4 @@ public class StarAlmanach {
       SpaceCoordinate.of(RightAscension.of(6, 45, 8.9), Declination.of(-16, -42, -58));
   public static final SpaceCoordinate URSA_MAJOR_EPSILON =
       SpaceCoordinate.of(RightAscension.of(12, 54, 1.6), Declination.of(55, 57, 34.4));
-
 }

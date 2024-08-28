@@ -1,12 +1,13 @@
 package com.marcosavard.commons.astro.legacy;
 
+import com.marcosavard.commons.geog.GeoLocation;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
-import com.marcosavard.commons.geog.GeoLocation;
 
 public class SunEventDemo {
 

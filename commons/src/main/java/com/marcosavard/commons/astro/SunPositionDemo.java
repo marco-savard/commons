@@ -1,12 +1,13 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.geog.GeoLocation;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import com.marcosavard.commons.geog.GeoLocation;
 
 public class SunPositionDemo {
 
@@ -64,6 +65,4 @@ public class SunPositionDemo {
     msg = MessageFormat.format(" Sun rises at {0}", sunriseSunset[0]);
     System.out.println(msg);
   }
-
-
 }

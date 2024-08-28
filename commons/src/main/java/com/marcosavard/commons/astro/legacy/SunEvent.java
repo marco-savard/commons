@@ -1,5 +1,7 @@
 package com.marcosavard.commons.astro.legacy;
 
+import com.marcosavard.commons.geog.GeoLocation;
+
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,11 +11,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.TimeZone;
-import com.marcosavard.commons.geog.GeoLocation;
 
 /*
  * based on: http://williams.best.vwh.net/sunrise_sunset_algorithm.htm
- * 
+ *
  * Almanac for Computers, 1990 published by Nautical Almanac Office United States Naval Observatory
  * Washington, DC 20392
  */
@@ -30,13 +31,13 @@ public class SunEvent {
 
   public static SunEvent of(LocalDate date, GeoLocation coordinate) {
     TimeZone timeZone = TimeZone.getTimeZone(ZoneOffset.UTC);
-    return of(date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(),
-        timeZone);
+    return of(
+        date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(), timeZone);
   }
 
   public static SunEvent of(LocalDate date, GeoLocation coordinate, TimeZone timeZone) {
-    return of(date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(),
-        timeZone);
+    return of(
+        date, coordinate.getLatitude().getValue(), coordinate.getLongitude().getValue(), timeZone);
   }
 
   public static SunEvent of(LocalDate localDate, double[] coordinates, TimeZone timezone) {
@@ -46,8 +47,8 @@ public class SunEvent {
     return sunEvent;
   }
 
-  public static SunEvent of(LocalDate localDate, double latitude, double longitude,
-      TimeZone timezone) {
+  public static SunEvent of(
+      LocalDate localDate, double latitude, double longitude, TimeZone timezone) {
     int dayOfYear = localDate.getDayOfYear();
     Date date = AstroDates.toDate(localDate);
     System.out.println("date = " + date);
@@ -78,8 +79,13 @@ public class SunEvent {
     return sunEvent;
   }
 
-  private SunEvent(int dayOfYear, long midnightTime, boolean isDaylight, double latitude,
-      double longitude, TimeZone timezone) {
+  private SunEvent(
+      int dayOfYear,
+      long midnightTime,
+      boolean isDaylight,
+      double latitude,
+      double longitude,
+      TimeZone timezone) {
     double longitudeHour = longitude / 15.0;
 
     // compute sunrise
@@ -185,8 +191,11 @@ public class SunEvent {
   }
 
   private double computeSunTrueLongitude(double sunMeanAnomaly) {
-    double lon = sunMeanAnomaly + (1.916 * sinDeg(sunMeanAnomaly))
-        + (0.02 * sinDeg(2.0 * sunMeanAnomaly)) + 282.634;
+    double lon =
+        sunMeanAnomaly
+            + (1.916 * sinDeg(sunMeanAnomaly))
+            + (0.02 * sinDeg(2.0 * sunMeanAnomaly))
+            + 282.634;
 
     if (lon < 0) {
       lon += 360;
@@ -212,8 +221,8 @@ public class SunEvent {
     return rightAsc;
   }
 
-  private double computeSunEventHour(double rightAsc, double sunEventTime, double lngHour,
-      double cosH, boolean isSunrise) {
+  private double computeSunEventHour(
+      double rightAsc, double sunEventTime, double lngHour, double cosH, boolean isSunrise) {
 
     double lon = Math.toDegrees(Math.acos(cosH));
 
@@ -250,7 +259,4 @@ public class SunEvent {
     value = (value > 0) ? (value % max) : (max - Math.abs(value) % max) % max;
     return value;
   }
-
-
-
 }

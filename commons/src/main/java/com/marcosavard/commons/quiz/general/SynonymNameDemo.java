@@ -1,4 +1,4 @@
-package com.marcosavard.commons.quiz.fr;
+package com.marcosavard.commons.quiz.general;
 
 import com.marcosavard.commons.debug.Console;
 

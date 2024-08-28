@@ -1,7 +1,11 @@
 package com.marcosavard.commons.astro.space;
 
-import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
-import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
+import com.marcosavard.commons.astro.Astronomy;
+import com.marcosavard.commons.astro.SkyPosition;
+import com.marcosavard.commons.astro.StarAlmanach;
+import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.geog.GeoLocation;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,11 +17,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.marcosavard.commons.astro.Astronomy;
-import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.StarAlmanach;
-import com.marcosavard.commons.debug.Console;
-import com.marcosavard.commons.geog.GeoLocation;
+import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
+import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 
 public class SpaceLocationDemo {
 
@@ -28,7 +29,6 @@ public class SpaceLocationDemo {
 
     demoBirminghamUK();
     demoQuebecCity();
-
   }
 
   private static void demoFindPolaris() {
@@ -46,7 +46,6 @@ public class SpaceLocationDemo {
       double distance = Math.toDegrees(distanceRad);
       Console.println("  " + distance);
     }
-
   }
 
   private static void demoConversion() {
@@ -61,10 +60,10 @@ public class SpaceLocationDemo {
     System.out.println(msg);
 
     /*
-    sl = SpaceCoordinate.findZenithPositionAbove(madrid.toCoordinates(), moment);
-    msg = MessageFormat.format("({0}) is above ({1}) at {2}", sl, madrid, moment);
-    System.out.println(msg);
-*/
+        sl = SpaceCoordinate.findZenithPositionAbove(madrid.toCoordinates(), moment);
+        msg = MessageFormat.format("({0}) is above ({1}) at {2}", sl, madrid, moment);
+        System.out.println(msg);
+    */
 
     // SpaceLocation ec = SpaceLocation.of(6.2, 23.4);
     // LocalDate date = LocalDate.of(1982, 10, 3);
@@ -103,7 +102,8 @@ public class SpaceLocationDemo {
     ZonedDateTime moment = ZonedDateTime.of(localTime, ZoneOffset.UTC);
 
     // get sky position
-    SkyPosition skyPosition = Astronomy.findSkyPositionOf(starM13, moment, birminghamUK.toCoordinates());
+    SkyPosition skyPosition =
+        Astronomy.findSkyPositionOf(starM13, moment, birminghamUK.toCoordinates());
     System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
     System.out.println("  ..position of M13: " + skyPosition);
     System.out.println();
@@ -125,28 +125,29 @@ public class SpaceLocationDemo {
     ZonedDateTime moment = localTime.atZone(ZoneId.of("America/New_York"));
 
     // get sky position
-    SkyPosition skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity.toCoordinates());
+    SkyPosition skyPosition =
+        Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity.toCoordinates());
     System.out.println("  ..position of Polaris: " + skyPosition);
 
-/*
+    /*
 
 
 
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.URSA_MAJOR_EPSILON, moment, qcCity);
-    System.out.println("  ..position of Ursa Major Epsilon: " + skyPosition);
+       skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.URSA_MAJOR_EPSILON, moment, qcCity);
+       System.out.println("  ..position of Ursa Major Epsilon: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.SIRIUS, moment, qcCity);
-    System.out.println("  ..position of Sirius: " + skyPosition);
+       skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.SIRIUS, moment, qcCity);
+       System.out.println("  ..position of Sirius: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.ANTARES, moment, qcCity);
-    System.out.println("  ..position of Antares: " + skyPosition);
+       skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.ANTARES, moment, qcCity);
+       System.out.println("  ..position of Antares: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, qcCity);
-    System.out.println("  ..position of Crux Alpha: " + skyPosition);
-    System.out.println();
+       skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, qcCity);
+       System.out.println("  ..position of Crux Alpha: " + skyPosition);
+       System.out.println();
 
- */
+    */
   }
 
   private static void demoEquinoxPrecession() {

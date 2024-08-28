@@ -1,15 +1,16 @@
 package com.marcosavard.commons.astro;
 
-import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
-import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
+import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.geog.GeoLocation;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.geog.GeoLocation;
+import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
+import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 
 public class SkyPositionDemo {
 

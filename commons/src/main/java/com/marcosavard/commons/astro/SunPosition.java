@@ -1,5 +1,10 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.astro.time.JulianDay;
+import com.marcosavard.commons.geog.GeoLocation;
+import com.marcosavard.commons.math.trigonometry.Angle;
+import com.marcosavard.commons.math.trigonometry.Angle.Unit;
+
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -7,12 +12,8 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import static com.marcosavard.commons.astro.AstroMath.range;
 
-import com.marcosavard.commons.astro.time.JulianDay;
-import com.marcosavard.commons.geog.GeoLocation;
-import com.marcosavard.commons.math.trigonometry.Angle;
-import com.marcosavard.commons.math.trigonometry.Angle.Unit;
+import static com.marcosavard.commons.astro.AstroMath.range;
 
 public class SunPosition {
   private static final double J1980 = JulianDay.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
@@ -72,8 +73,9 @@ public class SunPosition {
     this.sunLongitude = degRange(ec + SUN_ELONG_PERIGEE);
 
     // Orbital distance factor.
-    this.orbitalDistanceFactor = ((1 + ECCENT_EARTH_ORBIT * Math.cos(Math.toRadians(ec)))
-        / (1 - ECCENT_EARTH_ORBIT * ECCENT_EARTH_ORBIT));
+    this.orbitalDistanceFactor =
+        ((1 + ECCENT_EARTH_ORBIT * Math.cos(Math.toRadians(ec)))
+            / (1 - ECCENT_EARTH_ORBIT * ECCENT_EARTH_ORBIT));
   }
 
   public double getJulianDay() {
@@ -100,9 +102,11 @@ public class SunPosition {
 
   @Override
   public String toString() {
-    String str = MessageFormat.format("lon={0} dist={1} AU", //
-        String.format("%.2f", sunLongitude), //
-        String.format("%.3f", 1 / orbitalDistanceFactor));
+    String str =
+        MessageFormat.format(
+            "lon={0} dist={1} AU", //
+            String.format("%.2f", sunLongitude), //
+            String.format("%.3f", 1 / orbitalDistanceFactor));
     return str;
   }
 
@@ -169,14 +173,16 @@ public class SunPosition {
       angleDiff = angle1.minus(angleToFind);
       boolean before = angleDiff < 0;
       long deltaTime = (long) (SECONDS_PER_DAY / Math.pow(2, i++));
-      instant1 = before ? //
-          instant1.plus(deltaTime, ChronoUnit.SECONDS) : //
-          instant1.minus(deltaTime, ChronoUnit.SECONDS);
+      instant1 =
+          before
+              ? //
+              instant1.plus(deltaTime, ChronoUnit.SECONDS)
+              : //
+              instant1.minus(deltaTime, ChronoUnit.SECONDS);
       moment1 = instant1.atZone(ZoneOffset.UTC);
       position1 = SunPosition.at(moment1);
       angle1 = Angle.of(position1.getSunLongitude(), Unit.DEG);
     } while (Math.abs(angleDiff) > 0.01);
-
 
     return moment1;
   }
@@ -217,9 +223,11 @@ public class SunPosition {
     double latitudeRad = Math.toRadians(latitude);
 
     // Hour angle
-    final double omega = Math.acos((Math.sin(Math.toRadians(SUN_ALTITUDE_SUNRISE_SUNSET))
-        - Math.sin(latitudeRad) * Math.sin(localPosition.delta))
-        / (Math.cos(latitudeRad) * Math.cos(localPosition.delta)));
+    final double omega =
+        Math.acos(
+            (Math.sin(Math.toRadians(SUN_ALTITUDE_SUNRISE_SUNSET))
+                    - Math.sin(latitudeRad) * Math.sin(localPosition.delta))
+                / (Math.cos(latitudeRad) * Math.cos(localPosition.delta)));
     System.out.println("  omega = " + omega);
 
     ZonedDateTime[] sunriseSunset = new ZonedDateTime[] {};
@@ -232,8 +240,12 @@ public class SunPosition {
 
       // Sunset
       final double jset =
-          SunLocalPosition.J2000 + 0.0009 + ((Math.toDegrees(omega) - longitude) / 360 + n
-              + 0.0053 * Math.sin(m) - 0.0069 * Math.sin(2 * l));
+          SunLocalPosition.J2000
+              + 0.0009
+              + ((Math.toDegrees(omega) - longitude) / 360
+                  + n
+                  + 0.0053 * Math.sin(m)
+                  - 0.0069 * Math.sin(2 * l));
 
       // Sunrise
       final double jrise = jtransit - (jset - jtransit);
@@ -294,7 +306,4 @@ public class SunPosition {
     private double delta;
     private double jtransit;
   }
-
-
-
 }

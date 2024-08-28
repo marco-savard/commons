@@ -25,6 +25,17 @@ public class StringUtil {
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
 
+  public static boolean startWithVowel(String str) {
+    char first = CharacaterUtil.stripAccent(str.toLowerCase().charAt(0));
+    char second = CharacaterUtil.stripAccent(str.toLowerCase().charAt(1));
+
+    if (first == 'y') {
+      return !CharacaterUtil.isVowel(second);
+    } else {
+      return CharacaterUtil.isVowel(first);
+    }
+  }
+
   public enum Alignment {
     LEFT,
     RIGHT
