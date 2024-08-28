@@ -1,5 +1,10 @@
 package com.marcosavard.commons.astro.moon;
 
+import com.marcosavard.commons.astro.SunPosition;
+import com.marcosavard.commons.astro.time.JulianDay;
+import com.marcosavard.commons.math.trigonometry.Angle;
+import com.marcosavard.commons.math.trigonometry.Angle.Unit;
+
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -9,15 +14,18 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-import com.marcosavard.commons.astro.time.JulianDay;
-import com.marcosavard.commons.astro.SunPosition;
-import com.marcosavard.commons.math.trigonometry.Angle;
-import com.marcosavard.commons.math.trigonometry.Angle.Unit;
 import static com.marcosavard.commons.math.Maths.range;
 
 public class MoonPosition {
   public enum PhaseName {
-    NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRD_QUARTER, WANING_CRESCENT
+    NEW,
+    WAXING_CRESCENT,
+    FIRST_QUARTER,
+    WAXING_GIBBOUS,
+    FULL,
+    WANING_GIBBOUS,
+    THIRD_QUARTER,
+    WANING_CRESCENT
   };
 
   private static final double EPOCH = JulianDay.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
@@ -194,9 +202,12 @@ public class MoonPosition {
       angleDiff = angle1.minus(angleToFind);
       boolean before = angleDiff < 0;
       long deltaTime = (long) (SECONDS_PER_DAY / Math.pow(2, i++));
-      instant1 = before ? //
-          instant1.plus(deltaTime, ChronoUnit.SECONDS) : //
-          instant1.minus(deltaTime, ChronoUnit.SECONDS);
+      instant1 =
+          before
+              ? //
+              instant1.plus(deltaTime, ChronoUnit.SECONDS)
+              : //
+              instant1.minus(deltaTime, ChronoUnit.SECONDS);
       moment1 = instant1.atZone(ZoneOffset.UTC);
       position1 = MoonPosition.at(moment1);
       angle1 = Angle.of(position1.moonAge, Unit.DEG);
@@ -204,7 +215,6 @@ public class MoonPosition {
 
     return moment1;
   }
-
 
   public static MoonPosition atSimplified(ZonedDateTime moment) {
     double fractionalDayOfYear = getFractionalDayOfYear(moment);
@@ -232,8 +242,15 @@ public class MoonPosition {
     double sinE = Math.sin(Math.toRadians(e));
     double sin2EMm = Math.sin(Math.toRadians(2 * e - mm));
 
-    double angle = 180 - e - (6.289 * sinMm) - (0.214 * sin2Mm) + (2.1 * sinMs) - (0.658 * sin2E)
-        - (0.112 * sinE) - (1.1274 * sin2EMm);
+    double angle =
+        180
+            - e
+            - (6.289 * sinMm)
+            - (0.214 * sin2Mm)
+            + (2.1 * sinMs)
+            - (0.658 * sin2E)
+            - (0.112 * sinE)
+            - (1.1274 * sin2EMm);
     angle = range(angle, 0, 360);
     MoonPosition position = new MoonPosition(angle, 0);
     return position;

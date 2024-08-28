@@ -12,13 +12,14 @@ import java.time.temporal.JulianFields;
  * Returns the Julian day number that begins at noon of this day, Positive year signifies A.D.,
  * negative year B.C. Remember that the year after 1 B.C. was 1 A.D.
  *
- * ref : Numerical Recipes in C, 2nd ed., Cambridge University Press 1992
- * 
- * TODO isComparable, daysBetween(otherJd), addTo(), lessThan()
+ * <p>ref : Numerical Recipes in C, 2nd ed., Cambridge University Press 1992
+ *
+ * <p>TODO isComparable, daysBetween(otherJd), addTo(), lessThan()
  */
 public class JulianDay {
-	public static final double JD2000 = 2451543.5; //Julian day of 2000 Jan 0th 00:00 UT (= 1999 Dec 31 00:00 UT) 
-	
+  public static final double JD2000 =
+      2451543.5; // Julian day of 2000 Jan 0th 00:00 UT (= 1999 Dec 31 00:00 UT)
+
   // Gregorian Calendar adopted Oct. 15, 1582 (2299161)
   public static final LocalDate COMMON_ERA = LocalDate.of(1, 1, 1);
   public static final LocalDate GREGORIAN_ERA = LocalDate.of(1582, 10, 15);
@@ -68,7 +69,6 @@ public class JulianDay {
     long jd = c + day + e + f - 1524;
     return jd;
   }
-
 
   // science et vie
   public static JulianDay ofOld2(LocalDate date, LocalTime time) {
@@ -212,7 +212,4 @@ public class JulianDay {
     String msg = MessageFormat.format("JD = {0}", String.format("%.2f", value));
     return msg;
   }
-
-
-
 }

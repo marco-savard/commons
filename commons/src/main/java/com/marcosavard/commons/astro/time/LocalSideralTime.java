@@ -14,13 +14,13 @@ public class LocalSideralTime {
 
   /**
    * Return the local sideral time at a given moment, for a given logitude
-   * 
+   *
    * @param moment a give moment
    * @param longitude from -180 to +180
    * @return lst (0 to 360)
    */
   public static LocalSideralTime of(ZonedDateTime moment, double longitude) {
-	ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
+    ZonedDateTime momentUt = TimeConverter.toZonedDateTime(moment, ZoneOffset.UTC);
     double jd = JulianDay.of(momentUt).getValue();
     double ut = toDecimalHours(momentUt);
     double d = (jd - JULIAN_DAY_Y2K_AT_NOON_UTC);
@@ -65,6 +65,4 @@ public class LocalSideralTime {
     String msg = MessageFormat.format("{0} hr", String.format("%.2f", hours()));
     return msg;
   }
-
-
 }

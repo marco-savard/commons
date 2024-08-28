@@ -1,11 +1,12 @@
 package com.marcosavard.commons.astro.moon;
 
+import com.marcosavard.commons.time.TextCalendar;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import com.marcosavard.commons.time.TextCalendar;
 
 // validate w/ https://mooncalendar.astro-seek.com/moon-phases-calendar-february-1984
 public class MoonPositionDemo {
@@ -69,8 +70,6 @@ public class MoonPositionDemo {
     System.out.println(" next last quarter : " + MoonPosition.findNextLastQuarter(date));
   }
 
-
-
   private static void demoYear(int year) {
     System.out.println("Moon Phases " + year);
     LocalTime time = LocalTime.MIDNIGHT;
@@ -116,5 +115,4 @@ public class MoonPositionDemo {
 
     calendar.print(System.out);
   }
-
 }

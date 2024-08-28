@@ -1,19 +1,15 @@
 package com.marcosavard.commons.astro.time;
 
-import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
-import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
+import com.marcosavard.commons.geog.GeoLocation;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-//import org.junit.Assert;
-import com.marcosavard.commons.astro.Astronomy;
-import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.astro.StarAlmanach;
-import com.marcosavard.commons.geog.GeoLocation;
 
+import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
+import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 
 public class LocalSideralTimeDemo {
 
