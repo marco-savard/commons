@@ -14,16 +14,27 @@ public class CountryDemo {
 
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
-    printCountryNames(display, Country.Style.LOCATIVE);
-    // printCountryCompactInfos(display);
+    printCountryNames(display);
+    //  printCountryNamesWithArticle(display);
+    //  printCountryCompactInfos(display);
     // printCountryDetailedInfos(display);
-    // printCountryNamesWithArticle(display);
+  }
+
+  private static void printCountryNames(Locale display) {
+    for (Country country : Country.values()) {
+      String countryName = country.getDisplayName(display);
+      Console.println("{0} : {1}", country.getCode(), countryName);
+    }
+  }
+
+  private static void printCountryNamesWithArticle(Locale display) {
+    printCountryNames(display, Country.Style.WITH_ARTICLE);
   }
 
   private static void printCountryNames(Locale display, Country.Style style) {
     for (Country country : Country.values()) {
       String countryName = country.getDisplayName(display, style);
-      Console.println(countryName);
+      Console.println("{0} : {1}", country.getCode(), countryName);
     }
   }
 

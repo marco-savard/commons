@@ -3,6 +3,7 @@ package com.marcosavard.commons.geog;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Gender;
 import com.marcosavard.commons.ling.Language;
+import com.marcosavard.commons.math.RessourceEnum;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -10,9 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public enum Country {
+public enum Country implements RessourceEnum {
   ANDORRA("AD"),
   UNITED_ARAB_EMIRATES("AE"),
   AFGHANISTAN("AF"),
@@ -261,20 +264,44 @@ public enum Country {
   MAYOTTE("YT"),
   SOUTH_AFRICA("ZA"),
   ZAMBIA("ZM"),
-  ZIMBABWE("ZW");
+  ZIMBABWE("ZW"),
+  SERBIA_AND_MONTENEGRO("SCG", 2006, Country.SERBIA, Country.MONTENEGRO),
+  YUGOSLAVA("YUG", 2003, Country.SERBIA_AND_MONTENEGRO),
+  ZAIRE("ZAR", 1997, Country.CONGO_KINSHASA),
+  CZECHOSLOVAKIA("CSK", 1993, Country.CZECH_REPUBLIC, Country.SLOVAKIA),
+  SOVIET_UNION(
+      "SUN",
+      1992,
+      Country.RUSSIA,
+      Country.UKRAINE,
+      Country.BELARUS,
+      Country.MOLDOVA,
+      Country.LATVIA,
+      Country.LITHUANIA,
+      Country.ESTONIA,
+      Country.GEORGIA,
+      Country.ARMENIA,
+      Country.AZERBAIJAN,
+      Country.KAZAKHSTAN,
+      Country.KYRGYZSTAN,
+      Country.TAJIKISTAN,
+      Country.TURKMENISTAN,
+      Country.UZBEKISTAN),
+  GERMAN_DEMOCRATIC_REPUBLIC("DDR", 1990, Country.GERMANY),
+  BURMA("BUR", 1989, Country.MYANMAR),
+  UPPER_VOLTA("HVO", 1984, Country.BURKINA),
+  SOUTHERN_RHODESIA("RHO", 1980, Country.ZIMBABWE),
+  DAHOMEY("DHY", 1977, Country.BENIN),
+  VIETNAM_DEMOCRATIC_REPUBLIC("VDR", 1977, Country.VIETNAM);
+
   /*
-  SWAZILAND("Swaziland"),
-  ROME("Rome"),
-  PRUSSIA("Prussia"),
-  GRENADINES("Grenadines"),
-  NEWFOUNDLAND("Newfoundland"),
-  OTTOMAN_EMPIRE("Ottoman Empire"),
-  MALDIVES("Maldives"),
-  MOUNT_ATHOS("Mount Athos"),
-  KOSOVO("Kosovo"),
-  DANZIG("Danzig"),
-  GAZA_STRIP("Gaza Strip"),
-  HOLY_ROMAN_EMPIRE("Holy Roman Empire"*/
+   NEWFOUNDLAND("Newfoundland"),
+      AUSTRIA_HUNGARY("Ottoman Empire"),
+   OTTOMAN_EMPIRE("Ottoman Empire"),
+    PRUSSIA("Prussia"),
+  HOLY_ROMAN_EMPIRE("Holy Roman Empire"
+    ROME("Rome"),
+    */
 
   public enum Style {
     ALONE,
@@ -290,6 +317,10 @@ public enum Country {
   private Currency currency;
 
   Country(String code) {
+    this(code, -1, null);
+  }
+
+  Country(String code, int endYear, Country... successors) {
     this.code = code;
     this.locales = findLocales(code);
     this.scripts = findScripts(locales);
@@ -329,19 +360,30 @@ public enum Country {
     return getDisplayName(Locale.getDefault());
   }
 
+  @Override
   public String getDisplayName(Locale display) {
-    return getDisplayName(display, Style.ALONE);
+    String displayName, baseName = getClass().getName();
+    Locale locale = localeOf(code);
+
+    try {
+      ResourceBundle bundle = ResourceBundle.getBundle(baseName, display);
+      displayName = (locale == null) ? toTitleCase(name()) : locale.getDisplayCountry(display);
+      displayName = bundle.containsKey(code) ? bundle.getString(code) : displayName;
+    } catch (MissingResourceException ex) {
+      displayName = locale.getDisplayCountry(display);
+    }
+
+    return displayName;
   }
 
   public String getDisplayName(Locale display, Style style) {
-    Locale locale = localeOf(code);
-    String name = (locale == null) ? toTitleCase(name()) : locale.getDisplayCountry(display);
+    String displayName = getDisplayName(display);
 
     if (display.getLanguage().equals(Language.FRENCH.toString())) {
-      return getFrDisplayName(name, style);
+      return getFrDisplayName(displayName, style);
     }
 
-    return name;
+    return displayName;
   }
 
   private String getFrDisplayName(String name, Style style) {
@@ -654,7 +696,7 @@ public enum Country {
 
       if (display.getLanguage().equals("fr")) {
         gender = countryName.endsWith("e") ? 'F' : 'M';
-        gender = List.of("BZ", "CG", "KH", "MX", "MZ").contains(code) ? 'M' : gender;
+        gender = List.of("BZ", "CG", "KH", "MX", "MZ", "ZW").contains(code) ? 'M' : gender;
         gender = List.of("KP", "KR", "MK").contains(code) ? 'F' : gender;
       }
 
