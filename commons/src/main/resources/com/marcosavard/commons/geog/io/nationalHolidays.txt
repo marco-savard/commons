@@ -1,0 +1,203 @@
+Janvier
+1;Andorre;Fête de l'indépendance
+1;Cuba;Fête de la libération
+1;Haïti;Fête de l'indépendance (1804)
+1;Soudan;Fête nationale
+4;Myanmar;Fête de l'indépendance (1948)
+9;Ouzbékistan;Fête de l'indépendance (1991)
+26;Australie;Fête de l'Australie
+26;Inde;Proclamation de la République (1950)
+31;Nauru;Fête nationale
+Février
+4;Sri Lanka;Fête nationale
+6;Nouvelle-Zélande;Fête nationale (fête de Waitangi)
+7;Grenade;Fête de l'indépendance (1974)
+11;Iran;Fête nationale
+16;Lituanie;Fête de l'indépendance
+18;Gambie;Fête de l'indépendance
+22;Sainte-Lucie;Fête de l'indépendance (1979)
+23;Brunéi-Darussalam;Fête nationale
+23;Guyana;Fête de la République
+24;Estonie;Fête de l'indépendance (1918)
+25;Koweït;Fête nationale
+27;République dominicaine;Fête de l'indépendance
+Mars
+3;Bulgarie;Fête nationale
+6;Ghana;Fête nationale
+12;Maurice;Fête nationale
+17;Irlande;Saint-Patric (461)
+20;Tunisie;Proclamation de l'indépendance (1956)
+23;Pakistan;Fête du Pakistan
+25;Grèce;Fête de l'indépendance (1821)
+26;Bangladesh;Fête nationale
+Avril
+4;Sénégal;Fête de l'indépendance
+16;Danemark;Anniversaire de naissance de Sa Majesté la reine Margrethe II
+17;Syrie;Fête nationale
+18;Zimbabwe;Fête de l'indépendance
+26;Tanzanie;Fête de l'Union
+27;Afrique du Sud;Jour de la Liberté
+27;Sierra Leone;Fête de la République
+27;Togo;Fête nationale (1960)
+30;Pays-Bas;Anniversaire de naissance de Sa Majesté la Reine Béatrix
+Mai
+1;Îles Marshall;Fête nationale
+3;Pologne;Fête nationale
+9;Union européenne;Journée de l'Europe - Déclaration Schuman
+12;Israël;Fête nationale
+15;Paraguay;Fête de l'indépendance (1811)
+17;Norvège;Fête de la Constitution
+20;Cameroun;Fête nationale
+22;Yémen;Fête nationale
+24;Érythrée;Fête de l'indépendance (1993)
+25;Argentine;Révolution de mai (1810)
+25;Jordanie;Fête nationale
+28;Éthiopie;Anniversaire du renversement du Derg
+30;Croatie;Fête nationale (depuis 1990)
+Juin
+1;Samoa;Fête de l'indépendance (1962)
+2;Italie;Fondation de la République (1946)
+4;Tonga;Fête de l'indépendance (1970)
+5;Danemark;Jour de la Constitution
+6;Suède;Fête nationale
+10;Portugal;Fête nationale
+12;Philippines;Fête nationale
+12;Russie;Fête nationale
+16;Royaume-Uni;Anniversaire de naissance de Sa Majesté la Reine
+17;Islande;Proclamation de la République (1944)
+18;Organisation des États des Antilles orientales;Jour de L'OEAO
+18;Seychelles;Fête de la Constitution
+23;Luxembourg;Anniversaire de naissance de Son Altesse Royale le Grand Duc Jean (1921)
+24;Québec;Fête nationale
+25;Mozambique;Fête nationale
+25;Slovénie;Fête nationale
+26;Madagascar;Fête de l'indépendance
+27;Djibouti;Fête nationale
+30;République démocratique du Congo;Fête de l'indépendance
+Juillet
+1;Canada;Fête du Canada
+1;Rwanda;Fête de l'indépendance
+1;Burundi;Fête nationale (1962)
+3;Bélarus;Fête de l'indépendance
+4;États-Unis;Fête de l'indépendance (1776)
+5;Cap-Vert;Fête nationale
+5;Venezuela;Fête de l'indépendance (1811)
+6;Comores;Fête nationale
+6;Malawi;Fête de l'indépendance
+7;Îles Salomon;Fête nationale
+10;Bahamas;Fête de l'indépendance (1973)
+11;Mongolie;Fête nationale
+12;Sao Tomé et Principe;Fête nationale
+12;Kiribati;Fête nationale
+14;France;Fête nationale
+17;Iraq;Anniversaire de la Révolution
+20;Colombie;Fête nationale
+21;Belgique;Avènement du Roi Léopold (1831)
+23;Égypte;Fête nationale
+26;Libéria;Fête de l'indépendance
+28;Pérou;Fête de l'indépendance (1821)
+30;Maroc;Fête du Trône
+30;Vanuatu;Fête de l'indépendance (1950)
+Août
+1;Suisse;Fête nationale
+1;Bénin;Jour de l'indépendance
+3;Niger;Proclamation de l'indépendance (1960)
+6;Jamaïque;Fête de l'indépendance
+6;Bolivie;Fête de l'indépendance
+7;Côte d'Ivoire;Fête de l'indépendance
+9;Singapour;Fête de l'indépendance
+10;Équateur;Fête de l'indépendance (1809)
+11;Tchad;Fête nationale
+15;République de Corée;Fête de la libération
+15;République du Congo;Fête nationale
+16;Liechtenstein;Fête nationale
+17;Indonésie;Fête de l'indépendance (1945)
+17;Gabon;Fête nationale
+19;Afghanistan;Fête nationale
+20;Hongrie;La Journée de Saint-Étienne, fondateur de l'État hongrois
+24;Ukraine;Fête de l'indépendance (1991)
+25;Uruguay;Fête nationale
+27;Moldova;Fête nationale
+31;Malaisie;Fête nationale
+31;Trinité et Tobago;Fête nationale
+31;Kirghizistan;Fête de l'indépendance
+Septembre
+1;Libye;Fête nationale
+1;Slovaquie;Fête de la Constitution (1992)
+2;Viet Nam;Fête de l'indépendance
+3;Qatar;Fête de l'indépendance
+6;Swaziland;Fête de l'indépendance
+7;Brésil;Fête de l'indépendance (1822)
+8;Macédoine;Fête de l'indépendance
+9;République populaire démocratique de Corée;Fête nationale
+11;Catalogne;Fête nationale
+12;Guinée-Bissau;Fête nationale
+15;Costa Rica;Fête de l'indépendance
+15;Salvador;Fête de l'indépendance (1821)
+15;Guatemala;Fête de l'indépendance
+15;Honduras;Fête nationale
+15;Nicaragua;Fête nationale
+16;Papouasie-Nouvelle-Guinée;Fête de l'indépendance
+16;Mexique;Fête nationale
+18;Chili;Fête de l'indépendance
+19;Saint-Kitts-et-Nevis;Fête de l'indépendance (1983)
+21;Belize;Fête de l'indépendance
+21;Malte;Fête de l'indépendance (1964)
+21;Arménie;Fête de l'indépendance
+22;Mali;Proclamation de la République (1960)
+23;Arabie saoudite;Fête nationale
+27;Belgique;Fête de la Communauté française
+30;Botswana;Fête de l'indépendance
+Octobre
+1;Chine;Fête nationale
+1;Tuvalu;Fête nationale
+1;Chypre;Fête de l'indépendance
+1;Nigéria;Fête nationale
+2;Guinée;Fête nationale (1958)
+3;Allemagne;Anniversaire de l'unification de l'Allemagne
+4;Lesotho;Fête nationale
+9;Ouganda;Fête de l'indépendance
+10;Fidji;Fête nationale
+12;Espagne;Fête nationale
+12;Guinée;Fête nationale équatoriale
+21;Somalie;Proclamation de la République
+22;Saint-Siège;Couronnement de Sa Sainteté le pape Jean Paul II
+24;Zambie;Fête de l'indépendance
+25;Kazakhstan;Jour de la République
+26;Autriche;Fête nationale
+27;Turkménistan;Fête de l'indépendance
+27;Saint-Vincent et les Grenadines;Fête de l'indépendance (1979)
+28;République tchèque;Proclamation de l'État tchèque
+29;Turquie;Proclamation de la République (1923)
+Novembre
+1;Algérie;Fête nationale
+1;Antigua-et-Barbuda;Fête de l'indépendance (1981)
+3;Panama;Fête de l'indépendance
+3;Dominique;Fête nationale (1978)
+3;Micronésie;Fête de l'indépendance (1986)
+9;Cambodge;Fête nationale
+11;Angola;Fête de l'indépendance
+18;Oman;Fête nationale
+18;Lettonie;Jour de l'indépendance
+19;Monaco;Fête nationale
+22;Liban;Fête de l'indépendance (1943)
+25;Suriname;Fête de l'indépendance (1975)
+25;Bosnie-Herzégovine;Fête nationale
+28;Mauritanie;Fête de l'indépendance (1960)
+28;Albanie;Fête nationale
+30;Barbade;Fête de l'indépendance (1966)
+Décembre
+1;Roumanie;Fête nationale
+1;République centrafricaine;Proclamation de la République
+2;Laos;Fête nationale
+2;Émirats arabes unis;Fête nationale
+5;Thaïlande;Fête nationale
+6;Finlande;Fête de l'indépendance (1917)
+11;Burkina Faso;Fête nationale
+12;Kenya;Fête de l'indépendance (Jamhuri)
+16;Bahreïn;Fête nationale
+23;Japon;Fête nationale
+28;Népal;Anniversaire de naissance de Sa Majesté le Roi
+
+
+

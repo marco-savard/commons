@@ -1,0 +1,51 @@
+AI;Anguilla;GB
+AS;American Samoa;US
+AW:Aruba;NL
+AX;Åland;FI
+BM;Bermuda;GB
+BQ;Bonair;NL
+BV;Bouvet Island;NO
+IO;British Indian Ocean Territory;GB
+KY;Cayman Islands;GB
+CX;Christmas Island;AU
+CC;Cocos;AU
+CK;Cook Islands;NZ
+CW;Curaçao;NL
+FK;Falkland Islands;GB
+FO;Faroe Islands;DK
+GF;French Guiana;FR
+PF;French Polynesia;FR
+TF;French Southern Territories;FR
+GI;Gibraltar;GB
+GL;Greenland;DK
+GP;Guadeloupe;FR
+GU;Guam;US
+GG;Guernsey;GB
+HM;Heard Island and McDonald Islands;AU
+HK;Hong Kong;CN
+IM;Isle of Man;GB
+JE;Jersey;GB
+MO;Macao;CN
+MQ;Martinique;FR
+YT;Mayotte;FR
+MS;Montserrat;GB
+NC;New Caledonia;FR
+NU;Niue;NZ
+NF;Norfolk Island;AU
+MP;Northern Mariana Islands;US
+PN;Pitcairn;GB
+PR;Puerto Rico;US
+RE;Réunion;FR
+BL;Saint Barthélemy;FR
+SH;Saint Helena;GB
+MF;Saint Martin;FR
+PM;Saint Pierre and Miquelon;FR
+SX;Sint Maarten;NL
+GS;South Georgia and the South Sandwich Islands;GB
+SJ;Svalbard and Jan Mayen;NO
+TK;Tokelau;NZ
+TC;the Turks and Caicos Islands;GB
+UM;United States Minor Outlying Islands;US
+VG;the Virgin Islands;GB
+VI;the Virgin Islands of the United States;US
+WF;Wallis and Futuna;FR

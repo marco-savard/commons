@@ -1,0 +1,197 @@
+AF;Afghanistan (l');l'État islamique d'Afghanistan;Kaboul
+ZA;Afrique du Sud (l');la République d'Afrique du Sud/la République sud-africaine;Pretoria (administrative);Le Cap (législative)
+AL;Albanie (l');la République d'Albanie;Tirana
+DZ;Algérie (l');la République algérienne démocratique et populaire;Alger
+DE;Allemagne (l');la République fédérale d'Allemagne;Berlin
+AD;Andorre (l');la Principauté d'Andorre;Andorre-la-Vieille
+AO;Angola (l');la République d'Angola;Luanda
+AG;Antigua-et-Barbuda;;Saint John's
+SA;Arabie saoudite (l');le Royaume d'Arabie saoudite;Riyad
+AR;Argentine (l');la République argentine;Buenos Aires
+AM;Arménie (l');la République d'Arménie;Erevan
+AU;Australie (l');le Commonwealth d'Australie;Canberra
+AT;Autriche (l');la République d'Autriche;Vienne
+AZ;Azerbaïdjan (l');la République d'Azerbaïdjan;Bakou
+BS;Bahamas (les);le Commonwealth des Bahamas;Nassau
+BH;Bahreïn;le Royaume de Bahreïn;Manama
+BD;Bangladesh (le);la République populaire du Bangladesh;Dacca/Dhaka
+BB;Barbade (la);;Bridgetown
+BE;Belgique (la);le Royaume de Belgique;Bruxelles
+BZ;Belize (le);;Belmopan
+BJ;Bénin (le);la République du Bénin;Porto-Novo (constitutionnelle);Cotonou (administrative)
+BT;Bhoutan (le);le Royaume du Bhoutan;Thimphou
+BY;Biélorussie (la)/Bélarus (le);la République de Biélorussie;Minsk
+MM;Birmanie (la)/Myanmar (le);l'Union de Birmanie;Rangoon/Rangoun
+BO;Bolivie (la);la République de Bolivie;Sucre (constitutionnelle);La Paz (administrative)
+BA;Bosnie-Herzégovine (la);;Sarajevo
+BW;Botswana (le);la République du Botswana;Gaborone
+BR;Brésil (le);la République fédérative du Brésil;Brasilia
+BN;Brunei (le)/Brunéi Darussalam (le);le Negara Brunei Darussalam;Bandar Seri Begawan
+BG;Bulgarie (la);la République de Bulgarie;Sofia
+BF;Burkina (le);le Burkina Faso;Ouagadougou
+BI;Burundi (le);la République du Burundi;Bujumbura
+KH;Cambodge (le);le Royaume du Cambodge;Phnom Penh
+CM;Cameroun (le);la République du Cameroun;Yaoundé
+CA;Canada (le);;Ottawa
+CV;Cap-Vert (le);la République du Cap-Vert;Praia
+CF;centrafricaine (la République)/Centrafrique (la);la République centrafricaine;Bangui
+CL;Chili (le);la République du Chili;Santiago
+CN;Chine (la);la République populaire de Chine;Pékin
+CY;Chypre;la République de Chypre;Nicosie
+CO;Colombie (la);la République de Colombie;Bogota
+KM;Comores (les);l'Union des Comores;Moroni
+CD;Congo (la République démocratique du);la République démocratique du Congo;Kinshasa
+CG;Congo (le);la République du Congo;Brazzaville
+KP;Corée du Nord (la);la République populaire démocratique de Corée;Pyongyang
+KR;Corée du Sud (la);la République de Corée;Séoul
+CR;Costa Rica (le);la République du Costa Rica;San José
+CI;Côte d'Ivoire (la);la République de Côte d'Ivoire;Yamoussoukro (politique);Abidjan (ambassades)
+HR;Croatie (la);la République de Croatie;Zagreb
+CU;Cuba;la République de Cuba;La Havane
+DK;Danemark (le);le Royaume du Danemark;Copenhague
+DJ;Djibouti;la République de Djibouti;Djibouti
+DO;dominicaine (la République);la République dominicaine;Saint-Domingue
+DM;Dominique (la);le Commonwealth de Dominique;Roseau
+EG;Égypte (l');la République arabe d'Égypte;Le Caire
+AE;Émirats arabes unis (les);les Émirats arabes unis;Abou Dhabi/Abu Dhabi/Abou Dabi
+EC;Équateur (l');la République d'Équateur;Quito
+ER;Érythrée (l');l'État d'Érythrée;Asmara
+ES;Espagne (l');le Royaume d'Espagne;Madrid
+EE;Estonie (l');la République d'Estonie;Tallinn
+US;États-Unis (les);les États-Unis d'Amérique;Washington
+ET;Éthiopie (l');la République démocratique fédérale d'Éthiopie;Addis Abeba
+FJ;Fidji (les);la République des Îles Fidji;Suva
+FI;Finlande (la);la République de Finlande;Helsinki
+FR;France (la);la République française;Paris
+GA;Gabon (le);la République gabonaise;Libreville
+GM;Gambie (la);la République de Gambie;Banjul
+GE;Géorgie (la);;Tbilissi
+GH;Ghana (le);la République du Ghana;Accra
+GR;Grèce (la);la République hellénique;Athènes
+GD;Grenade (la);;Saint-Georges
+GT;Guatemala (le);la République du Guatemala;Guatemala;
+GN;Guinée (la);la République de Guinée;Conakry
+GW;Guinée-Bissau (la);la République de Guinée-Bissau;Bissau/Bissao
+GQ;Guinée équatoriale;la République de Guinée équatoriale;Malabo
+GY;Guyana;la République coopérative du Guyana;Georgetown
+HT;Haïti;la République d'Haïti;Port-au-Prince
+HN;Honduras (le);la République du Honduras;Tegucigalpa
+HU;Hongrie (la);la République de Hongrie;Budapest
+IN;Inde (l');la République de l'Inde;New Delhi
+ID;Indonésie (l');la République d'Indonésie;Jakarta
+IQ;Irak (l')/Iraq (l');la République d'Irak/la République d'Iraq;Bagdad/Baghdad
+IR;Iran (l');la République islamique d'Iran;Téhéran
+IE;Irlande (l');;Dublin
+IS;Islande (l');la République d'Islande;Reykjavik
+IL;Israël;l'État d'Israël;Tel-Aviv (ambassades);Jérulalem (politique)
+IT;Italie(l');la République italienne;Rome
+JM;Jamaïque (la);;Kingston
+JP;Japon (le);;Tokyo
+JO;Jordanie (la);le Royaume hachémite de Jordanie;Amman
+KZ;Kazakhstan (le);la République du Kazakhstan;Astana
+KE;Kenya (le);la République du Kenya;Nairobi
+KG;Kirghizstan (le)/Kirghizie (la)/Kirghizistan (le);la République kirghize;Bichkek
+KI;Kiribati (les);la République des Kiribati;Bairiki
+KW;Koweït (le);l'État du Koweït;Koweït
+LA;Laos (le);la République démocratique populaire lao;Vientiane
+LS;Lesotho (le);le Royaume du Lesotho;Maseru
+LV;Lettonie (la);la République de Lettonie;Riga
+LB;Liban (le);la République libanaise;Beyrouth
+LR;Liberia (le);la République du Liberia;Monrovia
+LY;Libye (la);la grande Jamahiriya arabe libyenne populaire et socialiste;Tripoli
+LI;Liechtenstein (le);la Principauté du Liechtenstein;Vaduz
+LT;Lituanie (la);la République de Lituanie;Vilnius
+LU;Luxembourg (le);le Grand-Duché de Luxembourg;Luxembourg
+MK;Macédoine (la);l'ancienne République yougoslave de Macédoine;Skopje
+MG;Madagascar;la République de Madagascar;Antananarivo
+MY;Malaisie (la);;Kuala Lumpur
+MW;Malawi (le);la République du Malawi;Lilongwe
+MV;Maldives (les);la République des Maldives;Malé
+ML;Mali (le);la République du Mali;Bamako
+MT;Malte;la République de Malte;La Valette
+MA;Maroc (le);le Royaume du Maroc;Rabat
+MH;Marshall (les);la République des Îles Marshall;Delap-Uliga-Darrit
+MU;Maurice;la République de Maurice;Port Louis
+MR;Mauritanie (la);la République islamique de Mauritanie;Nouakchott
+MX;Mexique (le);les États unis mexicains;Mexico
+FM;Micronésie (la);les États fédérés de Micronésie;Palikir
+MD;Moldavie (la)/Moldova (la);la République de Moldavie;Chisinau
+MC;Monaco;la Principauté de Monaco;Monaco
+MN;Mongolie;;Oulan-Bator
+MZ;Mozambique (le);la République du Mozambique;Maputo
+NA;Namibie (la);la République de Namibie;Windhoek
+NR;Nauru;la République de Nauru;Yaren
+NP;Népal (le);le Royaume du Népal;Katmandou
+NI;Nicaragua (le);la République du Nicaragua;Managua
+NE;Niger (le);la République du Niger;Niamey
+NG;Nigeria (le)/Nigéria (le);la République fédérale du Nigeria;Abuja (nouvelle);Lagos (ancienne)
+NO;Norvège (la);le Royaume de Norvège;Oslo
+NZ;Nouvelle-Zélande (la);;Wellington
+OM;Oman;le Sultanat d'Oman;Mascate
+UG;Ouganda (l');la République d'Ouganda;Kampala
+UZ;Ouzbékistan (l');la République d'Ouzbékistan;Tachkent
+PK;Pakistan (le);la République islamique du Pakistan;Islamabad
+PW;Palaos (les);la République des Palaos;Koror
+PA;Panama (le);la République du Panama;Panama
+PG;Papouasie-Nouvelle-Guinée (la);;Port Moresby
+PY;Paraguay (le);la République du Paraguay;Asuncion/Assomption
+NL;Pays-Bas (les);le Royaume des Pays-Bas;Amsterdam (constitutionnelle);La Haye (administrative)
+PE;Pérou (le);la République du Pérou;Lima
+PH;Philippines (les);la République des Philippines;Manille
+PL;Pologne (la);la République de Pologne;Varsovie
+PT;Portugal (le);la République portugaise;Lisbonne
+QA;Qatar (le);l'État du Qatar;Doha
+RO;Roumanie (la);;Bucarest
+GB;Royaume-Uni (le);le Royaume-Uni de Grande-Bretagne et d'Irlande du Nord;Londres
+RU;Russie (la);la Fédération de Russie;Moscou
+RW;Rwanda (le);la République rwandaise;Kigali
+KN;Saint-Christophe-et-Niévès;la Fédération de Saint-Christophe-et-Niévès;Basseterre
+LC;Sainte-Lucie;;Castries
+SM;Saint-Marin;la République de Saint-Marin;Saint-Marin
+VA;Vatican (le)/Saint-Siège (le);l'État de la Cité du Vatican;le Vatican
+VC;Saint-Vincent-et-les Grenadines;;Kingstown
+SB;Salomon (les);les Îles Salomon;Honiara
+SV;Salvador (le);la République du Salvador;San Salvador
+WS;Samoa (les);l'État indépendant des Samoa;Apia
+ST;Sao Tomé-et-Principe;la République démocratique de Sao Tomé-et-principe;Sao Tomé
+SN;Sénégal (le);la République du Sénégal;Dakar
+CS;Serbie-et-Monténégro (la);;Belgrade
+RS;Serbie (la);;Belgrade
+ME;Monténégro (le);;Podgorica
+SC;Seychelles (les);la République des Seychelles;Victoria
+SL;Sierra Leone (la);la République de Sierra Leone;Freetown
+SG;Singapour;la République de Singapour;Singapour
+SK;Slovaquie (la);la République slovaque;Bratislava
+SI;Slovénie (la);la République de Slovénie;Ljubljana
+SO;Somalie (la);;Muqdisho/Mogadiscio
+SD;Soudan (le);la République du Soudan;Khartoum
+LK;Sri Lanka (le);la République démocratique socialiste du Sri Lanka;Colombo
+SE;Suède (la);le Royaume de Suède;Stockholm
+CH;Suisse (la);la Confédération suisse;Berne
+SR;Suriname (le)/Surinam (le);la République du Suriname;Paramaribo
+SZ;Swaziland (le);le Royaume du Swaziland Mbabane;Lobamba
+SY;Syrie (la);la République arabe syrienne;Damas
+TJ;Tadjikistan (le);la République du Tadjikistan;Douchanbé
+TZ;Tanzanie (la);la République unie de Tanzanie;Dodoma (nouvelle);Dar es Salam (ancienne)
+TD;Tchad (le);la République du Tchad;Ndjamena
+CZ;Tchèque (la République)/Tchéquie (la);la République tchèque;Prague
+TH;Thaïlande (la);le Royaume de Thaïlande;Bangkok
+TL;Timor oriental (le);la République démocratique du Timor oriental;Dili
+TG;Togo (le);la République togolaise;Lomé
+TO;Tonga (les);le Royaume des Tonga;Nuku'alofa
+TT;Trinité-et-Tobago (la);la République de Trinité-et-Tobago;Port of Spain
+TN;Tunisie (la);la République tunisienne;Tunis
+TM;Turkménistan (le);;Achgabat
+TR;Turquie (la);la République de Turquie;Ankara
+TV;Tuvalu (les);;Vaiaku
+UA;Ukraine (l');;Kiev
+UY;Uruguay (l');la République orientale d'Uruguay;Montevideo
+VU;Vanuatu (le);la République du Vanuatu;Port-Vila
+VE;Venezuela (le);la République bolivarienne du Venezuela;Caracas
+VN;Viêt Nam (le)/Vietnam (le);la République socialiste du Viêt Nam;Hanoï
+YE;Yémen (le);la République du Yémen;Sanaa
+ZM;Zambie (la);la République de Zambie;Lusaka
+ZW;Zimbabwe (le);la République du Zimbabwe;Harare
+
+
+
