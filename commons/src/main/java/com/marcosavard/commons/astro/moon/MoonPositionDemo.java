@@ -12,11 +12,11 @@ import java.time.ZonedDateTime;
 public class MoonPositionDemo {
 
   public static void main(String[] args) {
-    // demoFebruary2nd1984();
+    demoFebruary2nd1984();
     // demoFebruary1984();
-    // demoFindPhaseTime();
+     demoFindPhaseTime();
     // demoMonth(2020, 10);
-    demoCalendarMonth(2020, 10);
+   // demoCalendarMonth(2025, 1);
   }
 
   private static void demoFebruary2nd1984() {
