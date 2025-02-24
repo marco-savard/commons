@@ -437,9 +437,12 @@ public class StringUtil {
    * @return stripped text
    */
   public static String stripAccents(CharSequence original) {
-    original = translate(original, "łș", "ls");
-    String stripped = Normalizer.normalize(NullSafe.of(original), Normalizer.Form.NFD);
-    return stripped.replaceAll("[^\\p{ASCII}]", "");
+    String stripped = translate(original, "’", "'");
+    stripped = translate(stripped, "łș", "ls");
+    stripped = Normalizer.normalize(NullSafe.of(stripped), Normalizer.Form.NFD);
+    stripped = stripped.replaceAll("[^\\p{ASCII}]", "");
+    stripped = translate(stripped, "'", "’");
+    return stripped;
   }
 
   public static String stripAccentsOld(CharSequence original) {
