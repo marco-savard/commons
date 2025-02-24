@@ -1,5 +1,6 @@
 package com.marcosavard.library.poi.word;
 
+import com.marcosavard.commons.math.arithmetic.IntegerGrid;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.util.ArrayList;
