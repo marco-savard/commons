@@ -5,7 +5,17 @@ import com.marcosavard.commons.lang.StringUtil;
 import java.util.*;
 
 public class PlayingCard implements Comparable<PlayingCard> {
-    
+
+    public static int computeScore(List<PokerHand> hands) {
+        int total = 0;
+
+        for (PlayingCard.PokerHand pokerHand : hands) {
+            total += pokerHand.getHand().getPoints();
+        }
+
+        return total;
+    }
+
     public enum Suit {
         SPADE(0x2660),
         HEART(0x2665),
