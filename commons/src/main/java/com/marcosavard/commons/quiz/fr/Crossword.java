@@ -1,20 +1,20 @@
 package com.marcosavard.commons.quiz.fr;
 
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.lang.StringUtil;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Crossword {
   private static final char EMPTY = '.';
-
   private static final char BLOCK = '#';
-
-  private char[][] grid;
-
   private static final int MINIMAL_COUNT = 5;
 
+  private int rows, cols;
+  private char[][] grid;
   private int wordCount = 0;
 
   private List<Entry> horizontalEntries = new ArrayList<>();
@@ -26,6 +26,8 @@ public class Crossword {
   }
 
   private Crossword(int rows, int cols) {
+    this.rows = rows;
+    this.cols = cols;
     grid = new char[rows][cols];
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
@@ -50,6 +52,17 @@ public class Crossword {
     }
   }
 
+  public boolean[][] getCellStates() {
+    boolean[][] states = new boolean[rows][cols];
+
+    for (int i=0; i<rows; i++) {
+      for (int j=0; j<cols; j++) {
+        states[i][j] = (grid[i][j] == '#' ||  grid[i][j] == '.');
+      }
+    }
+    return states;
+  }
+
   private static List<List<Question>> partitionByLength(List<Question> questions) {
     List<List<Question>> partitions = new ArrayList<>();
     int maxLength = questions.get(0).getWord().length();
@@ -68,8 +81,7 @@ public class Crossword {
     return partitions;
   }
 
-  public int fillPartition(
-      List<Question> pickedQuestions, List<Question> questions, int orientation) {
+  public int fillPartition(List<Question> pickedQuestions, List<Question> questions, int orientation) {
     int rows = grid.length;
     int cols = grid[0].length;
     int minScore = 0;
@@ -293,6 +305,34 @@ public class Crossword {
     printVerticalHints();
   }
 
+  public List<String> getHorizontalDefinitions() {
+    List<String> definitions = new ArrayList<>();
+
+    for (int i = 0; i < rows; i++) {
+      String defs = getDefinition(horizontalEntries, i);
+
+      if (defs != null) {
+        definitions.add(defs);
+      }
+    }
+
+    return definitions;
+  }
+
+  public List<String> getVerticalDefinitions() {
+    List<String> definitions = new ArrayList<>();
+
+    for (int i = 0; i < cols; i++) {
+      String defs = getDefinition(verticalEntries, i);
+
+      if (defs != null) {
+        definitions.add(defs);
+      }
+    }
+
+    return definitions;
+  }
+
   private void printHorizontalHints() {
     Console.println("Horizontal");
     int rows = grid.length;
@@ -315,6 +355,25 @@ public class Crossword {
     Console.println();
   }
 
+  private String getDefinition(List<Entry> entries, int pos) {
+    List<Entry> filtered =
+            entries.stream()
+                    .filter(e -> e.pos == pos)
+                    .sorted(Comparator.comparing(e -> e.order))
+                    .toList();
+
+    List<String> hintList = new ArrayList<>();
+    for (int i = 0; i < filtered.size(); i++) {
+      Question question = filtered.get(i).question;
+      hintList.add(question.getHint());
+    }
+
+    String hints = String.join("; ", hintList);
+    hints = StringUtil.capitalize(hints);
+    String msg = hintList.isEmpty() ? null : MessageFormat.format("{0} : {1}.", Integer.toString(pos + 1), hints);
+    return msg;
+  }
+
   private void printHintsAtPos(List<Entry> entries, int pos) {
     List<Entry> filtered =
         entries.stream()
@@ -332,6 +391,10 @@ public class Crossword {
 
       Console.println();
     }
+  }
+
+  public char[][] getGrid() {
+    return grid;
   }
 
   private static class Entry {
