@@ -4,11 +4,11 @@ import com.marcosavard.commons.debug.Console;
 
 import java.util.Locale;
 
-public class PlanetDemo {
+public class AstroObjectDemo {
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
 
-    for (Planet planet : Planet.values()) {
+    for (AstroObject planet : AstroObject.values()) {
       String name = planet.getDisplayName(display);
       Console.println("{0} : {1}", name, planet.getSymbol());
     }
