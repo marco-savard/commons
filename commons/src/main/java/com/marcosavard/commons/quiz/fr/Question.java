@@ -3,11 +3,7 @@ package com.marcosavard.commons.quiz.fr;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Question implements Comparable<Question> {
 
@@ -19,7 +15,7 @@ public class Question implements Comparable<Question> {
     this.hint = hint;
   }
 
-  public static List<Question> shuffle(List<Question> allQuestions, PseudoRandom pr) {
+  public static List<Question> shuffle(List<Question> allQuestions, Random random) {
     Map<Integer, List<Question>> questionsByLength = sortByLength(allQuestions);
     List<Question> shuffledQuestions = new ArrayList<>();
 
@@ -27,8 +23,8 @@ public class Question implements Comparable<Question> {
       List<Question> questions = questionsByLength.get(i);
 
       if (questions != null) {
-        List<Question> shuffled = pr.shuffle(questions);
-        shuffledQuestions.addAll(shuffled);
+        Collections.shuffle(questions, random);
+        shuffledQuestions.addAll(questions);
       }
     }
 

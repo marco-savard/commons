@@ -2,24 +2,20 @@ package com.marcosavard.commons.quiz.fr;
 
 import com.marcosavard.commons.geog.CountryOld;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.math.arithmetic.PseudoRandom;
+import com.marcosavard.commons.util.PseudoRandom;
 
 import java.text.MessageFormat;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class QuestionDemo {
 
   public static void main(String[] args) {
     List<Question> questions = generateQuestions();
-    PseudoRandom pr = new PseudoRandom(15);
-    questions = Question.shuffle(questions, pr);
+    Random random = new PseudoRandom(15);
+    Collections.shuffle(questions, random);
 
     // create crossword grid
     CrosswordGrid grid = CrosswordGrid.of(5);
@@ -46,7 +42,8 @@ public class QuestionDemo {
 
     QuestionList questionList = new QuestionList();
     Locale display = Locale.FRENCH;
-    questionList.generateQuestions(display, 15);
+    Random random = new PseudoRandom(1);
+    questionList.generateQuestions(display, random);
 
     List<Question> questions = new ArrayList<>();
 

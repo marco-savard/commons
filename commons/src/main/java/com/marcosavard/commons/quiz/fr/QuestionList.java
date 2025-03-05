@@ -1,6 +1,6 @@
 package com.marcosavard.commons.quiz.fr;
 
-import com.marcosavard.commons.astro.planet.Planet;
+import com.marcosavard.commons.astro.planet.AstroObject;
 import com.marcosavard.commons.astro.zodiac.ZodiacSign;
 import com.marcosavard.commons.astro.zodiac.phonetic.PhoneticLetter;
 import com.marcosavard.commons.chem.ChemicalElement;
@@ -19,8 +19,9 @@ import com.marcosavard.commons.geog.world.WorldCityResource;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Numeral;
 import com.marcosavard.commons.ling.RomanNumeral;
+import com.marcosavard.commons.ling.fr.dic.DicoDefinitionReader;
+import com.marcosavard.commons.ling.fr.dic.Word;
 import com.marcosavard.commons.math.Function;
-import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 import com.marcosavard.commons.quiz.general.CategoryName;
 import com.marcosavard.commons.quiz.general.Sequence;
 import com.marcosavard.commons.quiz.general.SynonymName;
@@ -35,8 +36,10 @@ import com.marcosavard.commons.ui.FileOperation;
 import com.marcosavard.commons.ui.WindowOperation;
 import com.marcosavard.commons.ui.color.WebColor;
 import com.marcosavard.commons.ui.color.WebSafeColor;
+import com.marcosavard.commons.util.PseudoRandom;
 
 import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.DateFormatSymbols;
 import java.text.MessageFormat;
@@ -45,32 +48,55 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Currency;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class QuestionList {
   private List<Question> questions = new ArrayList<>();
   private TimeZoneGlossary timeZoneGlossary = new TimeZoneGlossary();
 
-  public void generateQuestions(Locale display, int seed) {
-    PseudoRandom pr = new PseudoRandom(seed);
+  public void generateQuestions(Locale display, Random random) {
+    generateWordWithDefinitions(500, random);
 
     // general
-    /*
-        generateSynonyms(display);
-        generateSynonymNonCountableNouns(display);
-        generateSynonymCountableNouns(display);
-        generateSynonymAdjectives(display);
-        generateCategories(display);
-        generateSequences(display);
-        generateGuessEnumYesNo(display);
-            generatePhoneticLetter(display);
-    */
-    // antiquite
+    generateSynonyms(display);
+    generateSynonymNonCountableNouns(display);
+    generateSynonymCountableNouns(display);
+    generateSynonymAdjectives(display);
+    generateCategories(display);
+    generateSequences(display);
 
+    generatePhoneticLetter(display);
+    generateAbbreviations(display);
+    generateGuessCardinalPoint(display);
+    generateGuessCardinalPointAbbreviation(display);
+
+    //time
+    generateGuessWeekDay(display);
+    generateGuessWeekDayAbbreviation(display);
+    generateGuessDateAbbreviation(display);
+    generateGuessMonth(display);
+    generateGuessMonthAbbreviation(display);
+
+    /*
+    // science
+    generateGuessMetal(display);
+    generateGuessMetalByName(display);
+    generateGuessColorCategory(display);
+    generateGuessColorBlend(display);
+   // generateTimeUnit(display);
+    //
+    generateGuessChemicalElement(display);
+
+    // from UI resource
+    generateGuessEnumYesNo(display);
+    generateGuessEnumDirection(display);
+    generateGuessEnumCollection(display);
+
+    // antiquite
+*/
+    /*
     generateGreekLetter(display);
     generateGreekGods(display);
     generateRomanGod(display);
@@ -79,7 +105,7 @@ public class QuestionList {
     generateRomanceLanguages(display);
     generateZodiacSigns(display);
     generateGuessRomanNumerals(pr);
-
+*/
     //
     // europe
     // generateEuropeQuestions(display);
@@ -108,15 +134,11 @@ public class QuestionList {
     */
     /*
                generateMathFunctions(display);
-               generateTimeUnit(display);
                generateNumerals(display);
                generateGuessEnumColorProperty(display);
-               generateGuessColorCategory(display);
-               generateGuessColorBlend(display);
-               generateGuessMetal(display);
-               generateGuessMetalByName(display);
-               generateGuessChemicalElement(display);
-               generatePlanet(display);
+
+               //generatePlanet(display);
+
 
                // techno
                generateGuessEnumFileAttribute(display);
@@ -125,26 +147,9 @@ public class QuestionList {
                generateFontName(display);
     */
 
-    // generateAbbreviations(display);
 
     /*
         generateWorldCities(display);
-
-        // general
-
-
-        generateGuessEnumDirection(display);
-        generateGuessEnumCollection(display);
-
-        generateGuessCardinalPointAbbreviation(display);
-        generateGuessCardinalPoint(display);
-
-        //time
-        generateGuessWeekDay(display);
-        generateGuessWeekDayAbbreviation(display);
-        generateGuessDateAbbreviation(display);
-        generateGuessMonth(display);
-        generateGuessMonthAbbreviation(display);
     */
 
     /*
@@ -158,6 +163,29 @@ public class QuestionList {
     */
 
     // generateTimeZoneCodeByName(display);
+  }
+
+  private void generateWordWithDefinitions(int count, Random random) {
+      try {
+          DicoDefinitionReader reader = new DicoDefinitionReader();
+          List<Word> pickedWords = reader.pickWords(count, random);
+
+        for (Word word : pickedWords) {
+          List<String> definitions =  word.getDefinitions();
+          String definition = definitions.get(random.nextInt(definitions.size()));
+          definition = removeEnding(definition, ".");
+          addQuestion(definition, word.getText());
+        }
+
+      } catch (IOException e) {
+          throw new RuntimeException(e);
+      }
+  }
+
+  private String removeEnding(String text, String ch) {
+    int len = text.length();
+    text = text.endsWith(ch) ? text.substring(0, len-1) : text;
+    return text;
   }
 
   private void generateSequences(Locale display) {
@@ -375,7 +403,7 @@ public class QuestionList {
   }
 
   private void generateGeographyQuestions(
-      Continent continent, Locale display, PseudoRandom pr, int maximum) {
+      Continent continent, Locale display, Random random, int maximum) {
     List<Question> questions = new ArrayList<>();
     questions.addAll(generateGuessCountryByLanguage(continent, display));
     questions.addAll(generateGuessLanguageByCountry(continent, display));
@@ -385,11 +413,11 @@ public class QuestionList {
     questions.addAll(generateGuessCurrencyByCountry(continent, display));
     questions.addAll(generateGuessCurrencyCodeByName(continent, display));
     questions.addAll(generateGuessDomainByCountryName(continent, display));
-    List<Question> shuffled = pr.shuffle(questions);
-    int nb = Math.min(shuffled.size(), maximum);
+    Collections.shuffle(questions, random);
+    int nb = Math.min(questions.size(), maximum);
 
     for (int i = 0; i < nb; i++) {
-      Question question = shuffled.get(i);
+      Question question = questions.get(i);
       addQuestion(question.getHint(), question.getWord());
     }
   }
@@ -397,7 +425,7 @@ public class QuestionList {
   private void generatePhoneticLetter(Locale display) {
     for (PhoneticLetter letter : PhoneticLetter.values()) {
       int rank = 1 + letter.ordinal();
-      String hint = rank + "e lettre en alphabet phonetique";
+      String hint = rank + "e lettre en alphabet phonétique";
       String word = letter.name().toLowerCase();
       addQuestion(hint, word);
     }
@@ -614,11 +642,11 @@ public class QuestionList {
   }
 
   private void generatePlanet(Locale display) {
-    for (Planet planet : Planet.values()) {
-      Planet.Category category = planet.getCategory();
+    for (AstroObject planet : AstroObject.values()) {
+      AstroObject.Category category = planet.getCategory();
       String hint;
 
-      if (category == Planet.Category.OFFICIAL) {
+      if (category == AstroObject.Category.PLANET) {
         hint = "Planète";
       } else {
         hint = "Corps céleste";
@@ -1055,7 +1083,7 @@ public class QuestionList {
   private void generateWorldCapitals(List<WorldCityResource.Data> allCities, Locale display) {
     List<WorldCityResource.Data> capitals =
         allCities.stream().filter(c -> "C".equals(c.capital)).toList();
-
+/*
     for (WorldCityResource.Data capital : capitals) {
       Country country = Country.of(capital.country);
       String countryName = country.getDisplayName(display, Country.Style.GENITIVE);
@@ -1071,7 +1099,7 @@ public class QuestionList {
         Question q = new Question(country.getDisplayName(display), hint);
         questions.add(q);
       }
-    }
+    }*/
   }
 
   private void generateWorldCityDistance(List<WorldCityResource.Data> allCities, Locale display) {
@@ -1625,9 +1653,8 @@ public class QuestionList {
     return words;
   }
 
-  public void shuffle(int seed) {
-    PseudoRandom pr = new PseudoRandom(seed);
-    questions = Question.shuffle(questions, pr);
+  public void shuffle(Random random) {
+    questions = Question.shuffle(questions, random);
   }
 
   public List<Question> getQuestions() {
