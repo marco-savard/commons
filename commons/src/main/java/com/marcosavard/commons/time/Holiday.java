@@ -1,10 +1,12 @@
 package com.marcosavard.commons.time;
 
+import com.marcosavard.commons.time.calendar.Season;
 import com.marcosavard.commons.time.res.ReligiousHolidayName;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
+import java.time.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.JulianFields;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,42 +16,44 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 public enum Holiday {
-  NEW_YEAR(Month.JANUARY, 1),
-  VALENTINES_DAY(Month.FEBRUARY, 14),
-  FAMILY_DAY(Month.FEBRUARY, DayOfWeek.MONDAY, 3),
-  DAYLIGHT_SAVING_ON(Month.MARCH, DayOfWeek.SUNDAY, 2),
-  SAINT_PATRICK(Month.MARCH, 17),
-  MARDI_GRAS(-40),
-  ASH_WEDNESDAY(-39),
-  PALM_SUNDAY(-7),
-  GOOD_FRIDAY(-2),
-  EASTER(0),
-  MOTHERS_DAY(Month.MAY, DayOfWeek.SUNDAY, 2),
-  VICTORIA_DAY(Month.MAY, DayOfWeek.MONDAY, 3),
-  FATHERS_DAY(Month.JUNE, DayOfWeek.SUNDAY, 3),
-  ASCENSION(39),
-  PENTECOST(49),
-  TRINITY_SUNDAY(56),
-  FEAST_OF_CORPUS_CHRISTI(60),
-  SAINT_JOHN_BAPTIST(Month.JUNE, 24),
-  CANADA_DAY(Month.JULY, 1),
-  US_INDEPENDANCE_DAY(Month.JULY, 4),
-  CIVIC_DAY(Month.AUGUST, DayOfWeek.MONDAY, 1),
-  LABOR_DAY(Month.SEPTEMBER, DayOfWeek.MONDAY, 1),
-  CANADIAN_THANKSGIVING(Month.OCTOBER, DayOfWeek.MONDAY, 2),
-  HALLOWEEN(Month.OCTOBER, 31),
-  ALL_SAINTS_DAY(Month.NOVEMBER, 1),
-  DAYLIGHT_SAVING_OFF(Month.NOVEMBER, DayOfWeek.SUNDAY, 1),
-  AMERICAN_THANKSGIVING(Month.NOVEMBER, DayOfWeek.THURSDAY, 4),
-  CHRISTMAS(Month.DECEMBER, 25);
+  NEW_YEAR(0x1F4C6, Month.JANUARY, 1),
+  VALENTINES_DAY(0x2764, Month.FEBRUARY, 14),
+  FAMILY_DAY(0x1F46A, Month.FEBRUARY, DayOfWeek.MONDAY, 3),
+  DAYLIGHT_SAVING_ON(0x1F4A1, Month.MARCH, DayOfWeek.SUNDAY, 2),
+  SAINT_PATRICK(0x1F340, Month.MARCH, 17),
+  MARDI_GRAS(0x1F389, -40),
+  ASH_WEDNESDAY(0x271F, -39),
+  PALM_SUNDAY(0x2E19, -7),
+  GOOD_FRIDAY(0x271F, -2),
+  EASTER(0x1F407, 0),
+  MOTHERS_DAY(0x1F469, Month.MAY, DayOfWeek.SUNDAY, 2),
+  VICTORIA_DAY(0x2655, Month.MAY, DayOfWeek.MONDAY, 3),
+  FATHERS_DAY(0x1F468, Month.JUNE, DayOfWeek.SUNDAY, 3),
+  ASCENSION(0x271F, 39),
+  PENTECOST(0x271F, 49),
+  TRINITY_SUNDAY(0x271F, 56),
+  FEAST_OF_CORPUS_CHRISTI(0x271F, 60),
+  SAINT_JOHN_BAPTIST(0x269C, Month.JUNE, 24),
+  CANADA_DAY(0x1F341, Month.JULY, 1),
+  US_INDEPENDANCE_DAY(0x1F5FD, Month.JULY, 4),
+  CIVIC_DAY(0x1F389, Month.AUGUST, DayOfWeek.MONDAY, 1),
+  LABOR_DAY(0x2692, Month.SEPTEMBER, DayOfWeek.MONDAY, 1),
+  CANADIAN_THANKSGIVING(0x1F341, Month.OCTOBER, DayOfWeek.MONDAY, 2),
+  HALLOWEEN(0x1F383, Month.OCTOBER, 31),
+  ALL_SAINTS_DAY(0x26EA, Month.NOVEMBER, 1),
+  DAYLIGHT_SAVING_OFF(0x1F4A1, Month.NOVEMBER, DayOfWeek.SUNDAY, 1),
+  AMERICAN_THANKSGIVING(0x1F5FD, Month.NOVEMBER, DayOfWeek.THURSDAY, 4),
+  CHRISTMAS(0x1F384, Month.DECEMBER, 25);
 
+  private final int codePoint;
   private final int daysAfterEaster;
   private final int dayOfMonth;
   private final int weekOfMonth;
   private final Month month;
   private final DayOfWeek dayOfWeek;
 
-  Holiday(int daysAfterEaster) {
+  Holiday(int codePoint, int daysAfterEaster) {
+    this.codePoint = codePoint;
     this.daysAfterEaster = daysAfterEaster;
     this.dayOfMonth = 0;
     this.weekOfMonth = 0;
@@ -57,7 +61,8 @@ public enum Holiday {
     this.dayOfWeek = null;
   }
 
-  Holiday(Month month, int dayOfMonth) {
+  Holiday(int codePoint, Month month, int dayOfMonth) {
+    this.codePoint = codePoint;
     this.dayOfMonth = dayOfMonth;
     this.month = month;
     this.daysAfterEaster = 0;
@@ -65,12 +70,31 @@ public enum Holiday {
     this.dayOfWeek = null;
   }
 
-  Holiday(Month month, DayOfWeek dayOfWeek, int weekOfMonth) {
+  Holiday(int codePoint, Month month, DayOfWeek dayOfWeek, int weekOfMonth) {
+    this.codePoint = codePoint;
     this.month = month;
     this.dayOfWeek = dayOfWeek;
     this.daysAfterEaster = 0;
     this.dayOfMonth = 0;
     this.weekOfMonth = weekOfMonth;
+  }
+
+  public int getCodePoint() {
+    return codePoint;
+  }
+
+  public static List<Occurence> findNextOccurences(LocalDate from) {
+    LocalDate to = from.plusDays(365);
+    Map<LocalDate, Holiday> holidays = Holiday.holidaysBetween(from, to);
+    List<Occurence> nextOccurrences = new ArrayList<>();
+
+    for (LocalDate date : holidays.keySet()) {
+      Holiday holiday = holidays.get(date);
+      nextOccurrences.add(new Occurence(holiday, date));
+    }
+
+    nextOccurrences = nextOccurrences.stream().sorted().toList();
+    return nextOccurrences;
   }
 
   public String getDisplayName(Locale display) {
@@ -161,7 +185,47 @@ public enum Holiday {
     return fields;
   }
 
+
+
   private static class DateField {
     int year, month, day;
+  }
+
+  private static final double DAY_IN_MS = Duration.ofDays(1).toMillis();
+
+  private static double toJulianDay(LocalDate date) {
+    double jd = date.getLong(JulianFields.JULIAN_DAY);
+    jd += LocalTime.MIDNIGHT.get(ChronoField.MILLI_OF_DAY) / DAY_IN_MS - 0.5;
+    return jd;
+  }
+
+  //
+  //inner class
+  //
+  public static class Occurence implements Comparable<Occurence> {
+    private Holiday holiday;
+    private LocalDate date;
+
+    public Occurence(Holiday holiday, LocalDate date) {
+      this.holiday = holiday;
+      this.date = date;
+    }
+
+    public Holiday getHoliday() {
+      return holiday;
+    }
+
+    @Override
+    public int compareTo(Occurence other) {
+      return toJulianDay() - other.toJulianDay();
+    }
+
+    public int toJulianDay() {
+      return (int) Holiday.toJulianDay(date);
+    }
+
+    public LocalDate getDate() {
+      return date;
+    }
   }
 }
