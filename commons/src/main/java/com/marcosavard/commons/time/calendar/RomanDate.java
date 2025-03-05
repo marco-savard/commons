@@ -1,5 +1,7 @@
 package com.marcosavard.commons.time.calendar;
 
+import com.marcosavard.commons.debug.Console;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.Month;
@@ -8,6 +10,7 @@ import java.util.Locale;
 
 //cf https://www.public.asu.edu/~checkma/today.html
 public class RomanDate {
+    private static final int AB_URBE_CONDITA_ERA = 754;
     private static final int[] NONES_DAYS = {5, 5, 7, 5, 7, 5, 7, 5, 5, 7, 5, 5};
     private static final int[] IDES_DAYS = {13, 13, 15, 13, 15, 13, 15, 13, 13, 15, 13, 13};
 
@@ -29,7 +32,7 @@ public class RomanDate {
     public static RomanDate ofJulian(LocalDate localDate) {
         Month month = localDate.getMonth();
         boolean before1stMarch = month.getValue() < 3;
-        int year = localDate.getYear() + (before1stMarch ? 753 : 754);
+        int year = localDate.getYear() + (before1stMarch ? AB_URBE_CONDITA_ERA - 1 : AB_URBE_CONDITA_ERA);
 
         int day = localDate.getDayOfMonth();
         int nonesDay = NONES_DAYS[month.getValue() - 1];
@@ -144,16 +147,17 @@ public class RomanDate {
         String monthName = month.getDisplayName(style, display);
         String dayName = Integer.toString(day);
         String periodName = period.getDisplayName(style, display, day);
-        String yearStr = RomanNumeral.of(year);
+        String yearRn = RomanNumeral.of(year);
+        String yearStr = Integer.toString(year);
 
         if (isShort) {
-            return String.join("/", dayName, periodName, monthName, yearStr);
+            return String.join("/", dayName, periodName, monthName, yearRn);
         } else if (day == 1) {
-            return MessageFormat.format("{0} de {1}, an {3}", periodName, monthName, yearStr);
+            return MessageFormat.format("{0} de {1}, an {2}", periodName, monthName, yearRn);
         } else if (day == 2) {
-            return MessageFormat.format("veille des {0} de {1}, an {2}", periodName, monthName, yearStr);
+            return MessageFormat.format("veille des {0} de {1}, an {2}", periodName, monthName, yearRn);
         } else {
-            return MessageFormat.format("{0} jours avant les {1} de {2}, an {3}", dayName, periodName, monthName, yearStr);
+            return MessageFormat.format("{0} jours avant les {1} de {2}, an {3} ({4}) depuis la fondation de Rome", dayName, periodName, monthName, yearRn, yearStr);
         }
     }
 
@@ -201,6 +205,14 @@ public class RomanDate {
         public String getDisplayNameFr() {
             String displayName = this.equals(Period.KALENDS) ? "calendes" : this.name().toLowerCase();
             return displayName;
+        }
+    }
+
+    public static void main(String[] args) {
+        for (int i=1; i <= 365; i++) {
+            LocalDate date = LocalDate.ofYearDay(-44, i);
+            RomanDate romanDate = RomanDate.ofJulian(date);
+            Console.println("{0} -> {1}", date, romanDate.getDisplayName(TextStyle.FULL, Locale.FRENCH));
         }
     }
 
