@@ -21,8 +21,8 @@ public class CitationCreator {
     }
 
     public String[] selectCitationAndAuthors(Random random) {
-        CitationReader reader = new CitationReader("citations.par.auteurs.txt", StandardCharsets.UTF_8);
-        Map<String, List<String>> citationsByAuthor = reader.readAll();
+        CitationReader reader = new CitationReader();
+        Map<String, CitationReader.Author> citationsByAuthor = reader.readAll();
         List<String> allAuthors = new ArrayList<>(citationsByAuthor.keySet());
         List<String> authors = new ArrayList<>();
         boolean correct;
@@ -30,9 +30,9 @@ public class CitationCreator {
         do {
             int authorIdx = random.nextInt(citationsByAuthor.size());
             author = allAuthors.get(authorIdx);
-            List<String> citations = citationsByAuthor.get(author);
+            List<String> citations = citationsByAuthor.get(author).getCitations();
             int citationIdx = random.nextInt(citations.size());
-            citation = citationsByAuthor.get(author).get(citationIdx);
+            citation = citations.get(citationIdx);
             int len = citation.length();
             correct = (len >= cols * 2) && (len <= cols * 4);
         } while (! correct);

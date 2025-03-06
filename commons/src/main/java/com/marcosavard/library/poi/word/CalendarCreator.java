@@ -2,8 +2,8 @@ package com.marcosavard.library.poi.word;
 
 import com.marcosavard.commons.astro.moon.MoonPosition;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.time.Holiday;
 import com.marcosavard.commons.time.calendar.Season;
+import com.marcosavard.commons.time.holiday.Holiday;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.awt.*;
@@ -18,6 +18,9 @@ import java.util.*;
 import java.util.List;
 
 public class CalendarCreator {
+    private static final String BLACK = "000000";
+    private static final String GRAY = "AAAAAA";
+
     public List<CalendarEvent> findCalendarEvents(LocalDate date, Locale display) {
         Month month = date.getMonth();
         int year = date.getYear();
@@ -35,8 +38,8 @@ public class CalendarCreator {
         addSeasonEvent(events, occurence, display);
 
         //compute next holidays
-        List<Holiday.Occurence> occurences = Holiday.findNextOccurences(firstOfMonth);
-        addHolidays(events, occurences, display);
+       List<Holiday.Event> holidaysEvents = Holiday.getNextEvents(firstOfMonth, 60);
+       addHolidays(events, holidaysEvents, display);
 
         events = events.stream().sorted().toList();
         return events;
@@ -68,12 +71,12 @@ public class CalendarCreator {
         events.add(event);
     }
 
-    private static void addHolidays(List<CalendarEvent> events, List<Holiday.Occurence> occurences, Locale display) {
-        for (Holiday.Occurence occurence : occurences) {
-            Holiday holiday = occurence.getHoliday();
+    private static void addHolidays(List<CalendarEvent> events, List<Holiday.Event> holidaysEvents, Locale display) {
+        for (Holiday.Event event : holidaysEvents) {
+            Holiday holiday = event.getHoliday();
             String displayName = holiday.getDisplayName(display);
-            CalendarEvent event = new CalendarEvent(occurence.getDate(), displayName, holiday.getCodePoint());
-            events.add(event);
+            CalendarEvent calendarEvent = new CalendarEvent(event.getDate(), displayName, holiday.getCodePoint());
+            events.add(calendarEvent);
         }
     }
 
@@ -84,10 +87,13 @@ public class CalendarCreator {
 
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
-
         XWPFRun run = paragraph.createRun();
         run.setFontSize(30);
         run.setText(title);
+        run.addCarriageReturn();
+
+        paragraph = document.createParagraph();
+        run = paragraph.createRun();
         run.addCarriageReturn();
     }
 
@@ -158,13 +164,14 @@ public class CalendarCreator {
             Point gridPos = gridPositionByDay.get(d);
             int row = gridPos.x;
             int col = gridPos.y;
-            printCell(table, row, col, d);
+            printCell(table, date, row, col, d);
         }
     }
 
-    private Point printCell(XWPFTable table, int rowId, int col, int day) {
+    private Point printCell(XWPFTable table, LocalDate date, int rowId, int col, int day) {
         Point gridPos = new Point(rowId, col);
         String text = Integer.toString(day);
+        boolean past = day < date.getDayOfMonth();
 
         XWPFTableRow row = table.getRow(rowId);
         XWPFTableCell cell = row.getCell(col);
@@ -172,8 +179,10 @@ public class CalendarCreator {
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setVerticalAlignment(TextAlignment.CENTER);
         XWPFRun titleRun = paragraph.createRun();
-        titleRun.setText(text);
         titleRun.setFontSize(20);
+        titleRun.setColor(past ? GRAY : BLACK);
+        titleRun.setText(text);
+
         return gridPos;
     }
 
@@ -184,13 +193,14 @@ public class CalendarCreator {
             if (eventDate.getYear() == date.getYear()) {
                 if (eventDate.getMonth() == date.getMonth()) {
                     Point gridPos = gridPositionByDay.get(eventDate.getDayOfMonth());
-                    addCalendarEvent(table, gridPos, event);
+                    addCalendarEvent(table, date, gridPos, event);
                 }
             }
         }
     }
 
-    private void addCalendarEvent(XWPFTable table, Point gridPos, CalendarEvent event) {
+    private void addCalendarEvent(XWPFTable table, LocalDate date, Point gridPos, CalendarEvent event) {
+        boolean past = event.date.getDayOfMonth() < date.getDayOfMonth();
         XWPFTableRow row = table.getRow(gridPos.x);
         XWPFTableCell cell = row.getCell(gridPos.y);
         int nbParagraphs = cell.getParagraphs().size();
@@ -204,24 +214,30 @@ public class CalendarCreator {
         }
 
         XWPFRun titleRun = eventParagraph.createRun();
-        titleRun.setText(Character.toString(event.getCodePoint()));
         titleRun.setFontSize(16);
+        titleRun.setColor(past ? GRAY : BLACK);
+        titleRun.setText(Character.toString(event.getCodePoint()));
     }
 
     public void addUpcomingEvents(XWPFDocument document, LocalDate date, List<CalendarEvent> events, Locale display) {
         int max = 5;
         List<CalendarEvent> nextEvents = events.stream().filter(e -> ! e.getDate().isBefore(date)).toList();
         nextEvents = nextEvents.size() > max ? nextEvents.subList(0, max) : nextEvents;
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("eeee d MMMM", display);
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
 
+        XWPFParagraph paragraph = document.createParagraph();
         XWPFRun run = paragraph.createRun();
         run.addCarriageReturn();
-        run.setFontSize(18);
-        run.setText("A venir : ");
+
+        paragraph = document.createParagraph();
+        run = paragraph.createRun();
+        run.setFontSize(16);
+        run.setText("À venir : ");
         run.addCarriageReturn();
+
+        paragraph = document.createParagraph();
+        run = paragraph.createRun();
+        run.setFontSize(14);
 
         for (CalendarEvent event : nextEvents) {
             long daysBetween = ChronoUnit.DAYS.between(date, event.getDate());
@@ -231,9 +247,7 @@ public class CalendarCreator {
             String formatted = event.getDate().format(formatter);
             String inNbDays = (daysBetween == 0) ? "aujourd’hui" : "dans " + days + " jours";
             String text = MessageFormat.format("{0} {1}, le {2}, {3}.", symb, name, formatted, inNbDays);
-            run.setFontSize(11);
             run.setText(text);
-            run.addCarriageReturn();
         }
     }
 

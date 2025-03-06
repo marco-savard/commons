@@ -10,6 +10,9 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class MoonEventCreator {
@@ -60,19 +63,35 @@ public class MoonEventCreator {
     private void printNextMoonPhases(WordStringReplacer replacer) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("'Le' eeee d MMMM", display);
 
-        //compute info
-        ZonedDateTime moment = ZonedDateTime.of(date, LocalTime.MIDNIGHT, ZoneOffset.UTC);
-        MoonPosition position = MoonPosition.at(moment);
-        int moonAge = (int)position.getMoonAge() * 360;
+        //compute moon phases
+        LocalDate newMoon = MoonPosition.findNextNewMoon(date).toLocalDate();
+        LocalDate firstQuarter = MoonPosition.findNextFirstQuarter(date).toLocalDate();
+        LocalDate fullMoon = MoonPosition.findNextFullMoon(date).toLocalDate();
+        LocalDate lastQuarter = MoonPosition.findNextLastQuarter(date).toLocalDate();
 
-        for (int i=1; i<=4; i++) {
-            MoonPosition.Phase nextPhase = MoonPosition.Phase.findPhaseAt(moonAge);
-            ZonedDateTime phaseDate = MoonPosition.findNextMoonAge(date, moonAge);
+        List<MoonEvent> events = new ArrayList<>();
+        events.add(new MoonEvent(newMoon, MoonPosition.Phase.NEW));
+        events.add(new MoonEvent(firstQuarter, MoonPosition.Phase.FIRST_QUARTER));
+        events.add(new MoonEvent(fullMoon, MoonPosition.Phase.FULL));
+        events.add(new MoonEvent(lastQuarter, MoonPosition.Phase.THIRD_QUARTER));
+        events = events.stream().sorted(Comparator.comparing(e -> e.date)).toList();
+        int i=1;
 
-            replacer.replaceStrings("phase"+i+"Date", phaseDate.format(formatter));
-            replacer.replaceStrings("s"+i, Character.toString(nextPhase.getCodePoint()));
-            replacer.replaceStrings("moonPhase"+i, nextPhase.getDisplayName(display));
-            moonAge = (moonAge + 45) % 360;
+        for (MoonEvent event : events) {
+            replacer.replaceStrings("phase"+i+"Date", event.date.format(formatter));
+            replacer.replaceStrings("s"+i, Character.toString(event.phase.getCodePoint()));
+            replacer.replaceStrings("moonPhase"+i, event.phase.getDisplayName(display));
+            i++;
+        }
+    }
+
+    private static class MoonEvent {
+        private LocalDate date;
+        private MoonPosition.Phase phase;
+
+        public MoonEvent(LocalDate date, MoonPosition.Phase phase) {
+            this.date = date;
+            this.phase = phase;
         }
     }
 

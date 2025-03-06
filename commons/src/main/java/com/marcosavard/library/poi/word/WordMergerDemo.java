@@ -22,7 +22,7 @@ public class WordMergerDemo {
         File inputFile3 = new File("jeux-du-jour-2025-02-24.docx");
 
         try (OutputStream output = new FileOutputStream(outputFile)) {
-            WordMerger merger = new WordMerger(output);
+            WordMergerSimple merger = new WordMergerSimple(output);
             merger.add( new FileInputStream(inputFile1));
             merger.add( new FileInputStream(inputFile2));
             merger.add( new FileInputStream(inputFile3));
