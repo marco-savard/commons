@@ -1,0 +1,271 @@
+
+RANG; NOM DE RÈGNE DU PAPE;	DÉBUT DU PONTIFICAT; FIN DU PONTIFICAT; NOM DE NAISSANCE; LIEU DE NAISSANCE
+1	Pierre;		            33  67;	                	Bethsaïde en Galilée
+2	Lin;	                68	79;	 	                Tuscie (Italie)
+3	Anaclet ou Clet;	    79	92;	 	                Rome
+4	Clément;                92	98;               	 	Rome
+5	Évariste;               98  105;                 	Grèce
+6	Alexandre Ier;          105 115;              	 	Rome
+7	Sixte Ier;              115 125;             	 	Rome
+8	Télésphore;             125 138;	 	            Grèce
+9	Hygin;                  138	142;              	 	Grèce
+10	Pie Ier;                142 155;              	 	Aquilée (Italie)
+11	Anicet;                 155 166;	 	            Homs (Syrie)
+12	Soter;                  166	175;	 	            Fondi (Italie)
+13	Éleuthère;              175	189;     	 	        Nicopolis d'Épire (Grèce)
+14	Victor Ier;             189	198;    	 	        Afrique
+15	Zéphyrin;               198	217; 	 	            Rome
+16	Calixte Ier;            218	222;
+17	Urbain Ier;             222	230;	 	            Rome
+18	Pontien;                21.VII.230	28.IX.235;	 	Rome
+19	Antère;                 21.XI.235	3.I.236;	 	Grèce
+20	Fabien;                 ... 236	20.I.250;	 	    Rome
+21	Corneille;           	6.III.251	... VI.253;	 	Rome
+22	Lucius Ier;             VII.253	5.III.254;	 	    Rome
+23	Étienne Ier;            12.III.254	2.VIII.257;	 	Rome
+24	Sixte II;               30.VIII.257	6.VIII.258;	 	Grèce
+25	Denys;                  22.VII.259	26.XII.268;	 	patrie ignorée
+26	Félix Ier;           	5.I.269	30.XII.274;	     	Rome
+27	Eutychien;            	4.I.275	7.XII.283;	 	    Luni (Italie)
+28	Caïus;	                17.XII.283	22.IV.296;	 	Dalmatie
+29	Marcelin;            	30.VI.296	25.X.304;	 	Rome
+30	Marcel Ier;           	306	16.I.309;	 	        Rome
+31	Eusèbe;	                18.IV.309	17.VIII.309;	Grèce
+32	Miltiade ou Melchiade;	2.VII.311	10.I.314;	 	Afrique
+33	Sylvestre Ier;	        31.I.314	31.XII.335;	 	Rome
+34	Marc;	                18.I.336	7.X.336;	 	Rome
+35	Jules Ier;	            6.II.337	12.IV.352;	 	Rome
+36	Libère;	                17.V.352	24.IX.366;	 	Rome
+37	Damase Ier;	            1.X.366	11.XII.384;	 	    Rome
+38	Sirice;	                15.XII.384	26.XI.399;	 	Rome
+39	Anastase Ier;         	27.XI.399	19.XII.401;	 	Rome
+40	Innocent Ier;	        22.XII.401	12.III.417;	 	Albano Laziale (Italie)
+41	Zosime;	                18.III.417	26.XII.418;	 	Grèce
+42	Boniface Ier;        	28.XII.418	4.IX.422;	    Rome
+43	Célestin Ier;	        10.IX.422	27.VII.432;	 	Campanie (Italie)
+44	Sixte III;	            31.VII.432	19.VIII.440;	Rome
+45	Léon Ier;	            29.IX.440	10.XI.461;	 	Tuscie (Italie)
+46	Hilaire;                19.XI.461	29.II.468;	 	Sardaigne (Italie)
+47	Simplicius ou Simplice;	3.III.468	10.III.483;	 	Tivoli (Italie)
+48	Félix III;	            13.III.483	1.III.492;	 	Rome
+49	Gélase Ier;          	1.III.492	21.XI.496;	 	Afrique
+50	Anastase II;         	24.XI.496	19.XI.498;	 	Rome
+51	Symmaque;	            22.XI.498	19.VII.514;	 	Sardaigne (Italie)
+52	Hormisdas;	            20.VII.514	6.VIII.523;
+53	Hormisdas;            	13.VIII.523	18.V.526;	 	Tuscie (Italie)
+54	Félix IV;	            12.VII.526	20.IX.530;	 	Samnium (Italie)
+55	Boniface II;          	20.IX.530	17.X.532;	 	Rome
+56	Jean II;              	31.XII.532, 2.I.533	8.V.535;	Mercure;Rome
+57	Agapet Ier;          	13.V.535	22.IV.536;	 	Rome
+58	Silvère;	            8.VI.536	... 537;	 	Frosinone (Italie)
+59	Vigile;	                29.III.537	7.VI.555;	 	Rome
+60	Pélage Ier;            	16.IV.556	4.III.561;	 	Rome
+61	Jean III;	            17.VII.561	13.VII.574;	    Catalino;Rome
+62	Benoît Ier;          	2.VI.575	30.VII.579;	 	Rome
+63	Pélage II;	            26.XI.579	7.II.590;	 	Rome
+64	Grégoire Ier;	        3.IX.590	12.III.604;	 	Rome
+65	Sabinien;	            ... III, 13.IX.604	22.II.606;	 	Blera en Tuscie (Italie)
+66	Boniface III;	        19.II.607	10.XI.607;	 	Rome
+67	Boniface IV;          	25.VIII.608	8.V.615;	 	Territoire des Marsi (Italie)
+68	Dieudonné ou Adéodat Ier; 19.X.615	8.XI.618;	 	Rome
+69	Boniface V;	            23.XII.619	23.X.625;	 	Naples (Italie)
+70	Honorius Ier;        	27.X.625	12.X.638;	 	Campanie (Italie)
+71	Sévérin;	            ... X.638, 28.V.640	2.VIII.640;	 	Rome
+72	Jean IV;	            ... VIII, 24.XII.640	12.X.642;	 	Dalmatie
+73	Théodore Ier;	        12.X, 24.XI.642	14.V.649;	Jérusalem
+74	Martin Ier;	            5.VII.649	16.IX.655;	 	Todi (Italie)
+75	Eugène Ier;	            10.VIII.654	2.VI.657;	 	Rome
+76	Vitalien;	            30.VII.657	27.I.672;	 	Segni (Italie)
+77	Adéodat II;	            11.IV.672	16.VI.676;	 	Rome
+78	Domnus ou Donus;      	2.XI.676	11.IV.678;	 	Rome
+79	Agathon;             	27.VI.678	10.I.681;	 	Sicile (Italie)
+80	Léon II;	            ... I.681, 17.VIII.682	3.VII.683;	 	Sicile (Italie)
+81	Benoît II;           	26.VI.684	8.V.685;	 	Rome
+82	Jean V;	                23.VII.685	2.VIII.686;	 	Syrie
+83	Conon;	                23.X.686	21.IX.687;	 	patrie ignorée
+84	Serge Ier;	            15.XII.687	7.IX.701;	 	Syrie
+85	Jean VI;	            30.X.701	11.I.705;	 	Grèce
+86	Jean VII;	            1.III.705	18.X.707;	 	Grèce
+87	Sisinnius;	            15.I.708	4.II.708;	 	Syrie
+88	Constantin;           	25.III.708	9.IV.715;	 	Syrie
+89	Grégoire II;	        19.V.715	11.II.731;	 	Rome
+90	Grégoire III;	        18.III.731	28.XI.741;	 	Syrie
+91	Zacharie;	            3.XII.741	15.III.752;	 	Grèce
+92	Étienne II;           	26.III.752	26.IV.757;	 	Rome
+93	Paul I;              	... IV, 29.V.757	28.VI.767;	 	Rome
+94	Étienne III;            1,7.VIII.768	24.I.772;	 	Sicile (Italie)
+95	Adrien Ier;           	1,9.II.772	25.XII.795;	 	Rome
+96	Léon III;	            26,27.XII.795	12.VI.816;	Rome
+97	Étienne IV;	            22.VI.816	24.I.817;	 	Rome
+98	Pascal I;	            25.I.817	... II-V.824;	Rome
+99	Eugène II;	            ... II-V.824	...VIII.827;	Rome
+100	Valentin;	            ... VIII.827	...IX.827;	 	Rome
+101	Grégoire IV;            ... IX.827, 29.III.828	25.I.844;	 	Rome
+102	Serge II;	            25.I.844	27.I.847;	 	Rome
+103	Léon IV;	            ...I,10.V.847	17.VII.855;	 	Rome
+104	Benoît III;           	...VII, 29.IX.855	17.IV.858;	 	Rome
+105	Nicolas Ier;	        24.IV.858	13.XI.867;	 	Rome
+106	Adrien II;	            14.XII.867	14.XII.872;	 	Rome
+107	Jean VIII;	            14.XII.872	16.XII.882;	 	Rome
+108	Marin Ier;	            ... XII.882	15.V.884;	 	Gallese (Italie)
+109	Adrien III;	            17.V.884	...IX.885;	 	Rome
+110	Étienne V;	            ...IX.885	14.IX.891;	 	Rome
+111	Formose;	            6.X.891	4.IV.896;	 	    Porto (Italie)
+112	Boniface VI;          	11.IV.896	26.IV.896;	 	Rome
+113	Étienne VI;	            ...V.896	...VII.897;	 	Rome
+114	Romain;	                ...VII.897	...XI.897;	 	Gallese (Italie)
+115	Théodore II;	        ...XII.897	...XII.897;	 	Rome
+116	Jean IX;	            ...XII.897	...I-V.900;	 	Tivoli (Italie)
+117	Benoît IV;	            ...I-V.900	...VII.903;	 	Rome
+118	Léon V;	                ... VII.903	... IX.903;	 	Ardea (Italie)
+119	Serge III;	            29.I.904	14.IV.911;	 	Rome
+120	Anastase III;	        ... VI.911	... VI.913;	 	Rome
+121	Landon;	                ... VII.913	... III.914;	Sabine (Italie)
+122	Jean X;              	... III.914	... V.928;	 	Tossignano (Italie)
+123	Léon VI;              	... V.928	... I.929;	 	Rome
+124	Étienne VII;          	...I.929	...II.931;	 	Rome
+125	Jean XI;	            ...III.931	...I.936;	 	Rome
+126	Léon VII;	            ...I.936	13.VII.939;	 	Rome
+127	Étienne VIII;	        14.VII.939	... X.942;	 	Rome
+128	Marin II;	            30.X,...XI.942	...V.946;	Rome
+129	Agapet II;	            10.V.946	...XII.955;	 	Rome
+130	Jean XII;	            16.XII.955	14.V.964;	Octavien;Tusculum (Italie)
+131	Léon VIII;	            4,6.XII.963	...III.965;	 	Rome
+132	Benoît V;	            ...V.964	4.VII.964;	 	Rome
+133	Jean XIII;	            1.X.965	6.IX.972;	 	    Rome
+134	Benoît VI;	            ...XII.972, 19.I.973	...VII.974;	 	Rome
+135	Benoît VII;	            ...X.974	10.VII.983;	 	Rome
+136	Jean XIV;	            ...XI.983	20.VIII.984;	Pierre;Pavie
+137	Jean XV;               ...VIII.985	...III.996;	 	Rome
+138	Grégoire V;	            3.V.996	...III.999;	Bruno	Saxe (Allemagne)
+139	Sylvestre II;	        2.IV.999	12.V.1003;	Gerbert;Aquitaine (France)
+140	Jean XVII;	            16.V.1003	6.XI.1003;	Siccon;Rome
+141	Jean XVIII;	            25.XII.1003	...VII.1009;	Jean Fasano;Rome
+142	Serge IV;	            31.VII.1009	12.V.1012;	Pierre;Rome
+143	Benoît VIII;	        18.V.1012	9.IV.1024;	Teofilatto
+144	Jean XIX;	            19.IV.1024	...1032;	Romain
+145	Benoît IX;	           ...VIII.1032	...IX.1044;	Teofilatto
+146	Sylvestre III;	       13.I.1045	...III.1045;	Jean;Rome
+147	Benoît XI;	           10.III.1045	1.V.1045;	Teofilatto
+148	Grégoire VI;	       1.V.1045	20.XII.1046;	Jean Gratien;Rome
+149	Clément II;	           24.XII.1046	9.X.1047;	Suidger de Morsleben et Hornburg	Saxe (Allemagne)
+150	Benoît IX;	           ...X.1047	... VIII.1048;	Teofilatto
+151	Damase II;	           17.VII.1048	9.VIII.1048;	Poppon;Tyrol
+152	Léon IX;	           2,12.II.1049	19.IV.1054;	Bruno d'Eguisheim-Dabo;Alsace (France)
+153	Victor II;	           13.IV.1055	28.VII.1057;	Gebhard de Dollnstein-Hirschberg;Souabe (Allemagne)
+154	Étienne IX;	           2,3.VIII.1057	29.III.1058;	Frédéric de Lorraine
+155	Nicolas II;	           ...XII.1058, 24.I.1059	27.VII.1061;	Gérard;Bourgogne
+156	Alexandre II;	        30.IX, 1.X.1061	21.IV.1073;	Anselme;Milan (Italie)
+157	Grégoire VII;	        22.IV,30.VI.1073	25.V.1085;	Hildebrand;Tuscie (Italie)
+158	Victor III;	            24.V.1086, 9.V.1087	16.IX.1087;	Dauferius (Desiderius);Bénévent (Italie)
+159	Urbain II;	            12.III.1088	29.VII.1099;	Odon de Lagery;Châtillon-sur-Marne (France)
+160	Pascal II;              13,14.VIII.1099	21.I.1118;	Raniero;Bieda ou Galeata (Italie)
+161	Gélase II;	            24.I,10.III.1118	28.I.1119;	Giovanni de Gaète;Gaète (Italie)
+162	Calixte II;	            2,9.II.1119	14.XII.1124;	Gui de Bourgogne
+163	Honorius II;	        15,21.XII.1124	14.II.1130;	Lamberto Scannabecchi;Fiagnano (Italie)
+164	Innocent II;	        14,23.II.1130	24.IX.1143;	Gregorio Papareschi;Rome
+165	Célestin II;	        26.IX,3.X.1143	8.III.1144;	Gui	Città di Castello (Italie)
+166	Lucius II;	            12.III.1144	15.II.1145;	Gérard;Bologne (Italie)
+167	Eugène III;           	15,18.II.1145	8.VII.1153;	Bernard;Pise (Italie)
+168	Anastase IV;	        12.VII.1153	3.XII.1154;	Conrad;Rome
+169	Adrien IV;	            4,5.XII.1154	1.IX.1159;	Nicolas Breakspear;Abbots Langley (Angleterre)
+170	Alexandre III;	        7,20.IX.1159	30.VIII.1181;	Rolando Bandinelli;Sienne (Italie)
+171	Lucius III;	            1. 6.IX.1181	25.IX.1185;	Ubaldo Allucingoli;Lucques (Italie)
+172	Urbain III;	            25.XI,1.XII.1185	20.X.1187;	Uberto Crivelli;Milan (Italie)
+173	Grégoire VIII;	        21.25.X.1187	17.XII.1187;	Alberto di Morra;Bénévent (Italie)
+174	Clément III;          	19,20.XII.1187	...III.1191;	Paolo Scolari;Rome
+175	Célestin III;	        10,14.IV.1191	8.I.1198;	Giacinto Bobone;Rome
+176	Innocent III;	        8.I,22.II.1198	16.VII.1216;	Lotario;Gavignano (Italie)
+177	Honorius III;	        18,24.VII.1216	18.III.1227;	Cencio Savelli;Rome
+178	Grégoire IX;            19,21.III.1227	22.VIII.1241;	Ugolino di Conti;Anagni (Italie)
+179	Célestin IV;	        25,28.X.1241	10.XI.1241;	Goffredo da Castiglione;Milan (Italie)
+180	Innocent IV;	        25,28.VI.1243	7.XII.1254;	Sinibaldo Fieschi;Lavagna (Italie)
+181	Alexandre IV;	        12,20.XII.1254	25.V.1261;	Rinaldo dei conti di Segni;Jenne (Italie)
+182	Urbain IV;	            29.VIII,4.IX.1261	2.X.1264;	Jacques Pantaléon;Troyes (France)
+183	Clément IV;           	5,22.II.1265	29.XI.1268;	Gui Foulques;Saint-Gilles (France)
+184	Grégoire X;          	1.IX.1271,27.III.1272	10.I.1276;	Tebaldo Visconti;Plaisance (Italie)
+185	Innocent V;	            21.I,22.II.1276	22.VI.1276;	Pierre de Tarentaise;Savoie (France)
+186	Adrien V;	            11.VII.1276	18.VIII.1276;	Ottobono Fieschi;Gênes (Italie)
+187	Jean XXI;	            16,20.IX.1276	20.V.1277;	Pedro Julião;Lisbonne (Portugal)
+188	Nicolas III;	        25.XI, 26.XII.1277	22.VIII.1280;	Giovanni Gaetano Orsini;Rome
+189	Martin IV;	            22.II,23.III.1281	29.III.1285;	Simon de Brie ou de Brion ou de Mainpincien;France
+190	Honorius IV;          	2.IV, 20.V.1285	3.IV.1287;	Giacomo Savelli;Rome
+191	Nicolas IV;	            22.II.1288	4.IV.1292;	Girolamo Masci;Lisciano (Italie)
+192	Célestin V;	            5.VII, 29.VIII.1294	13.XII.1294;	Pietro del Morrone;Molise (Italie)
+193	Boniface VIII;          24.XII.1294, 23.I.1295	11.X.1303;	Benedetto Caetani;Anagni (Italie)
+194	Benoît XI;	            22,27.X.1303	7.VII.1304;	Niccolò di Boccassio;Trévise (Italie)
+195	Clément V;	            5.VI, 14.XI.1305	20.IV.1314;	Bertrand de Got;Villandraut (France)
+196	Jean XXII;	            7.VIII,5.IX.1316	4.XII.1334;	Jacques Duèze;Cahors (France)
+197	Benoît XII;	            20.XII.1334, 8.I.1335	25.IV.1342;	Jacques Fournier;Saverdun (France)
+198	Clément VI;	            7,19.V.1342	6.XII.1352;	Pierre Roger;Maumont (France)
+199	Innocent VI;	        18,30.XII.1352	12.IX.1362;	Étienne Aubert;Monts, Limousin (France)
+200	Urbain V;	            28.IX,6.XI.1362	19.XII.1370;	Guillaume Grimoard;Grizac, Lozère (France)
+201	Grégoire XI;	        30.XII.1370, 3.I.1371	26.III.1378;	Pierre Roger de Beaufort;Rosiers d'Egletons (France)
+202	Urbain VI;	            8,18.IV.1378	15.X.1389;	Bartolomeo Prignano;Naples (Italie)
+203	Boniface IX;	        2,9.XI.1389	1.X.1404;	Pietro Tomacelli;Naples (Italie)
+204	Innocent VII;	        17.X,11.XI.1404	6.XI.1406;	Cosma Migliorati;Sulmona (Italie)
+205	Grégoire XII;	        30.XI,19.XII.1406	4.VII.1415;	Angelo Correr;Venise (Italie)
+206	Martin V;	            11,21.XI.1417	20.II.1431;	Oddone Colonna;Genazzano (Italie)
+207	Eugène IV;	            3,11.III.1431	23.II.1447;	Gabriele Condulmer;Venise (Italie)
+208	Nicolas;	            6,19.III.1447	24.III.1455;	Tommaso Parentucelli;Sarzana (Italie)
+209	Calixte III;            8,20.IV.1455	6.VIII.1458;	Alonso Borja;Torre del Canals (Espagne)
+210	Pie II;	                19.VIII, 3.IX.1458	14.VIII.1464;	Enea Silvio Piccolomini;Corsignano (Italie)
+211	Paul II;	            30.VIII, 16.IX.1464	26.VII.1471;	Pietro Barbo;Venise (Italie)
+212	Sixte IV;	            1,9,25.VIII.1471	12.VIII.1484;	Francesco della Rovere;Celle Ligure (Italie)
+213	Innocent VIII;	        29.VIII, 12.IX.1484	25.VII.1492;	Giovanni Battista Cibo;Gênes (Italie)
+214	Alexandre VI;	        11,26.VIII.1492	18.VIII.1503;	Rodrigo de Borja;Játiva (Espagne)
+215	Pie III;	            22.IX, 1,8.X.1503	18.X.1503;	Francesco Todeschini Piccolomini;Sienne (italie)
+216	Jules II;	            1,26.XI.1503	21.II.1513;	Giuliano della Rovere;Albisola (Italie))
+217	Léon X;	                11,19.III.1513	1.XII.1521;	Jean de Médicis;Florence (Italie)
+218	Adrien VI;	            9.I,31.VIII.1522	14.IX.1523;	Adrien Florensz;Utrecht
+219	Clément VII;	        19,26.XI.1523	25.IX.1534;	Jules de Médicis;Florence (Italie)
+220	Paul III;	            13.X, 3.XI.1534	10.XI.1549;	Alexandre Farnese;Canino, Viterbe (Italia)
+221	Jules III;	            7,22.II.1550	23.III.1555;	Giovanni Maria Ciocchi del Monte;Rome
+222	Marcel II;	            9,10.IV.1555	1.V.1555;	Marcello Cervini;Montefano (Italie)
+223	Paul IV;             	23,26.V.1555	18.VIII.1559;	Gian Pietro Carafa;Capriglia Irpina (Italia)
+224	Pie IV;	                26.XII.1559, 6.I.1560	9.XII.1565;	Jean-Ange de Médicis;Milan (Italie)
+225	Pie V;	                7,17.I.1566	1.V.1572;	Antonio (Michele) Ghisleri;Bosco Marengo (Italie)
+226	Grégoire XIII;	        13,25.V.1572	10.IV.1585;	Ugo Boncompagni;Bologne (Italie)
+227	Sixte V;             	24.IV, 1.V.1585	27.VIII.1590;	Felice Peretti;Grottammare (Italie)
+228	Urbain VII;           	15.IX.1590	27.IX.1590;	Giambattista Castagna;Rome
+229	Grégoire XIV;	        5,8.XII.1590	16.X.1591;	Niccolò Sfondrati;Somma Lombardo (Italie)
+230	Innocent IX;	        29.X,3.XI.1591	30.XII.1591;	Giovanni Antonio Facchinetti;Bologne (Italie)
+231	Clément VIII;	        30.I,9.II.1592	3.III.1605;	Ippolito Aldobrandini;Fano (Italie)
+232	Léon XI;	            1,10.IV.1605	27.IV.1605;	Alexandre de Médicis;Florence (Italie)
+233	Paul V;	                16,29.V.1605	28.I.1621;	Camille Borghèse;Rome
+234	Grégoire XV;	        9,14.II.1621	8.VII.1623;	Alessandro Ludovisi;Bologne (Italie)
+235	Urbain VIII;	        6.VIII, 29.IX.1623	29.VII.1644;	Maffeo Barberini;Florence (Italie)
+236	Innocent X;	            15.IX,4.X.1644	7.I.1655;	Giovanni Battista Pamphili;Rome
+237	Alexandre VII;	        7,18.IV.1655	22.V.1667;	Fabio Chigi;Sienne (Italie)
+238	Clément IX;	            20,26.VI.1667	9.XII.1669;	Giulio Rospigliosi;Pistoia (Italie)
+239	Clément X;	            29.IV,11.V.1670	22.VII.1676;	Emilio Altieri;Rome
+240	Innocent XI;	        21.IX, 4.X.1676	12.VIII.1689;	Benedetto Odescalchi;Côme (Italie)
+241	Alexandre VIII;	        6,16.X.1689	1.II.1691;	Pietro Ottoboni;Venise (Italie)
+242	Innocent XII;	        12,15.VII.1691	27.IX.1700;	Antonio Pignatelli;Spinazzola (Italie)
+243	Clément XI;	            23,30.XI, 8.XII.1700	19.III.1721;	Giovanni Francesco Albani;Urbin (Italie)
+244	Innocent XIII;          8,18.V.1721	7.III.1724;	Michelangelo Conti;Poli (Italie)
+245	Benoît XIII;	        29.V, 4.VI.1724	21.II.1730;	Pietro Francesco (Vincenzo Maria) Orsini;Gravina (Italie)
+246	Clément XII;	        12,16.VII.1730	6.II.1740;	Lorenzo Corsini;Florence (Italie)
+247	Benoît XIV;	            17,22.VIII.1740	3.V.1758;	Prospero Lambertini;Bologne (Italie)
+248	Clément XIII;	        6,16.VII.1758	2.II.1769;	Carlo Rezzonico;Venise (Italie)
+249	Clément XIV;	        19,28.V, 4.VI.1769	22.IX.1774;	Giovanni Vincenzo Antonio (Lorenzo) Ganganelli;Sant'Arcangelo di Romagna (Italie)
+250	Pie VI;	                15,22.II.1775	29.VIII.1799;	Giannangelo Braschi;Cesena (Italie)
+251	Pie VII;	            14,21.III.1800	20.VIII.1823;	Barnaba (Gregorio) Chiaramonti;Cesena (Italie)
+252	Léon XII;	            28.IX, 5.X.1823	10.II.1829;	Annibale Sermattei della Genga;Monticelli di Genga (Italie)
+253	Pie VIII;	            31.III, 5.IV.1829	30.XI.1830;	Francesco Saverio Castiglioni;Cingoli (Italie)
+254	Grégoire XVI;         	2,6.II.1831	1.VI.1846;	Bartolomeo Alberto (Mauro) Cappellari;Belluno (Italie)
+255	Pie IX;	                16,21.VI.1846	7.II.1878;	Giovanni Maria Mastai Ferretti;Senigallia (Italie)
+256	Léon XIII;            	20.II, 3.III.1878	20.VII.1903;	Vincenzo Gioacchino Pecci;Carpineto Romano (Italie)
+257	Pie X;	                4,9.VIII.1903	20.VIII.1914;	Giuseppe Melchiorre Sarto;Riese (Italie)
+258	Benoît XV;            	3,6.IX.1914	22.I.1922;	Giacomo della Chiesa
+259	Pie XI;	                6,12.II.1922	10.II.1939;	Achille Ratti;Desio (Italie)
+260	Pie XII;	            2,12.III.1939	9.X.1958;	Eugenio Pacelli;Rome
+261	Jean XXIII;	            28.X, 4.XI.1958	3.VI.1963;	Angelo Giuseppe Roncalli;Sotto il Monte, Bergame (Italie)
+262	Paul VI;	            21,30.VI.1963	6.VIII.1978;	Giovanni Battista Montini;Concesio, Brescia (Italie)
+263	Jean-Paul Ier;       	26.VIII, 3.IX.1978	28.IX.1978;	Albino Luciani;Forno di Canale, Belluno (Italie)
+264	Jean-Paul II;	        16,22.X.1978	2.IV.2005;	Karol Wojtyła;Wadowice, Cracovie (Pologne)
+265	Benoît XVI;	            19,24.IV.2005	28.II.2013;	Joseph Ratzinger;Marktl am Inn, Bavière (Allemagne)
+266	François;	            13,19.III.2013;		Jorge Mario Bergoglio;Buenos Aires (Argentine)
+
+
+
