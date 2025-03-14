@@ -1,6 +1,8 @@
 package com.marcosavard.library.poi.word;
 
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.lang.NullSafe;
+import com.marcosavard.commons.util.collection.NullSafeList;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture;
@@ -177,10 +179,13 @@ public class WordMerger {
             XWPFStyles styles = document.getStyles();
             XWPFStyles resultStyles = resultDocument.getStyles();
             XWPFStyle style = styles.getStyle(styleID);
+
             //merge each used styles, also the related ones
-            for (XWPFStyle relatedStyle : styles.getUsedStyleList(style)) {
-                if (resultStyles.getStyle(relatedStyle.getStyleId()) == null) {
-                    resultStyles.addStyle(relatedStyle);
+            if (resultStyles != null) {
+                for (XWPFStyle relatedStyle : NullSafeList.of(styles.getUsedStyleList(style))) {
+                    if (resultStyles.getStyle(relatedStyle.getStyleId()) == null) {
+                        resultStyles.addStyle(relatedStyle);
+                    }
                 }
             }
         }

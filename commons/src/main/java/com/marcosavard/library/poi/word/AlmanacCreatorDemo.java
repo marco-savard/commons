@@ -1,7 +1,7 @@
 package com.marcosavard.library.poi.word;
 
 import com.marcosavard.commons.debug.Console;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import com.marcosavard.commons.util.PseudoRandom;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
@@ -9,10 +9,8 @@ import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class AlmanacCreatorDemo {
 
@@ -20,6 +18,7 @@ public class AlmanacCreatorDemo {
         //setting
         Locale display = Locale.FRENCH;
         LocalDate date = LocalDate.now();
+        Random random = new PseudoRandom(4);
 
         //set output file
         String basename = "almanac-" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date);
@@ -29,9 +28,11 @@ public class AlmanacCreatorDemo {
 
         //generate individual files
         pages.add(generateSunEventPage(date, display));
-        pages.add(generateMoonEventPage(date, display));
         pages.add(generateCalendarPage(date, display));
+        pages.add(generateMoonEventPage(date, display));
         pages.add(generateClimatePage(date, display));
+        pages.add(generateAntiquePage(date, random, display));
+        pages.add(generateMedievalPage(date, random, display));
 
         try (OutputStream output = new FileOutputStream(outputFile)) {
             //merge together
@@ -103,4 +104,23 @@ public class AlmanacCreatorDemo {
         climateCreator.create(outputFile);
         return outputFile;
     }
+
+    private static File generateAntiquePage(LocalDate date, Random random, Locale display) {
+        AntiquitePageCreator creator = new AntiquitePageCreator(date, random, display);
+        String outputFilePath = "antiquite.docx";
+        File outputFile = new File(outputFilePath);
+        creator.create(outputFile);
+        return outputFile;
+    }
+
+    private static File generateMedievalPage(LocalDate date, Random random, Locale display) {
+        MedievalPageCreator creator = new MedievalPageCreator(date, random, display);
+        String outputFilePath = "medieval.docx";
+        File outputFile = new File(outputFilePath);
+        creator.create(outputFile);
+        return outputFile;
+    }
+
+
+
 }

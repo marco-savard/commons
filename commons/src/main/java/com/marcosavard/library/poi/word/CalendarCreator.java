@@ -220,7 +220,7 @@ public class CalendarCreator {
     }
 
     public void addUpcomingEvents(XWPFDocument document, LocalDate date, List<CalendarEvent> events, Locale display) {
-        int max = 5;
+        int max = 8;
         List<CalendarEvent> nextEvents = events.stream().filter(e -> ! e.getDate().isBefore(date)).toList();
         nextEvents = nextEvents.size() > max ? nextEvents.subList(0, max) : nextEvents;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("eeee d MMMM", display);
