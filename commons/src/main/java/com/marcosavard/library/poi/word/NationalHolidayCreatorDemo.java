@@ -25,7 +25,7 @@ public class NationalHolidayCreatorDemo {
         //settings
         LocalDate date = LocalDate.now();
         Locale display = Locale.FRENCH;
-        int nbDays = 7;
+        int nbDays = 14;
 
         //set output file
         String outputFilePath = "fetes-nationales.docx";
@@ -110,9 +110,10 @@ public class NationalHolidayCreatorDemo {
     }
 
     private static void printCountryCapital(XWPFParagraph paragraph, Country country, Locale display) {
-        List<String> capitalCities = country.getCapitalCities();
+        List<Country.Capital> capitalCities = country.getCapitalCities();
         String title = capitalCities.size() == 1 ? "Capitale" : "Capitales";
-        String cities = String.join(", ", capitalCities);
+        List<String> capitalNames = capitalCities.stream().map(Country.Capital::name).toList();
+        String cities = String.join(", ", capitalNames);
 
         XWPFRun run = paragraph.createRun();
         run.setText("  Nom officiel : " + country.getDisplayName(display, TextStyle.FULL));
@@ -174,12 +175,12 @@ public class NationalHolidayCreatorDemo {
         Locale[] regionalLanguages = country.getRegionalLanguages();
         String title = officialLanguages.length == 1 ? "Langue officielle" : "Langues officielles";
         XWPFRun run = paragraph.createRun();
-        run.setText(MessageFormat.format("  {0}: {1}", title, LocaleUtil.toDisplayName(officialLanguages, display)));
+        run.setText(MessageFormat.format("  {0} : {1}", title, LocaleUtil.toDisplayNames(officialLanguages, display)));
         run.addCarriageReturn();
 
         if (regionalLanguages.length > 0) {
-            title = regionalLanguages.length == 1 ? "Langue régional" : "Langues régionales";
-            run.setText(MessageFormat.format("  {0}: {1}", title, LocaleUtil.toDisplayName(regionalLanguages, display)));
+            title = regionalLanguages.length == 1 ? "Langue régional ou administrative" : "Langues régionales ou administratives";
+            run.setText(MessageFormat.format("  {0} : {1}", title, LocaleUtil.toDisplayNames(regionalLanguages, display)));
             run.addCarriageReturn();
         }
     }
