@@ -3,6 +3,7 @@ package com.marcosavard.commons.geog;
 import com.marcosavard.commons.debug.Console;
 
 import java.text.MessageFormat;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
@@ -14,10 +15,18 @@ public class CountryDemo {
 
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
-    printCountryNames(display);
+    //printCountryNames(display);
+    printCountryCapitals();
     //  printCountryNamesWithArticle(display);
     //  printCountryCompactInfos(display);
     // printCountryDetailedInfos(display);
+  }
+
+  private static void printCountryCapitals() {
+    for (Country country : Country.values()) {
+      List<String> capitals = country.getCapitalCities().stream().map(Country.Capital::name).toList();
+      Console.println("{0} : {1}", country.getCode(), capitals);
+    }
   }
 
   private static void printCountryNames(Locale display) {
@@ -28,12 +37,12 @@ public class CountryDemo {
   }
 
   private static void printCountryNamesWithArticle(Locale display) {
-    printCountryNames(display, Country.Style.WITH_ARTICLE);
+    printCountryNames(display, TextStyle.SHORT);
   }
 
-  private static void printCountryNames(Locale display, Country.Style style) {
+  private static void printCountryNames(Locale display, TextStyle textStyle) {
     for (Country country : Country.values()) {
-      String countryName = country.getDisplayName(display, style);
+      String countryName = country.getDisplayName(display, textStyle);
       Console.println("{0} : {1}", country.getCode(), countryName);
     }
   }

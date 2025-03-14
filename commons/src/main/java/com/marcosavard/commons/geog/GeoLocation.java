@@ -5,6 +5,8 @@ import com.marcosavard.commons.math.Maths;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A class that represents geographical coordinates (latitude and longitude). It provides methods to
@@ -43,7 +45,7 @@ public class GeoLocation implements Serializable {
     return ORIENTATION[bearingToOrientation(bearing)];
   }
 
-  public enum Format {
+    public enum Format {
     DECIMAL,
     DEG_MIN_SEC,
     DEG_MIN_SEC_HTML
@@ -85,6 +87,79 @@ public class GeoLocation implements Serializable {
   private static GeoLocation of(Latitude latitude, Longitude longitude) {
     return new GeoLocation(latitude, longitude);
   }
+
+  public static GeoLocation parse(String text) {
+    String regex1 = "(\\d+)°(\\d+)?\\′?(\\d+)?\\″?([NS])\\s+(\\d+)°(\\d+)?\\′?(\\d+)?\\″?([EW])";
+    Pattern pattern1 = Pattern.compile(regex1);
+    Matcher matcher1 = pattern1.matcher(text);
+    String regex2 = "(\\d+)°(\\d+)\\.(\\d+)\\′([NS])\\s+(\\d+)°(\\d+)\\.(\\d+)\\′([EW])";
+    Pattern pattern2 = Pattern.compile(regex2);
+    Matcher matcher2 = pattern2.matcher(text);
+    String regex3 = "(\\d+)\\.(\\d+)°([NS])\\s+(\\d+)\\.(\\d+)°([EW])";
+    Pattern pattern3 = Pattern.compile(regex3);
+    Matcher matcher3 = pattern3.matcher(text);
+
+    double latitude, longitude;
+
+    if (matcher1.matches()) {
+      latitude = dmsToDecimal(
+              Integer.parseInt(matcher1.group(1)),
+              matcher1.group(2) != null ? Integer.parseInt(matcher1.group(2)) : 0,
+              matcher1.group(3) != null ? Integer.parseInt(matcher1.group(3)) : 0,
+              matcher1.group(4)
+      );
+
+      longitude = dmsToDecimal(
+              Integer.parseInt(matcher1.group(5)),
+              matcher1.group(6) != null ? Integer.parseInt(matcher1.group(6)) : 0,
+              matcher1.group(7) != null ? Integer.parseInt(matcher1.group(7)) : 0,
+              matcher1.group(8)
+      );
+
+    } else if (matcher2.matches()) {
+      latitude = dmsToDecimal(
+              Integer.parseInt(matcher2.group(1)),
+              Integer.parseInt(matcher2.group(2)),
+              0,
+              matcher2.group(3));
+
+      longitude = dmsToDecimal(
+              Integer.parseInt(matcher2.group(1)),
+              Integer.parseInt(matcher2.group(2)),
+              0,
+              matcher2.group(4));
+    } else if (matcher3.matches()) {
+      latitude = dmsToDecimal(
+              Integer.parseInt(matcher3.group(1)),
+             0,
+              0,
+              matcher3.group(3));
+
+      longitude = dmsToDecimal(
+              Integer.parseInt(matcher3.group(4)),
+              0,
+              0,
+              matcher3.group(6));
+    } else {
+      throw new IllegalArgumentException("Invalid coordinate format: " + text);
+    }
+
+
+
+
+
+    GeoLocation location = GeoLocation.of(latitude, longitude);
+    return location;
+  }
+
+  private static double dmsToDecimal(int degrees, int minutes, int seconds, String direction) {
+    double decimal = degrees + (minutes / 60.0) + (seconds / 3600.0);
+    if (direction.equals("S") || direction.equals("W")) {
+      decimal = -decimal;
+    }
+    return decimal;
+  }
+
 
   private GeoLocation(Latitude latitude, Longitude longitude) {
     this.latitude = latitude;

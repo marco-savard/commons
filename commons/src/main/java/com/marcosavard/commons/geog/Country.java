@@ -1,21 +1,21 @@
 package com.marcosavard.commons.geog;
 
+import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.geog.io.*;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.ling.Gender;
 import com.marcosavard.commons.ling.Language;
 import com.marcosavard.commons.math.RessourceEnum;
+import com.marcosavard.commons.util.LocaleUtil;
 
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public enum Country implements RessourceEnum {
+public enum Country {
   ANDORRA("AD"),
   UNITED_ARAB_EMIRATES("AE"),
   AFGHANISTAN("AF"),
@@ -294,24 +294,20 @@ public enum Country implements RessourceEnum {
   DAHOMEY("DHY", 1977, Country.BENIN),
   VIETNAM_DEMOCRATIC_REPUBLIC("VDR", 1977, Country.VIETNAM);
 
-  /*
-   NEWFOUNDLAND("Newfoundland"),
-      AUSTRIA_HUNGARY("Ottoman Empire"),
-   OTTOMAN_EMPIRE("Ottoman Empire"),
-    PRUSSIA("Prussia"),
-  HOLY_ROMAN_EMPIRE("Holy Roman Empire"
-    ROME("Rome"),
-    */
-
-  public enum Style {
+    public enum Style {
     ALONE,
     WITH_ARTICLE,
     GENITIVE,
     LOCATIVE
   }
 
-  private String code;
+  private static CountryCapitalReader countryCapitalReader = new CountryCapitalReader();
+  private static TimezoneByCountryReader timezoneByCountryReader = new TimezoneByCountryReader();
+  private static NationalHolidaysReader nationalHolidaysReader = new NationalHolidaysReader();
+  private static LanguageByCountryReader languageByCountryReader = new LanguageByCountryReader();
+  private static DevisesNationalesReader devisesNationalesReader = new DevisesNationalesReader();
 
+  private String code;
   private List<Locale> locales;
   private List<Character.UnicodeScript> scripts;
   private Currency currency;
@@ -322,7 +318,7 @@ public enum Country implements RessourceEnum {
 
   Country(String code, int endYear, Country... successors) {
     this.code = code;
-    this.locales = findLocales(code);
+    this.locales = LocaleUtil.localesOf(code);
     this.scripts = findScripts(locales);
     this.currency = findCurrency(locales);
   }
@@ -334,22 +330,13 @@ public enum Country implements RessourceEnum {
     return country;
   }
 
-  public static List<Locale> findLocales(String code) {
-    List<Locale> locales;
-
-    if ("AQ".equals(code)) {
-      locales = List.of(new Locale("en", "AQ"));
-    } else {
-      List<Locale> allLocales = List.of(Locale.getAvailableLocales());
-      locales =
-          allLocales.stream().filter(l -> code.equals(l.getCountry())).collect(Collectors.toList());
-    }
-
-    return locales;
+  public Locale getLocale() {
+    return LocaleUtil.forCountryTag(code);
   }
 
-  public Locale localeOf(String country) {
-    return locales.isEmpty() ? null : locales.get(0);
+  @Override
+  public String toString() {
+    return getDisplayName();
   }
 
   public String getCode() {
@@ -360,73 +347,66 @@ public enum Country implements RessourceEnum {
     return getDisplayName(Locale.getDefault());
   }
 
-  @Override
   public String getDisplayName(Locale display) {
-    String displayName, baseName = getClass().getName();
-    Locale locale = localeOf(code);
-
-    try {
-      ResourceBundle bundle = ResourceBundle.getBundle(baseName, display);
-      displayName = (locale == null) ? toTitleCase(name()) : locale.getDisplayCountry(display);
-      displayName = bundle.containsKey(code) ? bundle.getString(code) : displayName;
-    } catch (MissingResourceException ex) {
-      displayName = locale.getDisplayCountry(display);
-    }
-
-    return displayName;
+    return getDisplayName(display, TextStyle.NARROW);
   }
 
-  public String getDisplayName(Locale display, Style style) {
-    String displayName = getDisplayName(display);
-
-    if (display.getLanguage().equals(Language.FRENCH.toString())) {
-      return getFrDisplayName(displayName, style);
-    }
-
-    return displayName;
+  public String getDisplayName(Locale display, TextStyle textStyle) {
+    return countryCapitalReader.getDisplayCountry(code, display, textStyle);
   }
 
-  private String getFrDisplayName(String name, Style style) {
-    if (style == Style.WITH_ARTICLE) {
-      name = withFrArticle(name);
-    } else if (style == Style.GENITIVE) {
-      name = "de " + withFrArticle(name);
-      name = name.replace("de les", "des");
-      name = name.replace("de le", "du");
-    } else if (style == Style.LOCATIVE) {
-      name = "à " + withFrArticle(name);
-      name = name.replace("à les", "aux");
-      name = name.replace("à le", "au");
-      name = name.replace("à la", "en");
-      name = name.replace("à l’", "en ");
-    }
-
-    return name;
+  public List<Capital> getCapitalCities() {
+    return countryCapitalReader.getCapitalCities(code);
   }
 
-  private String withFrArticle(String name) {
-    Locale fr = Language.FRENCH.toLocale();
-    char gender = getCountryName(fr).getGrammaticalGender();
-    char number = getCountryName(fr).getGrammaticalNumber();
-    boolean noArticle = isLocality() || isIsland() || name.toLowerCase(fr).startsWith("saint");
+  public List<TimeZone> getTimeZones() {
+    return timezoneByCountryReader.readTimezones(code);
+  }
 
-    if (noArticle) {
-      return name;
-    } else if (number == 'P') {
-      return "les " + name;
-    } else if (StringUtil.startWithVowel(name)) {
-      return "l’" + name;
-    } else if (gender == 'F') {
-      return "la " + name;
+  public List<String> getNationalMottos() {
+    return devisesNationalesReader.getMottos(getLocale());
+  }
+
+  public LocalDate getNationalHolidayDate(int year) {
+    NationalHolidaysReader.NationalHoliday holiday = nationalHolidaysReader.read(code);
+    if (holiday != null) {
+      Month month = holiday.getMonth();
+      int dayOfMonth = holiday.getDayOfMonth();
+      return LocalDate.of(year, month, dayOfMonth);
     } else {
-      return "le " + name;
+      return null;
     }
+
   }
 
-  @Override
-  public String toString() {
-    return getDisplayName();
+  public Locale[] getOfficialLanguages() {
+    Locale[][] allLanguages = languageByCountryReader.read(code);
+    return allLanguages[0];
   }
+
+  public Locale[] getRegionalLanguages() {
+    Locale[][] allLanguages = languageByCountryReader.read(code);
+    return allLanguages[1];
+  }
+
+  public Currency getCurrency() {
+    return currency;
+  }
+
+
+
+
+
+
+
+
+
+
+
+  /// //////////////////
+  /// OLD
+
+
 
   public String toTitleCase(String s) {
     String title = Character.toTitleCase(s.charAt(0)) + s.toLowerCase().substring(1);
@@ -454,9 +434,7 @@ public enum Country implements RessourceEnum {
     return scriptNames;
   }
 
-  public Currency getCurrency() {
-    return currency;
-  }
+
 
   public List<String> getLanguages() {
     List<String> languages = new ArrayList<>();
@@ -602,33 +580,6 @@ public enum Country implements RessourceEnum {
     return CountryName.of(code, name, display);
   }
 
-  public String getDisplayNameWithArticle(Locale display, String preposition) {
-    String countryName = getDisplayName(display);
-    char number = getCountryName(display).getGrammaticalNumber();
-    char gender = getCountryName(display).getGrammaticalGender();
-
-    Article articles = Article.of(display);
-    String article = articles.getArticle(number, gender, preposition);
-    String lower = StringUtil.stripAccents(countryName.toLowerCase());
-    char firstLetter = lower.charAt(0);
-    char lastLetter = article.length() == 0 ? ' ' : article.charAt(article.length() - 1);
-    boolean startVowel = "aeiou".indexOf(firstLetter) >= 0;
-    boolean endVowel = "aeiou".indexOf(lastLetter) >= 0;
-    boolean vowels = startVowel && endVowel;
-    article = vowels ? article.substring(0, article.length() - 1) + "\'" : article;
-
-    article = article.equals("de le") ? "du" : article;
-    article = article.equals("de les") ? "des" : article;
-    article = article.equals("à l'") ? "en" : article;
-    article = article.equals("à la") ? "en" : article;
-    article = article.equals("à le") ? "au" : article;
-    article = article.equals("à les") ? "aux" : article;
-
-    lastLetter = article.length() == 0 ? ' ' : article.charAt(article.length() - 1);
-    String withArticle = (lastLetter == '\'') ? article + countryName : article + " " + countryName;
-    return withArticle.trim();
-  }
-
   public List<Locale> getLanguageLocales() {
     List<String> languages = getLanguages();
     List<Locale> locales = new ArrayList<>();
@@ -639,15 +590,6 @@ public enum Country implements RessourceEnum {
     }
 
     return locales;
-  }
-
-  public Gender getGender(Locale display) {
-    Gender gender = Gender.NEUTRAL;
-
-    if (Locale.FRENCH.getLanguage().equals(display.getLanguage())) {
-      // gender = getFrGender(display);
-    }
-    return gender;
   }
 
   private static final List<String> ISLANDS =
@@ -702,21 +644,6 @@ public enum Country implements RessourceEnum {
 
       return gender;
     }
-
-    public char getGrammaticalGenderOld() {
-      char number = getGrammaticalNumber();
-      boolean feminine = (number == 'S') ? countryName.endsWith("e") : countryName.endsWith("es");
-      feminine = List.of("BZ", "KH", "MX", "MZ", "ZW").contains(code) ? false : feminine;
-      feminine = List.of("KP", "KR", "MK").contains(code) ? true : feminine;
-      char gender = feminine ? 'F' : 'M';
-      List<String> list;
-      list =
-          List.of(
-              "AD", "AW", "CU", "CW", "DJ", "FJ", "GU", "HT", "JE", //
-              "MC", "MT", "OM", "PM", "PR", "RE", "ST", "SX", "WF", "YT");
-      gender = list.contains(code) ? 'N' : gender;
-      return gender;
-    }
   }
 
   private abstract static class Article {
@@ -758,4 +685,7 @@ public enum Country implements RessourceEnum {
       return article;
     }
   }
+
+  public static record Capital(String name, GeoLocation location) {}
+
 }
