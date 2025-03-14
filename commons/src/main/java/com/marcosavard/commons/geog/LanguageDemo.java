@@ -35,6 +35,7 @@ public class LanguageDemo {
   }
 
   private static String getLanguageLocales(List<Locale> allLocales, String language) {
+    /*
     List<String> locales =
         allLocales.stream()
             .filter(l -> language.equals(l.getLanguage()))
@@ -42,8 +43,8 @@ public class LanguageDemo {
             .filter((s -> s.length() == 2))
             .distinct()
             .sorted()
-            .toList();
-    String countries = String.join(",", locales);
+            .toList();*/
+    String countries = ""; //String.join(",", locales);
     return countries;
   }
 }

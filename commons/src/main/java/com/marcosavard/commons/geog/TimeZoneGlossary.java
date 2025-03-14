@@ -229,7 +229,7 @@ public class TimeZoneGlossary extends Glossary {
   private String extractName(String str, String start) {
     str = str.toLowerCase();
     List<String> words = List.of(str.split("\\s+"));
-    words = words.stream().filter(s -> StringUtil.stripAccents(s).startsWith(start)).toList();
+  //  words = words.stream().filter(s -> StringUtil.stripAccents(s).startsWith(start)).toList();
     String name = String.join(" ", words).toLowerCase();
     return name;
   }
@@ -288,7 +288,7 @@ public class TimeZoneGlossary extends Glossary {
 
   private String getWordStarting(String text, String... prefixes) {
     List<String> words = List.of(text.split("\\s+"));
-    words = words.stream().filter(s -> startsWith(s, prefixes)).toList();
+   // words = words.stream().filter(s -> startsWith(s, prefixes)).toList();
     String word = String.join(" ", words).toLowerCase();
     return word;
   }
