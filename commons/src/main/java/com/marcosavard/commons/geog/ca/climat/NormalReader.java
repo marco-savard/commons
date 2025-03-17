@@ -6,10 +6,9 @@ import com.marcosavard.commons.lang.StringUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -78,13 +77,37 @@ public class NormalReader {
     private Map<NormalReader.Station, Double[]> extremeMaximum = new HashMap<>();
     private Map<NormalReader.Station, LocalDate[]> extremeMaximumDate = new HashMap<>();
 
-    public double getDailyMaximum(NormalReader.Station station, Month month) throws IOException {
-        loadNormals(station);
-        return dailyMaximum.get(station)[month.getValue() - 1];
+    public double getDailyMaximum(NormalReader.Station station, LocalDate date) throws IOException {
+        return getDailyLimit(station, date, true);
     }
 
-    public double getDailyMinimum(NormalReader.Station station, Month month) throws IOException {
+    public double getDailyMinimum(NormalReader.Station station, LocalDate date) throws IOException {
+        return getDailyLimit(station, date, false);
+    }
+
+    private double getDailyLimit(NormalReader.Station station, LocalDate date, boolean isMax) throws IOException {
         loadNormals(station);
+        int year = date.getYear();
+        int dayOfMonth = date.getDayOfMonth();
+        int monthLength = date.getMonth().length(date.isLeapYear());
+        boolean beforeMid = dayOfMonth <= monthLength/2;
+        Month month1 = beforeMid ? date.getMonth().minus(1) : date.getMonth();
+        Month month2 = beforeMid ? date.getMonth() : date.getMonth().plus(1);
+        LocalDate date1 = LocalDate.of(month1.equals(Month.DECEMBER) ? year -1 : year, month1, 15);
+        long daysSince = Duration.between(date1.atStartOfDay(), date.atStartOfDay()).toDays();
+        double fractionOfMonth = daysSince / (double)monthLength;
+
+        Map<NormalReader.Station, Double[]> dailyLimit = isMax? dailyMaximum : dailyMinimum;
+        double limit1 = dailyLimit.get(station)[month1.getValue() - 1];
+        double limit2 = dailyLimit.get(station)[month2.getValue() - 1];
+        double limit = limit1 * (1-fractionOfMonth) + (limit2 * fractionOfMonth);
+        limit = Math.round(limit * 10) / 10.0;
+        return limit;
+    }
+
+    public double getDailyMinimumOld(NormalReader.Station station, LocalDate date) throws IOException {
+        loadNormals(station);
+        Month month = date.getMonth();
         return dailyMinimum.get(station)[month.getValue() - 1];
     }
 
@@ -202,6 +225,26 @@ public class NormalReader {
         return findEvents(current, maxCount, extremeMaximum, extremeMaximumDate, true);
     }
 
+    public List<NormalEvent> findDailyMinMaxSpots(LocalDate date, int maxCount, boolean isMax) throws IOException {
+        List<NormalEvent> events = new ArrayList<>();
+        int month = date.getMonth().getValue();
+        int day = date.getDayOfYear();
+
+        for (Station station : stations) {
+            double value = getDailyLimit(station, date, isMax);
+            NormalEvent event = new NormalEvent(station, value, date, day, isMax);
+            events.add(event);
+        }
+
+        Comparator<NormalEvent> comparator = Comparator
+                .comparing(NormalEvent::getValue);
+
+        events = events.stream().sorted(comparator).toList();
+        events = (events.size() > maxCount) ? events.subList(0, maxCount) : events;
+        return events;
+    }
+
+
     public List<NormalEvent> findEvents(LocalDate current, int maxCount, Map<Station, Double[]> extremes, Map<Station, LocalDate[]> extremeDates, boolean isMax) {
         int month = current.getMonth().getValue();
         int doy = current.getDayOfYear();
@@ -256,6 +299,11 @@ public class NormalReader {
 
         public String getStationName() {
             return station.getDisplayName();
+        }
+
+        @Override
+        public String toString() {
+            return MessageFormat.format("{0} : {1} ", station, value);
         }
     }
 

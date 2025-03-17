@@ -14,26 +14,12 @@ public class NormalReaderDemo {
         NormalReader reader = new NormalReader();
         reader.loadAll();
 
+       // findMinMaxDaily(reader);
+        findHotSpots(reader);
 
 
 
 
-        LocalDate date = LocalDate.of(2025, 2, 1);
-        List<NormalReader.NormalEvent> maxs = reader.findExtremeMaximums(date, 5);
-
-        List<NormalReader.NormalEvent> mins = reader.findExtremeMinimums(date, 5);
-
-
-
-        List<Month> months = List.of(Month.JUNE, Month.JULY, Month.AUGUST);
-        String patt = "Daily min = {0}, max = {1} for {2} in {3}";
-
-        for (Month month :months) {
-            double max = reader.getExtremeMaximum(NormalReader.Station.QC, month);
-            LocalDate maxDate = reader.getExtremeMaximumDate(NormalReader.Station.QC, month);
-
-            Console.println(patt, reader.getDailyMinimum(NormalReader.Station.QC, month), reader.getDailyMaximum(NormalReader.Station.QC, month), NormalReader.Station.QC, month);
-            Console.println(patt, reader.getDailyMinimum(NormalReader.Station.MTL, month), reader.getDailyMaximum(NormalReader.Station.MTL, month), NormalReader.Station.MTL, month);
 
 
 
@@ -60,12 +46,48 @@ public class NormalReaderDemo {
             Console.println(patt, granby.getDailyMinimum(month), granby.getDailyMaximum(month), "Granby", month);
             Console.println(patt, frelig.getDailyMinimum(month), frelig.getDailyMaximum(month), "Frelig.", month);
 */
-            Console.println();
-        }
+
+
 
 
     }
 
+    private static void findHotSpots(NormalReader reader) throws IOException {
+        LocalDate date = LocalDate.of(2000, Month.MARCH, 16);
+        List<NormalReader.NormalEvent> maxEvents = reader.findDailyMinMaxSpots(date, Integer.MAX_VALUE, true);
+        List<NormalReader.NormalEvent> minEvents = reader.findDailyMinMaxSpots(date, Integer.MAX_VALUE, false);
+
+        Console.println("Point le plus froid pour cette journee {0}", date);
+        Console.println("  la nuit : {0}", minEvents.get(0));
+        Console.println("  le jour : {0}", maxEvents.get(0));
+        Console.println();
+
+        Console.println("Point le plus chaud pour cette journee {0}", date);
+        Console.println("  la nuit : {0}", minEvents.get(minEvents.size()-1));
+        Console.println("  le jour : {0}", maxEvents.get(maxEvents.size()-1));
+        Console.println();
+
+
+
+
+    }
+
+    private static void findMinMaxDaily(NormalReader reader) throws IOException {
+        List<Month> months = List.of(Month.JUNE, Month.JULY, Month.AUGUST);
+        String patt = "..daily min = {0}, max = {1} for {2} in {3}";
+
+        for (Month month :months) {
+            int len = month.length(true);
+
+            for (int day = 1; day <= len; day++) {
+                LocalDate date = LocalDate.of(2000, month, day);
+                Console.println(date);
+                Console.println(patt, reader.getDailyMinimum(NormalReader.Station.QC, date), reader.getDailyMaximum(NormalReader.Station.QC, date), NormalReader.Station.QC, month);
+                //  Console.println(patt, reader.getDailyMinimum(NormalReader.Station.MTL, date), reader.getDailyMaximum(NormalReader.Station.MTL, date), NormalReader.Station.MTL, month);
+                Console.println();
+            }
+        }
+    }
 
 
 }
