@@ -49,49 +49,49 @@ public class ClimatCreatorDemo {
     }
 
     private static void fillNormalsInTable(WordStringReplacer replacer, LocalDate date, NormalReader normalReader) throws IOException {
-        replacer.replaceStrings("minmad", toMinText(normalReader, NormalReader.Station.ILES_MAD, date.getMonth()));
-        replacer.replaceStrings("maxmad", toMaxText(normalReader, NormalReader.Station.ILES_MAD, date.getMonth()));
-        replacer.replaceStrings("minsi", toMinText(normalReader, NormalReader.Station.SEPT_ILES, date.getMonth()));
-        replacer.replaceStrings("maxsi", toMaxText(normalReader, NormalReader.Station.SEPT_ILES, date.getMonth()));
-        replacer.replaceStrings("minbc", toMinText(normalReader, NormalReader.Station.BAIE_COMEAU, date.getMonth()));
-        replacer.replaceStrings("maxbc", toMaxText(normalReader, NormalReader.Station.BAIE_COMEAU, date.getMonth()));
+        replacer.replaceStrings("minmad", toMinText(normalReader, NormalReader.Station.ILES_MAD, date));
+        replacer.replaceStrings("maxmad", toMaxText(normalReader, NormalReader.Station.ILES_MAD, date));
+        replacer.replaceStrings("minsi", toMinText(normalReader, NormalReader.Station.SEPT_ILES, date));
+        replacer.replaceStrings("maxsi", toMaxText(normalReader, NormalReader.Station.SEPT_ILES, date));
+        replacer.replaceStrings("minbc", toMinText(normalReader, NormalReader.Station.BAIE_COMEAU, date));
+        replacer.replaceStrings("maxbc", toMaxText(normalReader, NormalReader.Station.BAIE_COMEAU, date));
 
-        replacer.replaceStrings("mingas", toMinText(normalReader, NormalReader.Station.GASPE, date.getMonth()));
-        replacer.replaceStrings("maxgas", toMaxText(normalReader, NormalReader.Station.GASPE, date.getMonth()));
-        replacer.replaceStrings("minrim", toMinText(normalReader, NormalReader.Station.RIMOUSKI, date.getMonth()));
-        replacer.replaceStrings("maxrim", toMaxText(normalReader, NormalReader.Station.RIMOUSKI, date.getMonth()));
-        replacer.replaceStrings("minsag", toMinText(normalReader, NormalReader.Station.BAGOTVILLE, date.getMonth()));
-        replacer.replaceStrings("maxsag", toMaxText(normalReader, NormalReader.Station.BAGOTVILLE, date.getMonth()));
-        replacer.replaceStrings("minrob", toMinText(normalReader, NormalReader.Station.ROBERVAL, date.getMonth()));
-        replacer.replaceStrings("maxrob", toMaxText(normalReader, NormalReader.Station.ROBERVAL, date.getMonth()));
+        replacer.replaceStrings("mingas", toMinText(normalReader, NormalReader.Station.GASPE, date));
+        replacer.replaceStrings("maxgas", toMaxText(normalReader, NormalReader.Station.GASPE, date));
+        replacer.replaceStrings("minrim", toMinText(normalReader, NormalReader.Station.RIMOUSKI, date));
+        replacer.replaceStrings("maxrim", toMaxText(normalReader, NormalReader.Station.RIMOUSKI, date));
+        replacer.replaceStrings("minsag", toMinText(normalReader, NormalReader.Station.BAGOTVILLE, date));
+        replacer.replaceStrings("maxsag", toMaxText(normalReader, NormalReader.Station.BAGOTVILLE, date));
+        replacer.replaceStrings("minrob", toMinText(normalReader, NormalReader.Station.ROBERVAL, date));
+        replacer.replaceStrings("maxrob", toMaxText(normalReader, NormalReader.Station.ROBERVAL, date));
 
-        replacer.replaceStrings("minqc", toMinText(normalReader, NormalReader.Station.STE_FOY, date.getMonth()));
-        replacer.replaceStrings("maxqc", toMaxText(normalReader, NormalReader.Station.STE_FOY, date.getMonth()));
-        replacer.replaceStrings("minstg", toMinText(normalReader, NormalReader.Station.ST_GEORGES, date.getMonth()));
-        replacer.replaceStrings("maxstg", toMaxText(normalReader, NormalReader.Station.ST_GEORGES, date.getMonth()));
-        replacer.replaceStrings("mintr", toMinText(normalReader, NormalReader.Station.TROIS_RIVIERES, date.getMonth()));
-        replacer.replaceStrings("maxtr", toMaxText(normalReader, NormalReader.Station.TROIS_RIVIERES, date.getMonth()));
-        replacer.replaceStrings("mindru", toMinText(normalReader, NormalReader.Station.DRUMMONDVILLE, date.getMonth()));
-        replacer.replaceStrings("maxdru", toMaxText(normalReader, NormalReader.Station.DRUMMONDVILLE, date.getMonth()));
-        replacer.replaceStrings("minshb", toMinText(normalReader, NormalReader.Station.SHERBROOKE, date.getMonth()));
-        replacer.replaceStrings("maxshb", toMaxText(normalReader, NormalReader.Station.SHERBROOKE, date.getMonth()));
+        replacer.replaceStrings("minqc", toMinText(normalReader, NormalReader.Station.STE_FOY, date));
+        replacer.replaceStrings("maxqc", toMaxText(normalReader, NormalReader.Station.STE_FOY, date));
+        replacer.replaceStrings("minstg", toMinText(normalReader, NormalReader.Station.ST_GEORGES, date));
+        replacer.replaceStrings("maxstg", toMaxText(normalReader, NormalReader.Station.ST_GEORGES, date));
+        replacer.replaceStrings("mintr", toMinText(normalReader, NormalReader.Station.TROIS_RIVIERES, date));
+        replacer.replaceStrings("maxtr", toMaxText(normalReader, NormalReader.Station.TROIS_RIVIERES, date));
+        replacer.replaceStrings("mindru", toMinText(normalReader, NormalReader.Station.DRUMMONDVILLE, date));
+        replacer.replaceStrings("maxdru", toMaxText(normalReader, NormalReader.Station.DRUMMONDVILLE, date));
+        replacer.replaceStrings("minshb", toMinText(normalReader, NormalReader.Station.SHERBROOKE, date));
+        replacer.replaceStrings("maxshb", toMaxText(normalReader, NormalReader.Station.SHERBROOKE, date));
 
-        replacer.replaceStrings("minmtl", toMinText(normalReader, NormalReader.Station.MTL, date.getMonth()));
-        replacer.replaceStrings("maxmtl", toMaxText(normalReader, NormalReader.Station.MTL, date.getMonth()));
-        replacer.replaceStrings("mingat", toMinText(normalReader, NormalReader.Station.OTTAWA, date.getMonth()));
-        replacer.replaceStrings("maxgat", toMaxText(normalReader, NormalReader.Station.OTTAWA, date.getMonth()));
-        replacer.replaceStrings("minvld", toMinText(normalReader, NormalReader.Station.VAL_DOR, date.getMonth()));
-        replacer.replaceStrings("maxvld", toMaxText(normalReader, NormalReader.Station.VAL_DOR, date.getMonth()));
-        replacer.replaceStrings("minrou", toMinText(normalReader, NormalReader.Station.ROUYN, date.getMonth()));
-        replacer.replaceStrings("maxrou", toMaxText(normalReader, NormalReader.Station.ROUYN, date.getMonth()));
+        replacer.replaceStrings("minmtl", toMinText(normalReader, NormalReader.Station.MTL, date));
+        replacer.replaceStrings("maxmtl", toMaxText(normalReader, NormalReader.Station.MTL, date));
+        replacer.replaceStrings("mingat", toMinText(normalReader, NormalReader.Station.OTTAWA, date));
+        replacer.replaceStrings("maxgat", toMaxText(normalReader, NormalReader.Station.OTTAWA, date));
+        replacer.replaceStrings("minvld", toMinText(normalReader, NormalReader.Station.VAL_DOR, date));
+        replacer.replaceStrings("maxvld", toMaxText(normalReader, NormalReader.Station.VAL_DOR, date));
+        replacer.replaceStrings("minrou", toMinText(normalReader, NormalReader.Station.ROUYN, date));
+        replacer.replaceStrings("maxrou", toMaxText(normalReader, NormalReader.Station.ROUYN, date));
     }
 
     private static void fillNormalsOnMap(WordStringReplacer replacer, LocalDate date, NormalReader normalReader) throws XmlException, IOException {
-        replacer.replaceStrings("maprim", toText(normalReader, NormalReader.Station.RIMOUSKI, date.getMonth()), "w:t");
-        replacer.replaceStrings("mapsag", toText(normalReader, NormalReader.Station.BAGOTVILLE, date.getMonth()), "w:t");
-        replacer.replaceStrings("mapqc", toText(normalReader, NormalReader.Station.STE_FOY, date.getMonth()), "w:t");
-        replacer.replaceStrings("mapmtl", toText(normalReader, NormalReader.Station.MTL, date.getMonth()), "w:t");
-        replacer.replaceStrings("mapgat", toText(normalReader, NormalReader.Station.OTTAWA, date.getMonth()), "w:t");
+        replacer.replaceStrings("maprim", toText(normalReader, NormalReader.Station.RIMOUSKI, date), "w:t");
+        replacer.replaceStrings("mapsag", toText(normalReader, NormalReader.Station.BAGOTVILLE, date), "w:t");
+        replacer.replaceStrings("mapqc", toText(normalReader, NormalReader.Station.STE_FOY, date), "w:t");
+        replacer.replaceStrings("mapmtl", toText(normalReader, NormalReader.Station.MTL, date), "w:t");
+        replacer.replaceStrings("mapgat", toText(normalReader, NormalReader.Station.OTTAWA, date), "w:t");
     }
 
     private static void fillExtreme(WordStringReplacer replacer, LocalDate date, NormalReader normalReader, Locale display) {
@@ -117,17 +117,17 @@ public class ClimatCreatorDemo {
     }
 
 
-    private static String toMinText(NormalReader normalReader, NormalReader.Station station, Month month) throws IOException {
-        return Double.toString(normalReader.getDailyMinimum(station, month));
+    private static String toMinText(NormalReader normalReader, NormalReader.Station station, LocalDate date) throws IOException {
+        return Double.toString(normalReader.getDailyMinimum(station, date));
     }
 
-    private static String toMaxText(NormalReader normalReader, NormalReader.Station station, Month month) throws IOException {
-        return Double.toString(normalReader.getDailyMaximum(station, month));
+    private static String toMaxText(NormalReader normalReader, NormalReader.Station station, LocalDate date) throws IOException {
+        return Double.toString(normalReader.getDailyMaximum(station, date));
     }
 
-    private static String toText(NormalReader normalReader, NormalReader.Station station, Month month) throws IOException {
-        double min = normalReader.getDailyMinimum(station, month);
-        double max = normalReader.getDailyMaximum(station, month);
+    private static String toText(NormalReader normalReader, NormalReader.Station station, LocalDate date) throws IOException {
+        double min = normalReader.getDailyMinimum(station, date);
+        double max = normalReader.getDailyMaximum(station, date);
         return Double.toString(min) + ", " + Double.toString(max);
     }
 
