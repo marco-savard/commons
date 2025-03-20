@@ -123,10 +123,10 @@ public class ClimateCreator {
         String pat = "Point le plus froid pour un {0}";
         String pointsFroids = MessageFormat.format(pat, date.format(fmt));
 
-        pat = "La nuit, il fait en moyenne {0} à {1}";
+        pat = "La nuit, il fait en moyenne {0} °C à {1}";
         String pointFroidLaNuit = MessageFormat.format(pat, minEvent.getValue(), minEvent.getStationName());
 
-        pat = "Le jour, il fait en moyenne {0} à {1}";
+        pat = "Le jour, il fait en moyenne {0} °C à {1}";
         String pointFroidLeJour = MessageFormat.format(pat, maxEvent.getValue(), maxEvent.getStationName());
 
         replacer.replaceStrings("PointsFroids", pointsFroids);
@@ -144,10 +144,10 @@ public class ClimateCreator {
         String pat = "Point le plus chaud pour un {0}";
         String pointsChauds = MessageFormat.format(pat, date.format(fmt));
 
-        pat = "La nuit, il fait en moyenne {0} à {1}";
+        pat = "La nuit, il fait en moyenne {0} °C à {1}";
         String pointChaudLaNuit = MessageFormat.format(pat, minEvent.getValue(), minEvent.getStationName());
 
-        pat = "Le jour, il fait en moyenne {0} à {1}";
+        pat = "Le jour, il fait en moyenne {0} °C à {1}";
         String pointChaudLeJour = MessageFormat.format(pat, maxEvent.getValue(), maxEvent.getStationName());
 
         replacer.replaceStrings("PointsChauds", pointsChauds);

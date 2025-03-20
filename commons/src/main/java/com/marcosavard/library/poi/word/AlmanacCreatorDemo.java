@@ -17,8 +17,8 @@ public class AlmanacCreatorDemo {
     public static void main(String[] args) {
         //setting
         Locale display = Locale.FRENCH;
-        LocalDate date = LocalDate.now();
-        Random random = new PseudoRandom(4);
+        LocalDate date = LocalDate.now().plusDays(0);
+        Random random = new PseudoRandom(date.hashCode());
 
         //set output file
         String basename = "almanac-" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(date);
@@ -31,8 +31,8 @@ public class AlmanacCreatorDemo {
         pages.add(generateCalendarPage(date, display));
         pages.add(generateMoonEventPage(date, display));
         pages.add(generateClimatePage(date, display));
-        pages.add(generateAntiquePage(date, random, display));
-        pages.add(generateMedievalPage(date, random, display));
+       // pages.add(generateAntiquePage(date, random, display));
+       // pages.add(generateMedievalPage(date, random, display));
 
         try (OutputStream output = new FileOutputStream(outputFile)) {
             //merge together

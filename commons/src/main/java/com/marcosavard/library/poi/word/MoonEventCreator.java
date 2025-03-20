@@ -5,6 +5,8 @@ import com.marcosavard.commons.debug.Console;
 import com.marcosavard.library.poi.word.template.MoonEventTemplateReader;
 
 import java.io.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
@@ -52,12 +54,23 @@ public class MoonEventCreator {
         MoonPosition position = MoonPosition.at(moment);
         int moonAge = (int)position.getMoonAgeDays();
         int illumination = (int)( 100 * position.getMoonIllumination());
+        long distance = (long)position.getMoonDistance();
+        double diameter = position.getMoonAngularDiameter();
+        double percent = 100.0 * distance / MoonPosition.MOON_APOGEE;
         MoonPosition.Phase phase = position.getPhase();
+
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(display);
+        String distanceStr = df.format(distance);
+        String percentStr = Double.toString(Math.round(percent*10) / 10.0);
+        String diameterStr = Double.toString(Math.round(diameter*1000) / 1000.0);
 
         replacer.replaceStrings("symb", Character.toString(phase.getCodePoint()));
         replacer.replaceStrings("moonPhase0", phase.getDisplayName(display));
         replacer.replaceStrings("moonAge", Integer.toString(moonAge));
         replacer.replaceStrings("moonIllumination", Integer.toString(illumination));
+        replacer.replaceStrings("moonDistance", distanceStr);
+        replacer.replaceStrings("moonDistPct", percentStr);
+        replacer.replaceStrings("moonDiameter", diameterStr);
     }
 
     private void printNextMoonPhases(WordStringReplacer replacer) {
