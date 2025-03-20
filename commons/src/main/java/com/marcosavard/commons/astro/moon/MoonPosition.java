@@ -76,8 +76,6 @@ public class MoonPosition {
         return "?";
       }
     }
-
-
   };
 
   private static final double EPOCH = JulianDay.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
@@ -96,6 +94,11 @@ public class MoonPosition {
 
   // Mean longitude of the perigee at the epoch.
   public static final double MOON_MEAN_LONGITUDE_PERIGREE = 349.383063;
+
+  // from 356,500 km at perigee to 406,700 km at apogee
+  public static final double MOON_PERIGREE = 356_500.0;
+
+  public static final double MOON_APOGEE = 406_700.0;
 
   // semi-major axis of Moon's orbit in km
   private static final double MOON_SEMI_MAJOR = 384401.0D;
@@ -201,7 +204,7 @@ public class MoonPosition {
     return moonPhase;
   }
 
-  // Calculate Moon's angular diameter.
+  // Calculate Moon's angular diameter, in degrees (around 0.5 degrees)
   public double getMoonAngularDiameter() {
     double moonDFrac = moonDist / MOON_SEMI_MAJOR;
     double moonAng = MOON_ANG_SIZE / moonDFrac;
@@ -239,6 +242,7 @@ public class MoonPosition {
     MoonPosition position0 = MoonPosition.at(moment0);
     double moonAge = position0.getMoonAge();
     double ageDelta = degRange(moonAgeToFind - moonAge);
+    ageDelta = (ageDelta > 355) ? ageDelta - 360 : ageDelta; //ajust
     long approxTime = (long) ((ageDelta / 360) * SYN_MONTH * SECONDS_PER_DAY);
     Instant instant1 = instant0.plus(approxTime, ChronoUnit.SECONDS);
     ZonedDateTime moment1 = instant1.atZone(ZoneOffset.UTC);
