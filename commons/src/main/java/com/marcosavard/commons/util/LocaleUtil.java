@@ -1,10 +1,8 @@
 package com.marcosavard.commons.util;
 
-import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.lang.StringUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LocaleUtil {
     private static Map<String, Locale> localeByCountryCode = new HashMap<>();
@@ -58,20 +56,24 @@ public class LocaleUtil {
         return locales;
     }
 
-    public static String toDisplayName(Locale[] locales, Locale display) {
-        return String.join(", ", toDisplayNames(locales, display));
+    public static String toDisplayNames(Locale[] locales, Locale display) {
+        return String.join(", ", toDisplayNameArray(locales, display));
     }
 
-    private static String[] toDisplayNames(Locale[] locales, Locale display) {
+    private static String[] toDisplayNameArray(Locale[] locales, Locale display) {
         String[] names = new String[locales.length];
 
         for (int i=0; i<locales.length; i++) {
-            names[i] = locales[i].getDisplayLanguage(display);
+            names[i] = toDisplayName(locales[i], display);
         }
 
         return names;
     }
 
+    private static String toDisplayName(Locale locale, Locale display) {
+        String displayName = locale.getDisplayLanguage(display);
+        return displayName;
+    }
 
     public static Locale forCountryName(String name, Locale display) {
         name = normalize(name).toLowerCase();

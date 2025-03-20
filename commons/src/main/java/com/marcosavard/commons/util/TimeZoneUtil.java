@@ -54,7 +54,7 @@ public class TimeZoneUtil {
             case "Australia" -> "Australie";
             case "Pacific" -> "Pacifique";
             case "Atlantic" -> "Atlantique";
-            case "Indian" -> "Indien";
+            case "Indian" -> "Océan indien";
             default -> value;
         };
     }
