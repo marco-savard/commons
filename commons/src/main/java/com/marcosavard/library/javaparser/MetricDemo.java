@@ -1,87 +1,56 @@
 package com.marcosavard.library.javaparser;
 
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseResult;
-import com.github.javaparser.ast.CompilationUnit;
-import com.marcosavard.commons.App;
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.io.FileSystem;
-import com.marcosavard.commons.util.ArrayUtil;
-import com.marcosavard.commons.util.Grid;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 public class MetricDemo {
-  private static final File sourceFolder =
-      new File("C:/Users/User/IdeaProjects/commons/commons/src/main/java");
+
+  private static final AbstractMetric[] metrics = new AbstractMetric[] {
+          new EncapsulationMetric(),
+        //  new CouplingMetric(),
+          new MethodComplexityMetric()
+  };
 
   public static void main(String[] args) {
-    Metric[] metrics =
-        new Metric[] {
-          // new GenericityMetric(),
-          new MethodLengthComplexity()
-        };
+    try {
+      File srcFolder = getSourceFolder();
+      List<File> files = FileSystem.getFilesEndingWith(srcFolder, ".java");
+      files = files.subList(0, 30);
+      JavaParser parser = new JavaParser();
 
-    List<File> sourceFiles = getSourceFiles();
-    List<File> selection =
-        sourceFiles.stream().filter(f -> !f.getName().endsWith("Demo.java")).collect(Collectors.toList());
-    selection = selection.stream().filter(f -> !f.getPath().contains("meta")).collect(Collectors.toList());
-
-    for (Metric metric : metrics) {
-      computeMetric(metric, selection);
-    }
-  }
-
-  private static void computeMetric(Metric metric, List<File> sourceFiles) {
-    Map<File, CompilationUnit> parsedFiles = parseFiles(sourceFiles);
-    List<String[]> rows = new ArrayList<>();
-
-    for (File file : parsedFiles.keySet()) {
-      List<Metric.Stat> stats = metric.compute(file, parsedFiles.get(file));
-
-      for (Metric.Stat stat : stats) {
-        String[] row = ArrayUtil.concat(new String[] {stat.name}, stat.results);
-        rows.add(row);
+      for (AbstractMetric metric : metrics) {
+        metric.iterateFiles(parser, files);
       }
-    }
 
-    Metric.Stat total = metric.getTotal();
-    String[] row = ArrayUtil.concat(new String[] {total.name}, total.results);
-    rows.add(row);
-    List<String> lines = Grid.arrayListToLines(rows);
+      for (AbstractMetric metric : metrics) {
+        List<AbstractMetric.ResultSet> resultSets = metric.getResults();
 
-    for (String line : lines) {
-      System.out.println(line);
-    }
+        for (AbstractMetric.ResultSet resultSet : resultSets) {
+          Console.println(resultSet);
+        }
 
-    System.out.println();
-  }
-
-  private static List<File> getSourceFiles() {
-    Package pack = App.class.getPackage();
-    List<File> sourceFiles = FileSystem.getSourceFiles(sourceFolder, pack);
-    sourceFiles.addAll(sourceFiles);
-    return sourceFiles;
-  }
-
-  private static Map<File, CompilationUnit> parseFiles(List<File> sourceFiles) {
-    Map<File, CompilationUnit> parsedFiles = new TreeMap<>();
-    JavaParser parser = new JavaParser();
-
-    for (File file : sourceFiles) {
-      try {
-        CompilationUnit cu = parser.parse(file) ;
-        parsedFiles.put(file, cu);
-      } catch (FileNotFoundException e) {
-        // ignore
+        Console.println();
       }
-    }
 
-    return parsedFiles;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
+
+
+  private static File getSourceFolder() {
+    File rootFolder = FileSystem.getRootFolder(MetricDemo.class);
+    return new File(rootFolder.getParentFile(), "src");
+  }
+
+
+
+
+
+
 }
