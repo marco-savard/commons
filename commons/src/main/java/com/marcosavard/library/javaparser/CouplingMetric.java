@@ -4,12 +4,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.marcosavard.commons.util.collection.UniqueList;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CouplingMetric extends AbstractMetric {
     private Map<CompilationUnit, List<String>> importsByCompilationUnits = new LinkedHashMap<>();
@@ -18,10 +16,6 @@ public class CouplingMetric extends AbstractMetric {
     protected void onCompilationUnit(CompilationUnit compilationUnit) {
         NodeList<ImportDeclaration> imports = compilationUnit.getImports();
         List<String> importedClasses = new UniqueList<>();
-        PackageDeclaration pack = compilationUnit.getPackageDeclaration().orElse(null);
-        String[] parts = pack.getName().asString().split("\\.");
-        String internalName = parts[0] + "." + parts[1];
-        int systemCount = 0, internalCount = 0;
 
         for (int i = 0; i < imports.size(); i++) {
             ImportDeclaration importDeclaration = imports.get(i);
@@ -29,13 +23,6 @@ public class CouplingMetric extends AbstractMetric {
         }
 
         importsByCompilationUnits.put(compilationUnit, importedClasses);
-
-        for (String classname : importedClasses) {
-            boolean isSystem = classname.startsWith("java.") || classname.startsWith("javax.");
-            boolean isInternal =  classname.startsWith(internalName);
-            systemCount += isSystem ? 1 : 0;
-            internalCount += isInternal ? 1 : 0;
-        }
     }
 
     private void onImport(List<String> importedClasses, ImportDeclaration importDeclaration) {
@@ -56,25 +43,33 @@ public class CouplingMetric extends AbstractMetric {
 
         for (CompilationUnit unit : importsByCompilationUnits.keySet()) {
             List<String> importedClasses = importsByCompilationUnits.get(unit);
+            Set<String> usedExternalLibs = new TreeSet<>();
             PackageDeclaration pack = unit.getPackageDeclaration().orElse(null);
             String[] parts = pack.getName().asString().split("\\.");
-            String internalName = parts[0] + "." + parts[1];
+            String domain = parts[0] + "." + parts[1];
             int systemCount = 0, internalCount = 0;
 
             for (String classname : importedClasses) {
                 boolean isSystem = classname.startsWith("java.") || classname.startsWith("javax.");
-                boolean isInternal =  classname.startsWith(internalName);
+                boolean isInternal =  classname.startsWith(domain);
                 systemCount += isSystem ? 1 : 0;
                 internalCount += isInternal ? 1 : 0;
+
+                if (!isSystem && !isInternal) {
+                    parts = classname.split("\\.");
+                    usedExternalLibs.add(parts[0] + "." + parts[1]);
+                }
             }
 
             int totalCount = importedClasses.size();
             int externalCount = totalCount - systemCount - internalCount;
-            String classname = unit.getPrimaryTypeName().orElse(null);
-            ResultSet resultSet = new ResultSet(classname);
-            resultSet.add(new Result("System", systemCount));
-            resultSet.add(new Result("Internal", internalCount));
-            resultSet.add(new Result("External", externalCount));
+            TypeDeclaration type = unit.getPrimaryType().orElse(null);
+            ResultSet resultSet = new ResultSet(type);
+            resultSet.addResult(new Result("System", systemCount));
+            resultSet.addResult(new Result("Internal", internalCount));
+            resultSet.addResult(new Result("External", externalCount));
+
+            resultSet.addAnnotation(new Annotation("UsedExternalLibs", usedExternalLibs.stream().toList()));
             resultSets.add(resultSet);
         }
 

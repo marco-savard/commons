@@ -29,15 +29,15 @@ public class EncapsulationMetric extends AbstractMetric {
 
         for (PackageDeclaration pack : classesByPackages.keySet()) {
             List<ClassOrInterfaceDeclaration> classes = classesByPackages.get(pack);
-            int publicCount = 0;
+            int packageCount = 0;
 
             for (ClassOrInterfaceDeclaration claz : classes) {
-                publicCount += claz.isPublic() ? 1 : 0;
+                packageCount += claz.isPublic() ? 0 : 1;
             }
 
-            ResultSet resultSet = new ResultSet(pack.getName().asString());
-            resultSet.add(new Result("Public", publicCount));
-            resultSet.add(new Result("Total", classes.size()));
+            ResultSet resultSet = new ResultSet(pack);
+            resultSet.addResult(new Result("Package", packageCount));
+            resultSet.addResult(new Result("Total", classes.size()));
             resultSets.add(resultSet);
         }
 

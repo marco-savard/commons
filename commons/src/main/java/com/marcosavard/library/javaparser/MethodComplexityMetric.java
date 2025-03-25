@@ -28,9 +28,9 @@ public class MethodComplexityMetric extends AbstractMetric {
                 int methodArity = computeMethodArity(method);
                 int bodyLength = computeMethodLength(method);
 
-                ResultSet resultSet = new ResultSet(name);
-                resultSet.add(new Result("arity", methodArity));
-                resultSet.add(new Result("bodyLength", bodyLength));
+                ResultSet resultSet = new ResultSet(method);
+                resultSet.addResult(new Result("arity", methodArity));
+                resultSet.addResult(new Result("bodyLength", bodyLength));
                 resultSets.add(resultSet);
             }
         }

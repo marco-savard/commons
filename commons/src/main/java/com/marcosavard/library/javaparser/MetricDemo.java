@@ -12,7 +12,7 @@ public class MetricDemo {
 
   private static final AbstractMetric[] metrics = new AbstractMetric[] {
           new EncapsulationMetric(),
-        //  new CouplingMetric(),
+          new CouplingMetric(),
           new MethodComplexityMetric()
   };
 
@@ -20,7 +20,7 @@ public class MetricDemo {
     try {
       File srcFolder = getSourceFolder();
       List<File> files = FileSystem.getFilesEndingWith(srcFolder, ".java");
-      files = files.subList(0, 30);
+      files = files.subList(0, Math.min(700, files.size()));
       JavaParser parser = new JavaParser();
 
       for (AbstractMetric metric : metrics) {
