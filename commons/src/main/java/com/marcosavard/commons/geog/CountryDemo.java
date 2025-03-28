@@ -15,11 +15,11 @@ public class CountryDemo {
 
   public static void main(String[] args) {
     Locale display = Locale.FRENCH;
-    //printCountryNames(display);
+    printCountryNames(display);
     printCountryCapitals();
-    //  printCountryNamesWithArticle(display);
-    //  printCountryCompactInfos(display);
-    // printCountryDetailedInfos(display);
+    printCountryNamesWithArticle(display);
+    printCountryCompactInfos(display);
+    printCountryDetailedInfos(display);
   }
 
   private static void printCountryCapitals() {
@@ -37,7 +37,7 @@ public class CountryDemo {
   }
 
   private static void printCountryNamesWithArticle(Locale display) {
-    printCountryNames(display, TextStyle.SHORT);
+    printCountryNames(display, TextStyle.FULL);
   }
 
   private static void printCountryNames(Locale display, TextStyle textStyle) {
