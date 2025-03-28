@@ -1,22 +1,21 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.sun;
 
-import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.trigonometry.Angle;
 import com.marcosavard.commons.math.trigonometry.Angle.Unit;
+import com.marcosavard.commons.time.JulianDay;
+import com.marcosavard.commons.time.StandardZoneId;
 
 import java.text.MessageFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 
 import static com.marcosavard.commons.astro.AstroMath.range;
 
 public class SunPosition {
-  private static final double J1980 = JulianDay.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
+  public enum Event {SUNRISE, LOCAL_NOON, SUNSET}
+
+  private static final double J1980 = JulianDay.toJulianDay(LocalDate.of(1980, 1, 1)) - 1;
 
   // Ecliptic longitude of the Sun at epoch 1980.0.
   private static final double SUN_ELONG_J1980 = 278.833540;
@@ -45,8 +44,9 @@ public class SunPosition {
   private double orbitalDistanceFactor;
 
   public static SunPosition at(ZonedDateTime moment) {
-    JulianDay jd = JulianDay.of(moment);
-    SunPosition position = SunPosition.at(jd.getValue());
+    OffsetDateTime offset = moment.toOffsetDateTime();
+    double jd = JulianDay.toJulianDay(moment.toLocalDateTime());
+    SunPosition position = SunPosition.at(jd);
     return position;
   }
 
@@ -98,6 +98,47 @@ public class SunPosition {
   public double getSunAngularSize() {
     double sunAngularSize = orbitalDistanceFactor * SUN_ANG_SIZE; // Sun's angular size in degrees
     return sunAngularSize;
+  }
+
+  public ZonedDateTime[] findSunriseSunsetAt(double latitude, double longitude) {
+    SunLocalPosition localPosition = SunLocalPosition.at(julianDay, longitude);
+    double latitudeRad = Math.toRadians(latitude);
+
+    // Hour angle
+    final double omega =
+            Math.acos(
+                    (Math.sin(Math.toRadians(SUN_ALTITUDE_SUNRISE_SUNSET))
+                            - Math.sin(latitudeRad) * Math.sin(localPosition.delta))
+                            / (Math.cos(latitudeRad) * Math.cos(localPosition.delta)));
+
+    ZonedDateTime[] sunriseSunset = new ZonedDateTime[] {};
+
+    if (!Double.isNaN(omega)) {
+      long n = localPosition.n;
+      double m = localPosition.meanAnomaly;
+      double l = localPosition.eclipticLong;
+      double jtransit = localPosition.jtransit;
+
+      // Sunset
+      final double jset =
+              SunLocalPosition.J2000
+                      + 0.0009
+                      + ((Math.toDegrees(omega) - longitude) / 360
+                      + n
+                      + 0.0053 * Math.sin(m)
+                      - 0.0069 * Math.sin(2 * l));
+
+      // Sunrise
+      final double jrise = jtransit - (jset - jtransit);
+
+      ZonedDateTime noon = findLocalNoonAt(longitude);
+      ZonedDateTime sunrise = JulianDay.toLocalDateTime(jrise).atZone(ZoneOffset.UTC);
+      ZonedDateTime sunset = JulianDay.toLocalDateTime(jset).atZone(ZoneOffset.UTC);
+
+      sunriseSunset = new ZonedDateTime[] {sunrise, noon, sunset};
+    }
+
+    return sunriseSunset;
   }
 
   @Override
@@ -207,7 +248,7 @@ public class SunPosition {
   public ZonedDateTime findLocalNoonAt(double longitude) {
     SunLocalPosition localPosition = SunLocalPosition.at(julianDay, longitude);
     double localNoonJd = localPosition.jtransit;
-    ZonedDateTime localNoon = JulianDay.of(localNoonJd).toDateTime();
+    ZonedDateTime localNoon = JulianDay.toLocalDateTime(localNoonJd).atZone(ZoneOffset.UTC);
     return localNoon;
   }
 
@@ -218,46 +259,7 @@ public class SunPosition {
     return sunriseSunset;
   }
 
-  public ZonedDateTime[] findSunriseSunsetAt(double latitude, double longitude) {
-    SunLocalPosition localPosition = SunLocalPosition.at(julianDay, longitude);
-    double latitudeRad = Math.toRadians(latitude);
 
-    // Hour angle
-    final double omega =
-        Math.acos(
-            (Math.sin(Math.toRadians(SUN_ALTITUDE_SUNRISE_SUNSET))
-                    - Math.sin(latitudeRad) * Math.sin(localPosition.delta))
-                / (Math.cos(latitudeRad) * Math.cos(localPosition.delta)));
-    System.out.println("  omega = " + omega);
-
-    ZonedDateTime[] sunriseSunset = new ZonedDateTime[] {};
-
-    if (!Double.isNaN(omega)) {
-      long n = localPosition.n;
-      double m = localPosition.meanAnomaly;
-      double l = localPosition.eclipticLong;
-      double jtransit = localPosition.jtransit;
-
-      // Sunset
-      final double jset =
-          SunLocalPosition.J2000
-              + 0.0009
-              + ((Math.toDegrees(omega) - longitude) / 360
-                  + n
-                  + 0.0053 * Math.sin(m)
-                  - 0.0069 * Math.sin(2 * l));
-
-      // Sunrise
-      final double jrise = jtransit - (jset - jtransit);
-
-      ZonedDateTime sunrise = JulianDay.of(jrise).toDateTime();
-      ZonedDateTime sunset = JulianDay.of(jset).toDateTime();
-
-      sunriseSunset = new ZonedDateTime[] {sunrise, sunset};
-    }
-
-    return sunriseSunset;
-  }
 
   // inner class
   private static class SunLocalPosition {
