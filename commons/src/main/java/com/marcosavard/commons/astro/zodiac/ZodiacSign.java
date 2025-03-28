@@ -56,7 +56,7 @@ public enum ZodiacSign {
     return found;
   }
 
-  private ZodiacSign getNext() {
+  public ZodiacSign getNext() {
     int nextIdx = (this.ordinal() + 1) % ZodiacSign.values().length;
     ZodiacSign nextSign = ZodiacSign.values()[nextIdx];
     return nextSign;
@@ -77,5 +77,13 @@ public enum ZodiacSign {
     LocalDate start = LocalDate.of(2000, month, dayOfMonth);
     LocalDate end = LocalDate.of(year, nextSign.month, nextSign.dayOfMonth);
     return !date.isBefore(start) && date.isBefore(end);
+  }
+
+  public Month getMonth() {
+    return this.month;
+  }
+
+  public int getDayOfMonth() {
+    return this.dayOfMonth;
   }
 }

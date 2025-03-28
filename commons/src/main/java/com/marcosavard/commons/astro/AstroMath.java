@@ -23,9 +23,7 @@ public class AstroMath {
   }
 
   public static double cosd(double degree) {
-    double rad = Math.toRadians(degree);
-    double cosd = Math.cos(rad);
-    return cosd;
+    return Math.cos(Math.toRadians(degree));
   }
 
   public static double tand(double degree) {

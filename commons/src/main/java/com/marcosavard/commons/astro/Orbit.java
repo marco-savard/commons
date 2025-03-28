@@ -1,12 +1,12 @@
 package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
-import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.astro.unit.Constant;
 import com.marcosavard.commons.astro.unit.Length;
 import com.marcosavard.commons.astro.unit.LengthUnit;
 import com.marcosavard.commons.astro.unit.Mass;
 import com.marcosavard.commons.astro.unit.MassUnit;
+import com.marcosavard.commons.time.JulianDay;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -178,8 +178,8 @@ public class Orbit {
   }
 
   public SpaceCoordinate findEclipticCoordinateOn(LocalDate date) {
-    JulianDay jd = JulianDay.of(date);
-    double d = jd.getValue() - JulianDay.JD2000;
+    double jd = JulianDay.toJulianDay(date);
+    double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
     double e = eccentricity + eccentricityVariation * d;
     double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation * d, 360);
     double ma = range(meanAnomaly + meanAnomalyVariation * d, 360);
@@ -197,8 +197,8 @@ public class Orbit {
     double distance = ecliptic.getDistance();
     double trueAnomaly = ecliptic.getRightAscensionDegree();
 
-    JulianDay jd = JulianDay.of(date);
-    double d = jd.getValue() - JulianDay.JD2000;
+    double jd = JulianDay.toJulianDay(date);
+    double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
     double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation * d, 360);
     double oblecl = range(obliquityOfEcliptic + obliquityOfEclipticVariation * d, 360);
 
@@ -215,15 +215,15 @@ public class Orbit {
   }
 
   public double findObliquityOfEcliptic(LocalDate date) {
-    JulianDay jd = JulianDay.of(date);
-    double d = jd.getValue() - JulianDay.JD2000;
+    double jd = JulianDay.toJulianDay(date);
+    double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
     double oblecl = range(obliquityOfEcliptic + obliquityOfEclipticVariation * d, 360);
     return oblecl;
   }
 
   public double findLongitudeOn(double trueAnomaly, LocalDate date) {
-    JulianDay jd = JulianDay.of(date);
-    double d = jd.getValue() - JulianDay.JD2000;
+    double jd = JulianDay.toJulianDay(date);
+    double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
     double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation * d, 360);
     double lon = range(trueAnomaly + w, 360);
     return lon;
