@@ -244,9 +244,18 @@ YE;Yémen (le);la République du Yémen;Sanaa;15°20′54″N 44°12′23″E
 YT;Mayotte;le département de Mayotte;Mamoudzou;12°46′50″S 45°13′40″E
 ZM;Zambie (la);la République de Zambie;Lusaka;15°25′S 28°17′E
 ZW;Zimbabwe (le);la République du Zimbabwe;Harare;17°49′45″S 31°03′08″E
+AQ;Antartique (l');l'Antartique;
+BV;île Bouvet (l;);l'île Bouvet;
+HM;îles Heard-et-MacDonald (les);Les îles Heard-et-MacDonald;
+TF;Terres australes et antarctiques françaises (les);Les Terres australes et antarctiques françaises
+BUR;Burkina (le);le Burkina Faso;Ouagadougou;12°22′N 1°32′W
+HVO;Haute-Volta (la);la Haute-Volta;Ouagadougou;12°22′N 1°32′W
+RHO;Rhodésie du Sud (la);la Rhodésie du Sud;Harare;17°49′45″S 31°03′08″E
+DHY;Dahomey (le);le Dahomey;Porto-Novo (constitutionnelle);6°29′50″N 2°36′18″E;Cotonou (administrative);6°22′N 2°26′E
+VDR;Nord-Vietnam (le);la République socialiste du Viêt Nam;Hanoï;21°2′N 105°51′E
 SCG;Serbie-et-Monténégro (la);la communauté d'États de Serbie-et-Monténégro;Belgrade;44°49′04″N 20°27′25″E
 YUG;Yougoslavie (la);la Yougoslavie;Belgrade;44°49′04″N 20°27′25″E
 ZAR;Zaïre (le);la république du Zaïre;Kinshasa;4°19′S 15°19′E
 CSK;Tchécoslovaquie (la);la Tchécoslovaquie;Prague;50°05′N 14°28′E
-SUN;Union soviétique;l'union des républiques socialistes soviétiques;Moscou;55°45′21″N 37°37′02″E
+SUN;Union soviétique;l'Union des républiques socialistes soviétiques;Moscou;55°45′21″N 37°37′02″E
 DDR;Allemagne de l'Est (l');la république démocratique allemande;Berlin;52°31′N 13°23′E
