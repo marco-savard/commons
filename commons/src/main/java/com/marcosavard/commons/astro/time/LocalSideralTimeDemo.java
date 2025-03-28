@@ -1,6 +1,7 @@
 package com.marcosavard.commons.astro.time;
 
 import com.marcosavard.commons.geog.GeoLocation;
+import com.marcosavard.commons.time.JulianDay;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,7 +40,7 @@ public class LocalSideralTimeDemo {
 
     // Ephemerides
     System.out.println("Moment : " + moment);
-    System.out.println("Julian day : " + JulianDay.of(moment));
+    System.out.println("Julian day : " + JulianDay.toJulianDay(moment.toLocalDateTime()));
     System.out.println("gst : " + LocalSideralTime.of(moment));
   }
 
