@@ -24,6 +24,11 @@ public class CountryCapitalReader {
 
     public String getDisplayCountry(String countryCode, Locale display, TextStyle textStyle) {
         String[] data = readCountryData(countryCode);
+
+        if ((data == null) || (data[1] == null)) {
+            throw new RuntimeException("No data for countryCode = " + countryCode);
+        }
+
         Locale locale = LocaleUtil.forCountryTag(countryCode);
         String displayCountry;
 
