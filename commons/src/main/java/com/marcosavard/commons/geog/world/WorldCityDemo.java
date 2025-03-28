@@ -8,6 +8,7 @@ import com.marcosavard.commons.geog.us.State;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
 import java.text.MessageFormat;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -19,9 +20,11 @@ public class WorldCityDemo {
     WorldCityResource ressource = new WorldCityResource();
     List<WorldCityResource.Data> allCities = ressource.getRows();
 
-    // demoDistance(allCities);
     demoCapital(allCities, display);
+    // demoDistance(allCities);
+
   }
+
 
   private static void demoCapital(List<WorldCityResource.Data> allCities, Locale display) {
     List<WorldCityResource.Data> capitals =
@@ -29,8 +32,10 @@ public class WorldCityDemo {
 
     for (WorldCityResource.Data capital : capitals) {
       Country country = Country.of(capital.country);
-      String name = country.getDisplayName(display, Country.Style.GENITIVE);
-      String hint = MessageFormat.format("Capitale {0}", name);
+      String displayName = "de " + country.getDisplayName(display, TextStyle.SHORT);
+      displayName = displayName.replace("de les", "des");
+      displayName = displayName.replace("de le", "du");
+      String hint = MessageFormat.format("Capitale {0}", displayName);
       Console.println(hint + " : " + capital.frName);
     }
 
@@ -41,13 +46,17 @@ public class WorldCityDemo {
 
       if (country == Country.CANADA) {
         CanadianProvince prov = CanadianProvince.valueOf(capital.region);
-        String name = prov.getDisplayName(display, CanadianProvince.Style.GENITIVE);
-        String hint = MessageFormat.format("Capitale {0}", name);
+        String displayName = "de " + prov.getDisplayName(display, TextStyle.FULL);
+        displayName = displayName.replace("de les", "des");
+        displayName = displayName.replace("de le", "du");
+        String hint = MessageFormat.format("Capitale {0}", displayName);
         Console.println(hint + " : " + capital.frName);
       } else if (country == Country.USA) {
         State state = State.valueOf(capital.region);
-        String name = state.getDisplayName(display, State.Style.GENITIVE);
-        String hint = MessageFormat.format("Capitale {0}", name);
+        String displayName = "de " + state.getDisplayName(display, TextStyle.FULL);
+        displayName = displayName.replace("de les", "des");
+        displayName = displayName.replace("de le", "du");
+        String hint = MessageFormat.format("Capitale {0}", displayName);
         Console.println(hint + " : " + capital.frName);
       }
     }
