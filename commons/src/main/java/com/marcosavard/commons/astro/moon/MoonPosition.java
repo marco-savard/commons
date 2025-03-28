@@ -1,10 +1,10 @@
 package com.marcosavard.commons.astro.moon;
 
 import com.marcosavard.commons.astro.sun.SunPosition;
-import com.marcosavard.commons.astro.time.JulianDay;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.trigonometry.Angle;
 import com.marcosavard.commons.math.trigonometry.Angle.Unit;
+import com.marcosavard.commons.time.JulianDay;
 
 import java.text.MessageFormat;
 import java.time.Duration;
@@ -78,7 +78,8 @@ public class MoonPosition {
     }
   };
 
-  private static final double EPOCH = JulianDay.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
+  private static final double EPOCH = JulianDay.toJulianDay(LocalDate.of(1980, 1, 1)) - 1;
+          //JulianDayOld.of(LocalDate.of(1980, 1, 1)).getValue() - 1;
 
   // synodic month (new Moon to new Moon)
   private static final double SYN_MONTH = 29.53058868D;
@@ -122,7 +123,7 @@ public class MoonPosition {
   }
 
   public static MoonPosition at(ZonedDateTime moment) {
-    double julianDate = JulianDay.of(moment).getValue();
+    double julianDate = JulianDay.toJulianDay(moment.toLocalDateTime());
     MoonPosition position = at(julianDate);
     return position;
   }

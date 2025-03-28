@@ -6,10 +6,7 @@ import com.marcosavard.commons.time.TextCalendar;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Locale;
 
 // validate w/ https://mooncalendar.astro-seek.com/moon-phases-calendar-february-1984
@@ -17,11 +14,12 @@ public class MoonPositionDemo {
 
   public static void main(String[] args) {
     LocalDate date = LocalDate.now();
+    LocalDateTime now = LocalDateTime.now();
     Locale display = Locale.FRENCH;
 
-    demoPositionAt(date, display);
+    //demoPositionAt(date, display);
     // demoFebruary1984();
-  //   demoFindPhaseTime(date);
+     demoFindPhaseTime(date);
     // demoMonth(2020, 10);
    // demoCalendarMonth(2025, 1);
   }
