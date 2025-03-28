@@ -2,6 +2,7 @@ package com.marcosavard.commons.io;
 
 import java.io.Writer;
 import java.text.MessageFormat;
+import java.util.Arrays;
 
 public class FormatWriter extends IndentWriter {
 
@@ -20,7 +21,7 @@ public class FormatWriter extends IndentWriter {
 
   public void println(String pattern, Object... items) {
     pattern = pattern.replace("'", "''");
-    super.println(MessageFormat.format(pattern, items));
+    super.println(MessageFormat.format(pattern, toString(items)));
   }
 
   public void printlnIndented(String line) {
@@ -30,4 +31,40 @@ public class FormatWriter extends IndentWriter {
   public void printlnIndented(String pattern, Object... items) {
     super.printlnIndented(MessageFormat.format(pattern, items));
   }
+
+  private String[] toString(Object[] items) {
+    String[] strs = new String[items.length];
+
+    for (int i=0; i<items.length; i++) {
+      strs[i] = toString(items[i]);
+    }
+
+    return strs;
+  }
+
+  private String toString(Object item) {
+    boolean array = (item == null) ? false : item.getClass().isArray();
+    return array ? arrayToString(item) : String.valueOf(item);
+  }
+
+  private String arrayToString(Object item) {
+    if (item instanceof short[] array) {
+      return Arrays.toString(array);
+    } else if (item instanceof int[] array) {
+      return Arrays.toString(array);
+    } else if (item instanceof long[] array) {
+      return Arrays.toString(array);
+    } else if (item instanceof float[] array) {
+      return Arrays.toString(array);
+    } else if (item instanceof double[] array) {
+      return Arrays.toString(array);
+    } else if (item instanceof boolean[] array) {
+      return Arrays.toString(array);
+    } else if (item instanceof char[] array) {
+      return Arrays.toString(array);
+    } else {
+       return item.toString();
+    }
+  }
+
 }

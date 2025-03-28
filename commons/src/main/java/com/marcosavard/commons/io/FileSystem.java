@@ -4,8 +4,10 @@ import com.marcosavard.commons.lang.reflect.Reflection;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,11 +156,11 @@ public class FileSystem {
     return roots[0];
   }
 
-  public static File getRootFolder(Class entity) {
+  public static File getRootFolder(Class claz) {
     File rootFolder;
 
     try {
-      ClassLoader loader = entity.getClassLoader();
+      ClassLoader loader = claz.getClassLoader();
       URL url = loader.getResource(".");
       File file = Paths.get(url.toURI()).toFile();
       rootFolder = file.getParentFile();
@@ -204,5 +206,12 @@ public class FileSystem {
     }
 
     return sourceFiles;
+  }
+
+  public static List<File> getFilesEndingWith(File folder, String end) throws IOException {
+    return Files.walk(folder.toPath())
+            .map(p -> p.toFile())
+            .filter(f -> f.isFile() && f.getName().endsWith(end))
+            .toList();
   }
 }
