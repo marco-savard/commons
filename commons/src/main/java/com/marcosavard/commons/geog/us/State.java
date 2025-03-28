@@ -3,6 +3,7 @@ package com.marcosavard.commons.geog.us;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.RessourceEnum;
 
+import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
@@ -97,14 +98,7 @@ public enum State implements RessourceEnum {
     this.region = region;
   }
 
-  public enum Style {
-    SIMPLE,
-    WITH_ARTICLE,
-    GENITIVE,
-    LOCATIVE
-  }
-
-  public String getDisplayName(Locale display, Style style) {
+  public String getDisplayName(Locale display, TextStyle style) {
     String name = getDisplayName(display);
 
     if (display.getLanguage().equals(Locale.FRENCH.getLanguage())) {
@@ -114,33 +108,16 @@ public enum State implements RessourceEnum {
     return name;
   }
 
-  private String getFrDisplayName(Style style) {
-    String name = getDisplayName(Locale.FRENCH);
+  private String getFrDisplayName(TextStyle style) {
+    String[] values = getDisplayName(Locale.FRENCH).split(";");
+    values = values.length == 2 ? values : new String[] {values[0], "le " + values[0]};
 
-    if (style == Style.WITH_ARTICLE) {
-      boolean withArticle = !List.of(GU, HI, NY).contains(this);
-      if (withArticle) {
-        boolean plural = name.endsWith("s");
-        plural = List.of(KS, MA, TX).contains(this) ? false : plural;
-        boolean feminine = name.endsWith("e");
-        feminine = List.of(ME, NH, NM, TN).contains(this) ? false : feminine;
-        feminine = List.of(NC, SC).contains(this) ? true : feminine;
-        String article = plural ? "les" : feminine ? "la" : "le";
-        name = StringUtil.startWithVowel(name) ? "l'" + name : article + " " + name;
-      }
-    } else if (style == Style.GENITIVE) {
-      name = "de " + getFrDisplayName(Style.WITH_ARTICLE);
-      name = name.replace("de les", "des");
-      name = name.replace("de le", "du");
-    } else if (style == Style.LOCATIVE) {
-      name = "à " + getFrDisplayName(Style.WITH_ARTICLE);
-      name = name.replace("à les", "aux");
-      name = name.replace("à le", "au");
-      name = name.replace("à la", "en");
-      name = name.replace("à l’", "en ");
-    }
+    String displayName = switch (style) {
+      case FULL, FULL_STANDALONE -> values[1];
+      default -> values[0];
+    };
 
-    return name;
+    return displayName;
   }
 
   public String getSymbol() {
