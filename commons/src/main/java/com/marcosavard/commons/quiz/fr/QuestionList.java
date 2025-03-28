@@ -1056,12 +1056,12 @@ public class QuestionList {
 
       if (country == Country.CANADA) {
         CanadianProvince prov = CanadianProvince.valueOf(capital.region);
-        stateName = prov.getDisplayName(display, CanadianProvince.Style.SIMPLE);
-        ofStateName = prov.getDisplayName(display, CanadianProvince.Style.GENITIVE);
+        stateName = prov.getDisplayName(display, TextStyle.FULL);
+        ofStateName = "de " + prov.getDisplayName(display, TextStyle.FULL);
       } else if (country == Country.USA) {
         State state = State.valueOf(capital.region);
-        stateName = state.getDisplayName(display, State.Style.SIMPLE);
-        ofStateName = state.getDisplayName(display, State.Style.GENITIVE);
+        stateName = state.getDisplayName(display, TextStyle.FULL);
+        ofStateName = "de " + state.getDisplayName(display, TextStyle.FULL);
       }
 
       if (stateName != null) {
