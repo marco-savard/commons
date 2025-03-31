@@ -1,4 +1,4 @@
-package com.marcosavard.commons.io;
+package com.marcosavard.commons.io.reader;
 
 import java.net.URL;
 import java.nio.file.Files;
