@@ -1,4 +1,4 @@
-package com.marcosavard.commons.io;
+package com.marcosavard.commons.io.writer;
 
 import java.io.PrintWriter;
 import java.util.List;

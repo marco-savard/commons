@@ -1,4 +1,4 @@
-package com.marcosavard.commons.io;
+package com.marcosavard.commons.io.writer;
 
 import java.io.Writer;
 import java.text.MessageFormat;

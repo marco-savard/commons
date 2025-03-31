@@ -1,4 +1,4 @@
-package com.marcosavard.commons.io;
+package com.marcosavard.commons.io.writer;
 
 import com.marcosavard.commons.util.collection.NestedMap;
 
