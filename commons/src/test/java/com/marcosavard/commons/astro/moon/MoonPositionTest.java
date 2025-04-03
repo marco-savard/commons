@@ -1,7 +1,8 @@
 package com.marcosavard.commons.astro.moon;
 
 import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+//import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,8 +12,8 @@ import java.time.ZonedDateTime;
 public class MoonPositionTest {
 
   // https://mooncalendar.astro-seek.com/moon-phases-calendar-february-1984
-  // @Test
-  public void test19840202() {
+   @Test
+   void test19840202() {
     LocalDate date = LocalDate.of(1984, 2, 2);
     LocalTime time = LocalTime.MIDNIGHT;
     ZonedDateTime moment = ZonedDateTime.of(date, time, ZoneOffset.UTC);
@@ -22,7 +23,7 @@ public class MoonPositionTest {
 
   // https://mooncalendar.astro-seek.com/moon-phases-calendar-january-2020
   @Test
-  public void test20200110() {
+   void test20200110() {
     LocalDate date = LocalDate.of(2020, 1, 1);
     ZonedDateTime fullMoon = MoonPosition.findNextFullMoon(date);
 
