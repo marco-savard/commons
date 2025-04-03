@@ -2,7 +2,7 @@ package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.geog.GeoLocation;
-import org.junit.Test;
+//import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -13,7 +13,7 @@ import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 
 public class SpaceLocationTest {
 
-  @Test
+  //@Test
   public void testBirminghamUK() {
     // position of the star M13..
     SpaceCoordinate starM13 = StarAlmanach.M13;

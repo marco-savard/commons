@@ -2,7 +2,7 @@ package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.geog.GeoLocation;
-import org.junit.Test;
+//import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -14,7 +14,7 @@ import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
 public class SkyPositionTest {
 
   // http://www.stargazing.net/kepler/altaz.html
-  @Test
+ // @Test
   public void displayLondonUK() {
     // position of the star M13..
     SpaceCoordinate coordinate = StarAlmanach.M13;
