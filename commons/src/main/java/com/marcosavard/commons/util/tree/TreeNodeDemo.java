@@ -1,7 +1,7 @@
 package com.marcosavard.commons.util.tree;
 
 import com.marcosavard.commons.debug.Console;
-import com.marcosavard.commons.io.TreeWriter;
+import com.marcosavard.commons.io.writer.TreeWriter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
