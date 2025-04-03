@@ -1,16 +1,12 @@
 package com.marcosavard.commons.astro.finder;
 
 import com.marcosavard.commons.astro.SkyPosition;
+import com.marcosavard.commons.math.SafeMath;
 
 import java.text.MessageFormat;
 
-import static com.marcosavard.commons.astro.AstroMath.asind;
-import static com.marcosavard.commons.astro.AstroMath.atan2d;
-import static com.marcosavard.commons.astro.AstroMath.atand;
-import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.range;
-import static com.marcosavard.commons.astro.AstroMath.sind;
-import static com.marcosavard.commons.astro.AstroMath.tand;
+import static com.marcosavard.commons.math.SafeMath.*;
 
 public class SkyPositionFinder {
 
@@ -59,7 +55,7 @@ public class SkyPositionFinder {
     double zhor = x * cosd(lat) + z * sind(lat);
 
     // compute h, in range -180..180
-    double h = range(asind(zhor), -180, 180);
+    double h = SafeMath.range(asind(zhor), -180, 180);
 
     // compute az
     double az = atan2d(yhor, xhor) + 180;

@@ -1,5 +1,7 @@
 package com.marcosavard.commons.astro.finder;
 
+import com.marcosavard.commons.math.SafeMath;
+
 import static com.marcosavard.commons.astro.AstroMath.range;
 
 public enum Planet {
@@ -20,7 +22,7 @@ public enum Planet {
   // in deg
   double getMeanAnomaly(double jd) {
     double ma = orbit.absoluteMeanAnomaly + (orbit.relativeMeanAnomaly * jd);
-    ma = range(ma, 0, 360);
+    ma = SafeMath.range(ma, 0, 360);
     return ma;
   }
 
@@ -32,20 +34,20 @@ public enum Planet {
   // in deg
   double getInclination(double jd) {
     double i = orbit.absoluteInclination + (orbit.relativeInclination * jd);
-    i = range(i, 0, 360);
+    i = SafeMath.range(i, 0, 360);
     return i;
   }
 
   // in deg
   double getLongitudeAscendingNode(double jd) {
     double n = orbit.absoluteLongitudeAscNode + (orbit.relativeLongitudeAscNode * jd);
-    n = range(n, 0, 360);
+    n = SafeMath.range(n, 0, 360);
     return n;
   }
 
   double getArgumentOfPerihelion(double jd) {
     double w = orbit.absoluteArgumentOfPerihelion + (orbit.relativeArgumentOfPerihelion * jd);
-    w = range(w, 0, 360);
+    w = SafeMath.range(w, 0, 360);
     return w;
   }
 
