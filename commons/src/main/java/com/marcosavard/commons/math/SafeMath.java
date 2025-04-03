@@ -6,6 +6,7 @@ package com.marcosavard.commons.math;
  * @author Marco
  */
 public class SafeMath {
+    private static final double DOUBLE_TRIM_VALUE = 0.000_000_000_000_001;
     private static final double DOUBLE_PRECISION = 0.000_0001;
     private static final double FLOAT_PRECISION = 0.001;
 
@@ -138,14 +139,12 @@ public class SafeMath {
      * @return rounded values
      */
     public static double trim(double original, double precision) {
-        double rounded = ((int)Math.round(original / precision)) * precision;
+        double rounded = Math.round(original / precision) * precision;
         return rounded;
     }
 
     public static double trim(double original) {
-        double result = Math.round(original * 1000_000_000_000_000.0) / 1000_000_000_000_000.0;
-        return result;
-        //return round(original, DOUBLE_PRECISION);
+        return trim(original, DOUBLE_TRIM_VALUE);
     }
 
 }
