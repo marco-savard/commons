@@ -7,6 +7,17 @@ import java.math.BigInteger;
 public class FactorialDemo {
 
   public static void main(String[] args) {
+    simpleFactorial();
+    //advancedFactorial();
+  }
+
+  private static void simpleFactorial() {
+    for (short i=0; i<25; i++) {
+      Console.println("{0}! = {1}", i, Factorial.toLong(i));
+    }
+  }
+
+  private static void advancedFactorial() {
     Console.println("340! = " + Factorial.of(340));
     Console.println("365! = " + Factorial.of(365));
 
@@ -15,7 +26,7 @@ public class FactorialDemo {
     BigInteger result = term1.subtract(term2); // not accurate
 
     Console.println("365! - (365-25)! ~= " + result + " (not accurate)");
-    Console.println("365! - (365-25)! = " + Factorial.of(365).minus(Factorial.of(365 - 25)));
+    Console.println("365! - (365-25)! = " + Factorial.of(365).minus(Factorial.of(340)));
     Console.println();
 
     printSameBirthday(15);
@@ -25,6 +36,8 @@ public class FactorialDemo {
     printSameBirthday(50);
     printSameBirthday(66);
   }
+
+
 
   private static void printSameBirthday(int n) {
     double prob = computeSameBirthdayProbability(n);

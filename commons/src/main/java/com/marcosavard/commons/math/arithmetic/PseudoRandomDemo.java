@@ -15,7 +15,7 @@ public class PseudoRandomDemo {
   }
 
   private static void printPseudoRandomShuffle() {
-    List<Character> letters = IntStream.rangeClosed('A', 'Z').mapToObj(var -> (char) var).toList();
+    List<Character> letters = List.of(); // IntStream.rangeClosed('A', 'Z').mapToObj(var -> (char) var).toList();
     Console.println(letters);
 
     for (int i=0; i<5; i++) {
