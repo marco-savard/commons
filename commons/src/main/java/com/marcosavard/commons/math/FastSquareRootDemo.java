@@ -25,7 +25,7 @@ public class FastSquareRootDemo {
 
     start = System.currentTimeMillis();
     for (int i = 0; i < NB_ITERATIONS; i++) {
-      number = 10 + Maths.fastsqrt(i * 10);
+      number = 10 + FastMath.sqrt(i * 10);
     }
     duration = System.currentTimeMillis() - start;
     Console.println("duration = {0} ms", duration);
@@ -33,7 +33,7 @@ public class FastSquareRootDemo {
 
   private static void demoAccuracy() {
     for (int i = 0; i < 16; i++) {
-      Console.println("sqrt({0})) = {1} (classical) vs {2} (fast)", i, Math.sqrt(i), Maths.fastsqrt(i));
+      Console.println("sqrt({0})) = {1} (classical) vs {2} (fast)", i, Math.sqrt(i), FastMath.sqrt(i));
     }
   }
 
