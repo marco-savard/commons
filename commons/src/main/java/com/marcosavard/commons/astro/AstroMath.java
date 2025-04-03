@@ -1,5 +1,7 @@
 package com.marcosavard.commons.astro;
 
+import static com.marcosavard.commons.math.SafeMath.*;
+
 // http://www.stjarnhimlen.se/comp/ppcomp.html
 // kepler, astro_unit, normalizeAngle, modulo
 public class AstroMath {
@@ -11,60 +13,6 @@ public class AstroMath {
     return ranged;
   }
 
-  // keep in range [min..max]
-  public static double range(double value, int min, int max) {
-    double span = max - min;
-    double ranged = min + ((value - min) % span + span) % span;
-    return ranged;
-  }
-
-  public static double sind(double degree) {
-    return Math.sin(Math.toRadians(degree));
-  }
-
-  public static double cosd(double degree) {
-    return Math.cos(Math.toRadians(degree));
-  }
-
-  public static double tand(double degree) {
-    return Math.tan(Math.toRadians(degree));
-  }
-
-  // cosecant
-  public static double cosecd(double degree) {
-    return 1 / sind(degree);
-  }
-
-  // secant
-  public static double secd(double degree) {
-    return 1 / cosd(degree);
-  }
-
-  // cotangant
-  public static double cotand(double degree) {
-    return 1 / tand(degree);
-  }
-
-  public static double asind(double value) {
-    return Math.toDegrees(Math.asin(value));
-  }
-
-  public static double acosd(double value) {
-    return Math.toDegrees(Math.acos(value));
-  }
-
-  public static double atand(double value) {
-    return Math.toDegrees(Math.atan(value));
-  }
-
-  public static double atan2d(double y, double x) {
-    return Math.toDegrees(Math.atan2(y, x));
-  }
-
-  // haversine function
-  public static double haversined(double degree) {
-    return (1 - cosd(degree)) / 2;
-  }
 
   // e=eccentricity, ma=mean anomaly, epsilon=max approx
   public static double computeEccentricAnomaly(double e, double ma, double epsilon) {

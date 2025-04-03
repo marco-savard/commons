@@ -2,9 +2,7 @@ package com.marcosavard.commons.astro;
 
 import java.text.MessageFormat;
 
-import static com.marcosavard.commons.astro.AstroMath.acosd;
-import static com.marcosavard.commons.astro.AstroMath.cosd;
-import static com.marcosavard.commons.astro.AstroMath.sind;
+import static com.marcosavard.commons.math.SafeMath.*;
 
 public class SkyPosition {
   public static final SkyPosition HORIZON_NORTH = SkyPosition.of(0, 0);

@@ -5,7 +5,7 @@ import com.marcosavard.commons.astro.space.SpaceCoordinate.Declination;
 import com.marcosavard.commons.astro.space.SpaceCoordinate.RightAscension;
 import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.geog.GeoLocation;
-import com.marcosavard.commons.math.Maths;
+import com.marcosavard.commons.math.SafeMath;
 
 import java.time.ZonedDateTime;
 
@@ -33,7 +33,7 @@ public class Astronomy {
         Math.sin(Math.toRadians(h)) - Math.sin(Math.toRadians(lat)) * Math.sin(Math.toRadians(d));
     double b2 = Math.cos(Math.toRadians(lat)) * Math.cos(Math.toRadians(d));
     double b = b1 / b2;
-    b = Maths.equal(b, 1, 0.01) ? 1.0 : b;
+    b = SafeMath.equal(b, 1, 0.01) ? 1.0 : b;
     double c = Math.toDegrees(Math.acos(b));
     double hr = lst.hours() - (c / 15);
     RightAscension ra = RightAscension.ofHours(hr);

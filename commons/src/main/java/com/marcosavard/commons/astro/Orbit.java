@@ -11,10 +11,10 @@ import com.marcosavard.commons.time.JulianDay;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import static com.marcosavard.commons.astro.AstroMath.cosd;
 import static com.marcosavard.commons.astro.AstroMath.range;
-import static com.marcosavard.commons.astro.AstroMath.sind;
 import static com.marcosavard.commons.astro.unit.Constant.G;
+import static com.marcosavard.commons.math.SafeMath.cosd;
+import static com.marcosavard.commons.math.SafeMath.sind;
 import static java.lang.Math.PI;
 import static java.lang.Math.sqrt;
 
