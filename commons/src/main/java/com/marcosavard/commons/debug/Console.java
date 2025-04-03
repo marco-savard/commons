@@ -1,6 +1,6 @@
 package com.marcosavard.commons.debug;
 
-import com.marcosavard.commons.io.FormatWriter;
+import com.marcosavard.commons.io.writer.FormatWriter;
 import com.marcosavard.commons.util.ToStringBuilder;
 
 import java.io.OutputStreamWriter;
@@ -101,5 +101,13 @@ public class Console {
     }
 
     return formatWriter;
+  }
+
+    public static void indent() {
+      getWriter().indent();
+    }
+
+  public static void unindent() {
+    getWriter().unindent();
   }
 }
