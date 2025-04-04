@@ -23,23 +23,23 @@ public class HolidayDemo {
 
   private static void printNextHolidays(LocalDate from, int count, String pattern, Locale display) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withLocale(display);
-    Map<LocalDate, Holiday> holidays = Holiday.holidaysBetween(from, from.plusDays(365));
-    Map<LocalDate, Holiday> nextHolidays = findNext(holidays, count);
+    Map<LocalDate, HolidayOld> holidays = HolidayOld.holidaysBetween(from, from.plusDays(365));
+    Map<LocalDate, HolidayOld> nextHolidays = findNext(holidays, count);
 
     for (LocalDate date : nextHolidays.keySet()) {
-      Holiday holiday = holidays.get(date);
+      HolidayOld holiday = holidays.get(date);
       String formatted = date.format(formatter);
       String msg = MessageFormat.format("{0} : {1}", holiday.getDisplayName(display), formatted);
       Console.println(msg);
     }
   }
 
-  private static Map<LocalDate, Holiday> findNext(Map<LocalDate, Holiday> holidays, int count) {
-    Map<LocalDate, Holiday> nextHolidays = new TreeMap<>();
+  private static Map<LocalDate, HolidayOld> findNext(Map<LocalDate, HolidayOld> holidays, int count) {
+    Map<LocalDate, HolidayOld> nextHolidays = new TreeMap<>();
     int i = 0;
 
     for (LocalDate date : holidays.keySet()) {
-      Holiday holiday = holidays.get(date);
+      HolidayOld holiday = holidays.get(date);
       nextHolidays.put(date, holiday);
       i++;
       if (i >= count) {
@@ -53,10 +53,10 @@ public class HolidayDemo {
   private static void printHolidaysInPeriod(
       LocalDate from, LocalDate to, String pattern, Locale display) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withLocale(display);
-    Map<LocalDate, Holiday> holidays = Holiday.holidaysBetween(from, to);
+    Map<LocalDate, HolidayOld> holidays = HolidayOld.holidaysBetween(from, to);
 
     for (LocalDate date : holidays.keySet()) {
-      Holiday holiday = holidays.get(date);
+      HolidayOld holiday = holidays.get(date);
       String formatted = date.format(formatter);
       String msg = MessageFormat.format("{0} : {1}", holiday.getDisplayName(display), formatted);
       Console.println(msg);
@@ -64,7 +64,7 @@ public class HolidayDemo {
   }
 
   private static void printHolidayDates(
-      Holiday holiday, int fromYear, int toYear, String pattern, Locale display) {
+          HolidayOld holiday, int fromYear, int toYear, String pattern, Locale display) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withLocale(display);
     String easterName = holiday.getDisplayName(display);
 

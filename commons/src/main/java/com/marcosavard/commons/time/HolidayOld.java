@@ -1,11 +1,9 @@
 package com.marcosavard.commons.time;
 
-import com.marcosavard.commons.time.calendar.Season;
 import com.marcosavard.commons.time.res.ReligiousHolidayName;
 
 import java.time.*;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.JulianFields;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
-public enum Holiday {
+public enum HolidayOld {
   NEW_YEAR(0x1F4C6, Month.JANUARY, 1),
   VALENTINES_DAY(0x2764, Month.FEBRUARY, 14),
   FAMILY_DAY(0x1F46A, Month.FEBRUARY, DayOfWeek.MONDAY, 3),
@@ -52,7 +50,7 @@ public enum Holiday {
   private final Month month;
   private final DayOfWeek dayOfWeek;
 
-  Holiday(int codePoint, int daysAfterEaster) {
+  HolidayOld(int codePoint, int daysAfterEaster) {
     this.codePoint = codePoint;
     this.daysAfterEaster = daysAfterEaster;
     this.dayOfMonth = 0;
@@ -61,7 +59,7 @@ public enum Holiday {
     this.dayOfWeek = null;
   }
 
-  Holiday(int codePoint, Month month, int dayOfMonth) {
+  HolidayOld(int codePoint, Month month, int dayOfMonth) {
     this.codePoint = codePoint;
     this.dayOfMonth = dayOfMonth;
     this.month = month;
@@ -70,7 +68,7 @@ public enum Holiday {
     this.dayOfWeek = null;
   }
 
-  Holiday(int codePoint, Month month, DayOfWeek dayOfWeek, int weekOfMonth) {
+  HolidayOld(int codePoint, Month month, DayOfWeek dayOfWeek, int weekOfMonth) {
     this.codePoint = codePoint;
     this.month = month;
     this.dayOfWeek = dayOfWeek;
@@ -85,11 +83,11 @@ public enum Holiday {
 
   public static List<Occurence> findNextOccurences(LocalDate from) {
     LocalDate to = from.plusDays(365);
-    Map<LocalDate, Holiday> holidays = Holiday.holidaysBetween(from, to);
+    Map<LocalDate, HolidayOld> holidays = HolidayOld.holidaysBetween(from, to);
     List<Occurence> nextOccurrences = new ArrayList<>();
 
     for (LocalDate date : holidays.keySet()) {
-      Holiday holiday = holidays.get(date);
+      HolidayOld holiday = holidays.get(date);
       nextOccurrences.add(new Occurence(holiday, date));
     }
 
@@ -130,11 +128,11 @@ public enum Holiday {
     return holiday;
   }
 
-  public static Map<LocalDate, Holiday> holidaysBetween(LocalDate from, LocalDate to) {
-    Map<LocalDate, Holiday> holidaysByDate = new TreeMap<>();
-    Holiday[] holidays = Holiday.values();
+  public static Map<LocalDate, HolidayOld> holidaysBetween(LocalDate from, LocalDate to) {
+    Map<LocalDate, HolidayOld> holidaysByDate = new TreeMap<>();
+    HolidayOld[] holidays = HolidayOld.values();
 
-    for (Holiday holiday : holidays) {
+    for (HolidayOld holiday : holidays) {
       List<LocalDate> dates = holiday.between(from, to);
       for (LocalDate date : dates) {
         holidaysByDate.put(date, holiday);
@@ -203,15 +201,15 @@ public enum Holiday {
   //inner class
   //
   public static class Occurence implements Comparable<Occurence> {
-    private Holiday holiday;
+    private HolidayOld holiday;
     private LocalDate date;
 
-    public Occurence(Holiday holiday, LocalDate date) {
+    public Occurence(HolidayOld holiday, LocalDate date) {
       this.holiday = holiday;
       this.date = date;
     }
 
-    public Holiday getHoliday() {
+    public HolidayOld getHoliday() {
       return holiday;
     }
 
@@ -221,7 +219,7 @@ public enum Holiday {
     }
 
     public int toJulianDay() {
-      return (int) Holiday.toJulianDay(date);
+      return (int) HolidayOld.toJulianDay(date);
     }
 
     public LocalDate getDate() {
