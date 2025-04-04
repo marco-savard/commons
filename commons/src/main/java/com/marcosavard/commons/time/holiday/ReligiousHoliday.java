@@ -37,6 +37,17 @@ public enum ReligiousHoliday implements Holiday {
         this.dayOfMonth = dayOfMonth;
     }
 
+    public static Event[] findReligiousHolidayEvents(LocalDate from, LocalDate to) {
+        List<Event> eventList = new ArrayList<>();
+
+        for (int i=from.getYear(); i<=to.getYear(); i++) {
+            eventList.addAll(Arrays.asList(Holiday.getHolidaysOf(Arrays.asList(ReligiousHoliday.values()), i)));
+        }
+
+        eventList = eventList.stream().filter(e -> Holiday.isBetween(e.date, from, to)).toList();
+        return eventList.toArray(new Event[0]);
+    }
+
     public LocalDate of(int year) {
         if (month != null) {
             return LocalDate.of(year, month, dayOfMonth);
@@ -54,18 +65,6 @@ public enum ReligiousHoliday implements Holiday {
     @Override
     public int getCodePoint() {
         return codePoint;
-    }
-
-    public static Event[] findHolidayEvents(LocalDate from, LocalDate to) {
-        List<Event> eventList = new ArrayList<>();
-
-        for (int i=from.getYear(); i<=to.getYear(); i++) {
-            eventList.addAll(Arrays.asList(getHolidaysOf(i)));
-        }
-
-        eventList = eventList.stream().filter(e -> Holiday.isBetween(e.date, from, to)).toList();
-
-        return eventList.toArray(new Event[0]);
     }
 
     public static Event[] getHolidaysOf(int year) {

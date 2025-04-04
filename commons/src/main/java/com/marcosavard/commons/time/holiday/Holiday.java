@@ -17,6 +17,20 @@ public interface Holiday {
         return getHolidays(holidays, startDate, endDate);
     }
 
+    public static Event[] findHolidayEvents(LocalDate from, LocalDate to) {
+        List<Event> eventList = new ArrayList<>();
+
+        for (int i=from.getYear(); i<=to.getYear(); i++) {
+            eventList.addAll(Arrays.asList(Holiday.getHolidaysOf(Arrays.asList(FloatingHoliday.values()), i)));
+            eventList.addAll(Arrays.asList(Holiday.getHolidaysOf(Arrays.asList(NationalHoliday.values()), i)));
+            eventList.addAll(Arrays.asList(Holiday.getHolidaysOf(Arrays.asList(ReligiousHoliday.values()), i)));
+        }
+
+        eventList = eventList.stream().filter(e -> Holiday.isBetween(e.date, from, to)).toList();
+
+        return eventList.toArray(new Event[0]);
+    }
+
     static List<Event> getHolidays(List<Holiday> holidays, LocalDate startDate, LocalDate endDate) {
         List<Event> eventList = new ArrayList<>();
 

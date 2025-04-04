@@ -16,7 +16,22 @@ public class HolidayDemo {
         LocalDate to = LocalDate.of(2025, 12, 31);
 
        // printHolidaysOfYear(2025, display);
-        printHolidaysInPeriod(from, to, display);
+       // printHolidaysInPeriod(from, to, display);
+        printNextReligiousHolidays(display);
+    }
+
+    private static void printNextReligiousHolidays(Locale display) {
+        LocalDate from = LocalDate.now();
+        LocalDate to = from.plusDays(365);
+
+        List<Holiday.Event> holidays = new ArrayList<>();
+        holidays.addAll(Arrays.asList( ReligiousHoliday.findReligiousHolidayEvents(from, to)));
+        Holiday.sort(holidays);
+
+        for (Holiday.Event event : holidays) {
+            String displayName = event.holiday.getDisplayName(display);
+            Console.println("{0} : {1}", displayName, event.date);
+        }
     }
 
     private static void printHolidaysOfYear(int year, Locale display) {
@@ -33,9 +48,11 @@ public class HolidayDemo {
     }
 
     private static void printHolidaysInPeriod(LocalDate from, LocalDate to, Locale display) {
-        ReligiousHoliday.Event[] holidayEvents = ReligiousHoliday.findHolidayEvents(from, to);
+        List<Holiday.Event> holidays = new ArrayList<>();
+        holidays.addAll(Arrays.asList(Holiday.findHolidayEvents(from, to)));
+        Holiday.sort(holidays);
 
-        for (ReligiousHoliday.Event event : holidayEvents) {
+        for (Holiday.Event event : holidays) {
             String displayName = event.holiday.getDisplayName(display);
             Console.println("{0} : {1}", displayName, event.date);
         }
