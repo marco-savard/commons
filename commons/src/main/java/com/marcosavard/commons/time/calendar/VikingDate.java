@@ -2,14 +2,24 @@ package com.marcosavard.commons.time.calendar;
 
 import com.marcosavard.commons.debug.Console;
 
+import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 
 public record VikingDate(LocalDate localDate, int cyclesSinceEra, int yearsInCycle, int dayOfYear) {
     private static final int VIKING_YEAR = 955;
     private static final LocalDate ERA = Season.summerSolsticeOf(VIKING_YEAR).toLocalDate();
     private static final long CYCLE = 364 * 6 + 7;
+
+    public String getDisplayName(TextStyle textStyle) {
+        String dayOfWeek = getDayOfWeek().getName();
+        String week = Integer.toString(getWeekOfYear());
+        String year = Integer.toString(getYear());
+        String month = getMonth().getName();
+        return MessageFormat.format("{0}, {1} semaine de l''an {2}, mois de {3}", dayOfWeek, week, year, month);
+    }
 
     public enum WeekDay {
         SUNDAY("Sunnudagr"), //starts on Sunday
@@ -50,7 +60,7 @@ public record VikingDate(LocalDate localDate, int cyclesSinceEra, int yearsInCyc
             this.name = name;
         }
 
-        public Object getName() {
+        public String getName() {
             return name;
         }
     }
@@ -67,7 +77,7 @@ public record VikingDate(LocalDate localDate, int cyclesSinceEra, int yearsInCyc
         return WeekDay.values()[dayOfYear % 7];
     }
 
-    private static VikingDate ofLocalDate(LocalDate date) {
+    public static VikingDate ofLocalDate(LocalDate date) {
         long daysSinceEra = Duration.between(ERA.atStartOfDay(), date.atStartOfDay()).toDays();
         int cyclesSinceEra = (int)(daysSinceEra / CYCLE);
         int daysOfCycle = (int)(daysSinceEra % CYCLE);

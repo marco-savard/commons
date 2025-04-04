@@ -1,5 +1,7 @@
 package com.marcosavard.commons.time.calendar;
 
+import com.marcosavard.commons.time.JulianDay;
+
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.JulianFields;
@@ -81,7 +83,7 @@ public class Season {
         double y3 = y2 * y;
         double y4 = y2 * y2;
         double jd = 2451623.80984 + 365242.37404*y + 0.05169*y2 - 0.00411*y3 - 0.00057*y4;
-        return toLocalDateTime(correct(jd));
+        return JulianDay.toLocalDateTime(correct(jd));
     }
 
     public static LocalDateTime summerSolsticeOf(int year) {
@@ -90,7 +92,7 @@ public class Season {
         double y3 = y2 * y;
         double y4 = y2 * y2;
         double jd = 2451716.56767 + 365241.62603*y + 0.00325*y2 + 0.00888*y3 - 0.00030*y4;
-        return toLocalDateTime(correct(jd));
+        return JulianDay.toLocalDateTime(correct(jd));
     }
 
     public static LocalDateTime automnalEquinoxOf(int year) {
@@ -99,7 +101,7 @@ public class Season {
         double y3 = y2 * y;
         double y4 = y2 * y2;
         double jd = 2451810.21715 + 365242.01767*y - 0.11575*y2 + 0.00337*y3 + 0.00078*y4;
-        return toLocalDateTime(correct(jd));
+        return JulianDay.toLocalDateTime(correct(jd));
     }
 
     public static LocalDateTime winterSolsticeOf(int year) {
@@ -108,7 +110,7 @@ public class Season {
         double y3 = y2 * y;
         double y4 = y2 * y2;
         double jd = 2451900.05952 + 365242.74049*y - 0.06223*y2 - 0.00823*y3 + 0.00032*y4;
-        return toLocalDateTime(correct(jd));
+        return JulianDay.toLocalDateTime(correct(jd));
     }
 
     private static double correct(double jd) {
@@ -122,30 +124,6 @@ public class Season {
         }
 
         return jd + (0.00001 * s / dl);
-    }
-
-    private static LocalDateTime toLocalDateTime(double jd) {
-        long days = (long)(jd + 0.5);
-        double fractionOfDay = (jd + 0.5) - days;
-        int hour = (int)(fractionOfDay * 24.0);
-        int min = (int)((fractionOfDay * 24.0 - hour) * 60.0);
-        LocalDate localDate = toLocalDate(days);
-        LocalTime localTime = LocalTime.of(hour, min);
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
-        return  localDateTime;
-    }
-
-    private static LocalDate toLocalDate(long jd) {
-        return LocalDate.MIN.with(JulianFields.JULIAN_DAY, jd);
-    }
-
-    private static final double DAY_IN_MS = Duration.ofDays(1).toMillis();
-
-    private static double toJulianDay(LocalDateTime date) {
-        LocalTime timeOfDay = date.toLocalTime();
-        double jd = date.getLong(JulianFields.JULIAN_DAY);
-        jd += timeOfDay.get(ChronoField.MILLI_OF_DAY) / DAY_IN_MS - 0.5;
-        return jd;
     }
 
     public static class EventOccurence implements Comparable<EventOccurence> {
@@ -167,7 +145,7 @@ public class Season {
         }
 
         public int toJulianDay() {
-            return (int)Season.toJulianDay(dateTime);
+            return (int)JulianDay.toJulianDay(dateTime);
         }
 
         public LocalDateTime getDateTime() {
