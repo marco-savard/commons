@@ -13,11 +13,19 @@ import java.time.temporal.JulianFields;
 public class JulianDay {
     public static final LocalDate JULIAN_DAY_ERA = LocalDate.of(-4713, Month.NOVEMBER, 24);
     public static final LocalDate Y2000 = LocalDate.of(2000, Month.JANUARY, 1);
-    public static final double JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC = 2_451_543.5; //JD of 1999 Dec 31 00:00 UT
+    public static final double JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC = 2_451_543.5;
+    public static final double JULIAN_DAY_Y2000_EVE_NOON_UTC = 2_451_544.0; //JD of 1999 Dec 31 00:00 UT//JD of 1999 Dec 31 00:00 UT
     public static final double JULIAN_DAY_Y2000_MIDNIGHT_UTC = 2_451_544.5; //JD of 2000 jan 01 00:00 UT
     public static final double JULIAN_DAY_Y2000_NOON_UTC = 2_451_545.0; //JD of 2000 jan 01 12:00 UT
 
     private static final double DAY_IN_MS = Duration.ofDays(1).toMillis();
+
+    public static double toJulianDay(ZonedDateTime dateTime) {
+        LocalTime timeOfDay = dateTime.toLocalTime();
+        double jd = dateTime.getLong(JulianFields.JULIAN_DAY);
+        jd += timeOfDay.get(ChronoField.MILLI_OF_DAY) / DAY_IN_MS - 0.5;
+        return jd;
+    }
 
     public static double toJulianDay(LocalDateTime dateTime) {
         LocalTime timeOfDay = dateTime.toLocalTime();
@@ -47,6 +55,17 @@ public class JulianDay {
         LocalTime localTime = LocalTime.of(hour, min);
         LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         return  localDateTime;
+    }
+
+    public static double daysSinceJ2000(ZonedDateTime dateTime) {
+        double jd = JulianDay.toJulianDay(dateTime) - JulianDay.JULIAN_DAY_Y2000_NOON_UTC;
+        return jd;
+    }
+
+    public static double daysSinceJ2000(LocalDate date) {
+        ZonedDateTime dateTime = ZonedDateTime.of(date, LocalTime.of(0, 0), ZoneOffset.UTC);
+        double jd = JulianDay.toJulianDay(dateTime) - JulianDay.JULIAN_DAY_Y2000_NOON_UTC;
+        return jd;
     }
 
     @Deprecated
@@ -82,4 +101,6 @@ public class JulianDay {
         dayOfMonth = (dayOfMonth > daysInMonth) ? daysInMonth : dayOfMonth;
         return LocalDate.of(year, month, dayOfMonth);
     }
+
+
 }
