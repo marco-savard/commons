@@ -1,13 +1,13 @@
 package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
+import com.marcosavard.commons.time.JulianDay;
+import com.marcosavard.commons.time.StandardZoneId;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 
 import static com.marcosavard.commons.geog.GeoLocation.LatitudeHemisphere.NORTH;
 import static com.marcosavard.commons.geog.GeoLocation.LongitudeHemisphere.WEST;
@@ -16,13 +16,13 @@ public class SkyPositionDemo {
 
   public static void main(String[] args) {
     displayLondonUK();
-    displayQuebecCity();
+    displayQuebecCity(LocalDate.now());
   }
 
   // http://www.stargazing.net/kepler/altaz.html
   private static void displayLondonUK() {
     // position of the star M13..
-    SpaceCoordinate coordinate = StarAlmanach.M13;
+    SpaceCoordinate spaceCoord = StarAlmanach.M13;
 
     // ..as seen from this location
     GeoLocation birminghamUK = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);
@@ -31,55 +31,47 @@ public class SkyPositionDemo {
     LocalDateTime localTime = LocalDateTime.of(1998, 8, 10, 23, 10, 0); // 2310 UT, 10th August 1998
     ZonedDateTime moment = ZonedDateTime.of(localTime, ZoneOffset.UTC);
 
-    /*
     // get sky position
-    SkyPosition skyPosition =
-        Astronomy.findSkyPositionOf(coordinate, moment, birminghamUK.toCoordinates());
+    double[] coordinates = birminghamUK.toCoordinates();
+    SkyPosition skyPosition = Astronomy.findSkyPositionOf(spaceCoord, moment, coordinates);
 
-    System.out.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
-    System.out.println("  ..position of M13: " + skyPosition);
-    System.out.println();
+    SpaceCoordinate spaceCoordinate = Astronomy.findSpaceCoordinateOf(skyPosition, moment, coordinates);
 
-    SkyPosition skyPosition2 =
-        Astronomy.findSkyPositionOfOld(coordinate, moment, birminghamUK.toCoordinates());
-    System.out.println("  ..position2 of M13: " + skyPosition2);
-    System.out.println();
-
-     */
+    Console.println("Position of star M13 above Birmingham, UK on August 10st, 1998 at 23:10");
+    Console.println("  ..position of M13: " + skyPosition);
+    Console.println("  ..spaceCoordinate of M13: " + spaceCoordinate);
+    Console.println();
   }
 
-  private static void displayQuebecCity() {
-    System.out.println("Position of some stars above Quebec City on January 1st, 2019 at 6PM");
+  private static void displayQuebecCity(LocalDate date) {
+    LocalDateTime localTime = LocalDateTime.of(date, LocalTime.MIDNIGHT);
+    ZonedDateTime moment = localTime.atZone(StandardZoneId.AMERICA_NEW_YORK.getZoneId());
+    Console.println("Position of some stars above Quebec City on {0}", moment);
 
     // as seen at this location
     GeoLocation qcCity = GeoLocation.of(46, 49, NORTH, 71, 13, WEST);
+    double[] coordinates = qcCity.toCoordinates();
 
     // at this moment
-    LocalDateTime localTime = LocalDateTime.of(2019, Month.JANUARY, 1, 18, 0, 0); // Jan1st, 6PM
-    ZonedDateTime moment = localTime.atZone(ZoneId.of("America/New_York"));
+    SkyPosition skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, coordinates);
+    SpaceCoordinate coord = Astronomy.findSpaceCoordinateOf(skyPosition, moment, coordinates);
+    Console.println("  ..position of Polaris: {0} [{1}]", skyPosition, coord);
 
-    /*
-    // get sky position
-    SkyPosition skyPosition =
-        Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, qcCity.toCoordinates());
-    System.out.println("  ..position of Polaris: " + skyPosition);
+    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.URSA_MAJOR_EPSILON, moment, coordinates);
+    Console.println("  ..position of Ursa Major Epsilon: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.URSA_MAJOR_EPSILON, moment,
-        qcCity.toCoordinates());
-    System.out.println("  ..position of Ursa Major Epsilon: " + skyPosition);
+    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.SIRIUS, moment, coordinates);
+    Console.println("  ..position of Sirius: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.SIRIUS, moment, qcCity.toCoordinates());
-    System.out.println("  ..position of Sirius: " + skyPosition);
+    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.ANTARES, moment, coordinates);
+    Console.println("  ..position of Antares: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.ANTARES, moment, qcCity.toCoordinates());
-    System.out.println("  ..position of Antares: " + skyPosition);
+    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, coordinates);
+    Console.println("  ..position of Crux Alpha: " + skyPosition);
 
-    skyPosition =
-        Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, qcCity.toCoordinates());
-    System.out.println("  ..position of Crux Alpha: " + skyPosition);
 
-    System.out.println();
 
-     */
+    Console.println();
+
   }
 }
