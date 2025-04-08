@@ -1,6 +1,6 @@
 package com.marcosavard.commons.math.geom;
 
-import com.marcosavard.commons.math.Maths;
+import com.marcosavard.commons.math.SafeMath;
 
 import java.text.MessageFormat;
 
@@ -58,7 +58,7 @@ public class Point2D {
 
     if (o instanceof Point2D) {
       Point2D that = (Point2D) o;
-      equal = Maths.equal(this.x, that.x) && Maths.equal(this.y, that.y);
+      equal = SafeMath.equal(this.x, that.x, 0.001) && SafeMath.equal(this.y, that.y, 0.001);
     }
 
     return equal;
