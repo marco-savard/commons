@@ -1,6 +1,7 @@
 package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.astro.star.Star;
 import com.marcosavard.commons.geog.GeoLocation;
 //import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class SpaceLocationTest {
   //@Test
   public void testBirminghamUK() {
     // position of the star M13..
-    SpaceCoordinate starM13 = StarAlmanach.M13;
+    SpaceCoordinate starM13 = Star.M13.coordinate();
 
     // ..as seen from this location
     GeoLocation birminghamUK = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);
