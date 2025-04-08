@@ -1,7 +1,6 @@
 package com.marcosavard.commons.math.trigonometry;
 
-import com.marcosavard.commons.math.Maths;
-import static com.marcosavard.commons.math.Maths.range;
+import com.marcosavard.commons.math.SafeMath;
 
 public class Angle implements Comparable<Angle> {
   private static final String DEGREE_SIGN = "\u00B0";
@@ -19,10 +18,10 @@ public class Angle implements Comparable<Angle> {
     Angle angle;
 
     if (unit == Unit.DEG) {
-      value = range(value, 0, 360);
+      value = SafeMath.range(value, 0, 360);
       angle = new Angle(Math.toRadians(value));
     } else {
-      value = range(value, 0, 2 * Math.PI);
+      value = SafeMath.range(value, 0, 2 * Math.PI);
       angle = new Angle(value);
     }
 
@@ -39,7 +38,7 @@ public class Angle implements Comparable<Angle> {
 
     if (other instanceof Angle) {
       Angle otherAngle = (Angle) other;
-      equal = Maths.equal(otherAngle.rads(), this.rads());
+      equal = SafeMath.equal(otherAngle.rads(), this.rads(), 0.001);
     }
     return equal;
   }

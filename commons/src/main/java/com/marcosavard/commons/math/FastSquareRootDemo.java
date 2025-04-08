@@ -8,6 +8,7 @@ public class FastSquareRootDemo {
   public static void main(String[] args) {
     demoSpeed();
     demoAccuracy();
+
   }
 
   public static void demoSpeed() {
@@ -20,7 +21,7 @@ public class FastSquareRootDemo {
     }
 
     duration = System.currentTimeMillis() - start;
-    Console.println("duration = {0} ms", duration);
+    Console.println("duration Math.sqrt : {0} ms", duration);
     number = 0;
 
     start = System.currentTimeMillis();
@@ -28,7 +29,7 @@ public class FastSquareRootDemo {
       number = 10 + FastMath.sqrt(i * 10);
     }
     duration = System.currentTimeMillis() - start;
-    Console.println("duration = {0} ms", duration);
+    Console.println("duration FastMath.sqrt : {0} ms", duration);
   }
 
   private static void demoAccuracy() {
