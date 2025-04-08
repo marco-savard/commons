@@ -1,7 +1,7 @@
 package com.marcosavard.commons.astro.finder;
 
-import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.astro.star.Star;
 import com.marcosavard.commons.geog.GeoLocation;
 
 import java.time.LocalDate;
@@ -164,7 +164,7 @@ public class SkyPositionFinderDemo {
   // http://www.stargazing.net/kepler/altaz.html
   private static void findM13PositionInBirmingham() {
     // position of the star M13..
-    SpaceCoordinate m13 = StarAlmanach.M13;
+    SpaceCoordinate m13 = Star.M13.coordinate();
 
     // ..as seen from this location
     GeoLocation birminghamUK = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);

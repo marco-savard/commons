@@ -1,8 +1,8 @@
 package com.marcosavard.commons.astro.finder;
 
 import com.marcosavard.commons.astro.SkyPosition;
-import com.marcosavard.commons.astro.StarAlmanach;
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.astro.star.Star;
 import com.marcosavard.commons.geog.GeoLocation;
 
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class SpaceLocationFinderDemo {
 
   private static void findTimeAtMeridian() {
     GeoLocation besancon = GeoLocation.of(47, 6);
-    SpaceCoordinate polaris = StarAlmanach.POLARIS;
+    SpaceCoordinate polaris = Star.POLARIS.coordinate();
     LocalDate date = LocalDate.of(1982, 1, 20);
     ZonedDateTime moment =
         SpaceLocationFinder.findTimeAtMeridian(polaris, besancon.toCoordinates(), date);
