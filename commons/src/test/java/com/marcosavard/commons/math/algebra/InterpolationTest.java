@@ -1,14 +1,13 @@
-package com.marcosavard.commons.math;
+package com.marcosavard.commons.math.algebra;
 
-import com.marcosavard.commons.math.algebra.Interpolation;
 import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InterpolationTest {
   private static double DELTA = 0.01;
 
   @Test
-  public void givenMiles_whenInterpolateToKm_thanEqual() {
+  void givenMiles_whenInterpolateToKm_thanEqual() {
     Interpolation mileToKmConverter = new Interpolation();
     mileToKmConverter.define(65.0, 104.607);
 
