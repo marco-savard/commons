@@ -1,6 +1,6 @@
 package com.marcosavard.commons.astro.res;
 
-import com.marcosavard.commons.astro.Constellation;
+import com.marcosavard.commons.astro.star.Constellation;
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 
 import java.text.MessageFormat;
