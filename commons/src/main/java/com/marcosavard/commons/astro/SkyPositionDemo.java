@@ -1,6 +1,7 @@
 package com.marcosavard.commons.astro;
 
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
+import com.marcosavard.commons.astro.star.Star;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.time.JulianDay;
@@ -22,7 +23,7 @@ public class SkyPositionDemo {
   // http://www.stargazing.net/kepler/altaz.html
   private static void displayLondonUK() {
     // position of the star M13..
-    SpaceCoordinate spaceCoord = StarAlmanach.M13;
+   SpaceCoordinate spaceCoord = Star.M13.coordinate();
 
     // ..as seen from this location
     GeoLocation birminghamUK = GeoLocation.of(52, 30, NORTH, 1, 55, WEST);
@@ -53,20 +54,20 @@ public class SkyPositionDemo {
     double[] coordinates = qcCity.toCoordinates();
 
     // at this moment
-    SkyPosition skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.POLARIS, moment, coordinates);
+    SkyPosition skyPosition = Astronomy.findSkyPositionOf(Star.POLARIS.coordinate(), moment, coordinates);
     SpaceCoordinate coord = Astronomy.findSpaceCoordinateOf(skyPosition, moment, coordinates);
     Console.println("  ..position of Polaris: {0} [{1}]", skyPosition, coord);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.URSA_MAJOR_EPSILON, moment, coordinates);
+    skyPosition = Astronomy.findSkyPositionOf(Star.ALIOTH.coordinate(), moment, coordinates);
     Console.println("  ..position of Ursa Major Epsilon: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.SIRIUS, moment, coordinates);
+    skyPosition = Astronomy.findSkyPositionOf(Star.SIRIUS.coordinate(), moment, coordinates);
     Console.println("  ..position of Sirius: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.ANTARES, moment, coordinates);
+    skyPosition = Astronomy.findSkyPositionOf(Star.ANTARES.coordinate(), moment, coordinates);
     Console.println("  ..position of Antares: " + skyPosition);
 
-    skyPosition = Astronomy.findSkyPositionOf(StarAlmanach.CRUX_ALPHA, moment, coordinates);
+    skyPosition = Astronomy.findSkyPositionOf(Star.ACRUX.coordinate(), moment, coordinates);
     Console.println("  ..position of Crux Alpha: " + skyPosition);
 
 

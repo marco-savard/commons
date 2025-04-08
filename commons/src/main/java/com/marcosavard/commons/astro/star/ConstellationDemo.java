@@ -1,4 +1,4 @@
-package com.marcosavard.commons.astro;
+package com.marcosavard.commons.astro.star;
 
 import java.util.Arrays;
 import java.util.List;

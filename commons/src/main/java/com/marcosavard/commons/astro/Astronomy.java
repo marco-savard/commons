@@ -3,6 +3,7 @@ package com.marcosavard.commons.astro;
 import com.marcosavard.commons.astro.space.SpaceCoordinate;
 import com.marcosavard.commons.astro.time.LocalSideralTime;
 import com.marcosavard.commons.debug.Console;
+import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.SafeMath;
 import com.marcosavard.commons.time.JulianDay;
 
@@ -57,4 +58,14 @@ public class Astronomy {
         SpaceCoordinate spaceCoordinate = SpaceCoordinate.of(ra, decl);
         return spaceCoordinate;
     }
+
+    private static SpaceCoordinate findSpaceLocationForZenithOf(ZonedDateTime moment, double[] coordinates) {
+        return findSpaceCoordinateOf(SkyPosition.ZENITH, moment, coordinates);
+    }
+
+    public static double[] findGeoCoordinateForZenithOf(SpaceCoordinate spaceCoordinate, ZonedDateTime moment) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
