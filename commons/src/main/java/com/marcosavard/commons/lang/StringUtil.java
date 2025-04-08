@@ -528,6 +528,9 @@ public class StringUtil {
   }
 
   public static String translate(CharSequence str, CharSequence old, CharSequence target) {
+    str = (str == null) ? "" : str;
+    old = (old == null) ? "" : old;
+    target = (target == null) ? "" : target;
     int n = Math.min(old.length(), target.length());
     char[] array = str.toString().toCharArray();
 
