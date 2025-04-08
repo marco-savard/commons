@@ -2,7 +2,7 @@ package com.marcosavard.commons.lang;
 
 import com.marcosavard.commons.text.encoding.AccentCoding;
 import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class StringUtilTest {
   private static final char eacute = '\u00e9';
