@@ -1,5 +1,7 @@
 package com.marcosavard.commons.astro;
 
+import com.marcosavard.commons.math.SafeMath;
+
 import java.text.MessageFormat;
 
 import static com.marcosavard.commons.math.SafeMath.*;
@@ -19,7 +21,7 @@ public class SkyPosition {
 
   private SkyPosition(double horizon, double azimuth) {
     this.horizon = horizon;
-    this.azimuth = AstroMath.range(azimuth, 360);
+    this.azimuth = SafeMath.range360(azimuth);
   }
 
   public double getHorizon() {

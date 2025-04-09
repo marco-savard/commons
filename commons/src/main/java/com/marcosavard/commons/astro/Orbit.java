@@ -6,15 +6,14 @@ import com.marcosavard.commons.astro.unit.Length;
 import com.marcosavard.commons.astro.unit.LengthUnit;
 import com.marcosavard.commons.astro.unit.Mass;
 import com.marcosavard.commons.astro.unit.MassUnit;
+import com.marcosavard.commons.math.SafeMath;
 import com.marcosavard.commons.time.JulianDay;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import static com.marcosavard.commons.astro.AstroMath.range;
 import static com.marcosavard.commons.astro.unit.Constant.G;
-import static com.marcosavard.commons.math.SafeMath.cosd;
-import static com.marcosavard.commons.math.SafeMath.sind;
+import static com.marcosavard.commons.math.SafeMath.*;
 import static java.lang.Math.PI;
 import static java.lang.Math.sqrt;
 
@@ -181,9 +180,9 @@ public class Orbit {
     double jd = JulianDay.toJulianDay(date);
     double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
     double e = eccentricity + eccentricityVariation * d;
-    double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation * d, 360);
-    double ma = range(meanAnomaly + meanAnomalyVariation * d, 360);
-    double ml = range(w + ma, 360);
+    double w = SafeMath.range360(longitudeOfPerihelion + longitudeOfPerihelionVariation * d);
+    double ma = SafeMath.range360(meanAnomaly + meanAnomalyVariation * d);
+    double ml = SafeMath.range360(w + ma);
     double ea = ma + (180 / PI) * e * sind(ma) * (1 + e * cosd(ma));
     double x = cosd(ea) - e;
     double y = sind(ea) * sqrt(1 - e * e);
@@ -199,10 +198,10 @@ public class Orbit {
 
     double jd = JulianDay.toJulianDay(date);
     double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
-    double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation * d, 360);
-    double oblecl = range(obliquityOfEcliptic + obliquityOfEclipticVariation * d, 360);
+    double w = SafeMath.range360(longitudeOfPerihelion + longitudeOfPerihelionVariation * d);
+    double oblecl = SafeMath.range360(obliquityOfEcliptic + obliquityOfEclipticVariation * d);
 
-    double lon = range(trueAnomaly + w, 360);
+    double lon = SafeMath.range360(trueAnomaly + w);
     double x = distance * cosd(lon);
     double y = distance * sind(lon);
     double z = 0.0;
@@ -217,15 +216,15 @@ public class Orbit {
   public double findObliquityOfEcliptic(LocalDate date) {
     double jd = JulianDay.toJulianDay(date);
     double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
-    double oblecl = range(obliquityOfEcliptic + obliquityOfEclipticVariation * d, 360);
+    double oblecl = SafeMath.range360(obliquityOfEcliptic + obliquityOfEclipticVariation * d);
     return oblecl;
   }
 
   public double findLongitudeOn(double trueAnomaly, LocalDate date) {
     double jd = JulianDay.toJulianDay(date);
     double d = jd - JulianDay.JULIAN_DAY_Y2000_EVE_MIDNIGHT_UTC;
-    double w = range(longitudeOfPerihelion + longitudeOfPerihelionVariation * d, 360);
-    double lon = range(trueAnomaly + w, 360);
+    double w = SafeMath.range360(longitudeOfPerihelion + longitudeOfPerihelionVariation * d);
+    double lon = SafeMath.range360(trueAnomaly + w);
     return lon;
   }
 
