@@ -6,7 +6,7 @@ package com.marcosavard.commons.math;
  * @author Marco
  */
 public class SafeMath {
-    private static final double DOUBLE_TRIM_VALUE = 0.000_000_000_000_001;
+    private static final double DOUBLE_TRIM_VALUE = 0.000_000_000_000_1;
     private static final double DOUBLE_PRECISION = 0.000_0001;
     private static final double FLOAT_PRECISION = 0.001;
 
@@ -88,6 +88,9 @@ public class SafeMath {
         return ranged;
     }
 
+    public static double range360(double value) {
+        return range(value, 0, 360);
+    }
 
     // secant
     public static double secd(double degree) {
@@ -143,8 +146,13 @@ public class SafeMath {
         return rounded;
     }
 
+    private static final double TRIM_FACTOR = 1_000_000.0;
+
     public static double trim(double original) {
-        return trim(original, DOUBLE_TRIM_VALUE);
+        double rounded = Math.round(original * TRIM_FACTOR);
+        double faction = Math.abs(rounded - original * TRIM_FACTOR);
+        double trimmed = (faction < DOUBLE_PRECISION) ? (rounded / TRIM_FACTOR) : original;
+        return trimmed;
     }
 
 }
