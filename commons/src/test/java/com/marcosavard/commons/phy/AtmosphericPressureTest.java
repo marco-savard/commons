@@ -1,7 +1,7 @@
 package com.marcosavard.commons.phy;
 
 import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 
