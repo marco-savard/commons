@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 
 public class RealTimeLoopTest {
 
+  /*
   public static void main(String[] args) {
     RealTime.Loop realTimeLoop = RealTime.Loop.of(2).withMaxDuration(5);
     realTimeLoop.addSummaryTask(new PrintStatTask(realTimeLoop));
@@ -28,5 +29,5 @@ public class RealTimeLoopTest {
       String msg = MessageFormat.format(patt, i, elapsedTimeStr, waitTime);
       System.out.println(msg);
     }
-  }
+  }*/
 }

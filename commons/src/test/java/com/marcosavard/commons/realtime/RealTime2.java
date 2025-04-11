@@ -1,10 +1,8 @@
 package com.marcosavard.commons.realtime;
 
-import java.util.ArrayList;
-import java.util.List;
+public class RealTime2 {
 
-public class RealTime {
-
+  /*
   public static class Loop implements Runnable {
     private double period;
     private long maxDurationMillis;
@@ -99,13 +97,14 @@ public class RealTime {
     public double getPeriod() {
       return period;
     }
-  }
+  }*/
 
+  /*
   public abstract static class Task implements Runnable {
-    protected RealTime.Loop loop;
+    protected RealTimeOld.Loop loop;
 
-    protected Task(RealTime.Loop loop) {
+    protected Task(RealTimeOld.Loop loop) {
       this.loop = loop;
     }
-  }
+  }*/
 }
