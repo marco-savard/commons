@@ -1,6 +1,6 @@
 package com.marcosavard.commons.time;
 
-import com.marcosavard.commons.astro.AstroMath;
+import com.marcosavard.commons.math.SafeMath;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -10,7 +10,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.marcosavard.commons.astro.AstroMath.range;
 import static com.marcosavard.commons.math.SafeMath.sind;
 
 public class Season {
@@ -38,8 +37,8 @@ public class Season {
       double dj = (ji - 2_415_020) / 36525.0;
       double lm = 279.69668 + (36000.76892 * dj);
       double m = 358.47583 + (35999.04975 * dj);
-      double lma = range(lm, 360);
-      double ma = range(m, 360);
+      double lma = SafeMath.range360(lm);
+      double ma = SafeMath.range360(m);
       double c = 0.01396 * (year - 1950);
       double sin = sind(ma);
       double ls = lma + EXCENTRICITY * sin - c;
