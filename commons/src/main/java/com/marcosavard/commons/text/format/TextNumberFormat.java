@@ -76,7 +76,7 @@ public class TextNumberFormat extends NumberFormat {
 
     private String toOrdinalString(long number) {
         if (Locale.FRENCH.getLanguage().equals(display.getLanguage())) {
-            return toOrdinalStringEn(number);
+            return toOrdinalStringFr(number);
         } else {
             return toOrdinalStringEn(number);
         }
