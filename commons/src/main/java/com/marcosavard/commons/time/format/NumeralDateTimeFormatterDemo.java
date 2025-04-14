@@ -21,7 +21,7 @@ public class NumeralDateTimeFormatterDemo {
     Console.println("{0} : {1}", date.toString(), formatter.format(date));
 
     // le mercredi premier janvier de l'an MMXX
-    pattern = "'le' eeee #dT MMMM 'de l''an' #yyyyR";
+    pattern = "'le' eeee #d MMMM 'de l''an' #yyyy";
     formatter = NumeralDateTimeFormatter.ofPattern(pattern, display);
     Console.println("{0} : {1}", date.toString(), formatter.format(date));
 
