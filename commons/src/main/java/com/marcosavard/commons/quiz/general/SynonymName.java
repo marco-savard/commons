@@ -21,7 +21,7 @@ public class SynonymName {
   }
 
   public static List<String> getAbbreviations() {
-    return ABBREVIATIONS_LATINES;
+    return ABBREVIATIONS;
   }
 
   private static final List<String> ADVERBS =
@@ -91,7 +91,7 @@ public class SynonymName {
           "couturier;styliste", //
           "opticien;lunetier", //
           "coiffeur;barbier", //
-          "estéticienne;cosméticienne", //
+          "esthéticienne;cosméticienne", //
           "agriculteur;fermier", //
           "antiquaire;brocanteur", //
           "cartographe;géomaticien", //
@@ -100,7 +100,7 @@ public class SynonymName {
           "linguiste;philologue", //
           "magistrat;juge", //
           "médiateur;conciliateur", //
-          "musicien;intrumentiste", //
+          "musicien;instrumentiste", //
           "orthophoniste;logopède", //
           "pilote;aviateur", //
           "viticulteur;vigneron", //
@@ -196,6 +196,32 @@ public class SynonymName {
           "asiatique;oriental",
           "malais;malaisien", //
           "japonais;nippon");
+
+  public static final List<String> ABBREVIATIONS =
+          List.of(   "am;amplitude maximale",
+                  "aq;assurance qualité", //
+                  "bd;bande dessinée", //
+                  "ca;conseil d`administration",
+                  "cc;copie conforme",
+                  "cp;code postal",
+                  "cq;contrôle qualité", //
+                  "cs;centre de service",
+                  "fm;fréquence modulée",
+                  "et;extra-terrestre",
+                  "hd;haute définition",
+                  "ia;intelligence artificielle",
+                  "ir;infra rouge",
+                  "iu;interface utilisateur",
+                  "lm;long métrage",
+                  "pv;procès-verbal",
+                  "rh;ressource humaine",
+                  "si;système international",
+                  "ti;technologies de l`information",
+                  "tv;télévision",
+                  "ua;unité astronomique",
+                  "uv;ultra violet",
+                  "vo;version originale"
+          );
 
   public static final List<String> ABBREVIATIONS_LATINES =
       List.of( //

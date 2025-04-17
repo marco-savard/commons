@@ -13,11 +13,11 @@ public class CategoryName {
           ";article défini;la;le;les", //
           ";article indéfini;un;une;des", //
           ";particule;de;du;des", //
-          ";a moi;mon;ma;mes", //
-          ";a toi;ton;ta;tes", //
-          ";a lui;son;sa;ses", //
-          ";a nous;notre;nos", //
-          ";a vous;votre;vos", //
+          ";à moi;mon;ma;mes", //
+          ";à toi;ton;ta;tes", //
+          ";à lui;son;sa;ses", //
+          ";à nous;notre;nos", //
+          ";à vous;votre;vos", //
           ";conjonction;car;donc;et;mais;ni;or;ou", //
           "NATURE;conifère;if;pin;sapin;cèdre;mélèze;cyprès;séquoia;genévrier", //
           "EUROPE;fleuve d'Italie;Po;Tibre", //
@@ -27,10 +27,10 @@ public class CategoryName {
           "EUROPE;lac de France;Annecy", //
           "EUROPE;lac d'Italie;Côme", //
           "EUROPE;lac de Suisse;Léman;Zurich", //
-          ";fleuve d'Egypte;Nil", //
-          ";fleuve des Etats-Unis;Mississipi;Columbia;Hudson",
+          ";fleuve d'Égypte;Nil", //
+          ";fleuve des États-Unis;Mississipi;Columbia;Hudson",
           ";lac d'Amérique du Nord;Erié;Huron;Ontario;Champlain",
-          ";lac des Etats-Unis;Michigan;Tahoe;Mead;Powell",
+          ";lac des États-Unis;Michigan;Tahoe;Mead;Powell",
           ";lac du Canada;Winnipeg", //
           ";jeu;go;domino;échecs;dames;poker;backgammon", //
           ";note;do;re;mi;fa;sol;la;si" //

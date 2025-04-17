@@ -1,6 +1,6 @@
 package com.marcosavard.commons.quiz.general;
 
-import com.marcosavard.library.poi.word.IntegerGrid;
+import com.marcosavard.commons.math.arithmetic.IntegerGrid;
 
 import java.util.Random;
 

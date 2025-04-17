@@ -20,11 +20,11 @@ public class Sequence {
           "NATURE;moins puissant que;plus puissant que;la brise;le vent;la rafale;la tempête;le cyclone", //
           "NATURE;climat plus froid que;climat plus chaud que;polaire;arctique;subarctique;tempéré;subtropical;tropical;équatorial", //
           "NATURE;plus bas que;plus haut que;la troposphère;la stratosphère;la mésosphère;la thermosphère;l'exosphère", //
-          "ANTIQUE;avant;après;César;Auguste;Tibère;Caligula;Claude;Néron", //
+          "ANTIQUE;dirigeait Rome avant;dirigeait Rome après;César;Auguste;Tibère;Caligula;Claude;Néron", //
           "ANTIQUE;moins gradé que;plus gradé que;le légionnaire;le chevalier;le décurion;l'optio;le centurion;le commandant;l'empereur", //
           "ANTIQUE;moins titré que;plus titré que;l'esclave;l'affranchi;le prolétaire;le plébéien;le patricien;le sénateur;le tribun;le censeur;l'édile;le questeur;le préteur;le consul;l'empereur", //
           "MEDIEVAL;moins titré que;plus titré que;le chevalier;le seigneur;le baron;le vicomte;le comte;le marquis;le duc;l'archiduc;le prince;le roi;l'empereur", //
-          "MEDIEVAL;avant;après;Clovis;Clodomir;Thierry;Clotaire;Dagobert;Pépin;Charlemagne", //
+          "MEDIEVAL;roi avant;roi après;Clovis;Clodomir;Thierry;Clotaire;Dagobert;Pépin;Charlemagne", //
           "SOCIETY;plus jeune que;plus vieux que;le nourisson;le bébé;le bambin;l'enfant;l'adolescent;le trentenaire;le quadragénaire;le quinquagénaire;le sexagénaire;le septuagénaire;l'octogénaire;le vieillard", //
           "SOCIETY;moins instruit que;plus instruit que;l'écolier;l'élève;l'étudiant;le bachelier;le maitre;le doctorant;le docteur;le professeur;le doyen;le recteur", //
           "SOCIETY;moins gradé que;plus gradé que;le soldat;le caporal;le sergent;l'adjudant;le lieutenant;le capitaine;le commandant;le colonel;le général;le maréchal", //
