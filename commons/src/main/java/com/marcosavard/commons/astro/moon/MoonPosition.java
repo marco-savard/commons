@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
-import static com.marcosavard.commons.math.Maths.range;
+import static com.marcosavard.commons.math.SafeMath.range;
 
 public class MoonPosition {
 
