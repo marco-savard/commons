@@ -17,8 +17,6 @@ import com.marcosavard.commons.geog.ca.CanadianProvince;
 import com.marcosavard.commons.geog.us.State;
 import com.marcosavard.commons.geog.world.WorldCityResource;
 import com.marcosavard.commons.lang.StringUtil;
-import com.marcosavard.commons.ling.Numeral;
-import com.marcosavard.commons.ling.RomanNumeral;
 import com.marcosavard.commons.ling.fr.dic.DicoDefinitionReader;
 import com.marcosavard.commons.ling.fr.dic.Word;
 import com.marcosavard.commons.math.Function;
@@ -26,6 +24,7 @@ import com.marcosavard.commons.quiz.general.CategoryName;
 import com.marcosavard.commons.quiz.general.Sequence;
 import com.marcosavard.commons.quiz.general.SynonymName;
 import com.marcosavard.commons.text.Script;
+import com.marcosavard.commons.text.format.TextNumberFormat;
 import com.marcosavard.commons.time.TimeUnitName;
 import com.marcosavard.commons.ui.Affirmation;
 import com.marcosavard.commons.ui.Collection;
@@ -43,6 +42,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.DateFormatSymbols;
 import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -588,10 +588,10 @@ public class QuestionList {
   }
 
   private void generateNumerals(Locale display) {
-    Numeral numeral = Numeral.of(Locale.FRENCH);
+    NumberFormat numberFormat = TextNumberFormat.getFullTextInstance(display);
 
     for (int i = 1; i <= 100; i++) {
-      String num = numeral.getDisplayName(i);
+      String num = numberFormat.format(i);
       if (!num.contains(" ") && !num.contains("-")) {
         int square = i * i;
         String hint = "Racine carrée de " + Integer.toString(square);
@@ -978,28 +978,30 @@ public class QuestionList {
   }
 
   private void generateGuessRomanNumerals(PseudoRandom pr) {
-    Numeral numeral = new RomanNumeral();
+    NumberFormat numberFormat = TextNumberFormat.getRomanNumeralInstance();
+    //Numeral numeral = new RomanNumeral();
 
     for (int i = 2; i <= 250; i++) {
-      String roman = numeral.getDisplayName(i);
+      String roman = numberFormat.format(i);
 
       if (roman.length() >= 2) {
         generateGuessRomanNumeral(i, roman);
 
         if (i < 50) {
-          generateGuessRomanSum(pr, numeral, i, roman);
+          generateGuessRomanSum(pr, i, roman);
         }
       }
     }
   }
 
-  private void generateGuessRomanSum(PseudoRandom pr, Numeral numeral, int number, String roman) {
+  private void generateGuessRomanSum(PseudoRandom pr, int number, String roman) {
+    NumberFormat numberFormat = TextNumberFormat.getRomanNumeralInstance();
     int a = 1 + pr.nextInt(number - 1);
     int b = number - a;
 
     if (a != b) {
-      String romanA = numeral.getDisplayName(a);
-      String romanB = numeral.getDisplayName(b);
+      String romanA = numberFormat.format(a);
+      String romanB = numberFormat.format(b);
       String hint = MessageFormat.format("{0} et {1}", romanA, romanB);
       Question q = new Question(roman, hint);
       questions.add(q);
