@@ -202,8 +202,8 @@ public class UnicodeScriptProperties {
 
   public static List<String> getLanguagesForScript(
       List<String> allLanguages, Character.UnicodeScript script, Locale displayLocale) {
-    List<String> languageTags =
-        allLanguages.stream().filter(l -> isUsing(script, Locale.forLanguageTag(l))).toList();
+    List<String> languageTags = List.of();
+     //   allLanguages.stream().filter(l -> isUsing(script, Locale.forLanguageTag(l))).toList();
     return languageTags;
   }
 

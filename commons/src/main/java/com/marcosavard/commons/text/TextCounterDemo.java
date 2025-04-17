@@ -1,7 +1,7 @@
 package com.marcosavard.commons.text;
 
 import java.util.Map;
-import com.marcosavard.commons.io.ContentReader;
+import com.marcosavard.commons.io.reader.ContentReader;
 
 public class TextCounterDemo {
 
