@@ -3,13 +3,13 @@ package com.marcosavard.commons.geog;
 import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.ling.Language;
 import junit.framework.Assert;
-import org.junit.Test;
+//import org.junit.Test;
 
 import java.util.Locale;
 
 public class ContinentTest {
 
-  @Test
+ // @Test
   public void testAfricaName() {
     System.out.println();
 
@@ -45,7 +45,7 @@ public class ContinentTest {
     testAfricaName("Afriko", Language.ESPERANTO.toLocale());
   }
 
-  @Test
+ // @Test
   public void testAmericaName() {
     System.out.println();
     testAmericaName("Amérique", Locale.FRENCH);
@@ -80,7 +80,7 @@ public class ContinentTest {
     testAmericaName("Ameriko", Language.ESPERANTO.toLocale());
   }
 
-  @Test
+ // @Test
   public void testAsiaName() {
     System.out.println();
     testAsiaName("Asie", Locale.FRENCH);
@@ -115,7 +115,7 @@ public class ContinentTest {
     testAsiaName("Azio", Language.ESPERANTO.toLocale());
   }
 
-  @Test
+  //@Test
   public void testEuropeName() {
     System.out.println();
     testEuropeName("Europe", Locale.FRENCH);

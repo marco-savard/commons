@@ -1,6 +1,6 @@
 package com.marcosavard.commons.geog;
 
-import com.marcosavard.commons.math.Maths;
+import com.marcosavard.commons.math.SafeMath;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
@@ -235,11 +235,8 @@ public class GeoLocation implements Serializable {
 
     if (other instanceof GeoLocation) {
       GeoLocation otherCoordinate = (GeoLocation) other;
-      equal =
-          Maths.equal(otherCoordinate.getLatitude().getValue(), getLatitude().getValue(), EPSILON);
-      equal &=
-          Maths.equal(
-              otherCoordinate.getLongitude().getValue(), getLongitude().getValue(), EPSILON);
+      equal = SafeMath.equal(otherCoordinate.getLatitude().getValue(), getLatitude().getValue(), EPSILON);
+      equal &= SafeMath.equal(otherCoordinate.getLongitude().getValue(), getLongitude().getValue(), EPSILON);
     }
     return equal;
   }
