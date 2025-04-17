@@ -64,7 +64,9 @@ public class LocalSideralTime {
 
   @Override
   public String toString() {
-    String msg = MessageFormat.format("{0} hr", String.format("%.2f", hours()));
+    String hr = String.format("%.2f", hours());
+    String deg = String.format("%3.5f", this.degrees);
+    String msg = MessageFormat.format("{0} hr ({1} deg)", hr, deg);
     return msg;
   }
 }
