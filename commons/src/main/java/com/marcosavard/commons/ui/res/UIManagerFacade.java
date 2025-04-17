@@ -14,7 +14,8 @@ import javax.swing.UIManager;
 public class UIManagerFacade {
 
 	public static UIDefaults getDefaults() {
-		UIDefaults uiDefaults = new ExtendedUIDefaults(UIManager.getDefaults()); 
+		UIDefaults uiDefaults = UIManager.getDefaults();
+		uiDefaults = new ExtendedUIDefaults(uiDefaults);
 		return uiDefaults;
 	}
 	
