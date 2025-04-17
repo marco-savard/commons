@@ -1,16 +1,16 @@
 package com.marcosavard.commons.astro.sun;
 
+import com.marcosavard.commons.astro.AstroMath;
 import com.marcosavard.commons.geog.GeoLocation;
 import com.marcosavard.commons.math.trigonometry.Angle;
 import com.marcosavard.commons.math.trigonometry.Angle.Unit;
 import com.marcosavard.commons.time.JulianDay;
-import com.marcosavard.commons.time.StandardZoneId;
 
 import java.text.MessageFormat;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 
-import static com.marcosavard.commons.astro.AstroMath.range;
+import static com.marcosavard.commons.math.SafeMath.range360;
 
 public class SunPosition {
   public enum Event {SUNRISE, LOCAL_NOON, SUNSET}
@@ -25,9 +25,6 @@ public class SunPosition {
 
   // Eccentricity of Earth's orbit.
   public static final double ECCENT_EARTH_ORBIT = 0.016718;
-
-  // Accurancy of the Kepler equation.
-  public static final double KEPLER_EPSILON = 1E-6;
 
   // semi-major axis of Earth's orbit, km
   private static final double SUN_SEMI_MAJOR = 1.495985e8D;
@@ -59,18 +56,18 @@ public class SunPosition {
     this.julianDay = julianDay;
 
     double day = julianDay - J1980; // date within epoch
-    double n = degRange((360 / 365.2422) * day); // mean anomaly of the Sun
+    double n = range360((360 / 365.2422) * day); // mean anomaly of the Sun
 
     // convert from perigee co-ordinates to epoch 1980.0
-    this.sunAnomaly = degRange(n + SUN_ELONG_J1980 - SUN_ELONG_PERIGEE);
+    this.sunAnomaly = range360(n + SUN_ELONG_J1980 - SUN_ELONG_PERIGEE);
 
     // solve equation of Kepler
-    double ec = kepler(sunAnomaly, ECCENT_EARTH_ORBIT);
+    double ec = AstroMath.kepler(sunAnomaly, ECCENT_EARTH_ORBIT);
     ec = Math.sqrt((1 + ECCENT_EARTH_ORBIT) / (1 - ECCENT_EARTH_ORBIT)) * Math.tan(ec / 2);
     ec = 2 * Math.toDegrees(Math.atan(ec)); // true anomaly
 
     // Sun's geocentric ecliptic longitude
-    this.sunLongitude = degRange(ec + SUN_ELONG_PERIGEE);
+    this.sunLongitude = range360(ec + SUN_ELONG_PERIGEE);
 
     // Orbital distance factor.
     this.orbitalDistanceFactor =
@@ -151,23 +148,6 @@ public class SunPosition {
     return str;
   }
 
-  private static double degRange(double d) {
-    return range(d, 0, 360);
-  }
-
-  // kepler - solve the equation of Kepler
-  private static double kepler(double degrees, double ecc) {
-    double rads = Math.toRadians(degrees);
-    double e, delta;
-
-    e = rads;
-    do {
-      delta = e - ecc * Math.sin(e) - rads;
-      e -= delta / (1 - ecc * Math.cos(e));
-    } while (Math.abs(delta) > KEPLER_EPSILON);
-    return e;
-  }
-
   private static final long SECONDS_PER_DAY = 60 * 60 * 24;
   private static final double SYN_YEAR = 365.24;
 
@@ -198,7 +178,7 @@ public class SunPosition {
 
     SunPosition position0 = SunPosition.at(moment0);
     double longitude0 = position0.getSunLongitude();
-    double longitudeDelta = degRange(longitudeToFind - longitude0);
+    double longitudeDelta = range360(longitudeToFind - longitude0);
     long approxTime = (long) ((longitudeDelta / 360) * SYN_YEAR * SECONDS_PER_DAY);
     Instant instant1 = instant0.plus(approxTime, ChronoUnit.SECONDS);
     ZonedDateTime moment1 = instant1.atZone(ZoneOffset.UTC);
