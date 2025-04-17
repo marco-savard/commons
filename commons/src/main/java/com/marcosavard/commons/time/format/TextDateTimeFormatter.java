@@ -82,8 +82,8 @@ public class TextDateTimeFormatter {
 
     text = text.replace("-#yyyy-", fullTextOrdinalFormat.format(year));
     text = text.replace("-#yyy-", (year == 1) ? fullTextOrdinalFormat.format(year) : fullTextFormat.format(year));
-    text = text.replace("-#yy-", fullTextFormat.format(year));
-    text = text.replace("-#y-", fullTextFormat.format(year));
+    text = text.replace("-#yy-", ordinalFormat.format(year));
+    text = text.replace("-#y-", ordinalFormat.format(year % 100));
     return text;
   }
 }
