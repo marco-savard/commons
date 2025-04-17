@@ -5,7 +5,6 @@ import com.marcosavard.commons.math.SafeMath;
 
 import java.text.MessageFormat;
 
-import static com.marcosavard.commons.astro.AstroMath.range;
 import static com.marcosavard.commons.math.SafeMath.*;
 
 public class SkyPositionFinder {
@@ -115,7 +114,7 @@ public class SkyPositionFinder {
     // System.out.println(msg);
 
     // System.out.println("  tsl = " + tsl);
-    tsl = range(tsl, 24);
+    tsl = range(tsl, 0, 24);
 
     // System.out.println("  tsl = " + tsl);
 

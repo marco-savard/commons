@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import static com.marcosavard.commons.astro.AstroMath.range;
+import static com.marcosavard.commons.math.SafeMath.range;
 
 public class SpaceLocationFinder {
 
@@ -58,7 +58,7 @@ public class SpaceLocationFinder {
             "tsl = {0} + {1} + {2} + {3}", //
             k, n, h, l);
 
-    tsl = range(tsl, 24);
+    tsl = range(tsl, 0, 24);
 
     return tsl;
   }
