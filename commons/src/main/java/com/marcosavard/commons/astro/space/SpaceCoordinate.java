@@ -3,11 +3,7 @@ package com.marcosavard.commons.astro.space;
 import java.text.MessageFormat;
 import java.time.ZonedDateTime;
 
-import static com.marcosavard.commons.astro.AstroMath.acosd;
-import static com.marcosavard.commons.astro.AstroMath.asind;
-import static com.marcosavard.commons.astro.AstroMath.atan2d;
-import static com.marcosavard.commons.astro.AstroMath.cosd;
-import static com.marcosavard.commons.astro.AstroMath.sind;
+import static com.marcosavard.commons.math.SafeMath.*;
 import static java.lang.Math.sqrt;
 
 // // see https://stjarnhimlen.se/comp/ppcomp.html
@@ -37,7 +33,7 @@ public class SpaceCoordinate {
   }
 
   public static SpaceCoordinate of(RightAscension ascension, Declination declination) {
-    return sphereOf(ascension.toHour(), declination.toDegrees());
+    return sphereOf(ascension.toDegrees(), declination.toDegrees());
   }
 
   private SpaceCoordinate(double x, double y, double z, double distance, double ra, double dec) {
@@ -46,7 +42,7 @@ public class SpaceCoordinate {
     this.z = z;
     this.distance = distance;
     this.ra = ra;
-    this.dec = dec;
+    this.dec = dec; //deg
   }
 
   public double getX() {
