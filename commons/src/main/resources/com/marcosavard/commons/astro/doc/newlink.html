@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>newlink</title></head><body><img src="http://www.stargazing.net/kepler/banner.gif" alt="" style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;" border="0" height="30" width="400"><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;"></span>
+<h1 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig00">High Precision Ephemerides</a></h1>
+<span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">[</span><a href="http://www.stargazing.net/kepler/index.html" style="font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Root</a><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">]</span>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Contents</h2>
+<ul style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">
+<li><a href="http://www.stargazing.net/kepler/newlink.html#twig01">Overview</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig01a">A few orbit theory links</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig01b">Paul Schlyter's page: How to compute planetary positions</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig02">Interactive Computer Ephemeris</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig02b">Web Multiyear Interactive Computer Ephemeris</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig03">Planeph 4.1</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig04">Ephemeris Tool 2.0 32 bit</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig05">Mooncalc</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig06">NASA Twelve Year Planetary Ephemeris</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig07">US Naval Observatory Sun and Moon rise calculator</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig10">Astro Script</a></li><li><a href="http://www.stargazing.net/kepler/newlink.html#twig11">C source for sunrise calculator</a></li>
+</ul>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig01">Overview</a></h2>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Most
+people use computer software to find positions for planets and rising
+and setting times. The resources on this page are mostly computer
+programs designed to calculate positions, but I also include some
+online calculators and some books. Many 'star chart' programs will also
+display the positions of the planets and other orbiting objects. I list
+'freeware' software where possible. I have tried to give some
+indication of the kind of output the software generates, the system it
+works under (usually DOS), and the level of accuracy claimed.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">The
+URL for each resource leads to a page about the resource, usually
+provided by the authors or sponsoring institution. The URL itself is
+shown in the text to make this page useful when printed out on paper,
+or when being sent as an e-mail in<span>&nbsp;</span><code>ascii</code><span>&nbsp;</span>code.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig01a">A few orbit theory links</a></h2>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://www.commkey.net/braeunig/space/orbmech.htm">http://www.commkey.net/braeunig/space/orbmech.htm</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">This
+page provides some basic definitions of the orbital elements. The page
+has a bias towards low Earth orbits for satellites, but the information
+is still relevant to planetary orbits.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://cfata2.harvard.edu/whp/ay45toc.html">http://cfata2.harvard.edu/whp/ay45toc.html</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">William Press is famous as one of the co-authors of the superb<span>&nbsp;</span><cite>Numerical Recipies in C</cite>,
+but the URL above leads to the contents page of a series of lecture
+notes for an astronomy course. Chapter 4 of the course deals with
+orbital motion from an advanced mathematical viewpoint. You go from
+Newton's equations to Kepler's laws for the two-body problem. The
+mathematical treatment is pitched at the second year undergraduate
+level (partial differential equations and vector calculus) and the
+exposition is clear. Chapter 4 is available online as a Web document,
+or in Adobe Acrobat format, or PostScript format.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig01b">Paul Schlyter's page: How to compute planetary positions</a></h2>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://hotel04.ausys.se/pausch/comp/ppcomp.html">http://hotel04.ausys.se/pausch/comp/ppcomp.html</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Paul
+Schlyter has provided a comprehensive page about finding the positions
+of the Sun, Moon and planets to an accuracy of one or two minutes of
+arc using mean orbits with basic perturbation corrections. Paul has
+adapted and simplified methods contained in a paper by T. van Flandern
+and K. Pulkkinen called "Low precision formulae for planetary
+positions", originally published in the Astrophysical Journal
+Supplement Series, 1980.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">The
+page contains no graphics and can be saved to your hard drive very
+easily. I found the use of rectangular coordinates for the planet
+positions a great simplification over the spherical trigonometry
+approach.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig02">Interactive Computer Ephemeris</a></h2>
+<span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">[</span><a href="http://www.stargazing.net/kepler/newlink.html#twig00" style="font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Top</a><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">]</span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://www.seds.org/billa/ice/ice.html">http://www.seds.org/billa/ice/ice.html</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">The
+Interactive Computer Ephemeris (ICE) has just become available as
+freeware for DOS computers. The Ephemeris will give you positions for
+the planets, Sun and Moon for any year from 1801 to 2047 (if you
+download all four of the files). As the home page says;</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">'The
+program covers nearly all that is given in the yearly "Astronomical
+Almanac" published by USNO. Positions of planets; rotational and illum-
+ination data; sun/moon/planet rise, transit, and set times. It does not
+include the satellite (moon) data for other planets; the latter IS
+included in the book. The output is a simple numerical tabulation, no
+graphics. Accuracy is equivalent to the book, that is, world-class
+accuracy. Output may be directed to a file for later use.'</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">The
+program comes in four ZIP files, and will occupy 1.2 Mb of space when
+expanded. You can run the program from a floppy disc. The Moon
+tabulations are not as full or as accurate as the Astronomical Almanac,
+but the rest of the tabulations are up to navigational standards.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">The
+program will provide apparent and astrometric positions. The
+astrometric positions are with respect to the mean equator and equinox
+of J2000.0 and are in the FK5 coordinate system. The apparent positions
+are referred to the true equinox and equator of the date - i.e. they
+allow for nutation and include the current inclination of the Earth's
+equator and are referred to the current position of the 'first point of
+aries'.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig02b">Web Multiyear Interactive Computer Ephemeris</a></h2>
+<span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">[</span><a href="http://www.stargazing.net/kepler/newlink.html#twig00" style="font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Top</a><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">]</span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://aa.usno.navy.mil/AA/data/docs/WebMICA_2.html">http://aa.usno.navy.mil/AA/data/docs/WebMICA_2.html</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">As the US Naval Observatory says;</p>
+<blockquote style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><p>"This
+page enables you to obtain many kinds of astronomical data, including
+celestial coordinates, sidereal time, lunar and planetary
+configurations and aspects, and rise/set times. Specify the type of
+calculation you want below, click on the "Continue..." button, and fill
+in the form that will appear. The computations are performed by MICA,
+the Multiyear Interactive Computer Almanac. The basis of the
+calculations is the same as for the Astronomical Almanac."</p></blockquote>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">You can get full Astronomical Almanac accuracy on a variety of data using a simple Web interface.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig03">Planeph 4.1</a></h2>
+<cite style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">by G. Francou, J. Chapront</cite><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;"></span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="ftp://cdsarc.u-strasbg.fr/pub/cats/VI/87/">ftp://cdsarc.u-strasbg.fr/pub/cats/VI/87/</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">"The
+program PLANEPH is an executable DOS program for PC which computes the
+most usual ephemeris of planets between 1900 and 2100. It has to be
+regarded as an example for the use of the planetary series built by
+frequency analysis (Chapront, 1995). The representations of the
+planetary motions are based on numerical integration DE403 provided by
+Jet Propulsion Laboratory" -- from the 'readme' file</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">You will need to download about 1.69 Mb of files. The files needed are;</p>
+<ul style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">
+<li>Executable program : planeph.exe.</li><li>Planetary tables : planeph.tab.</li><li>Locations coordinates : planeph.loc.</li><li>Manual for the program : planeph.doc.</li>
+</ul>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">You
+can export data from the program in decimal format in hours/degrees or
+radians, or heliocentric x, y, z coordinates. The coefficients of the
+series used to compute the longitudes of the planets are available in
+compressed format from the same page. The file series96.doc contains
+some information about the series, with references to appropriate
+journals. The Bureau des Longitudes does it again!</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">There
+is a wide choice of coordinate frame and kind of position (true,
+apparent, astrometric, topocentric and so on) available from a slightly
+confusing menu system.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig04">Ephemeris Tool 2.2</a></h2>
+<cite style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">by Manfred Dings</cite><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;"></span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://members.aol.com/DingsHMTSB/asappsen.htm">http://members.aol.com/DingsHMTSB/asappsen.htm</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">This
+is version 2.2 of a Windows 95 program which provides customisable
+ephemeris plots for the positions of planets, the Sun and the Moon. The
+output is available as an Excel version 4 or 5 spreadsheet, or as a TAB
+separated text file. There is considerable control over format,
+including the insertion of 'special characters' for degrees and minutes
+and seconds. Numerical format can be decimal, so you can use your
+spreadsheets for further calculations.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Manfred
+has supplied some details of the theory used in the program. You can
+use the built in Lunar and planetary theories, based on Brown and
+Newcomb as detailed in the book<span>&nbsp;</span><cite>Astronomie mit dem Personal Computer</cite><span>&nbsp;</span>by
+Montenbruck and Pfleger, published by Springer Verlag. You can also
+download a pair of extra DLLs which implement the VSOP87 planetary
+theory and the ELP2000 lunar theory to full accuracy (not as truncated
+in the book by Meeus).</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">I
+compared a Lunar ephemeris produced by the program with the NASA TYPE
+geocentric Lunar ephemeris, and they agree to the last digit (0.1 of an
+arc second) at dates throughout the twelve year period of the TYPE.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Herr
+Dings has provided some information on how to call the VSOP87 and
+ELP2000 DLLs from your own code, should you need this kind of accuracy
+in your own applications.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">If
+you have a Windows 3.1 computer, then the German language program Orion
+3.2 uses the same Brown and Newcombe thories as Ephtool 3.2, and can
+save data as CSV files. The program will run from a floppy disc and
+does not need to be installed.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig05">Mooncalc 4.0</a></h2>
+<cite style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">by Dr. Monzur Ahmed</cite><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;"></span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://www.starlight.demon.co.uk/mooncalc/">http://www.starlight.demon.co.uk/mooncalc/</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">"MoonCalc
+provides information relating to the position, age, phase, orientation
+and visibility of the moon for any given date, time and location on
+earth. It also provides the time and direction of moonrise and moonset,
+date/time of astronomical new moon (conjunction) and full moon and
+predicts the likelihood of visualising the new moon from a particular
+location." - From Dr Ahmed's manual for the program.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">If
+you want to know the current phase and orientation of the Moon, then
+this program can provide the information for any location on the Earth.
+The program runs under DOS - and needs about 500K of disc space - it
+will run from a floppy. Mooncalc is freeware. An especially nice
+feature is the screen which prints an image of the visible aspect of
+the Moon with crater positions marked on the illuminated part of the
+disc.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Dr
+Ahmed cites Duffett-Smith and Jean Meeus as sources for the algorithms
+used for the Moon's position. The latest release is Version 4.0 (9th
+June 1997), which I am now evaluating after extensive use of version
+0.3 (beta).</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig06">NASA Twelve Year Planetary Ephemeris</a></h2>
+<cite style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">provided by Fred Espenak and his team</cite><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;"></span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://planets.gsfc.nasa.gov/TYPE/TYPE.html">http://planets.gsfc.nasa.gov/TYPE/TYPE.html</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">If
+you prefer looking at a table on a Web page to running software, then
+the TYPE provides a listing of the positions of the Sun, Moon and the
+planets for the twelve years from 1995 to 2006 inclusive. The positions
+of each object are calculated at 0h TDT each day for the Sun and the
+Moon, and every two days for the planets. The TYPE provides geocentric
+positions of the planets corrected for light travel time, nutation of
+the Earth's axis and stellar aberration. The positions are thus
+referred to a true equator rather than a mean one - and may not be
+compared with star positions in catalogues and star charts.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig07">US Naval Observatory Sun and Moon rise calculator</a></h2>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://tycho.usno.navy.mil/srss.html">http://tycho.usno.navy.mil/srss.html</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">This
+CGI program accepts the longitude, latitiude and date and produces a
+page containing information on the rising and setting times and
+azimuths of the Sun and Moon.</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig10">Astro Script</a></h2>
+<cite style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">by Peter Duffett-Smith</cite><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;"></span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://www.mrao.cam.ac.uk/%7Epjds/ascript/">http://www.mrao.cam.ac.uk/~pjds/ascript/</a></p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Ascript
+is commercial software sold as a book package. The program runs under
+DOS and comes on a single floppy disc. The bibliographic details are;</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><cite>Easy PC Astronomy</cite><br>by Peter Duffett-Smith<br>Cambridge University Press<br>ISBN 0-521-56052-7<br>Cost about 22 Pounds Sterling.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Astro
+script is unusual in that you can write your own scripts - the software
+provides a series of built in functions and calculation templates which
+you can assemble in various sequences. There is limited control over
+output and input, and a very basic loop structure allows you to repeat
+calculations and search for phenomena such as occultations and eclipses.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">If any budding programmer is reading this page, IMHO the world does<span>&nbsp;</span><em>not</em><span>&nbsp;</span>need
+another star chart program - how about an interpreter for an
+astronomical programming language with full support for loops,
+functions and procedures?</p>
+<h2 style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-style: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a name="twig11">C source for sunrise calculator</a></h2>
+<cite style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">by Paul Schlyter</cite><span style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline ! important; float: none;">, pausch@saaf.se</span>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/newlink.html#twig00">Top</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;"><a href="http://www.snippets.org/SUNRISET.C">http://www.snippets.org/SUNRISET.C</a><span>&nbsp;</span>(programs)</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Paul
+has provided the C code for a program which works out the times of
+sunrise and sunset and the various twilights. Paul has recently posted
+a summary and simplification of a 'low precision' method for finding
+the positions of the Sun, Moon and planets to the news group<span>&nbsp;</span><code>sci.astro.amateur</code>,
+and is planning to put the details on a Web page soon. Paul has chosen
+the terms in the perturbation series to give an accuracy of better than
+1 arcminute.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">The
+method is based on the article by van Flandern &amp; Pulkkinen called
+"Low precision series for planetary positions", published by
+Astrophysical Journal Supplement in 1979.</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">[<a href="http://www.stargazing.net/kepler/index.html">Root</a>]</p>
+<p style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-style: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">Last Modified 7th June 1998<br>Keith Burnett<br></p>
+<address style="color: rgb(0, 0, 0); font-family: &quot;Times New Roman&quot;; font-size: medium; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px;">keith@xylem.demon.co.uk</address>
+<br class="Apple-interchange-newline">
+
+  
+
+</body></html>
