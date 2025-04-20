@@ -1,7 +1,7 @@
 package com.marcosavard.commons.ling.fr;
 
 import com.marcosavard.commons.ling.processing.Noun;
-import com.marcosavard.commons.ling.processing.NounReader;
+import com.marcosavard.commons.ling.fr.dic.NounReader;
 import com.marcosavard.commons.math.arithmetic.Percent;
 
 import java.io.IOException;
