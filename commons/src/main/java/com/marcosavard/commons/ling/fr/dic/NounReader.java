@@ -1,9 +1,10 @@
-package com.marcosavard.commons.ling.processing;
+package com.marcosavard.commons.ling.fr.dic;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import com.marcosavard.commons.io.csv.CsvReader;
+import com.marcosavard.commons.ling.processing.Noun;
 
 public class NounReader {
   private CsvReader csvReader;

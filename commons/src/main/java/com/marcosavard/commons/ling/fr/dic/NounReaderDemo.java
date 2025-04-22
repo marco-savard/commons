@@ -1,4 +1,6 @@
-package com.marcosavard.commons.ling.processing;
+package com.marcosavard.commons.ling.fr.dic;
+
+import com.marcosavard.commons.ling.processing.Noun;
 
 import java.io.IOException;
 import java.util.Collections;

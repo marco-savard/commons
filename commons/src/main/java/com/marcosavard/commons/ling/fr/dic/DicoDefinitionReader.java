@@ -50,7 +50,7 @@ public class DicoDefinitionReader  {
             if (! text.contains(" ") && ! text.contains("-") && ! text.contains("'")) {
                 if (! text.matches(".*\\d.*")) { //does not contain digits
                     List<String> defs = toDefs(line.substring(idx+1));
-                    Word word = Word.of(text, false);
+                    Word word = Word.of(text, Word.Gender.EPICENE);
                     word.addDefinitions(defs);
                     words.add(word);
                 }
