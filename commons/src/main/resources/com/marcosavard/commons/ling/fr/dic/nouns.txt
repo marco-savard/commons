@@ -18492,7 +18492,7 @@ cinquante-deuxième;sg
 cinquante-deuxièmes;pl
 cinquante-et-unième;sg
 cinquante-et-unièmes;pl
-cinquantehuitième;sg
+cinquante-huitième;sg
 cinquante-huitièmes;pl
 cinquante-neuvième;sg
 cinquante-neuvièmes;pl
@@ -63795,7 +63795,7 @@ oeillades;fem;pl
 oeillard;mas;sg
 oeillards;mas;pl
 oeillet;mas;sg
-eoillets;mas;pl
+oeillets;mas;pl
 oeilleton;mas;sg
 oeilletons;mas;pl
 oeilletonnage;mas;sg
