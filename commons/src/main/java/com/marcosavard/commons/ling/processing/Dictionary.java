@@ -1,6 +1,7 @@
 package com.marcosavard.commons.ling.processing;
 
 import com.marcosavard.commons.io.csv.CsvReader;
+import com.marcosavard.commons.ling.fr.dic.NounReader;
 
 public class Dictionary {
   private NounReader reader;
