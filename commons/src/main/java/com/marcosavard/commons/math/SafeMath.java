@@ -67,6 +67,16 @@ public class SafeMath {
         return equal(d1, d2, FLOAT_PRECISION);
     }
 
+    public double findAverageAngle(double a1, double a2) {
+        double x1 = Math.cos(Math.toRadians(a1));
+        double x2 = Math.cos(Math.toRadians(a2));
+        double y1 = Math.sin(Math.toRadians(a1));
+        double y2 = Math.sin(Math.toRadians(a2));
+        double x = (x1 + x2) / 2;
+        double y = (y1 + y2) / 2;
+        return Math.toDegrees(Math.atan2(y, x));
+    }
+
     // haversine function
     public static double haversined(double degree) {
         return (1 - cosd(degree)) / 2;
