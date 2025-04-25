@@ -1,4 +1,4 @@
-package com.marcosavard.commons.ui;
+package com.marcosavard.commons.ui.color;
 
 import java.io.Serializable;
 
@@ -15,24 +15,36 @@ import java.io.Serializable;
 // A type-safe color type
 // Replaces java.awt.Color, which is not supported in GWT
 @SuppressWarnings("serial")
-public class Color implements Serializable {
+public class GwtColor implements Serializable {
   private static final double RED_LUMINENCE = 0.299;
   private static final double GREEN_LUMINENCE = 0.587;
   private static final double BLUE_LUMINENCE = 0.114;
 
   // constants
-  public static final Color BLACK = new Color(0, 0, 0);
-  public static final Color RED = new Color(255, 0, 0);
-  public static final Color YELLOW = new Color(255, 255, 0);
-  public static final Color GREEN = new Color(0, 127, 0);
-  public static final Color LIME = new Color(0, 255, 0);
-  public static final Color CYAN = new Color(0, 255, 255);
-  public static final Color BLUE = new Color(0, 0, 255);
-  public static final Color MAGENTA = new Color(0, 255, 255);
-  public static final Color WHITE = new Color(255, 255, 255);
+  public static final GwtColor BLACK = new GwtColor(0, 0, 0);
+  public static final GwtColor RED = new GwtColor(255, 0, 0);
+  public static final GwtColor YELLOW = new GwtColor(255, 255, 0);
+  public static final GwtColor GREEN = new GwtColor(0, 127, 0);
+  public static final GwtColor LIME = new GwtColor(0, 255, 0);
+  public static final GwtColor CYAN = new GwtColor(0, 255, 255);
+  public static final GwtColor BLUE = new GwtColor(0, 0, 255);
+  public static final GwtColor MAGENTA = new GwtColor(0, 255, 255);
+  public static final GwtColor WHITE = new GwtColor(255, 255, 255);
+
+  public static final GwtColor DARK_GRAY = new GwtColor(63, 63, 63);
+  public static final GwtColor GRAY = new GwtColor(127, 127, 127);
+  public static final GwtColor LIGHT_GRAY = new GwtColor(215, 215, 215);
+  public static final GwtColor ORANGE = new GwtColor(255, 127, 0);
+  public static final GwtColor PINK = new GwtColor(255, 127, 127);
 
   private final int red, green, blue;
   private double alpha;
+
+  protected GwtColor(int rgb) {
+    this.red = (rgb & 0xff0000) / (256 * 256);
+    this.green = (rgb & 0x00ff00) / 256;
+    this.blue = rgb & 0x0000ff;
+  }
 
   /**
    * Create an immutable color based on Red, Green, Blue and Alpha channel.
@@ -42,46 +54,48 @@ public class Color implements Serializable {
    * @param blue in the range 0..255
    * @param alpha in the range 0.0 1.0 (default value 1.0)
    */
-  public static Color of(int red, int green, int blue, double alpha) {
-    Color color;
+  public static GwtColor of(int red, int green, int blue, double alpha) {
+    GwtColor color;
 
     if ((red == 0) && (green == 0) && (blue == 0)) {
       color = BLACK;
     } else if ((red == 0) && (green == 0) && (blue == 0)) {
       color = WHITE;
     } else {
-      color = new Color(red, green, blue, alpha);
+      color = new GwtColor(red, green, blue, alpha);
     }
 
     return color;
   }
 
-  public static Color of(int red, int green, int blue) {
-    return Color.of(red, green, blue, 1.0);
+  public static GwtColor of(int red, int green, int blue) {
+    return GwtColor.of(red, green, blue, 1.0);
   }
 
-  public static Color of(int rgb) {
+  public static GwtColor of(int rgb) {
     int red = (rgb & 0xff0000) / (256 * 256);
     int green = (rgb & 0x00ff00) / 256;
     int blue = rgb & 0x0000ff;
-    return Color.of(red, green, blue, 1.0);
+    return GwtColor.of(red, green, blue, 1.0);
   }
 
   // required by GWT
-  private Color() {
+  private GwtColor() {
     this(0, 0, 0, 0);
   }
 
-  private Color(int red, int green, int blue) {
+  protected GwtColor(int red, int green, int blue) {
     this(red, green, blue, 1.0);
   }
 
-  private Color(int red, int green, int blue, double alpha) {
+  private GwtColor(int red, int green, int blue, double alpha) {
     this.red = red;
     this.green = green;
     this.blue = blue;
     this.alpha = alpha;
   }
+
+
 
   /*
    * 
@@ -157,8 +171,8 @@ public class Color implements Serializable {
    * @param value such as #ff00ff
    * @return a color instance
    */
-  public static Color fromString(String value) {
-    Color color;
+  public static GwtColor fromString(String value) {
+    GwtColor color;
 
     try {
       String r = value.substring(1, 3);
@@ -168,7 +182,7 @@ public class Color implements Serializable {
       int red = Integer.parseInt(r, 16);
       int green = Integer.parseInt(g, 16);
       int blue = Integer.parseInt(b, 16);
-      color = new Color(red, green, blue);
+      color = new GwtColor(red, green, blue);
     } catch (RuntimeException ex) {
       color = null;
     }
@@ -178,7 +192,7 @@ public class Color implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    Color that = (o instanceof Color) ? (Color) o : null;
+    GwtColor that = (o instanceof GwtColor) ? (GwtColor) o : null;
     boolean equal = that != null;
 
     equal &= (that.red == red);
@@ -199,10 +213,10 @@ public class Color implements Serializable {
    * 
    * @return a color (white, grey or black)
    */
-  public Color toGrayscale() {
+  public GwtColor toGrayscale() {
     int luminence =
         (int) ((RED_LUMINENCE * red) + (GREEN_LUMINENCE * green) + (BLUE_LUMINENCE * blue));
-    return Color.of(luminence, luminence, luminence);
+    return GwtColor.of(luminence, luminence, luminence);
   }
 
   /**
@@ -211,18 +225,18 @@ public class Color implements Serializable {
    * @param factor from 1.0 to 100.0 (1.2 default)
    * @return a brighter color
    */
-  public Color brighter(double factor) {
+  public GwtColor brighter(double factor) {
     float[] hsb = toHSB();
     int hue = (int) (radToDegree(hsb[0]));
     int saturation = (int) (100 * hsb[1]);
     int brightness = (int) (100 * hsb[2] * factor);
     brightness = (brightness > 100) ? 100 : brightness;
 
-    Color brighterColor = Color.createFromHsl(hue, saturation, brightness);
+    GwtColor brighterColor = GwtColor.createFromHsl(hue, saturation, brightness);
     return brighterColor;
   }
 
-  public Color brighter() {
+  public GwtColor brighter() {
     return brighter(1.2);
   }
 
@@ -232,12 +246,12 @@ public class Color implements Serializable {
    * @param factor from 1.0 to 100.0 (1.2 default)
    * @return a darker color
    */
-  public Color darker(double factor) {
-    Color darkerColor = brighter(1.0 / factor);
+  public GwtColor darker(double factor) {
+    GwtColor darkerColor = brighter(1.0 / factor);
     return darkerColor;
   }
 
-  public Color darker() {
+  public GwtColor darker() {
     return darker(1.2);
   }
 
@@ -247,7 +261,7 @@ public class Color implements Serializable {
    * @param thatColor another color
    * @return contrast from 0.0 (no contrast) and 1.0 (full contrast)
    */
-  public double constrastWith(Color thatColor) {
+  public double constrastWith(GwtColor thatColor) {
     double thisLuminence =
         (RED_LUMINENCE * red) + (GREEN_LUMINENCE * green) + (BLUE_LUMINENCE * blue);
     double otherLuminence = (RED_LUMINENCE * thatColor.red) + (GREEN_LUMINENCE * thatColor.green)
@@ -263,9 +277,9 @@ public class Color implements Serializable {
    * @return Black or white
    * 
    */
-  public Color toContrastColor() {
+  public GwtColor toContrastColor() {
     int brightness = getBrightness();
-    Color contrast = (brightness > 50) ? Color.BLACK : Color.WHITE;
+    GwtColor contrast = (brightness > 50) ? GwtColor.BLACK : GwtColor.WHITE;
     return contrast;
   }
 
@@ -274,11 +288,11 @@ public class Color implements Serializable {
    * 
    * @return complimentary color.
    */
-  public Color toComplimentaryColor() {
+  public GwtColor toComplimentaryColor() {
     int r = 255 - red;
     int g = 255 - green;
     int b = 255 - blue;
-    return Color.of(r, g, b);
+    return GwtColor.of(r, g, b);
   }
 
   /**
@@ -288,22 +302,22 @@ public class Color implements Serializable {
    * @param thatPercent the percentage of the color to blend (default value : 50)
    * @return blended color
    */
-  public Color blendWith(Color thatColor, int thatPercent) {
+  public GwtColor blendWith(GwtColor thatColor, int thatPercent) {
     int thisPercent = 100 - thatPercent;
     int r = (red * thisPercent + thatColor.red * thatPercent) / 100;
     int g = (green * thisPercent + thatColor.green * thatPercent) / 100;
     int b = (blue * thisPercent + thatColor.blue * thatPercent) / 100;
 
-    Color color = new Color(r, g, b);
+    GwtColor color = new GwtColor(r, g, b);
     return color;
   }
 
-  public Color blendWith(Color otherColor) {
+  public GwtColor blendWith(GwtColor otherColor) {
     int r = (red + otherColor.red) / 2;
     int g = (green + otherColor.green) / 2;
     int b = (blue + otherColor.blue) / 2;
 
-    Color color = new Color(r, g, b);
+    GwtColor color = new GwtColor(r, g, b);
     return color;
   }
 
@@ -389,7 +403,7 @@ public class Color implements Serializable {
    * @param lightness in percentage
    * @return a color
    */
-  public static Color createFromHsl(int hue, int saturation, int lightness) {
+  public static GwtColor createFromHsl(int hue, int saturation, int lightness) {
     hue = (hue >= 360) ? hue % 360 : hue;
     int h = (int) ((hue / 360.0) * 6);
     double f = (hue / 360.0) * 6 - h;
@@ -443,7 +457,7 @@ public class Color implements Serializable {
                 + saturation + ", " + v);
     }
 
-    Color color = new Color((int) (r * 255), (int) (g * 255), (int) (b * 255));
+    GwtColor color = new GwtColor((int) (r * 255), (int) (g * 255), (int) (b * 255));
     return color;
   }
 
@@ -470,6 +484,10 @@ public class Color implements Serializable {
     return hue;
   }
 
+  public int getRGB() {
+    return (red * 256 * 256) + (green * 256) + blue;
+  }
+
   public enum Hue {
     RED, ORANGE, YELLOW, GREEN, CYAN, BLUE, PURPLE
   };
@@ -480,7 +498,7 @@ public class Color implements Serializable {
     return degrees;
   }
 
-  public int distanceFrom(Color other) {
+  public int distanceFrom(GwtColor other) {
     int distance = Math.abs(this.red - other.red);
     distance += Math.abs(this.green - other.green);
     distance += Math.abs(this.blue - other.blue);

@@ -1,6 +1,5 @@
 package com.marcosavard.commons.ui.color;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -8,17 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class WebColor extends Color {
+public class WebColor extends GwtColor {
   private static final double RED_LUMINENCE = 0.299;
   private static final double GREEN_LUMINENCE = 0.587;
   private static final double BLUE_LUMINENCE = 0.114;
-  private static Map<String, Color> colorsByName = null;
+  private static Map<String, GwtColor> colorsByName = null;
   private static Map<Integer, String> namesByRGB = null;
-  private static List<Color> namedColors = null;
+  private static List<GwtColor> namedColors = null;
 
-  private final float[] hsb;
 
-  public static WebColor of(Color color) {
+  public static WebColor of(GwtColor color) {
     return new WebColor(color.getRGB());
   }
 
@@ -32,18 +30,19 @@ public class WebColor extends Color {
 
   private WebColor(int rgb) {
     super(rgb);
-    hsb = Color.RGBtoHSB(getRed(), getGreen(), getBlue(), null);
+  //  hsb = Color.RGBtoHSB(getRed(), getGreen(), getBlue(), null);
   }
 
   private WebColor(int r, int g, int b) {
     super(r, g, b);
-    hsb = Color.RGBtoHSB(r, g, b, null);
+ //   hsb = Color.RGBtoHSB(r, g, b, null);
   }
 
   public float[] getHsb() {
-    return hsb;
+    return null;
   }
 
+  /*
   public float getHue() {
     return hsb[0];
   }
@@ -54,7 +53,7 @@ public class WebColor extends Color {
 
   public float getBrightness() {
     return hsb[2];
-  }
+  }*/
 
   @Override
   public String toString() {
@@ -65,7 +64,7 @@ public class WebColor extends Color {
     return toString(this);
   }
 
-  public static String toString(Color color) {
+  public static String toString(GwtColor color) {
     String name = getNamesByRGB().get(color.getRGB());
     String hex = "#" + Integer.toHexString(color.getRGB()).substring(2).toUpperCase();
     name = (name != null) ? name : hex;
@@ -74,7 +73,7 @@ public class WebColor extends Color {
 
   @Override
   public boolean equals(Object o) {
-    Color that = (o instanceof Color) ? (Color) o : null;
+    GwtColor that = (o instanceof GwtColor) ? (GwtColor) o : null;
     boolean equal = (that != null) && (getRGB() == that.getRGB());
     return equal;
   }
@@ -99,12 +98,12 @@ public class WebColor extends Color {
     return WebColor.ofRGB(luminence, luminence, luminence);
   }
 
-  public WebColor blendWith(Color thatColor) {
+  public WebColor blendWith(GwtColor thatColor) {
     WebColor blended;
 
-    if (this.equals(Color.YELLOW) && thatColor.equals(Color.BLUE)) {
+    if (this.equals(GwtColor.YELLOW) && thatColor.equals(GwtColor.BLUE)) {
       blended = WebSafeColor.GREEN.getColor();
-    } else if (this.equals(Color.BLUE) && thatColor.equals(Color.YELLOW)) {
+    } else if (this.equals(GwtColor.BLUE) && thatColor.equals(GwtColor.YELLOW)) {
       blended = WebSafeColor.GREEN.getColor();
     } else {
       int r = (this.getRed() + thatColor.getRed()) / 2;
@@ -116,14 +115,14 @@ public class WebColor extends Color {
     return blended;
   }
 
-  public int distanceFrom(Color thatColor) {
+  public int distanceFrom(GwtColor thatColor) {
     int distance = Math.abs(this.getRed() - thatColor.getRed());
     distance += Math.abs(this.getGreen() - thatColor.getGreen());
     distance += Math.abs(this.getBlue() - thatColor.getBlue());
     return distance;
   }
 
-  public double constrastWith(Color thatColor) {
+  public double constrastWith(GwtColor thatColor) {
     double luminence =
         (RED_LUMINENCE * getRed()) + (GREEN_LUMINENCE * getGreen()) + (BLUE_LUMINENCE * getBlue());
     double thatLuminence =
@@ -135,7 +134,7 @@ public class WebColor extends Color {
   }
 
   // static
-  public static Map<String, Color> getColorsByName() {
+  public static Map<String, GwtColor> getColorsByName() {
     init();
     return colorsByName;
   }
@@ -145,7 +144,7 @@ public class WebColor extends Color {
     return namesByRGB;
   }
 
-  public static List<Color> getNamedColors() {
+  public static List<GwtColor> getNamedColors() {
     init();
     return namedColors;
   }
@@ -155,7 +154,7 @@ public class WebColor extends Color {
       colorsByName = new TreeMap<>();
       namesByRGB = new TreeMap<>();
       namedColors = new ArrayList<>();
-      Class claz = Color.class;
+      Class claz = GwtColor.class;
       Field[] fields = claz.getDeclaredFields();
 
       for (Field field : fields) {
@@ -165,7 +164,7 @@ public class WebColor extends Color {
         if (constant) {
           try {
             String name = field.getName().toLowerCase();
-            Color color = (Color) field.get(null);
+            GwtColor color = (GwtColor) field.get(null);
             colorsByName.put(name, color);
             namesByRGB.put(color.getRGB(), name);
             namedColors.add(color);

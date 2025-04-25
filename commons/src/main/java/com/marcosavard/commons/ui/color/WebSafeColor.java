@@ -5,7 +5,6 @@ import com.marcosavard.commons.ui.res.ColorNameResource;
 import com.marcosavard.commons.ui.res.UIManagerFacade;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,7 +24,7 @@ public enum WebSafeColor implements RessourceEnum {
   COPPER(0xB36700, Origin.METAL),
   CORAL(0xFF7F50, Origin.ANIMAL),
   CYAN(0x00FFFF),
-  DARK_GRAY(Color.DARK_GRAY.getRGB()),
+  DARK_GRAY(GwtColor.DARK_GRAY.getRGB()),
   FLAVE(0xE6E697),
   FUCHSIA(0xFF00FF, Origin.VEGETAL),
   GLAUQUE(0x649B88),
@@ -35,7 +34,7 @@ public enum WebSafeColor implements RessourceEnum {
   INDIGO(0x4B0082, Origin.VEGETAL),
   IVORY(0xFFFFF0, Origin.ANIMAL),
   KHAKI(0xF0E68C),
-  LIGHT_GRAY(Color.LIGHT_GRAY.getRGB()),
+  LIGHT_GRAY(GwtColor.LIGHT_GRAY.getRGB()),
   LILAC(0xB666D2, Origin.FLORAL),
   LIME(0x00FF00, Origin.FRUIT),
   MAGENTA(0xFF00FF),
@@ -108,16 +107,7 @@ public enum WebSafeColor implements RessourceEnum {
     return name;
   }
 
-  /*
-  public String getDisplayName(Locale display) {
-    String name = findColorNameByUiResource(display);
-    name = (name != null) ? name : findMetalColor(display);
-    name = (name != null) ? name : findColorResource(display);
-    name = (name != null) ? name : name().toLowerCase();
-    return name;
-  }*/
-
-  public static WebSafeColor findClosestColor(Color thatColor) {
+  public static WebSafeColor findClosestColor(GwtColor thatColor) {
     int closestDistance = Integer.MAX_VALUE;
     WebSafeColor closestColor = null;
 
@@ -159,13 +149,13 @@ public enum WebSafeColor implements RessourceEnum {
   private String findColorNameByUiResource(Locale display) {
     if (keysByColor == null) {
       keysByColor = new HashMap<>();
-      keysByColor.put(Color.RED.getRGB(), "ColorChooser.rgbRedText");
+      keysByColor.put(GwtColor.RED.getRGB(), "ColorChooser.rgbRedText");
       keysByColor.put(WebSafeColor.GREEN.color.getRGB(), "ColorChooser.rgbGreenText");
-      keysByColor.put(Color.BLUE.getRGB(), "ColorChooser.rgbBlueText");
-      keysByColor.put(Color.YELLOW.getRGB(), "ColorChooser.cmykYellow.textAndMnemonic");
-      keysByColor.put(Color.CYAN.getRGB(), "ColorChooser.cmykCyan.textAndMnemonic");
-      keysByColor.put(Color.MAGENTA.getRGB(), "ColorChooser.cmykMagenta.textAndMnemonic");
-      keysByColor.put(Color.BLACK.getRGB(), "ColorChooser.cmykBlack.textAndMnemonic");
+      keysByColor.put(GwtColor.BLUE.getRGB(), "ColorChooser.rgbBlueText");
+      keysByColor.put(GwtColor.YELLOW.getRGB(), "ColorChooser.cmykYellow.textAndMnemonic");
+      keysByColor.put(GwtColor.CYAN.getRGB(), "ColorChooser.cmykCyan.textAndMnemonic");
+      keysByColor.put(GwtColor.MAGENTA.getRGB(), "ColorChooser.cmykMagenta.textAndMnemonic");
+      keysByColor.put(GwtColor.BLACK.getRGB(), "ColorChooser.cmykBlack.textAndMnemonic");
     }
 
     String colorName = null;
@@ -179,15 +169,7 @@ public enum WebSafeColor implements RessourceEnum {
     return colorName;
   }
 
-  private double findAverageAngle(double a1, double a2) {
-    double x1 = Math.cos(Math.toRadians(a1));
-    double x2 = Math.cos(Math.toRadians(a2));
-    double y1 = Math.sin(Math.toRadians(a1));
-    double y2 = Math.sin(Math.toRadians(a2));
-    double x = (x1 + x2) / 2;
-    double y = (y1 + y2) / 2;
-    return Math.toDegrees(Math.atan2(y, x));
-  }
+
 
   public int getRGB() {
     return this.color.getRGB();
@@ -197,7 +179,7 @@ public enum WebSafeColor implements RessourceEnum {
     return getRgbArray(this.color);
   }
 
-  public static int[] getRgbArray(Color color) {
+  public static int[] getRgbArray(GwtColor color) {
     int r = color.getRed();
     int g = color.getGreen();
     int b = color.getBlue();

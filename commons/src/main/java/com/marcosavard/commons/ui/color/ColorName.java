@@ -4,7 +4,6 @@ import com.marcosavard.commons.ui.res.ColorNameResource;
 import com.marcosavard.commons.ui.res.UIManagerFacade;
 
 import javax.swing.*;
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -14,30 +13,30 @@ import java.util.Map;
 
 public class ColorName {
 
-  private static Map<Color, ColorName> namesByColor = new HashMap<>();
-  private static Map<Color, String> keysByColor = null;
-  private static Map<Color, String> enNamesByColor = null;
-  private Color color;
+  private static Map<GwtColor, ColorName> namesByColor = new HashMap<>();
+  private static Map<GwtColor, String> keysByColor = null;
+  private static Map<GwtColor, String> enNamesByColor = null;
+  private GwtColor color;
 
-  public static List<Color> getNamedColors() {
+  public static List<GwtColor> getNamedColors() {
     return List.of(
-        Color.RED,
-        Color.GREEN,
-        Color.BLUE,
-        Color.YELLOW,
-        Color.CYAN,
-        Color.MAGENTA, //
-        Color.BLACK,
-        Color.WHITE, //
-        Color.GRAY, //
-        Color.LIGHT_GRAY, //
-        Color.DARK_GRAY, //
-        Color.ORANGE,
-        Color.GRAY,
-        Color.PINK);
+        GwtColor.RED,
+        GwtColor.GREEN,
+        GwtColor.BLUE,
+        GwtColor.YELLOW,
+        GwtColor.CYAN,
+        GwtColor.MAGENTA, //
+        GwtColor.BLACK,
+        GwtColor.WHITE, //
+        GwtColor.GRAY, //
+        GwtColor.LIGHT_GRAY, //
+        GwtColor.DARK_GRAY, //
+        GwtColor.ORANGE,
+        GwtColor.GRAY,
+        GwtColor.PINK);
   }
 
-  public static ColorName of(Color color) {
+  public static ColorName of(GwtColor color) {
     ColorName colorName = namesByColor.get(color);
 
     if (!namesByColor.containsKey(color)) {
@@ -48,7 +47,7 @@ public class ColorName {
     return colorName;
   }
 
-  private ColorName(Color color) {
+  private ColorName(GwtColor color) {
     this.color = color;
   }
 
@@ -69,16 +68,16 @@ public class ColorName {
     return colorName;
   }
 
-  private static String findColorNameByUiResource(Color color, Locale locale) {
+  private static String findColorNameByUiResource(GwtColor color, Locale locale) {
     if (keysByColor == null) {
       keysByColor = new HashMap<>();
-      keysByColor.put(Color.RED, "ColorChooser.rgbRedText");
-      keysByColor.put(Color.GREEN, "ColorChooser.rgbGreenText");
-      keysByColor.put(Color.BLUE, "ColorChooser.rgbBlueText");
-      keysByColor.put(Color.YELLOW, "ColorChooser.cmykYellow.textAndMnemonic");
-      keysByColor.put(Color.CYAN, "ColorChooser.cmykCyan.textAndMnemonic");
-      keysByColor.put(Color.MAGENTA, "ColorChooser.cmykMagenta.textAndMnemonic");
-      keysByColor.put(Color.BLACK, "ColorChooser.cmykBlack.textAndMnemonic");
+      keysByColor.put(GwtColor.RED, "ColorChooser.rgbRedText");
+      keysByColor.put(GwtColor.GREEN, "ColorChooser.rgbGreenText");
+      keysByColor.put(GwtColor.BLUE, "ColorChooser.rgbBlueText");
+      keysByColor.put(GwtColor.YELLOW, "ColorChooser.cmykYellow.textAndMnemonic");
+      keysByColor.put(GwtColor.CYAN, "ColorChooser.cmykCyan.textAndMnemonic");
+      keysByColor.put(GwtColor.MAGENTA, "ColorChooser.cmykMagenta.textAndMnemonic");
+      keysByColor.put(GwtColor.BLACK, "ColorChooser.cmykBlack.textAndMnemonic");
     }
 
     String colorName = null;
@@ -91,10 +90,10 @@ public class ColorName {
     return colorName;
   }
 
-  private static String findColorNameEnByIntrospection(Color color) {
+  private static String findColorNameEnByIntrospection(GwtColor color) {
     if (enNamesByColor == null) {
       enNamesByColor = new HashMap<>();
-      Field[] fields = Color.class.getDeclaredFields();
+      Field[] fields = GwtColor.class.getDeclaredFields();
       for (Field field : fields) {
         if (Modifier.isStatic(field.getModifiers())) {
           try {
@@ -102,8 +101,8 @@ public class ColorName {
             String name = canonize(fieldName);
             Object value = field.get(null);
 
-            if ((name != null) && (value instanceof Color)) {
-              enNamesByColor.put((Color) value, name);
+            if ((name != null) && (value instanceof GwtColor)) {
+              enNamesByColor.put((GwtColor) value, name);
             }
 
           } catch (IllegalArgumentException | IllegalAccessException e) {

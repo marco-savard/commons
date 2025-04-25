@@ -4,7 +4,6 @@ import com.marcosavard.commons.debug.Console;
 import com.marcosavard.commons.lang.StringUtil;
 import com.marcosavard.commons.math.arithmetic.PseudoRandom;
 
-import java.awt.*;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
@@ -48,15 +47,15 @@ public class WebSafeColorDemo {
 
   private static void chooseColorByTint(Locale display) {
     WebSafeColor[] allColors = WebSafeColor.values();
-    List<Color> tints =
-        List.of(Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA);
+    List<GwtColor> tints =
+        List.of(GwtColor.RED, GwtColor.ORANGE, GwtColor.YELLOW, GwtColor.GREEN, GwtColor.BLUE, GwtColor.MAGENTA);
 
-    for (Color tint : tints) {
+    for (GwtColor tint : tints) {
       chooseColorByTint(allColors, tint, display);
     }
   }
 
-  private static void chooseColorByTint(WebSafeColor[] allColors, Color tint, Locale display) {
+  private static void chooseColorByTint(WebSafeColor[] allColors, GwtColor tint, Locale display) {
     float hue = WebColor.of(tint).getHue();
     String n = WebSafeColor.findClosestColor(tint).getDisplayName(display);
     n = StringUtil.startWithVowel(n) ? "de l'" + n : "du " + n;
@@ -78,11 +77,11 @@ public class WebSafeColorDemo {
     PseudoRandom r = new PseudoRandom(3);
 
     for (int i = 0; i < count; i++) {
-      Color c1, c2;
+      GwtColor c1, c2;
       WebSafeColor w1, w2;
       WebSafeColor blendColor;
       boolean valid = false;
-      List<Color> namedColors = WebColor.getNamedColors();
+      List<GwtColor> namedColors = WebColor.getNamedColors();
 
       do {
         c1 = namedColors.get(r.nextInt(namedColors.size()));
@@ -136,7 +135,7 @@ public class WebSafeColorDemo {
   }
 
   private static WebSafeColor blend(WebSafeColor c1, WebSafeColor c2, Locale display) {
-    Color blend = c1.getColor().blendWith(c2.getColor());
+    GwtColor blend = c1.getColor().blendWith(c2.getColor());
     WebSafeColor blendColor;
 
     do {
