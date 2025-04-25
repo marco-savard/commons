@@ -1,6 +1,6 @@
 package com.marcosavard.commons.ui.res;
 
-import com.marcosavard.commons.ui.Color;
+import com.marcosavard.commons.ui.color.GwtColor;
 
 public class NamedColor {
 	private Integer colorCode;
@@ -12,8 +12,8 @@ public class NamedColor {
 		return str;
 	}
 
-	public Color getColor() {
-		Color color = Color.of(colorCode); 
+	public GwtColor getColor() {
+		GwtColor color = GwtColor.of(colorCode);
 		return color;
 	}
 	

@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.marcosavard.commons.res.CsvResourceFile;
-import com.marcosavard.commons.ui.Color.Hue;
+import com.marcosavard.commons.ui.color.GwtColor.Hue;
 
 public class ColorPaletteDemo {
 	private static Predicate<NamedColor> isRed = c -> c.getColor().getSaturation() > 10 && c.getColor().getHueCode() == Hue.RED; 
