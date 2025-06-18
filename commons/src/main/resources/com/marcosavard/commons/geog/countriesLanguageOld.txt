@@ -1,0 +1,193 @@
+AF;Afghanistan (l’);pachto ps Afghānistān de Afghānistān Islāmī Dawlat Kābul;persan fa Afghānestān Dowlat-e Eslāmī-ye Afghānestān Kābol
+ZA;Afrique du Sud (l’);afrikaans af Suid-Afrika Republiek van Suid-Afrika Pretoria Kaapstad;anglais en South Africa the Republic of South Africa Pretoria Cape Town
+AL;Albanie (l’);albanais sq Shqipëria, Shqipëri Republika e Shqipërisë;Tiranë
+DZ;Algérie (l’);arabe ar Al Jazā’ir Al Jumhūrīyah al Jazā’irīyah ad Dīmuqrāţīyah ash Shabīyah;Al Jazā’ir
+DE;Allemagne (l’);allemand de Deutschland die Bundesrepublik Deutschland;Berlin
+AD;Andorre (l’);catalan ca Andorra Principat d’Andorra Andorra;la Vella
+AO;Angola (l’);portugais pt Angola a República de Angola;Luanda
+AG;Antigua-et-Barbuda;anglais en Antigua and Barbuda;Saint John’s
+SA;Arabie saoudite (l’);arabe ar As Suūdīyah Al Mamlakah al Arabīyah as Suūdīyah;Ar Riyāḑ
+AR;Argentine (l’);espagnol es Argentina (la) la República Argentina;Buenos Aires
+AM;Arménie (l’);arménien hy Hayastan Hayastani Hanrapetut’yun;Erevan
+AU;Australie (l’);anglais en Australia the Commonwealth of Australia;Canberra
+AT;Autriche (l’);allemand de Österreich die Republik Österreich;Wien
+AZ;Azerbaïdjan (l’);azéri az Azərbaycan Azərbaycan Respublikasõ;Bakõ
+BS;Bahamas (les);anglais en The Bahamas the Commonwealth of The Bahamas;Nassau
+BH;Bahreïn;arabe ar Al Baḩrayn Mamlakat al Baḩrayn;Al Manāmah
+BD;Bangladesh (le);bengali bn Bā⇑lāδεσh Ga⇒a Prajātantrī Bā⇑lāδεσh;Dhaka
+BB;Barbade (la);anglais en Barbados;Bridgetown
+BE;Belgique (la);allemand de Belgien das Königreich Belgien Brüssel;français fr Belgique (la) le Royaume de Belgique Bruxelles;néerlandais nl België het Koninkrijk België Brussel
+BZ;Belize (le);anglais en Belize Belmopan
+BJ;Bénin (le);français fr Bénin (le) la République du Bénin;Porto-Novo;Cotonou
+BT;Bhoutan (le);dzongkha dz Druk-Yul Druk-Gyalkhap;Thimphu
+BY;Biélorussie (la);biélorusse be Bielarus’ Respublika Bielarus’ Minsk russe ru Belarus’ Respublika Belarus’ Minsk
+MM;Birmanie (la);birman my Myanma Pyidaungzu Myanma Naingngandaw Yangon
+BO;Bolivie (la);espagnol es Bolivia la República de Bolivia Sucre La Paz
+BA;Bosnie-Herzégovine (la) ;bosniaque bs Bosna i Hercegovina Sarajevo croate hr Bosna i Hercegovina Sarajevo serbe sr Bosna i Hercegovina Sarajevo
+BW;Botswana (le);anglais en Botswana the Republic of Botswana Gaborone
+BR;Brésil (le);portugais pt Brasil (o) a República Federativa do Brasil Brasília
+BN;Brunei (le);anglais en Brunei Negara Brunei Darussalam Bandar Seri Begawan malais ms Brunei Negara Brunei Darussalam Bandar Seri Begawan
+BG;Bulgarie (la);bulgare bg Bǎlgarija Republika Bǎlgarija Sofija
+BF;Burkina (le);français fr Burkina (le) le Burkina Faso Ouagadougou
+BI;Burundi (le);français fr Burundi (le) la République du Burundi Bujumbura rundi rn Burundi Republika y’Uburundi Bujumbura
+KH;Cambodge (le);khmer km Kâmpŭchéa Preăhréachéanachâkr Kâmpŭchéa Phnum Pénh
+CM;Cameroun (le);anglais en Cameroon the Republic of Cameroon Yaoundé français fr Cameroun (le) la République du Cameroun Yaoundé
+CA;Canada (le);anglais en Canada Ottawa français fr Canada (le) Ottawa
+CV;Cap-Vert (le);portugais pt Cabo Verde a República de Cabo Verde Praia
+CF;centrafricaine;(la République), ou la Centrafrique français fr la République centrafricaine Bangui
+CL;Chili (le);espagnol es Chile la República de Chile Santiago
+CN;Chine (la);chinois zh Zhongguo Zhonghua Renmin Gongheguo Beijing
+CY;Chypre;grec el Kýpros Kypriakí Dimokratía Lefkosía turc tr Kõbrõs Kõbrõs Cumhuriyeti Lefkoşa
+CO;Colombie (la);espagnol es Colombia la República de Colombia Santa Fe de Bogot〈
+KM;Comores (les);arabe ar Al Qamar Ittiḩād Juzur al Qamar Murunī français fr Comores (les) l’Union des Comores Moroni
+CD;Congo (la République démocratique du);français fr Congo (la République démocratique du) la République démocratique du Congo Kinshasa
+CG;Congo (le);français fr Congo (le) la République du Congo Brazzaville
+KP;Corée du Nord (la);coréen ko Chosŏn Chosŏn-minjujuŭi-inmin-konghwaguk P’yŏngyang
+KR;Corée du Sud (la);coréen ko Hanguk Taehan Min’guk Seoul
+CR;Costa Rica (le);espagnol es Costa Rica la República de Costa Rica San José
+CI;Côte d’Ivoire (la);français fr Côte d’Ivoire (la) la République de Côte d’Ivoire Yamoussoukro
+HR;Croatie (la);croate hr Hrvatska Republika Hrvatska Zagreb
+CU;Cuba espagnol;es Cuba la República de Cuba La Habana
+DK;Danemark (le);danois da Danmark Kongeriget Danmark København
+DJ;Djibouti;arabe ar Jībūtī Jumhūrīyat Jībūtī Jībūtī français fr Djibouti la République de Djibouti Djibouti
+DO;dominicaine (la République);espagnol es la República Dominicana Santo Domingo
+DM;Dominique (la);anglais en Dominica the Commonwealth of Dominica Roseau
+EG;Égypte (l’);arabe ar Mişr Jumhūrīyat Mişr al Arabīyah Al Qāhirah
+AE;Émirats arabes unis (les);arabe ar Al Imārāt Al Imārāt al Arabīyah al Muttaḩidah Abū Dhabī
+EC;Équateur (l’);espagnol es Ecuador (el) la República del Ecuador Quito
+ER;Érythrée (l’);anglais en Eritrea the State of Eritrea Asmera arabe ar Irītrīyā Dawlat Irītrīyā Asmera tigrigna Ērtra Hagere Ērtra Asmera
+ES;Espagne (l’);espagnol es España el Reino de España Madrid
+EE;Estonie (l’);estonien et Eesti Eesti Vabariik Tallinn
+US;États-Unis (les);anglais en United States (the) the United States of America Washington
+ET;Éthiopie (l’);amharique am Ītyop’iya YeĪtyop’iya Fēdēralawī Dēmokrasīyawī Rīpeblīk Addis Abeba
+FJ;Fidji (les);anglais en Fiji the Republic of the Fiji Islands Suva fidjien fj Viti Matanitu ko Viti Suva
+FI;Finlande (la);finnois fi Suomi Suomen tasavalta Helsinki suédois sv Finland Republiken Finland Helsingfors
+FR;France (la);français fr France (la) la République française Paris
+GA;Gabon (le);français fr Gabon (le) la République gabonaise Libreville
+GM;Gambie (la);anglais en The Gambia the Republic of The Gambia Banjul
+GE;Géorgie (la);géorgien ka Sak’art’velo T’bilisi
+GH;Ghana (le);anglais en Ghana the Republic of Ghana Accra
+GR;Grèce (la);grec el Ellás, ou Elláda Ellinikí Dimokratía Athína
+GD;Grenade (la);anglais en Grenada Saint George’s
+GT;Guatemala (le);espagnol es Guatemala la República de Guatemala Ciudad de Guatemala
+GN;Guinée (la);français fr Guinée (la) la République de Guinée Conakry
+GW;Guinée-Bissau (la);portugais pt Guiné-Bissau a República da Guiné-Bissau Bissau
+GQ;Guinée équatoriale (la);espagnol es Guinea Ecuatorial la República de Guinea Ecuatorial Malabo français fr Guinée équatoriale la République de Guinée équatoriale Malabo
+GY;Guyana (le);anglais en Guyana the Co-operative Republic of Guyana Georgetown
+HT;Haïti;créole haïtien ht Ayiti Repiblik d’Ayiti Pòtoprens français fr Haïti la République d’Haïti Port-au-Prince
+HN;Honduras (le);espagnol es Honduras la República de Honduras Tegucigalpa
+HU;Hongrie (la);hongrois hu Magyarország a Magyar Köztársaság Budapest
+IN;Inde (l’);anglais en India the Republic of India New Delhi hindi hi Bhārat Bhāratīya Ga⇒arājya Nī Dillī
+ID;Indonésie;indonésien id Indonesia Republik Indonesia Jakarta
+IQ;Irak (l’) Iraq;arabe ar Al Irāq Al Jumhūrīyah al Irāqīyah Baghdād
+IR;Iran (l);persan fa Īrān Jomhūrī-ye Eslāmī-ye Īrān Tehrān
+IE;Irlande (l’);anglais en Ireland Dublin irlandais ga Éire Baile Átha Cliath
+IS;Islande (l’);islandais is ⊆sland Lýðveldið Ísland Reykjavík
+IL;Israël;arabe ar Isrā’īl Dawlat Isrā’īl hébreu he Yisra’el Medinat Yisra’el
+IT;Italie (l’);italien it Italia (l') la Repubblica Italiana Roma
+JM;Jamaïque (la);anglais en Jamaica Kingston
+JP;Japon (le);japonais ja Nihon, ou Nippon Nihon-koku, ou Nippon-koku Tôkyô
+JO;Jordanie (la);arabe ar Al Urdun Al Mamlakah al Urdunīyah al Hāshimīyah Ammān
+KZ;Kazakhstan (le);kazakh kk Qazaqstan Qazaqstan Respūblīkasy Astana russe ru Kazahstan Respublika Kazahstan Astana
+KE;Kenya (le);anglais en Kenya the Republic of Kenya Nairobi swahili sw Kenya Jamhuri ya Kenya Nairobi
+KG;Kirghizstan (le), ou la Kirghizie;kirghize ky Kyrgyzstan Kyrgyz Respublikasy Bishkek russe ru Kyrgyzstan Kyrgyzskaja Respublika Bikek
+KI;Kiribati (les);anglais en Kiribati the Republic of Kiribati Bairiki
+KW;Koweït (le);arabe ar Al Kuwayt Dawlat al Kuwayt Al Kuwayt
+LA;Laos (le);lao lo Laos, ou Lao Sathalanalat Paxathipatai Paxaxôn Lao Vientiane
+LS;Lesotho (le);anglais en Lesotho the Kingdom of Lesotho Maseru sotho st Lesotho Maseru
+LV;Lettonie (la);letton lv Latvija Latvijas Republika Rīga
+LB;Liban (le);arabe ar Lubnān Al Jumhūrīyah al Lubnānīyah Bayrūt
+LR;Liberia (le);anglais en Liberia the Republic of Liberia Monrovia
+LY;Libye (la);arabe ar Lībyah, ou Lībyā Al Jamāhīrīyah al Arabīyah al Lībīyah ash Shabīyah al Ishtirākīyah al Uz̧má Ţ̧arābulus
+LI;Liechtenstein (le);allemand de Liechtenstein das Fürstentum Liechtenstein Vaduz
+LT;Lituanie (la);lituanien lt Lietuva Lietuvos Respublika Vilnius
+LU;Luxembourg (le);allemand de Luxemburg das Großherzogtum Luxemburg Luxemburg français fr Luxembourg (le) le Grand-Duché de Luxembourg Luxembourg luxembourgeois lb Lëtzebuerg de Grand-Duché, ou de Groussherzogtum vu Lëtzebuerg Lëtzebuerg
+MK;Macédoine (l'ancienne République yougoslave de);macédonien mk Poranena Jugoslovenska Republika Makedonija Skopje
+MG;Madagascar;français fr Madagascar la République de Madagascar Antananarivo malgache mg Madagasikara Repoblikan’i Madagasikara Antananarivo
+MY;Malaisie (la);malais ms Malaysia Kuala Lumpur
+MW;Malawi (le);anglais en Malawi the Republic of Malawi Lilongwe chichewa ny Malaŵi Dziko la Malaŵi Lilongwe
+MV;Maldives (les);maldivien dv Dhivehi Raajje Dhivehi Raajjeyge Jumhooriyyaa Male
+ML;Mali (le);français fr Mali (le) la République du Mali Bamako
+MT;Malte;anglais en Malta the Republic of Malta Valletta maltais mt Malta Repubblika ta’ Malta Valletta
+MA;Maroc (le);arabe ar Al Maghrib Al Mamlakah al Maghribīyah Ar Ribāţ
+MH;Marshall (les);anglais en Marshall Islands (the) the Republic of the Marshall Islands Delap-Uliga-Darrit marshall mh Aelōn̄ in M̧ajeļ Delap-Uliga-Darrit
+MU;Maurice;anglais en Mauritius the Republic of Mauritius Port Louis
+MR;Mauritanie (la);arabe ar Mūrītāniyā Al Jumhūrīyah al Islāmīyah al Mūrītānīyah Nuwakshūţ
+MX;Mexique (le);espagnol es México los Estados Unidos Mexicanos Ciudad de México
+FM;Micronésie (la);anglais en the Federated States of Micronesia Palikir
+MD;Moldavie (la);roumain ro Moldova Republica Moldova Chişinu
+MC;Monaco;français fr Monaco la Principauté de Monaco Monaco
+MN;Mongolie (la);mongol mn Mongol Mongol Uls Ulaanbaatar
+MZ;Mozambique (le);portugais pt Moçambique a República de Moçambique Maputo
+NA;Namibie (la);anglais en Namibia the Republic of Namibia Windhoek
+NR;Nauru;anglais en Nauru the Republic of Nauru Yaren nauruan na Naoero Yaren
+NP;Népal (le);népalais ne Nepāl Nepāl Adhirājya Kāhmā⇑δ̩ū
+NI;Nicaragua (le);espagnol es Nicaragua la República de Nicaragua Managua
+NE;Niger (le);français fr Niger (le) la République du Niger Niamey
+NG;Nigeria (le);anglais en Nigeria the Federal Republic of Nigeria Abuja français fr Nigeria la République fédérale du Nigeria Abuja
+NO;Norvège (la);Norvégien bokmål nb Norge Kongeriket Norge Oslo Norvégien nynorsk nn Noreg Kongeriket Noreg Oslo
+NZ;Nouvelle-Zélande (la);anglais en New Zealand Wellington maori mi Aotearoa Te Whanganui-a-Tara
+OM;Oman;arabe ar Umān Salţanat Umān Masqaţ
+UG;Ouganda (l’);anglais en Uganda the Republic of Uganda Kampala
+UZ;Ouzbékistan (l’);ouzbek uz Ozbekiston Ozbekiston Respublikasi Toshkent
+PK;Pakistan (le);anglais en Pakistan the Islamic Republic of Pakistan Islamabad ourdou ur Pākistān Jamhūryat Islāmī Pākistān Islāmābād
+PW;Palaos (les);anglais en Palau the Republic of Palau Koror paluan Belau Beluu er a Belau Koror
+PA;Panama (le);espagnol es Panamá la República de Panamá Ciudad de Panamá
+PG;Papouasie-Nouvelle-Guinée (la);anglais en Papua New Guinea the Independent State of Papua New Guinea Port Moresby hiri motu Papuaniugini Port Moresby tok pisin Papuaniugini Port Moresby
+PY;Paraguay (le);espagnol es Paraguay (el) la República del Paraguay Asunción guarani gn Paraguay Paraguay Retãn Paraguaÿ
+NL;Pays-Bas (les);néerlandais nl Nederland het Koninkrijk der Nederlanden Amsterdam Den Haag, ou s-Gravenhage
+PE;Pérou (le);aymara ay Perú Lima espagnol es Perú (el) la República del Perú Lima quechua qu Perú Lima
+PH;Philippines (les);anglais en Philippines (the) the Republic of the Philippines Manila tagalog tl Pilipinas Republika ng Pilipinas Manila
+PL;Pologne (la);polonais pl Polska Rzeczpospolita Polska Warszawa
+PT;Portugal (le);portugais pt Portugal a República Portuguesa Lisboa
+QA;Qatar (le);arabe ar Qaţar Dawlat Qaţar Ad Dawḩah
+RO;Roumanie (la);roumain ro România Bucureşti
+GB;Royaume-Uni (le);anglais en United Kingdom (the) the United Kingdom of Great Britain and Northern Ireland London
+RU;Russie (la);russe ru Rossija Rossijskaja Federacija Moskva
+RW;Rwanda (le);anglais en Rwanda the Rwandese Republic Kigali français fr Rwanda (le) la République rwandaise Kigali rwanda rw Rwanda Republika y’u Rwanda Kigali
+KN;Saint-Christophe-et-Niévès;anglais en Saint Kitts and Nevis the Federation of Saint Christopher and Nevis Basseterre
+LC;Sainte-Lucie;anglais en Saint Lucia Castries
+SM;Saint-Marin;italien it San Marino la Repubblica di San Marino San Marino
+VA;Saint-Siège (le), ou le Vatican;italien it Santa Sede (la) lo Stato della Città del Vaticano
+VC;Saint-Vincent-et-les Grenadines;anglais en Saint Vincent and the Grenadines Kingstown
+SB;Salomon (les);anglais en Solomon Islands (the) Honiara
+SV;Salvador (le);espagnol es El Salvador la República de El Salvador San Salvador
+WS;Samoa (les);anglais en Samoa the Independent State of Samoa Apia samoan sm Samoa Malo Saoloto Tuto’atasi o Samoa Apia
+ST;Sao Tomé-et-Principe;portugais pt São Tomé e Príncipe a República Democrática de São Tomé e Príncipe São Tomé
+SN;Sénégal (le);français fr Sénégal (le) la République du Sénégal Dakar
+CS;Serbie-et-Monténégro (la);serbe sr Srbija i Crna Gora Beograd
+SC;Seychelles (les);anglais en Seychelles the Republic of Seychelles Victoria créole seychellois Sesel Repiblik Sesel Victoria français fr Seychelles (les) la République des Seychelles Victoria
+SL;Sierra Leone (la);anglais en Sierra Leone the Republic of Sierra Leone Freetown
+SG;Singapour anglais;en Singapore the Republic of Singapore Singapore chinois zh Xinjiapo Xinjiapo Gongheguo Xinjiapo malais ms Singapura Republik Singapura Singapura tamoul ta Chi⇑kappūr Chi⇑kappūr Kuti̩yarachu Chi⇑kappūr
+SK;Slovaquie (la);slovaque sk Slovensko Slovenská republika Bratislava
+SI;Slovénie (la);slovène sl Slovenija Republika Slovenija Ljubljana
+SO;Somalie (la);arabe somali ar so Aş Şūmāl Soomaaliya Jumhūrīyat aş Şūmāl ad Dīmuqrāţīyah Jamhuuriyada Demuqraadiga Soomaaliyeed Muqdishu Muqdisho
+SD;Soudan (le);arabe ar As Sūdān Jumhūrīyat as Sūdān Al Kharţūm
+LK;Sri Lanka (le);singhalais si Shrī Laṁkā Shrī Laṁkā Prajātāntrika Samājavādī Janarajaya Colombo tamoul ta Ila⇑kai Ila⇑kai Ja⇓anāyaka Chos̩halichak Kuti̩yarachu Colombo
+SE;Suède (la);suédois sv Sverige Konungariket Sverige   Stockholm
+CH;Suisse (la);allemand de Schweiz (die) die Schweizerische Eidgenossenschaft Bern français fr Suisse (la) la Confédération suisse Berne italien it Svizzera (la) la Confederazione Svizzera Berna
+SR;Suriname (le);néerlandais nl Suriname de Republiek Suriname Paramaribo
+SZ;Swaziland (le);anglais en Swaziland the Kingdom of Swaziland Mbabane Lobamba swati ss eSwatini Umbuso weSwatini Mbabane Lobamba
+SY;Syrie (la);arabe ar Sūrīyah, ou Sūriyā Al Jumhūrīyah al Arabīyah as Sūrīyah Dimashq
+TJ;Tadjikistan (le);tadjik tg Tojikiston Jumhurii Tojikiston Dushanbe
+TZ;Tanzanie (la);anglais en Tanzania the United Republic of Tanzania Dodoma Dar es Salaam swahili sw Tanzania Jamhuri ya Muungano wa Tanzania Dodoma Dar es Salaam
+TD;Tchad (le);arabe ar Tshād Jumhūrīyat Tshād Ndjamena français fr Tchad (le) la République du Tchad Ndjamena
+CZ;tchèque (la République);tchèque cs Česko Česká republika Praha
+TH;Thaïlande (la);thaï th Prathet Thai Ratcha Anachak Thai Krung Thep
+TL;Timor oriental (le);portugais pt Timor-Leste a República Democrática de Timor-Leste Dili tetum Timor Lorosae Repúblika Demokrátika Timor Lorosae Dili
+TG;Togo (le);français fr Togo (le) la République togolaise Lomé
+TO;Tonga (les);anglais en Tonga the Kingdom of Tonga Nuku’alofa tongan to Tonga Pule’anga Tonga Nuku’alofa
+TT;Trinité-et-Tobago (la);anglais en Trinidad and Tobago the Republic of Trinidad and Tobago Port of Spain
+TN;Tunisie (la);arabe ar Tūnus Al Jumhūrīyah at Tūnusīyah Tūnus, ou Tūnis
+TM;Turkménistan (le);turkmène tk Türkmenistan Aşgabat
+TR;Turquie (la);turc tr Türkiye Türkiye Cumhuriyeti Ankara
+TV;Tuvalu (les);anglais en Tuvalu Vaiaku
+UA;Ukraine (l’);ukrainien uk Ukraina Kyïv
+UY;Uruguay (l’);espagnol es Uruguay (el) la República Oriental del Uruguay Montevideo
+VU;Vanuatu (le);anglais en Vanuatu the Republic of Vanuatu Port-Vila bichlamar bi Vanuatu Ripablik blong Vanuatu Port-Vila français fr Vanuatu (le) la République de Vanuatu Port-Vila
+VE;Venezuela (le);espagnol es Venezuela la República bolivariana de Venezuela Caracas
+VN;Viêt Nam (le), ou le Vietnam;vietnamien vi Việt Nam Cộng Hòa Xã Hội Chủ Nghĩa Việt Nam Hà Nội
+YE;Yémen (le);arabe ar Al Yaman Al Jumhūrīyah al Yamanīyah Şanā
+ZM;Zambie (la);anglais en Zambia the Republic of Zambia Lusaka
+ZW;Zimbabwe (le);anglais en Zimbabwe the Republic of Zimbabwe Harare
+
