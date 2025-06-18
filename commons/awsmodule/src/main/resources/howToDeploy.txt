@@ -1,0 +1,26 @@
+
+SIGN IN
+
+1. Aller https://aws.amazon.com/console/
+2. Sign In to the Concole
+3. Sign in using root user email
+4. id savard.marco@gmail.com
+5. pw AmKrka64!
+
+
+HOW TO DEPLOY
+
+1. https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home
+2. click environment Awsmodule-env-2
+3. Upload and deploy
+4. Choose file
+5. choose awsmodule.jar (max 500 MB)
+6. Deploy
+
+
+
+HOW TO TEST APPLICATION
+
+http://awsmodule.us-east-2.elasticbeanstalk.com/welcome
+
+
