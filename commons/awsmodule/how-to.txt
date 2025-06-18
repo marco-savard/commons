@@ -1,0 +1,28 @@
+
+HOW TO BUILD
+============
+
+cd /c/Users/Marco/IdeaProjects/commons/commons/awsmodule
+
+mvn clean package
+
+java -jar target/awsmodule.jar
+mvn spring-boot:run
+
+HOW TO DEPLOY ON AWS
+====================
+
+Login AWS (root)
+  us: savard.marco@gmail.com
+  pw: AmKrka64!
+
+Elastic Beanstalk Console
+Add role : aws-elasticbeanstalk-ec2-role
+
+Add environment variables :
+  JAVA_HOME
+  SERVER_PORT 5000
+
+HOW TO RUN
+==========
+

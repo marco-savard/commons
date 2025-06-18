@@ -4,7 +4,7 @@ HOW TO DEPLOY ON GOOGLE APP ENGINE
 1. Run Google Cloud SDK Shell
    (C:\WINDOWS\system32\cmd.exe /k ""C:\Users\Marco\AppData\Local\Google\Cloud SDK\cloud_env.bat"")
 
-2. Navigate to C:\Users\Marco\IdeaProjects\springboot
+2. Navigate to cd C:\Users\Marco\IdeaProjects\springboot
 
 3. Type : gcloud app deploy pom.xml
    as explained at : https://cloud.google.com/appengine/docs/standard/java-gen2/runtime
