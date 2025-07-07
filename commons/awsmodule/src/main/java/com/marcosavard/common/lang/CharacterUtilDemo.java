@@ -12,8 +12,14 @@ public class CharacterUtilDemo {
   }
 
   private static void demoCharacter() {
-    String s = "montréal";
-    Console.println("{0} -> {1}", s, s.toUpperCase());
+    String source = "montréal";
+    StringBuilder target = new StringBuilder();
+
+    for (char ch : source.toCharArray()) {
+      target.append(Character.toUpperCase(ch));
+    }
+
+    Console.println("{0} -> {1}", source, target.toString());
   }
 
   private static void demoCharacterUtil() {
