@@ -1,0 +1,261 @@
+AF;Afghanistan (l');l'État islamique d'Afghanistan;Kaboul;34°31′N 69°11′E
+ZA;Afrique du Sud (l');la République d'Afrique du Sud/la République sud-africaine;Pretoria (administrative);25°44′46″S 28°11′17″E;Le Cap (législative);33°55′31″S 18°25′26″E
+AL;Albanie (l');la République d'Albanie;Tirana;41°19′N 19°49′E
+DZ;Algérie (l');la République algérienne démocratique et populaire;Alger;36°42′N 3°13′E
+DE;Allemagne (l');la République fédérale d'Allemagne;Berlin;52°31′N 13°23′E
+AD;Andorre (l');la Principauté d'Andorre;Andorre-la-Vieille;42°30′23″N 1°31′17″E
+AO;Angola (l');la République d'Angola;Luanda;8°50′S 13°20′E
+AG;Antigua-et-Barbuda;;Saint John's;17°7′N 61°51′W
+AI;Angilla;;The Valley;18°13′15″N 63°03′06″W
+SA;Arabie saoudite (l');le Royaume d'Arabie saoudite;Riyad;24°39′N 46°46′E
+AR;Argentine (l');la République argentine;Buenos Aires;34°36′S 58°23′W
+AM;Arménie (l');la République d'Arménie;Erevan;40°11′N 44°31′E
+AU;Australie (l');le Commonwealth d'Australie;Canberra;35°18′29″S 149°07′28″E
+AS;Samoa américaines (les);les Samoa américaines;Pago Pago;14°16′26″S 170°42′16″W
+AT;Autriche (l');la République d'Autriche;Vienne;48°12′N 16°21′E
+AW;Aruba;le Pays d'Aruba;Oranjestad;12°31′7″N 70°2′9″W
+AX;Åland;les îles Åland;Mariehamn;60°07′N 019°54′E
+AZ;Azerbaïdjan (l');la République d'Azerbaïdjan;Bakou;40°23′N 49°50′E
+BS;Bahamas (les);le Commonwealth des Bahamas;Nassau;25°04′41″N 77°20′19″W
+BH;Bahreïn;le Royaume de Bahreïn;Manama;26°13′N 50°35′E
+BD;Bangladesh (le);la République populaire du Bangladesh;Dacca/Dhaka;23°45′50″N 90°23′20″E
+BB;Barbade (la);;Bridgetown;13°05′52″N 59°37′06″W
+BE;Belgique (la);le Royaume de Belgique;Bruxelles;50°51′N 4°21′E
+BZ;Belize (le);;Belmopan;17°15′N 88°46′W
+BJ;Bénin (le);la République du Bénin;Porto-Novo (constitutionnelle);6°29′50″N 2°36′18″E;Cotonou (administrative);6°22′N 2°26′E
+BT;Bhoutan (le);le Royaume du Bhoutan;Thimphou;27°28′N 89°38′E
+BY;Biélorussie (la)/Bélarus (le);la République de Biélorussie;Minsk;53°55′N 27°33′E
+MM;Birmanie (la)/Myanmar (le);l'Union de Birmanie;Rangoon/Rangoun;16°47′42″N 96°09′36″E
+BO;Bolivie (la);la République de Bolivie;Sucre (constitutionnelle);19°02′51″S 65°15′36″W;La Paz (administrative);16°29′45″S 68°08′00″W
+BA;Bosnie-Herzégovine (la);;Sarajevo;43°52′N 18°25′E
+BW;Botswana (le);la République du Botswana;Gaborone;24°39.5′S 25°54.5′E
+BR;Brésil (le);la République fédérative du Brésil;Brasilia;15°47′S 47°52′W
+BN;Brunei (le)/Brunéi Darussalam (le);le Negara Brunei Darussalam;Bandar Seri Begawan;4°53′N 114°56′E
+BG;Bulgarie (la);la République de Bulgarie;Sofia;42°41′51″N 23°19′21″E
+BF;Burkina (le);le Burkina Faso;Ouagadougou;12°22′N 1°32′W
+BI;Burundi (le);la République du Burundi;Bujumbura;3°30′S 30°00′E
+BL;Saint-Barthélemy;Saint-Barthélemy;Gustavia;17°53′52″N 62°51′2″W
+BM;Bermudes (les);les Bermudes;Hamilton;32°17′46″N 64°46′58″W
+BQ;Pays-Bas caribéens (les);les Pays-Bas caribéens;Kralendijk (Bonaire);12°8′40″N 68°15′56″W;Oranjestad (Sint Eustatius);17°29′N 62°59′W;The Bottom (Saba)17°37′34″N 63°14′57″W
+KH;Cambodge (le);le Royaume du Cambodge;Phnom Penh;11°34′10″N 104°55′16″E
+CM;Cameroun (le);la République du Cameroun;Yaoundé;3°52′N 11°31′E
+CA;Canada (le);;Ottawa;45°24′N 75°40′W
+CC;îles Cocos (les);le territoire des îles Cocos;West Island;12°11′13″S 96°49′42″E
+CK;îles Cook (les);les îles Cook;Avarua;21°12′S 159°46′W
+CV;Cap-Vert (le);la République du Cap-Vert;Praia;14°54′59″N 23°30′34″W
+CF;centrafricaine (la République)/Centrafrique (la);la République centrafricaine;Bangui;4°22′N 18°35′E
+CL;Chili (le);la République du Chili;Santiago;33°26′S 70°40′W
+CN;Chine (la);la République populaire de Chine;Pékin;39°55′N 116°23′E
+CW;Curaçao;Curaçao;Willemstad;12°7′N 68°56′W
+CX;île Christmas (l');le territoire de l'île Christmas;Flying Fish Cove;10°25′18″S 105°40′41″E
+CY;Chypre;la République de Chypre;Nicosie;35°10′N 33°22′E
+CO;Colombie (la);la République de Colombie;Bogota;4°35′N 74°4′W
+KM;Comores (les);l'Union des Comores;Moroni;11.69°S 43.26°E
+CD;Congo (la République démocratique du);la République démocratique du Congo;Kinshasa;4°19′S 15°19′E
+CG;Congo (le);la République du Congo;Brazzaville;4°16′S 15°17′E
+KP;Corée du Nord (la);la République populaire démocratique de Corée;Pyongyang;39°2′N 125°45′E
+KR;Corée du Sud (la);la République de Corée;Séoul;36.487002°N 127.282234°E
+CR;Costa Rica (le);la République du Costa Rica;San José;9°56′N 84°5′W
+CI;Côte d'Ivoire (la);la République de Côte d'Ivoire;Yamoussoukro (politique);6°51′N 5°18′W;Abidjan (ambassades);5°19′N 4°2′W[
+HR;Croatie (la);la République de Croatie;Zagreb;45°48′47″N 15°58′39″E
+CU;Cuba;la République de Cuba;La Havane;23°8′N 82°23′W
+DK;Danemark (le);le Royaume du Danemark;Copenhague;55°43′N 12°34′E
+DJ;Djibouti;la République de Djibouti;Djibouti;11°36′N 43°10′E
+DO;dominicaine (la République);la République dominicaine;Saint-Domingue;19°00′N 70°40′W
+DM;Dominique (la);le Commonwealth de Dominique;Roseau;15°18′N 61°23′W
+EG;Égypte (l');la République arabe d'Égypte;Le Caire;30°2′N 31°13′E
+EH;Sahara occidental (le);le Sahara occidental;Laayoune;27°09′00″N 13°11′56″W
+AE;Émirats arabes unis (les);les Émirats arabes unis;Abou Dhabi/Abu Dhabi/Abou Dabi;24°28′N 54°22′E
+EC;Équateur (l');la République d'Équateur;Quito;00°13′12″S 78°30′43″W
+ER;Érythrée (l');l'État d'Érythrée;Asmara;15°20′N 38°55′E
+ES;Espagne (l');le Royaume d'Espagne;Madrid;40°26′N 3°42′W
+EE;Estonie (l');la République d'Estonie;Tallinn;59°25′N 24°45′E
+US;États-Unis (les);les États-Unis d'Amérique;Washington;38°53′N 77°1′W
+ET;Éthiopie (l');la République démocratique fédérale d'Éthiopie;Addis Abeba;9°1′N 38°45′E
+FJ;Fidji (les);la République des Îles Fidji;Suva;18°10′S 178°27′E
+FI;Finlande (la);la République de Finlande;Helsinki;60°10′15″N 24°56′15″E
+FR;France (la);la République française;Paris;48°51′N 2°21′E
+FK;îles Malouines (les);les îles Malouines;Stanley;51°41′43″S 57°50′58″W
+FO;îles Féroé (les);les îles Féroé;Tórshavn;62°00′N 06°47′W
+GA;Gabon (le);la République gabonaise;Libreville;0°23′N 9°27′E
+GM;Gambie (la);la République de Gambie;Banjul;13°27′00″N 16°34′30″W
+GE;Géorgie (la);;Tbilissi;41°43′N 44°47′E
+GH;Ghana (le);la République du Ghana;Accra;05°33′18″N 00°11′33″W
+GR;Grèce (la);la République hellénique;Athènes;37°58′N 23°43′E
+GD;Grenade (la);;Saint-Georges;12°3′14″N 61°44′43″W
+GT;Guatemala (le);la République du Guatemala;Guatemala;14°38′N 90°30′W
+GN;Guinée (la);la République de Guinée;Conakry;9°31′N 13°42′W
+GW;Guinée-Bissau (la);la République de Guinée-Bissau;Bissau/Bissao;11°52′N 15°36′W
+GQ;Guinée équatoriale;la République de Guinée équatoriale;Malabo;3°45′N 8°47′E
+GY;Guyana;la République coopérative du Guyana;Georgetown;06°48′04″N 58°09′18″W
+GF;Guyane (la);la Guyane;Cayenne;4°56′14″N 52°19′34″W
+GG;Guernesey;le bailliage de Guernesey;Saint-Pierre-Port;49.4555°N 2.5368°W
+GI;Gibraltar;Gibraltar;Gibraltar;36°07′28″N 05°20′35″W
+GL;Groenland (le);le Groenland;Nuuk;64°10′N 51°44′W
+GP;Guadeloupe (la);la Guadeloupe;Basse-Terre;15°59′45″N 61°43′45″W
+GS;Géorgie du Sud-et-les îles Sandwich du Sud (la);la Géorgie du Sud-et-les îles Sandwich du Sud;King Edward Point;54°17′00″S 36°30′00″W
+GU;Guam;Guam;Hagåtña;13°28′45″N 144°45′00″E
+HT;Haïti;la République d'Haïti;Port-au-Prince;18°35′39″N 72°18′26″W
+HN;Honduras (le);la République du Honduras;Tegucigalpa;14°6′N 87°13′W
+HU;Hongrie (la);la République de Hongrie;Budapest;47°26′N 19°15′E
+HK;Hong Kong;la région administrative spéciale de Hong Kong de la république populaire de Chine;Tamar;22°16′51″N 114°9′56″E
+IN;Inde (l');la République de l'Inde;New Delhi;28°36′50″N 77°12′30″E
+ID;Indonésie (l');la République d'Indonésie;Jakarta;6°10′S 106°49′E
+IQ;Irak (l')/Iraq (l');la République d'Irak/la République d'Iraq;Bagdad/Baghdad;33°20′N 44°23′E
+IR;Iran (l');la République islamique d'Iran;Téhéran;35°41′N 51°25′E
+IE;Irlande (l');;Dublin;53°20.65′N 6°16.05′W
+IS;Islande (l');la République d'Islande;Reykjavik;64°08′N 21°56′W
+IL;Israël;l'État d'Israël;Tel-Aviv (ambassades);32.08°N 34.78°E;Jérulalem (politique);31°47′N 35°13′E
+IT;Italie (l');la République italienne;Rome;41°54′N 12°29′E
+IM;île de Man (l');l'île de Man;Douglas;54.235°N 4.525°W
+IO;territoire britannique de l'océan Indien (le);le territoire britannique de l'océan Indien;Camp Thunder Cove;7°18′S 72°24′E
+JM;Jamaïque (la);;Kingston;17°58′17″N 76°47′35″W
+JP;Japon (le);;Tokyo;35°41′N 139°46′E
+JO;Jordanie (la);le Royaume hachémite de Jordanie;Amman;31°57′N 35°56′E
+JE;Jersey;le bailliage de Jersey;St Helier;49°11.4′N 2°6.6′W
+KZ;Kazakhstan (le);la République du Kazakhstan;Astana;51°10′N 71°26′E
+KE;Kenya (le);la République du Kenya;Nairobi;1°16′S 36°48′E
+KG;Kirghizstan (le)/Kirghizie (la)/Kirghizistan (le);la République kirghize;Bichkek;2°52′N 74°36′E
+KI;Kiribati (les);la République des Kiribati;Bairiki;1°28′N 173°2′E
+KW;Koweït (le);l'État du Koweït;Koweït;29°22′11″N 47°58′42″E
+KY;îles Caïmans (les);les îles Caïmans;George Town;19.320°N 81.229°W
+LA;Laos (le);la République démocratique populaire lao;Vientiane;17°58′N 102°36′E
+LS;Lesotho (le);le Royaume du Lesotho;Maseru;29°18′54″S 27°29′13″E
+LV;Lettonie (la);la République de Lettonie;Riga;56°57′N 24°6′E
+LB;Liban (le);la République libanaise;Beyrouth;33°54′N 35°32′E
+LR;Liberia (le);la République du Liberia;Monrovia;6°19′N 10°48′W
+LY;Libye (la);la grande Jamahiriya arabe libyenne populaire et socialiste;Tripoli;32°52′N 13°11′E
+LI;Liechtenstein (le);la Principauté du Liechtenstein;Vaduz;47°8′26″N 9°31′20″E
+LT;Lituanie (la);la République de Lituanie;Vilnius;54°41′N 25°19′E
+LU;Luxembourg (le);le Grand-Duché de Luxembourg;Luxembourg;49°36′38″N 6°07′58″E
+MK;Macédoine (la);l'ancienne République yougoslave de Macédoine;Skopje;42°0′N 21°26′E
+MG;Madagascar;la République de Madagascar;Antananarivo;18°55′S 47°31′E
+MY;Malaisie (la);;Kuala Lumpur;3°8′N 101°41′E
+MW;Malawi (le);la République du Malawi;Lilongwe;13°57′S 33°42′E
+MV;Maldives (les);la République des Maldives;Malé;4°10′31″N 73°30′32″E
+ML;Mali (le);la République du Mali;Bamako;12°39′N 8°0′W
+MT;Malte;la République de Malte;La Valette;35°54′N 14°31′E
+MA;Maroc (le);le Royaume du Maroc;Rabat;34°02′N 6°51′W
+MH;Marshall (les);la République des Îles Marshall;Majura;7°7′N 171°4′E
+MU;Maurice;la République de Maurice;Port Louis;20.2°S 57.5°E
+MR;Mauritanie (la);la République islamique de Mauritanie;Nouakchott;18°09′N 15°58′W
+MX;Mexique (le);les États unis mexicains;Mexico;19°26′N 99°8′W
+FM;Micronésie (la);les États fédérés de Micronésie;Palikir;6°55′N 158°11′E
+MD;Moldavie (la)/Moldova (la);la République de Moldavie;Chisinau;47°0′N 28°55′E
+MC;Monaco;la Principauté de Monaco;Monaco;43°43′52″N 07°25′12″E
+MN;Mongolie;;Oulan-Bator;47°55′19″N 106°54′55″E
+MF;Saint-Martin;Saint-Martin;Marigot;18.0731°N 63.0822°W
+MO;Macao;la région administrative spéciale de Macao de la république populaire de Chine;Nossa Senhora de Fátima;22°12′28″N 113°32′54″E
+MP;îles Mariannes du Nord (les);le Commonwealth des Îles Mariannes du Nord;Saipan;15.19°N 145.74°E
+MQ;Martinique;Martinique;Fort-de-France;14°36′00″N 61°04′00″W
+MS;Montserrat;Montserrat;Plymouth (de jure);16.706417°N 62.215839°W;Brades (de facto);16°47′34″N 62°12′38″W
+MZ;Mozambique (le);la République du Mozambique;Maputo;25°57′S 32°35′E
+NA;Namibie (la);la République de Namibie;Windhoek;22°34′S 17°5′E
+NR;Nauru;la République de Nauru;Yaren;0°31′39″S 166°56′06″E
+NP;Népal (le);le Royaume du Népal;Katmandou;28°10′N 84°15′E
+NI;Nicaragua (le);la République du Nicaragua;Managua;12°6′N 86°14′W
+NE;Niger (le);la République du Niger;Niamey;13°30′49″N 2°06′32″E
+NG;Nigeria (le)/Nigéria (le);la République fédérale du Nigeria;Abuja (nouvelle);9°4′N 7°29′E;Lagos (ancienne);6.455027°N 3.384082°E
+NO;Norvège (la);le Royaume de Norvège;Oslo;59°56′N 10°41′E
+NC;Nouvelle-Calédonie (la);la Nouvelle-Calédonie;Nouméa;22°16′S 166°28′E
+NF;île Norfolk (l');l'île Norfolk;Kingston;29.056°S 167.961°E
+NU;Niue;Niue;Alofi;19°03′14″S 169°55′12″W
+NZ;Nouvelle-Zélande (la);;Wellington;41°18′S 174°47′E
+OM;Oman;le Sultanat d'Oman;Mascate;23°35′20″N 58°24′30″E
+UG;Ouganda (l');la République d'Ouganda;Kampala;00°18′49″N 32°34′52″E
+UZ;Ouzbékistan (l');la République d'Ouzbékistan;Tachkent;41°19′N 69°16′E
+PK;Pakistan (le);la République islamique du Pakistan;Islamabad;33°41′30″N 73°3′0″E
+PW;Palaos (les);la République des Palaos;Ngerulmud;7°30′N 134°37′E
+PA;Panama (le);la République du Panama;Panama;8°58′N 79°32′W
+PG;Papouasie-Nouvelle-Guinée (la);;Port Moresby;09°28′44″S 147°08′58″E
+PY;Paraguay (le);la République du Paraguay;Asuncion/Assomption;25°16′S 57°40′W
+NL;Pays-Bas (les);le Royaume des Pays-Bas;Amsterdam (constitutionnelle);52°22′N 4°53′E;La Haye (administrative);52°04′48″N 04°18′36″E
+PE;Pérou (le);la République du Pérou;Lima;12°2.6′S 77°1.7′W
+PH;Philippines (les);la République des Philippines;Manille;14°35′45″N 120°58′38″E
+PL;Pologne (la);la République de Pologne;Varsovie;52°13′N 21°02′E
+PT;Portugal (le);la République portugaise;Lisbonne;38°46′N 9°9′W
+PF;Polynésie française (la);la Polynésie française;Papeete;17°34′S 149°36′W
+PM;Saint-Pierre-et-Miquelon;Saint-Pierre-et-Miquelon;Saint-Pierre;46.7778°N 56.1778°W
+PN;îles Pitcairn (les);les îles Pitcairn, Henderson, Ducie et Oeno;Adamstown;25°04′S 130°06′W
+PR;Porto Rico;l'État libre associé de Porto Rico;San Juan;18°27′N 66°6′W
+PS;Palestine (la);l'État de Palestine;Ramallah;31°54′N 35°12′E
+QA;Qatar (le);l'État du Qatar;Doha;25°18′N 51°31′E
+RO;Roumanie (la);;Bucarest;44°25′N 26°06′E
+GB;Royaume-Uni (le);le Royaume-Uni de Grande-Bretagne et d'Irlande du Nord;Londres;51°30′N 0°7′W
+RU;Russie (la);la Fédération de Russie;Moscou;55°45′21″N 37°37′02″E
+RE;Réunion (la);la Réunion;Saint-Denis;20°52′44″S 55°26′53″E
+RW;Rwanda (le);la République rwandaise;Kigali;1°56′38″S 30°3′34″E
+KN;Saint-Christophe-et-Niévès;la Fédération de Saint-Christophe-et-Niévès;Basseterre;17°18′N 62°44′W
+LC;Sainte-Lucie;;Castries;13°53′00″N 60°58′00″W
+SM;Saint-Marin;la République de Saint-Marin;Saint-Marin;43°56′N 12°26′E
+SH;Sainte-Hélène;Sainte-Hélène, Ascension et Tristan da Cunha;Jamestown;15°56′S 05°43′W
+SJ;Svalbard et Jan Mayen;Svalbard et Jan Mayen;Longyearbyen;78°13′N 15°38′E
+SS;Soudan du Sud (le);la république du Soudan du Sud;Juba;04°51′N 31°36′E
+SX;Saint-Martin;le Pays de Saint-Martin;Philipsburg;18°02′N 63°03′W
+VA;Vatican (le)/Saint-Siège (le);l'État de la Cité du Vatican;le Vatican;41°54.2′N 12°27.2′E
+VC;Saint-Vincent-et-les Grenadines;;Kingstown;13°10′N 61°14′W
+SB;Salomon (les);les Îles Salomon;Honiara;9°25′55″S 159°57′20″E
+SV;Salvador (le);la République du Salvador;San Salvador;3°41′56″N 89°11′29″W
+WS;Samoa (les);l'État indépendant des Samoa;Apia;13°50′00″S 171°45′44″W
+ST;Sao Tomé-et-Principe;la République démocratique de Sao Tomé-et-principe;Sao Tomé;0°20′N 6°44′E
+SN;Sénégal (le);la République du Sénégal;Dakar;14°40′N 17°25′W
+CS;Serbie-et-Monténégro (la);;Belgrade;44°48′N 20°28′E
+RS;Serbie (la);;Belgrade;44°48′N 20°28′E
+ME;Monténégro (le);;Podgorica;42°47′N 19°28′E
+SC;Seychelles (les);la République des Seychelles;Victoria;4°37′S 55°27′E
+SL;Sierra Leone (la);la République de Sierra Leone;Freetown;08°30′00″N 12°06′00″W
+SG;Singapour;la République de Singapour;Singapour;1°17′N 103°50′E
+SK;Slovaquie (la);la République slovaque;Bratislava;48°09′N 17°07′E
+SI;Slovénie (la);la République de Slovénie;Ljubljana;46°03′05″N 14°30′22″E
+SO;Somalie (la);;Muqdisho/Mogadiscio/Mogadishu;2°2′N 45°21′E
+SD;Soudan (le);la République du Soudan;Khartoum;15°36′N 32°30′E
+LK;Sri Lanka (le);la République démocratique socialiste du Sri Lanka;Colombo;6°56′N 79°52′E
+SE;Suède (la);le Royaume de Suède;Stockholm;59°21′N 18°4′E
+CH;Suisse (la);la Confédération suisse;Berne;46°56′53″N 7°26′51″E
+SR;Suriname (le)/Surinam (le);la République du Suriname;Paramaribo;5°50′N 55°10′W
+SZ;Swaziland (le);le Royaume du Swaziland Mbabane;Lobamba;26°30′S 31°30′E
+SY;Syrie (la);la République arabe syrienne;Damas;33°30′N 36°18′E
+TJ;Tadjikistan (le);la République du Tadjikistan;Douchanbé;38°33′N 68°48′E
+TZ;Tanzanie (la);la République unie de Tanzanie;Dodoma (nouvelle);6°10′S 35°44′E;Dar es Salam (ancienne);06°48′S 39°16′E
+TD;Tchad (le);la République du Tchad;Ndjamena;12°06′19″N 15°02′41″E
+CZ;Tchèque (la République)/Tchéquie (la);la République tchèque;Prague;50°05′N 14°28′E
+TH;Thaïlande (la);le Royaume de Thaïlande;Bangkok;13°48′N 100°33′E
+TL;Timor oriental (le);la République démocratique du Timor oriental;Dili;08°33′13″S 125°34′42″E
+TG;Togo (le);la République togolaise;Lomé;8.55°S 125.56°E
+TO;Tonga (les);le Royaume des Tonga;Nuku'alofa;21°08′S 175°12′W
+TT;Trinité-et-Tobago (la);la République de Trinité-et-Tobago;Port of Spain;10°40′0″N 61°30′27″W
+TN;Tunisie (la);la République tunisienne;Tunis;36°49′N 10°11′E
+TM;Turkménistan (le);;Achgabat;37°58′N 58°20′E
+TR;Turquie (la);la République de Turquie;Ankara;39°55′N 32°51′E
+TV;Tuvalu (les);;Funafuti;8°31′S 179°12′E
+TC;îles Turques-et-Caïques (les);les îles Turques-et-Caïques;Cockburn Town;21.459°N 71.139°W
+TK;Tokelau;les îles Tokelau;Atafu (de facto);8°33′26″S 172°28′15″W
+TW;Taïwan;la République de Chine;Taipei;25°04′N 121°31′E
+UA;Ukraine (l');;Kiev;50°27′02″N 30°31′25″E
+UY;Uruguay (l');la République orientale d'Uruguay;Montevideo;34°53′S 56°10′W
+UM;îles mineures éloignées des États-Unis (les);les îles mineures éloignées des États-Unis;Wake Island;19°17′43″N 166°37′52″E
+VU;Vanuatu (le);la République du Vanuatu;Port-Vila;17°44′S 168°19′E
+VE;Venezuela (le);la République bolivarienne du Venezuela;Caracas;10°28′50″N 66°54′13″W
+VN;Viêt Nam (le)/Vietnam (le);la République socialiste du Viêt Nam;Hanoï;21°2′N 105°51′E
+VG;îles Vierges britanniques (les);les Îles Vierges britanniques;Road Town;18°25′53″N 64°37′23″W
+VI;îles Vierges des États-Unis (les);îles Vierges américaines;Charlotte Amalie;18°21′N 64°56′W
+WF;Wallis-et-Futuna;le territoire des îles de Wallis-et-Futuna;Mata Utu;13°17′S 176°11′W
+YE;Yémen (le);la République du Yémen;Sanaa;15°20′54″N 44°12′23″E
+YT;Mayotte;le département de Mayotte;Mamoudzou;12°46′50″S 45°13′40″E
+ZM;Zambie (la);la République de Zambie;Lusaka;15°25′S 28°17′E
+ZW;Zimbabwe (le);la République du Zimbabwe;Harare;17°49′45″S 31°03′08″E
+AQ;Antartique (l');l'Antartique;
+BV;île Bouvet (l;);l'île Bouvet;
+HM;îles Heard-et-MacDonald (les);Les îles Heard-et-MacDonald;
+TF;Terres australes et antarctiques françaises (les);Les Terres australes et antarctiques françaises
+BUR;Burkina (le);le Burkina Faso;Ouagadougou;12°22′N 1°32′W
+HVO;Haute-Volta (la);la Haute-Volta;Ouagadougou;12°22′N 1°32′W
+RHO;Rhodésie du Sud (la);la Rhodésie du Sud;Harare;17°49′45″S 31°03′08″E
+DHY;Dahomey (le);le Dahomey;Porto-Novo (constitutionnelle);6°29′50″N 2°36′18″E;Cotonou (administrative);6°22′N 2°26′E
+VDR;Nord-Vietnam (le);la République socialiste du Viêt Nam;Hanoï;21°2′N 105°51′E
+SCG;Serbie-et-Monténégro (la);la communauté d'États de Serbie-et-Monténégro;Belgrade;44°49′04″N 20°27′25″E
+YUG;Yougoslavie (la);la Yougoslavie;Belgrade;44°49′04″N 20°27′25″E
+ZAR;Zaïre (le);la république du Zaïre;Kinshasa;4°19′S 15°19′E
+CSK;Tchécoslovaquie (la);la Tchécoslovaquie;Prague;50°05′N 14°28′E
+SUN;Union soviétique;l'Union des républiques socialistes soviétiques;Moscou;55°45′21″N 37°37′02″E
+DDR;Allemagne de l'Est (l');la république démocratique allemande;Berlin;52°31′N 13°23′E
