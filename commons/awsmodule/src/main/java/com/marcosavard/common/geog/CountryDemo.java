@@ -14,6 +14,8 @@ public class CountryDemo {
         displayCountryNames(display);
         displayCountryBasicInfo(Country.SPAIN, display);
         displayCountryBasicInfo(Country.SWITZERLAND_FRENCH, display);
+        displayCountryDisplayNames(Country.USA, display);
+        displayCountryDisplayNames(Country.UNITED_KINGDOM, display);
         displayCountryInfo(Country.SPAIN, display);
     }
 
@@ -89,5 +91,14 @@ public class CountryDemo {
         }
 
         System.out.println("  timezones: " + timeZoneNames);
+    }
+
+    private static void displayCountryDisplayNames(Country country, Locale display) {
+        System.out.println("Code du pays : " + country.toLocale().getCountry());
+        System.out.println("  abréviation : " + CountryInfo.of(country).getDisplayName(display, TextStyle.NARROW));
+        System.out.println("  nom court seul : " + CountryInfo.of(country).getDisplayName(display, TextStyle.SHORT_STANDALONE));
+        System.out.println("  nom court avec article : " + CountryInfo.of(country).getDisplayName(display, TextStyle.SHORT));
+        System.out.println("  nom complet : " + CountryInfo.of(country).getDisplayName(display, TextStyle.FULL));
+        System.out.println();
     }
 }
