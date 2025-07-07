@@ -5,6 +5,8 @@ package com.marcosavard.common.time;
 //  ZodeId etc = StandardZoneId.ETC;
 
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.zone.ZoneRules;
 
 public enum StandardZoneId {
     PACIFIC_NIUE("Pacific/Niue"),
@@ -46,9 +48,26 @@ public enum StandardZoneId {
 
     StandardZoneId(String timeZone) {
         zoneId = ZoneId.of(timeZone);
+        ZoneOffset offset;
     }
 
     public ZoneId getZoneId() {
         return zoneId;
     }
+
+    /*
+    private static abstract class LocalZoneId extends ZoneId {
+
+
+        @Override
+        public String getId() {
+            return "";
+        }
+
+        @Override
+        public ZoneRules getRules() {
+            return null;
+        }
+    }*/
+
 }
