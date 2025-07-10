@@ -1,7 +1,7 @@
 package com.marcosavard.common.ling;
 
 import com.marcosavard.common.debug.Console;
-//import com.marcosavard.common.text.DisplayText;
+import com.marcosavard.common.text.DisplayText;
 
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
@@ -14,28 +14,49 @@ import java.util.stream.Collectors;
 public class LanguageDemo {
 
     public static void main(String[] args) {
-        printLocales();
-        //printWeekdaysInDifferentLanguages();
-        //listLanguagesByScript();
+        Locale display = Locale.FRENCH;
+        printLocales(display);
+        showLanguageAPI(display);
+        printWeekdaysInDifferentLanguages();
+
         //listLanguagesUsingJavaLocales();
         //listLanguagesUsingLanguage();
+
+       // listLanguagesByScript();
        // listLatinScriptLanguages();
     }
 
-    private static void printLocales() {
-        Locale display = Locale.FRENCH;
+    private static void showLanguageAPI(Locale display) {
+        Language[] languages = new Language[] {Language.FRENCH, Language.SPANISH};
+
+        for (Language language : languages) {
+            Character.UnicodeScript script = language.getUnicodeScript();
+            List<Character> accents = language.getDiacriticalCharacters();
+
+            System.out.println("Info sur : " + language.toLocale().getDisplayLanguage(display));
+            System.out.println("  alphabet : " + script.name());
+            System.out.println("  accents : " + accents);
+            System.out.println();
+        }
+    }
+
+    private static void printLocales(Locale display) {
         printLocale(display, "es");
     }
 
     private static void printLocale(Locale display, String tag) {
+        System.out.println("Print locale 'es'");
         Locale language = Locale.forLanguageTag(tag);
-        System.out.println(MessageFormat.format("{0} -> {1}", tag, language.getDisplayLanguage(display)));
+        System.out.println(MessageFormat.format("  {0} -> {1}", tag, language.getDisplayLanguage(display)));
+        System.out.println();
     }
 
     private static void printWeekdaysInDifferentLanguages() {
+        System.out.println("printWeekdaysInDifferentLanguages : ");
         printUsingDisplayLocale(Locale.ENGLISH);
         printUsingDisplayLocale(Locale.FRENCH);
         printUsingDisplayLocale(Language.SPANISH.toLocale());
+        System.out.println();
     }
 
     private static void listLanguagesByScript() {
@@ -55,12 +76,14 @@ public class LanguageDemo {
         String lang = displayLocale.getDisplayLanguage(displayLocale);
 
         DayOfWeek[] days = DayOfWeek.values();
-       // System.out.println(MessageFormat.format("{0} : {1}", lang, DisplayText.of(days, TextStyle.FULL, displayLocale)));
+        String text = DisplayText.of(days, TextStyle.FULL, displayLocale);
+        System.out.println(MessageFormat.format("  {0} : {1}", lang, text));
     }
-
 
     private static void listLanguagesUsingJavaLocales() {
         String[] languages = Locale.getISOLanguages();
+        Console.println("list languages using Locale.getISOLanguages() : {0} languages found", languages.length);
+        Console.indent();
 
         for (String language : languages) {
             Locale locale = Locale.forLanguageTag(language);
@@ -74,11 +97,14 @@ public class LanguageDemo {
             Console.println(row);
         }
 
+        Console.unindent();
         Console.println();
     }
 
     private static void listLanguagesUsingLanguage() {
         Language[] languages = Language.getISOLanguages();
+        Console.println("list languages using Language.getISOLanguages() : {0} languages found", languages.length);
+        Console.indent();
 
         for (Language language : languages) {
             Locale locale = language.toLocale();
@@ -92,6 +118,7 @@ public class LanguageDemo {
             Console.println(row);
         }
 
+        Console.unindent();
         Console.println();
     }
 

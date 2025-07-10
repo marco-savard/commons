@@ -1,16 +1,9 @@
 package com.marcosavard.common.ling;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Currency;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-//import static com.marcosavard.commons.lang.CharacaterUtil.isDiacritical;
+import static com.marcosavard.common.lang.CharacaterUtil.isDiacritical;
 
 public class Language {
   private static final String[] LANGUAGES_WITH_DIACRITICS = new String[] {"nb", "vo"};
@@ -82,7 +75,7 @@ public class Language {
     String displayName = locale.getDisplayName(locale);
     char firstLetter = displayName.charAt(0);
     script = Character.UnicodeScript.of(firstLetter);
-    diacritics = findDiacritics(locale);
+    diacritics = getDiacritics(locale);
     findCountryLocales();
   }
 
@@ -140,7 +133,64 @@ public class Language {
     return languageLocale.getLanguage();
   }
 
-  private List<Character> findDiacritics(Locale locale) {
+  public static List<Character> getDiacritics(Locale display) {
+    List<Character> diacritics = new ArrayList<>();
+
+    if ("fr".equals(display.getLanguage())) {
+      diacritics = "àâäéèêëîïôöùûüÿç".chars().mapToObj(c -> (char)c).collect(Collectors.toList());
+    } else {
+      diacritics = findDiacritics(display);
+    }
+
+    return diacritics;
+  }
+
+  private static List<Character> findDiacritics(Locale display) {
+    List<String> words = getCountryNames(display);
+    List<Character> diacritics = new ArrayList<>();
+
+    for (String word : words) {
+      for (int i = 0; i < word.length(); i++) {
+        char c = Character.toLowerCase(word.charAt(i));
+
+        if (isDiacritical(c) && !diacritics.contains(c)) {
+          diacritics.add(c);
+        }
+      }
+    }
+
+    Collections.sort(diacritics);
+    return diacritics;
+  }
+
+  private static List<String> getCountryNames(Locale display) {
+    Locale[] locales = Locale.getAvailableLocales();
+    List<String> names = new ArrayList<>();
+
+    for (Locale locale : locales) {
+      String name = locale.getDisplayCountry(display);
+
+      if (!names.contains(name)) {
+        names.add(name);
+      }
+    }
+
+    return names;
+  }
+
+  private static List<String> getLanguageNames(Locale display) {
+    String[] languages = Locale.getISOLanguages();
+    List<String> languageNames = new ArrayList<>();
+
+    for (String languageCode : languages) {
+      Locale locale = Locale.forLanguageTag(languageCode);
+      languageNames.add(locale.getDisplayLanguage(display));
+    }
+
+    return languageNames;
+  }
+
+  public static List<Character> findDiacriticsOld(Locale locale) {
     List<Character> diacritics = new ArrayList<>();
     String[] languages = Locale.getISOLanguages();
 
@@ -152,9 +202,9 @@ public class Language {
         for (int i = 0; i < displayName.length(); i++) {
           char c = displayName.charAt(i);
 
-      //    if (isDiacritical(c) && !diacritics.contains(c)) {
-        //    diacritics.add(c);
-       //   }
+          if (isDiacritical(c) && !diacritics.contains(c)) {
+            diacritics.add(c);
+          }
         }
       }
     }
