@@ -238,8 +238,16 @@ public class StringUtil {
     return (smallestIdx == Integer.MAX_VALUE) ? -1 : smallestIdx;
   }
 
+  public static int indexOfIgnoreCase(CharSequence original, String ch) {
+    return original.toString().toLowerCase().indexOf(ch);
+  }
+
   public static int indexOfIgnoreAccent(CharSequence original, String ch) {
     return stripAccents(original).indexOf(ch);
+  }
+
+  public static int indexOfIgnoreCaseAndsAccents(CharSequence original, String ch) {
+    return stripAccents(original).toLowerCase().indexOf(ch);
   }
 
   public static boolean isBoolean(CharString original) {
