@@ -7,7 +7,8 @@ public class ColorInfoDemo {
 
     public static void main(String[] args) {
         Locale display = Locale.FRENCH;
-        System.out.println(ColorInfo.of(Color.RED).getDisplayName(display));
+        String red = ColorInfo.of(Color.RED).getDisplayName(display);
+        System.out.println(red);
         Color[] colors = ColorInfo.getConstantColors();
 
         for (Color color : colors) {
