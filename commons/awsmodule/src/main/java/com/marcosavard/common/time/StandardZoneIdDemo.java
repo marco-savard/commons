@@ -20,6 +20,7 @@ public class StandardZoneIdDemo {
     }
 
     private static void demoCharset(Locale display) {
+        //throws runtime java.nio.charser.UnsupportedCharsetException if charsetName is invalid
         Charset charset = Charset.forName("ISO_8859_1");
         System.out.println(charset.displayName(display));
 
@@ -33,6 +34,7 @@ public class StandardZoneIdDemo {
         ZoneId zoneId = ZoneId.systemDefault();
         printZoneOffset(zoneId, display);
 
+        //throws a runtime java.time.zone.ZoneRulesException if zoneId is invalid
         zoneId = ZoneId.of("America/New_York");
         printZoneOffset(zoneId, display);
 

@@ -13,6 +13,8 @@ public class TextDateTimeFormatterDemo {
   public static void main(String[] args) {
     printFormattedDates();
     printFormattedDateTimes();
+    //TODO quinze heure moins quart
+    //TODO 10 heures du matin
   }
 
   private static void printFormattedDates() {

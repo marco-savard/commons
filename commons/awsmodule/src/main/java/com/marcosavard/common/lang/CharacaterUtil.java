@@ -34,12 +34,12 @@ public class CharacaterUtil {
 
   private static Map<Locale, String> diacriticalsByLocale = null;
 
-  public static Map<Character, List<Character>> getDiacriticals(Locale locale) {
+  public static Map<Character, List<Character>> getDiacritics(Locale locale) {
     Map<Character, List<Character>> diacriticals = new LinkedHashMap<>();
     for (int i = 0; i < 256; i++) {
       char ch = (char) i;
 
-      if (Character.isLowerCase(ch) && CharacaterUtil.isDiacritical(ch, locale)) {
+      if (Character.isLowerCase(ch) && CharacaterUtil.isDiacritic(ch, locale)) {
         char letter = CharacaterUtil.stripAccent(ch);
         Diacritical diacritical = CharacaterUtil.getDiacritical(ch);
         List<Character> letterDiaciticals = diacriticals.get(letter);
@@ -61,14 +61,14 @@ public class CharacaterUtil {
     return ascii;
   }
 
-  public static boolean isDiacritical(char c, Locale locale) {
-    Map<Locale, String> diacriticalsByLocale = getDiacriticalsByLocale();
-    String diacriticals = diacriticalsByLocale.get(locale);
-    boolean diacritical = (diacriticals != null) ? diacriticals.indexOf(c) >= 0 : isDiacritical(c);
+  public static boolean isDiacritic(char c, Locale locale) {
+    Map<Locale, String> diacriticsByLocale = getDiacriticalsByLocale();
+    String diacritics = diacriticsByLocale.get(locale);
+    boolean diacritical = (diacritics != null) ? diacritics.indexOf(c) >= 0 : isDiacritic(c);
     return diacritical;
   }
 
-  public static boolean isDiacritical(char c) {
+  public static boolean isDiacritic(char c) {
     boolean diacritical = Character.isLetter(c) && !isAscii(c);
     return diacritical;
   }

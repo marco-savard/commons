@@ -1,9 +1,11 @@
 package com.marcosavard.common.ling;
 
+import com.marcosavard.common.lang.CharacaterUtil;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.marcosavard.common.lang.CharacaterUtil.isDiacritical;
+import static com.marcosavard.common.lang.CharacaterUtil.isDiacritic;
 
 public class Language {
   private static final String[] LANGUAGES_WITH_DIACRITICS = new String[] {"nb", "vo"};
@@ -153,7 +155,7 @@ public class Language {
       for (int i = 0; i < word.length(); i++) {
         char c = Character.toLowerCase(word.charAt(i));
 
-        if (isDiacritical(c) && !diacritics.contains(c)) {
+        if (CharacaterUtil.isDiacritic(c) && !diacritics.contains(c)) {
           diacritics.add(c);
         }
       }
@@ -202,7 +204,7 @@ public class Language {
         for (int i = 0; i < displayName.length(); i++) {
           char c = displayName.charAt(i);
 
-          if (isDiacritical(c) && !diacritics.contains(c)) {
+          if (CharacaterUtil.isDiacritic(c) && !diacritics.contains(c)) {
             diacritics.add(c);
           }
         }

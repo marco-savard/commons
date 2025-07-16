@@ -15,7 +15,7 @@ public class TextNumberFormatDemo {
 
     private static void printUpTo(long number, Locale display) throws ParseException {
         // NumberFormat numberFormat = NumberFormat.getIntegerInstance(display);
-        TextNumberFormat numberFormat = TextNumberFormat.getFullTextOrdinalInstance(display);
+        NumberFormat numberFormat = TextNumberFormat.getFullTextOrdinalInstance(display);
 
         for (int i=0; i<=110; i++) {
             String formatted = numberFormat.format(i);

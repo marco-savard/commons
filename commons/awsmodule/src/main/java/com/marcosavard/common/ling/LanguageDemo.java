@@ -41,7 +41,7 @@ public class LanguageDemo {
     }
 
     private static void printLocales(Locale display) {
-        printLocale(display, "es");
+        printLocale(display, "ess");
     }
 
     private static void printLocale(Locale display, String tag) {
@@ -55,6 +55,7 @@ public class LanguageDemo {
         System.out.println("printWeekdaysInDifferentLanguages : ");
         printUsingDisplayLocale(Locale.ENGLISH);
         printUsingDisplayLocale(Locale.FRENCH);
+        printUsingDisplayLocale(Locale.forLanguageTag("pr"));
         printUsingDisplayLocale(Language.SPANISH.toLocale());
         System.out.println();
     }

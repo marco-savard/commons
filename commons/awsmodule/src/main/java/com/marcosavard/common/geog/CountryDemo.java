@@ -11,12 +11,32 @@ public class CountryDemo {
 
     public static void main(String[] args) {
         Locale display = Locale.FRENCH;
-        displayCountryNames(display);
-        displayCountryBasicInfo(Country.SPAIN, display);
-        displayCountryBasicInfo(Country.SWITZERLAND_FRENCH, display);
-        displayCountryDisplayNames(Country.USA, display);
-        displayCountryDisplayNames(Country.UNITED_KINGDOM, display);
-        displayCountryInfo(Country.SPAIN, display);
+      //  displayCountryNames(display);
+        displayCountryBasicInfo(display);
+      //  displayCountryBasicInfoOld(Country.SPAIN, display);
+     //   displayCountryBasicInfoOld(Country.SWITZERLAND_FRENCH, display);
+      //  displayCountryDisplayNames(Country.USA, display);
+       //displayCountryDisplayNames(Country.UNITED_KINGDOM, display);
+        //displayCountryInfo(Country.SPAIN, display);
+    }
+
+    private static void displayCountryBasicInfo(Locale display) {
+        Country[] countries = new Country[] {Country.SPAIN, Country.SWITZERLAND_FRENCH };
+
+        for (Country country : countries) {
+            System.out.println("Info sur : " + country.toLocale().getDisplayCountry(display));
+            List<Locale> locales = country.localesOf();
+            List<Language> languages = country.langagesOf();
+            List<String> languageNames = languages.stream()
+                    .map(l -> l.toLocale().getDisplayLanguage(display))
+                    .toList();
+            Currency currency = country.getCurrency();
+
+            System.out.println("  locales : " + locales);
+            System.out.println("  langues : " + languageNames);
+            System.out.println("  devise : " + currency.getDisplayName(display));
+            System.out.println();
+        }
     }
 
     private static void displayCountryNames(Locale display) {
@@ -28,7 +48,7 @@ public class CountryDemo {
         System.out.println();
     }
 
-    private static void displayCountryBasicInfo(Country country, Locale display) {
+    private static void displayCountryBasicInfoOld(Country country, Locale display) {
         List<Locale> locales = country.localesOf();
         List<Language> languages = country.langagesOf();
         List<Character.UnicodeScript> scripts = country.getScripts();
