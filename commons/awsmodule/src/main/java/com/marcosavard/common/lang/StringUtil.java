@@ -23,21 +23,9 @@ public class StringUtil {
   public static final String DIACRITICALS = "áàâäéèêëíìïîóòôöúùûüÿçñ";
   public static final String ASCII = "aaaaeeeeiiiiooooooooycn";
 
+  public static final String EMPTY = "";
   public static final String ELLIPSIS = "\u2026"; // ...character
   public static final String TWO_DOTS = ".."; // ..characters
-
-  public static boolean startWithVowel(String str) {
-    char first = CharacaterUtil.stripAccent(str.toLowerCase().charAt(0));
-    char second = CharacaterUtil.stripAccent(str.toLowerCase().charAt(1));
-
-    if (first == 'y') {
-      return !CharacaterUtil.isVowel(second);
-    } else {
-      return CharacaterUtil.isVowel(first);
-    }
-  }
-
-
 
   public enum Alignment {
     LEFT,
@@ -51,6 +39,9 @@ public class StringUtil {
 
   /**
    * Abbreviate source at a given length
+   * Cf. Apache commons.lang3.StringUtils.abbreviate() since v2.0
+   * Note: Apache commons support abbreviate(String), but not abbreviate(CharSequence)
+   * Note: Apache commons support the ellipsis character ("\u2026") by default
    *
    * @param length to be truncate
    * @return a string having at most 'lenght' characters
@@ -80,6 +71,8 @@ public class StringUtil {
 
   /**
    * Capitalize the original string.
+   * Cf. Apache commons.lang3.StringUtils.capitalize() since v2.0
+   * Note : Apache does not support capitalizeWords(), toTitleCase(Locale display)
    *
    * @param original string
    * @return capitalized string
@@ -102,6 +95,7 @@ public class StringUtil {
 
   /**
    * Capitalize each words in sentence
+   * Note : not supported in Apache commons
    *
    * @param original
    * @return capitalizedWords
@@ -121,6 +115,13 @@ public class StringUtil {
     return String.join(" ", capitalizedWords);
   }
 
+  /**
+   * Center original
+   * Note: Apache commons support center(String), but not center(CharSequence)
+   *
+   * @param original
+   * @return capitalizedWords
+   */
   public static String center(CharSequence original, int length) {
     original = NullSafe.of(original);
     int margin = length - original.length();
@@ -128,6 +129,12 @@ public class StringUtil {
     return (margin > 0) ? padRight(padLeft(original, leftLength), length) : original.toString();
   }
 
+  /**
+   * Note: Apache commons support compare(String), but not compare(CharSequence)
+   * @param original
+   * @param other
+   * @return comparison
+   */
   public static int compare(CharSequence original, CharSequence other) {
     boolean oneNull = (original == null) || (other == null);
     boolean bothNull = (original == null) && (other == null);
@@ -436,8 +443,20 @@ public class StringUtil {
     return toLowerCase(original).startsWith(toLowerCase(prefix));
   }
 
+  public static boolean startWithVowel(String str) {
+    char first = CharacaterUtil.stripAccent(str.toLowerCase().charAt(0));
+    char second = CharacaterUtil.stripAccent(str.toLowerCase().charAt(1));
+
+    if (first == 'y') {
+      return !CharacaterUtil.isVowel(second);
+    } else {
+      return CharacaterUtil.isVowel(first);
+    }
+  }
+
   /**
    * Strip off accents from characters
+   * Note: Apache commons support stripAccents(String), but not stripAccents(CharSequence)
    *
    * @param original with accents
    * @return stripped text
@@ -449,10 +468,6 @@ public class StringUtil {
     stripped = stripped.replaceAll("[^\\p{ASCII}]", "");
     stripped = translate(stripped, "'", "’");
     return stripped;
-  }
-
-  public static String stripAccentsOld(CharSequence original) {
-    return translate(original, DIACRITICALS, ASCII);
   }
 
   public static List<String> stripAccents(List<String> original) {
