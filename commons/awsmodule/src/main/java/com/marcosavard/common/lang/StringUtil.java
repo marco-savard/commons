@@ -37,6 +37,8 @@ public class StringUtil {
     }
   }
 
+
+
   public enum Alignment {
     LEFT,
     RIGHT
@@ -95,7 +97,7 @@ public class StringUtil {
   }
 
   public static String capitalizeWords(CharSequence original) {
-    return capitalizeWords(original, Locale.getDefault());
+    return capitalizeWords(original, 2, Locale.getDefault());
   }
 
   /**
@@ -104,13 +106,16 @@ public class StringUtil {
    * @param original
    * @return capitalizedWords
    */
-  public static String capitalizeWords(CharSequence original, Locale locale) {
+  public static String capitalizeWords(CharSequence original, int capitalizeSize, Locale locale) {
     original = NullSafe.of(original);
     List<String> words = Arrays.asList(original.toString().split(" "));
     List<String> capitalizedWords = new ArrayList<>();
 
-    for (String word : words) {
-      capitalizedWords.add(capitalize(word, locale));
+    for (int i=0; i<words.size(); i++) {
+      String word = words.get(i);
+      boolean doCapitalize = (i == 0) || (word.length() >= capitalizeSize);
+      String capitalized = doCapitalize ? capitalize(word, locale) : word;
+      capitalizedWords.add(capitalized);
     }
 
     return String.join(" ", capitalizedWords);
@@ -508,6 +513,14 @@ public class StringUtil {
     String displayed = original.replaceAll("_", " ");
     displayed = displayed.toLowerCase();
     return capitalizeWords(displayed);
+  }
+
+  public static String toTitleCase(String original, Locale display) {
+    if ("fr".equals(display.getLanguage())) {
+      return capitalize(original, display);
+    } else {
+      return capitalizeWords(original, 4, display);
+    }
   }
 
   public static String toLowerCase(CharSequence original) {
