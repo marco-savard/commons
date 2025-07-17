@@ -530,7 +530,7 @@ public class StringUtil {
     return capitalizeWords(displayed);
   }
 
-  public static String toTitleCase(String original, Locale display) {
+  public static String toTitleCase(CharSequence original, Locale display) {
     if ("fr".equals(display.getLanguage())) {
       return capitalize(original, display);
     } else {
